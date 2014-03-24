@@ -42,7 +42,7 @@ def	pinch_method(p, n, m, f = zero, g = zero):		#le m est temporaire
 
 #rootmf = a**((F.order() - 1)/m)				
 
-	while cyclotomic_polynomial(m)(rootmf) != 0:				#On vérifie qu'elle est primitive (faute de mieux je garde cette méhotd)
+	while cyclotomic_polynomial(m)(rootmf) != 0:				#On vérifie qu'elle est primitive (faute de mieux je garde cette méthode)
 		rootmf = temp**((F.order() - 1)/m)
 
 #Pour le moment on applique la méthode Finch, alors on utilise exactement le même procédé dans G
