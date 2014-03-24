@@ -92,8 +92,6 @@ def	pinch_method(p, n, m, f = zero, g = zero):		#le m est temporaire
 	
 	return [res, f, g, A, B, C]
 
-#Maintenant la question c'est comment construire l'isomorphisme trouvé.. ou plutôt comment l'utiliser
-
 
 
 
