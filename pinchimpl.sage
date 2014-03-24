@@ -75,7 +75,7 @@ def	pinch_method(p, n, m, f = zero, g = zero):		#le m est temporaire
 			B[i,:] = temp.vector()
 
 
-		C = A.inverse()*B	#On résout le système pour retrouver les coefficients du candidatà être un isomorphisme
+		C = A.inverse()*B	
 
 		for j in range(n):	#Le but de la boucle est de tester chaque ligne de coefficients afin de voir si elle fournit le candidat désiré
 			v = C[j,:]		#Vu que la première ligne fourni le coefficient dans F_p directement (pour b^0), je ne sais pas si ça vaut vraiment le coup de le tester 
