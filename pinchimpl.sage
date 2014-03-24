@@ -20,7 +20,7 @@ def	pinch_method(p, n, m, f = zero, g = zero):		#le m est temporaire
 #g = y**23 + 3*y**2 + 4*y + 9
 
 	while f == g:		#On ne veut pas avoir la même extension (il suffirait de prendre l'identité comme isomorphisme)
-		g = R.irreductible_element(n, algorithm='random')
+		g = R.irreducible_element(n, algorithm='random')
 
 
 #On créé les deux extensions
@@ -55,10 +55,10 @@ def	pinch_method(p, n, m, f = zero, g = zero):		#le m est temporaire
 
 #rootmg = b**((G.order() - 1)/m)
 
-	while cyclotomic_polynomial(m)(rootmg) != 0:				#On vérifie qu'elle est primitive (faute de mieux je garde cette méhotd)
+	while cyclotomic_polynomial(m)(rootmg) != 0:				#On vérifie qu'elle est primitive (faute de mieux je garde cette méthode)
 		rootmg = temp**((F.order() - 1)/m)
 
-#On défini les matrices qui contiendront les coefficiens qui nous intéressent, c'est le début de la partie "algèbre linéaire"
+#On défini les matrices qui contiendront les coefficients qui nous intéressent, c'est le début de la partie "algèbre linéaire"
 	A = matrix(GF(p), n, n)
 	B = matrix(GF(p), n, n)
 
