@@ -65,6 +65,8 @@ def	pinch_method(p, n, m, f = zero, g = zero):		#le m est temporaire
 	for i in range(n):				#Calcul de la matrice A qui contient les coefficients de chaque élément de la base par rapport à l'élement qui engendre l'extension (la classe de X)
 		temp = rootmf**(p**i)
 		A[i,:] = temp.vector()
+		
+	Ainv = A.inverse()
 
 
 	success, puissance = 0, 1	#success sert à déterminer si on a effectivement trouver une racine m-ième correspondante
@@ -75,7 +77,7 @@ def	pinch_method(p, n, m, f = zero, g = zero):		#le m est temporaire
 			B[i,:] = temp.vector()
 
 
-		C = A.inverse()*B	
+		C = Ainv*B	
 
 		for j in range(n):	#Le but de la boucle est de tester chaque ligne de coefficients afin de voir si elle fournit le candidat désiré
 			v = C[j,:]		#Vu que la première ligne fourni le coefficient dans F_p directement (pour b^0), je ne sais pas si ça vaut vraiment le coup de le tester 
