@@ -80,7 +80,7 @@ def	pinch_method(p, n, m, f = zero, g = zero):		#le m est temporaire
 
 		C = Ainv*B	
 
-		v = C[1,:]		#On ne s'intéresse qu'à la deuxième ligne de la matrice qui correspondra à l'image de alpha 
+		v = C[1,:]		#On ne s'intéresse qu'à la deuxième ligne de la matrice qui correspondra à l'image de x
 		res = 0
 		
 		for k in range(n):				
