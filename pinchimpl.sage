@@ -34,28 +34,25 @@ def	pinch_method(p, n, m, f = zero, g = zero):		#le m est temporaire
 
 #Une fois qu'on a m, on prend un élément au hasard dans F* et on l'élève à la puissance (F.order() - 1)/m en espérant tomber sur une racine primitive qui en plus engendre F (En gros, le m doit diviser qu'une seule fois l'ordre du groupe, si j'ai bien compris)
 
-	temp = 0
-	while temp == 0:
-		temp = F.random_element()
 
-	rootmf = temp**((F.order() - 1)/m)
-
-#rootmf = a**((F.order() - 1)/m)				
+	rootmf = 0
 
 	while cyclotomic_polynomial(m)(rootmf) != 0:				#On vérifie qu'elle est primitive (faute de mieux je garde cette méthode)
+		temp = 0
+		while temp == 0:
+			temp = F.random_element()
+
 		rootmf = temp**((F.order() - 1)/m)
 
 #Pour le moment on applique la méthode Finch, alors on utilise exactement le même procédé dans G
 
-	temp = 0
-	while temp == 0:
-		temp = G.random_element()
-
-	rootmg = temp**((G.order() - 1)/m)
-
-#rootmg = b**((G.order() - 1)/m)
+	rootmg = 0
 
 	while cyclotomic_polynomial(m)(rootmg) != 0:				#On vérifie qu'elle est primitive (faute de mieux je garde cette méthode)
+		temp = 0
+		while temp == 0:
+			temp = G.random_element()
+
 		rootmg = temp**((G.order() - 1)/m)
 
 #On défini les matrices qui contiendront les coefficients qui nous intéressent, c'est le début de la partie "algèbre linéaire"
