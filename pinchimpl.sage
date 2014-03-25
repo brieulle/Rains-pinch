@@ -1,5 +1,4 @@
 files = attached_files()
-#Il faudra pouvoir préciser qu'on utilise ce code si algorithm est égal à "rains" dans la fonction qui va bien (probableme Hom(E,F) ou une autre)
 
 #On va commencer par donner une valeur à p et n, respectivement la caractéristique du corps premier et le degré de l'extension qu'on va considérer, pour pouvoir commencer à taper un peu de code
 
