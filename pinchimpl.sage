@@ -63,7 +63,11 @@ def	pinch_method(p, n, m, f = zero, g = zero):		#le m est temporaire
 		temp = rootmf**(p**i)
 		A[i,:] = temp.vector()
 		
-	Ainv = A.inverse()
+	try:
+		Ainv = A.inverse()
+	except ZeroDivisionError:
+		print 'erreur'
+		return [A, rootmf, f]
 
 
 	puissance = 0			#La puissance est celle qui sert à calculer beta^s pour trouver effectivement l'isomorphisme
