@@ -69,9 +69,9 @@ def	pinch_method(p, n, m, f = zero, g = zero):		#le m est temporaire
 	Ainv = A.inverse()
 
 
-	success, puissance = 0, 1	#success sert à déterminer si on a effectivement trouver une racine m-ième correspondante
+	puissance = 0			#La puissance est celle qui sert à calculer beta^s pour trouver effectivement l'isomorphisme
 
-	while puissance <= m and success !=1:	#Dans la méthode de Pinch, il est précisé que si alpha est une puissance primitive m-ième de l'unité alors son image par l'isomorphisme est égal à une puissance de beta; si c'est effectivement un isomorphisme, c'est ce que cette boucle essaie de vérifier
+	while puissance <= m:	#Dans la méthode de Pinch, il est précisé que si alpha est une puissance primitive m-ième de l'unité alors son image par l'isomorphisme est égal à une puissance de beta; si c'est effectivement un isomorphisme, c'est ce que cette boucle essaie de vérifier
 		for i in range(n):
 			temp = rootmg**(puissance*p**i)
 			B[i,:] = temp.vector()
@@ -86,7 +86,6 @@ def	pinch_method(p, n, m, f = zero, g = zero):		#le m est temporaire
 			res = res + v[0,k]*b**k
 
 		if f(res) == 0:
-			success = 1
 			break
 
 		puissance = puissance + 1
