@@ -79,20 +79,19 @@ def	pinch_method(p, n, m, f = zero, g = zero):		#le m est temporaire
 
 		C = Ainv*B	
 
-		for j in range(n):	#Le but de la boucle est de tester chaque ligne de coefficients afin de voir si elle fournit le candidat désiré
-			v = C[j,:]		#Vu que la première ligne fourni le coefficient dans F_p directement (pour b^0), je ne sais pas si ça vaut vraiment le coup de le tester 
-			res = 0
+		v = C[1,:]		#On ne s'intéresse qu'à la deuxième ligne de la matrice qui correspondra à l'image de alpha 
+		res = 0
+		
+		for k in range(n):				
+			res = res + v[0,k]*b**k
 
-			for k in range(n):				
-				res = res + v[0,k]*b**k
-
-			if f(res) == 0:
-				success = 1
-				break
+		if f(res) == 0:
+			success = 1
+			break
 
 		puissance = puissance + 1
 	
-	return [res, f, g, A, B, C]
+	return [res, f, g, A, B, C]	#A terme on pourra ne renvoyer que C (le reste est présent pour les tests)
 
 
 
