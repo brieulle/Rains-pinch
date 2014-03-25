@@ -8,7 +8,8 @@ m = 829
 R.<x> = PolynomialRing(GF(p))
 
 def	pinch_method(p, n, m, f = zero, g = zero):		#le m est temporaire
-
+	
+	c, w = cputime(), walltime()
 	R.<x> = PolynomialRing(GF(p))
 #Pour commencer on met deux polynômes au hasard, on pourra peut-être préciser deux arguments au cas où on veut donner des polynômes particuliers
 	if f == zero:
@@ -86,6 +87,7 @@ def	pinch_method(p, n, m, f = zero, g = zero):		#le m est temporaire
 			res = res + v[0,k]*b**k
 
 		if f(res) == 0:
+			print 'CPU %s, Wall %s' % (cputime(c), walltime(w))
 			break
 
 		puissance = puissance + 1
