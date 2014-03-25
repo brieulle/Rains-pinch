@@ -65,7 +65,7 @@ def	pinch_method(p, n, m, f = zero, g = zero):		#le m est temporaire
 		
 	try:
 		Ainv = A.inverse()
-	except ZeroDivisionError:
+	except ZeroDivisionError:			#Le problème semble se trouver au niveau des rootmf de trace nulle
 		print 'erreur'
 		return [A, rootmf, f]
 
