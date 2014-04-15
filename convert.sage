@@ -75,3 +75,38 @@ def convert(z, v, F):
 
     return [c, base_normale, B, inv_list]
         
+        
+files = attached_files()
+
+def isom_normal(v, w, F, G, base_normale_v = zero, base_normale_w = zero):
+    p = F.characteristic()
+    n = F.degree()
+
+    if base_normale_v == zero:
+        base_normale_v = [v]
+        for i in range(n):
+            base_normale_v.append(base_normale_v[-1]**p)
+
+    if base_normale_w == zero:
+        base_normale_w = [w]
+        for i in range(n):
+            base_normale_w.append(base_normale_w[-1]**p)
+
+    A = matrix(GF(p), n, n)
+    B = matrix(GF(p), n, n)
+
+    for i in range(n):
+        A[i,:] = base_normale_v[i].vector() 
+
+    try:
+        Ainv = A.inverse()
+    except ZeroDivisionError:
+        print 'erreur'
+        return A
+
+    for i in range(n):
+        B[i,:] = base_normale_w[i].vector()
+
+
+    return Ainv*B
+
