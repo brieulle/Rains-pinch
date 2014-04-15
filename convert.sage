@@ -17,15 +17,15 @@ def convert(z, v, F):
     Cycl.<u> = temp.quo(U**n - 1) 
 
     base_normale = [v]
-    for i in range(n):
+    for i in range(n-1):
         base_normale.append(base_normale[-1]**p)
 
 
-    b = []
+    B = []
     
 #Calculer uniquement Tr(v*v^(p^(n-i))) puisque la matrice est circulante
     for i in range(n):    
-        b.append((v*base_normale[n-i]).trace())
+        B.append((v*base_normale[-i]).trace())
 
 
 #calcul de la base de l'anneau cyclotomique
@@ -37,12 +37,12 @@ def convert(z, v, F):
 #On va inverser alors l'élément de l'anneau correspondant à la matrice
     temp_elem = 0
     for i in range(n):
-        temp_elem = temp_elem + b[i]*base_cycl[i]
+        temp_elem = temp_elem + B[i]*base_cycl[i]
         
 #TODO : Pour que A*B = Id, on a via l'isomorphisme et les propriétés 
 #sur les matrices circulantes que c'est équivalent à (pour une matrice 3x3):
 #a_00.b_00 + a_02.b_01 + a_01.b_02 = 1
-#On pourra y appliquer un calculer de pgcd
+#On pourra y appliquer un calcule de pgcd
         
     temp = temp_elem**(-1)
     inv_list = temp.list()  
@@ -73,5 +73,5 @@ def convert(z, v, F):
         inv_list.insert(0, temp_coeff)
 
 
-    return [c, base_normale]
+    return [c, base_normale, B, inv_list]
         
