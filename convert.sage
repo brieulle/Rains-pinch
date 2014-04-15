@@ -82,6 +82,9 @@ def isom_normal(v, w, F, G, base_normale_v = zero, base_normale_w = zero):
     p = F.characteristic()
     n = F.degree()
 
+    #Ces deux boucles seraient éventuellement à améliorer et si possible
+    #les récupérer de précédentes fonctions ou alors les renvoyer pour
+    #éviter de les recalculer à chaque fois
     if base_normale_v == zero:
         base_normale_v = [v]
         for i in range(n):
@@ -98,6 +101,8 @@ def isom_normal(v, w, F, G, base_normale_v = zero, base_normale_w = zero):
     for i in range(n):
         A[i,:] = base_normale_v[i].vector() 
 
+    #Il y a probablement mieux à faire qu'inverse la matrice de passage;
+    #peut-être en s'inspirant de ce qui a été fait au-dessus
     try:
         Ainv = A.inverse()
     except ZeroDivisionError:
