@@ -13,8 +13,10 @@ def	pinch_method(p, n, m, f = zero, g = zero):		#le m est temporaire
 
 	c, w = cputime(), walltime()
 	R.<x> = PolynomialRing(GF(p))
-#Pour commencer on met deux polynômes au hasard, on pourra peut-être préciser 
-#deux arguments au cas où on veut donner des polynômes particuliers
+	
+	#Pour commencer on met deux polynômes au hasard, on pourra peut-être préciser 
+	#deux arguments au cas où on veut donner des polynômes particuliers
+	
 	if f == zero:
 		f = R.irreducible_element(n, algorithm='random')
 	if g == zero:
