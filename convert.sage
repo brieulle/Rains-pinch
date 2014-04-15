@@ -101,7 +101,7 @@ def isom_normal(v, w, F, G, base_normale_v = zero, base_normale_w = zero):
     for i in range(n):
         A[i,:] = base_normale_v[i].vector() 
 
-    #Il y a probablement mieux à faire qu'inverse la matrice de passage;
+    #Il y a probablement mieux à faire qu'inverser la matrice de passage;
     #peut-être en s'inspirant de ce qui a été fait au-dessus
     try:
         Ainv = A.inverse()
