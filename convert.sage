@@ -8,7 +8,6 @@ le passage de la base x**i à la base v**p**i pour v un élément normale
 #v élément normale de F, z l'élément à exprimer 
 #par rapport à la base normale
 def convert(z, v, F):   
-    x = F.gen()
     n = F.degree()
     p = F.characteristic()
 
