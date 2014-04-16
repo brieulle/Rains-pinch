@@ -42,7 +42,7 @@ def convert(z, v, F):
 #TODO : Pour que A*B = Id, on a via l'isomorphisme et les propriétés 
 #sur les matrices circulantes que c'est équivalent à (pour une matrice 3x3):
 #a_00.b_00 + a_02.b_01 + a_01.b_02 = 1
-#On pourra y appliquer un calcule de pgcd
+#On pourra y appliquer un calcul de pgcd
         
     temp = temp_elem**(-1)
     inv_list = temp.list()  
