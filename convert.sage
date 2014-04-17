@@ -77,6 +77,15 @@ def convert(z, v, F):
         
 files = attached_files()
 
+'''
+Le véritable avantage de la fonction suivante par rapport à la partie algèbre
+linéaire de Pinch est qu'il n'y a pas besoin de tester différentes "puissances"
+de l'élément normal du corps d'arrivé; on doit (je ne sais pas encore trop
+comment) tomber sur le bon élément.
+En pratique, cela revient à ne calculer qu'une seule fois la matrice B contenant
+les "coordonnées" de w en fonction de y ou encore à ne calculer qu'une seule matrice
+de passage.
+'''
 def isom_normal(v, w, F, G, base_normale_v = zero, base_normale_w = zero):
     p = F.characteristic()
     n = F.degree()
