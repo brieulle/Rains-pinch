@@ -1,13 +1,13 @@
 files = attached_files()
 
-'''
-Le but va être d'implémenter la "conversion" en base normale, i.e. 
-le passage de la base x**i à la base v**p**i pour v un élément normale
-'''
 
 #v élément normale de F, z l'élément à exprimer 
 #par rapport à la base normale
-def convert(z, v, F):   
+def convert(z, v, F):
+    '''
+    Le but va être d'implémenter la "conversion" en base normale, i.e. 
+    le passage de la base x**i à la base v**p**i pour v un élément normale
+    '''
     n = F.degree()
     p = F.characteristic()
 
@@ -77,21 +77,23 @@ def convert(z, v, F):
         
 files = attached_files()
 
-'''
-Le véritable avantage de la fonction suivante par rapport à la partie algèbre
-linéaire de Pinch est qu'il n'y a pas besoin de tester différentes "puissances"
-de l'élément normal du corps d'arrivé; on doit (je ne sais pas encore trop
-comment) tomber sur le bon élément.
 
-En pratique, cela revient à ne calculer qu'une seule fois la matrice B contenant
-les "coordonnées" de w en fonction de y ou encore à ne calculer qu'une seule matrice
-de passage.
-
-Mon seul problème pour le moment, c'est que la fonction convert si dessus n'intervient
-pas. Je pense que c'est de ce côté là qu'il faudrait que je cherche pour éviter d'avoir
-à inverser une matrice.
-'''
 def isom_normal(v, w, F, G, base_normale_v = zero, base_normale_w = zero):
+    '''
+    Le véritable avantage de la fonction par rapport à la partie algèbre
+    linéaire de Pinch est qu'il n'y a pas besoin de tester différentes "puissances"
+    de l'élément normal du corps d'arrivé; on doit (je ne sais pas encore trop
+    comment) tomber sur le bon élément.
+
+    En pratique, cela revient à ne calculer qu'une seule fois la matrice B contenant
+    les "coordonnées" de w en fonction de y ou encore à ne calculer qu'une seule matrice
+    de passage.
+
+    Mon seul problème pour le moment, c'est que la fonction convert si dessus n'intervient
+    pas. Je pense que c'est de ce côté là qu'il faudrait que je cherche pour éviter d'avoir
+    à inverser une matrice.
+    '''
+    
     p = F.characteristic()
     n = F.degree()
 
