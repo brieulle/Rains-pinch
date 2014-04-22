@@ -43,12 +43,11 @@ def	pinch_method(p, n, m, f = zero, g = zero):		#le m est temporaire
 	cofact = F.cardinality() // m	#On peut ne le faire qu'une fois puisque F & G 
                                     #ont le même cardinal
 
-	'''
-	Une fois qu'on a m, on prend un élément au hasard dans F* et on l'élève 
-	à la puissance (F.order() - 1)/m en espérant tomber sur une racine primitive qui 
-	en plus engendre F (En gros, le m doit diviser qu'une seule fois l'ordre du groupe, 
-	si j'ai bien compris)
-	'''
+	
+	#Une fois qu'on a m, on prend un élément au hasard dans F* et on l'élève 
+	#à la puissance (F.order() - 1)/m en espérant tomber sur une racine primitive qui 
+	#en plus engendre F (En gros, le m doit diviser qu'une seule fois l'ordre du groupe, 
+	#si j'ai bien compris)
 
 	fact = m.factor()
 	rootmf = 1 			#Recherche d'une racine primitive de l'unité dans F
