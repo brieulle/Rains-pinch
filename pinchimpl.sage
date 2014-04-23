@@ -113,6 +113,11 @@ def	pinch_method(p, n, m, f = zero, g = zero):		#le m est temporaire
 #TODO : ptit rappel : trouver une façon plus pratiquer d'exprimer un vecteur 
 #sous la forme une somme de puissance de a
 
+#!!! En l'état la fonction ne donne pas "correctement" l'image de n'importe quel élément. 
+#Elle fonctionne pour x (i.e. le générateur), mais pas pour rootmf par exemple. D'après 
+#ce qu'on a fait, on devrait avoir phi(rootmf) = rootmg^puissance, mais ce n'est pas le cas. 
+#Il y a encore des choses à revoir.
+
 def calcul_img(mat, elem, F, G, bs = zero):   #le but c'est de calculer phi(elem)
     c, w = cputime(), walltime()
     n = F.degree()
