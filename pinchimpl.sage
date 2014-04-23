@@ -113,18 +113,24 @@ def	pinch_method(p, n, m, f = zero, g = zero):		#le m est temporaire
 #TODO : ptit rappel : trouver une façon plus pratiquer d'exprimer un vecteur 
 #sous la forme une somme de puissance de a
 
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#En l'état la fonction ne donne pas "correctement" l'image de n'importe quel élément. 
-#Elle fonctionne pour x (i.e. le générateur), mais pas pour rootmf par exemple. D'après 
-#ce qu'on a fait, on devrait avoir phi(rootmf) = rootmg^puissance, mais ce n'est pas le cas. 
-#Il y a encore des choses à revoir. 
-#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-def calcul_img(mat, elem, F, G, bs = zero):   #le but c'est de calculer phi(elem)
+
+def calcul_img(mat, elem, F, G, bs = zero, img_gen = zero):   #le but c'est de calculer phi(elem)
+    
+    '''
+    Fonction qui calcule l'image d'un élément elem par l'isomorphisme dont l'image de x est img_elem.
+    Si l'image n'est pas fournie, on utilise la matrice de passage mat pour recalculer son image.
+    La matrice mat doit être la matrice de la base x_i à la base y_i tel que phi(x_i) = y_i
+    '''
+    
+    
     c, w = cputime(), walltime()
     n = F.degree()
     p = F.characteristic()
     R.<x> = PolynomialRing(GF(p))
+
+    tempvec = elem.vector()
+    res = 0
 
     
 
@@ -133,22 +139,31 @@ def calcul_img(mat, elem, F, G, bs = zero):   #le but c'est de calculer phi(elem
         for i in range(n-1):
             bs.append(G.gen()*bs[i])
 
+	if img_gen == zero:		#On calcul l'image du générateur, si on ne l'a pas
+		img_gen = 0
+		v = mat[1,:]		#Colonne qui correspond à l'image du generateur
 
-#    bs = [1]
-#    for i in range(n):
-#		bs.append(b*bs[-1])
+		for i in range(n):
+			img_gen = img_gen + v[0,i]*bs[i]
+		
+		if elem == F.gen():
+			print 'CPU %s, Wall %s'
+			return img_gen
+			
+		for i in range(n):
+			if tempvec[i] != 0:
+				res = res + tempvec[i]*img_gen**i
+				
+    	print 'CPU %s, Wall %s' % (cputime(c), walltime(w))
+    	return res
+			
+		
 
-
-    tempvec = elem.vector()
-    res = 0
-    
-    for i in range(n):
-        if tempvec[i] != 0:
-            v = mat[i,:]
-            
-            for j in range(n):
-                res = res + v[0,j]*bs[j]
-
+    #Sinon on calcul l'image directement
+	for i in range(n):
+		if tempvec[i] != 0:
+			res = res + tempvec[i]*img_gen**i
+			
     print 'CPU %s, Wall %s' % (cputime(c), walltime(w))
     return res
 
