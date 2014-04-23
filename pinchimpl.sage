@@ -4,10 +4,6 @@ files = attached_files()
 # corps premier et le degré de l'extension qu'on va considérer, pour pouvoir 
 #commencer à taper un peu de code
 
-p = 11
-n = 23		#On se base sur l'exemple de Pinch, je pense que c'est le plus simple
-m = 829
-R.<X> = PolynomialRing(GF(p))
 
 def	pinch_method(p, n, m, f = zero, g = zero):		#le m est temporaire
 
@@ -119,9 +115,11 @@ def	pinch_method(p, n, m, f = zero, g = zero):		#le m est temporaire
 
 def calcul_img(mat, elem, F, G, bs = zero):   #le but c'est de calculer phi(elem)
     c, w = cputime(), walltime()
+    n = F.degree()
+    p = F.characteristic()
     R.<x> = PolynomialRing(GF(p))
 
-    n = F.degree()
+    
 
     if bs == zero:
         bs = [1]
