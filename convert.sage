@@ -59,11 +59,7 @@ def convert(z, v, F):
 
         temp = 0
 
-        #On calcul les c_i tels que z = sum_ i c_i*v**p**i:
-        for i in range(n):
-            temp =  temp + inv_list[i]*val_trz[i]
-
-        c.append(temp)
+        c.append(sum([inv_list[i]*var_trz[i] for i in range(n)]))
 
 #On passe à la ligne suivante en utilisant la structure des matrices circulante, 
 #i.e. b_ij = b_i+1j+1. Ou pour résumer encore mieux, on applique une permutation 
