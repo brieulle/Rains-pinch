@@ -75,58 +75,30 @@ def convert(z, v, F):
     return [c, base_normale, B, inv_list]
         
         
-files = attached_files()
-
-
 def isom_normal(v, w, F, G, base_normale_v = zero, base_normale_w = zero):
     '''
-    Le véritable avantage de la fonction par rapport à la partie algèbre
-    linéaire de Pinch est qu'il n'y a pas besoin de tester différentes "puissances"
-    de l'élément normal du corps d'arrivé; on doit (je ne sais pas encore trop
-    comment) tomber sur le bon élément.
+    On prend deux élémets normaux qui sont égaux via un isomorphisme phi,
+    le but est alors de récupérer ce morphisme phi.
 
-    En pratique, cela revient à ne calculer qu'une seule fois la matrice B contenant
-    les "coordonnées" de w en fonction de y ou encore à ne calculer qu'une seule matrice
-    de passage.
-
-    Mon seul problème pour le moment, c'est que la fonction convert si dessus n'intervient
-    pas. Je pense que c'est de ce côté là qu'il faudrait que je cherche pour éviter d'avoir
-    à inverser une matrice.
+    Concrètement, on exprime x en fonction de la base v^(p^i), on récupère
+    les coefficients et on les applique à la base w^(p^i). Et c'est terminé.
     '''
-    
+
     p = F.characteristic()
     n = F.degree()
 
-    #Ces deux boucles seraient éventuellement à améliorer et si possible
+    #Cette boucle serait éventuellement à améliorer et si possible
     #les récupérer de précédentes fonctions ou alors les renvoyer pour
     #éviter de les recalculer à chaque fois
-    if base_normale_v == zero:
-        base_normale_v = [v]
-        for i in range(n):
-            base_normale_v.append(base_normale_v[-1]**p)
 
     if base_normale_w == zero:
         base_normale_w = [w]
         for i in range(n):
             base_normale_w.append(base_normale_w[-1]**p)
 
-    A = matrix(GF(p), n, n)
-    B = matrix(GF(p), n, n)
+    temp_normal = convert(F.gen(), v, F)[0] #On récupère les coeff de x
+                                            #en fonction de la base normal
+                                            #définie par v
 
-    for i in range(n):
-        A[i,:] = base_normale_v[i].vector() 
-
-    #Il y a probablement mieux à faire qu'inverser la matrice de passage;
-    #peut-être en s'inspirant de ce qui a été fait au-dessus
-    try:
-        Ainv = A.inverse()
-    except ZeroDivisionError:
-        print 'erreur'
-        return A
-
-    for i in range(n):
-        B[i,:] = base_normale_w[i].vector()
-
-
-    return Ainv*B
-
+    return sum([temp_normal[i]*base_normale_w[i]    #On renvoie l'image de x
+                for i in range(len(temp_normal))])
