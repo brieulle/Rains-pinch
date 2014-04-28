@@ -98,3 +98,22 @@ def isom_normal(v, w, F, G, base_normale_v = zero, base_normale_w = zero):
 
     return sum([temp_normal[i]*base_normale_w[i]    #On renvoie l'image de x
                 for i in range(len(temp_normal))])
+                
+                
+                
+def calcul_isom_normal(elem, F, G, img_x):
+    '''
+    Fonction qui prend un élément elem de F et exprime son image dans G par 
+    l'isomorphisme définie par l'image du générateur x, img_x := phi(x).
+    '''
+    
+    n = F.degree()
+    
+    elem_vector = elem.vector()
+    
+    puis_img = [1]
+    
+    for i in range(n):
+        puis_img.append(puis_img[-1]*img_x)
+        
+    return sum([elem_vector[i]*puis_img[i] for i in range(n)])
