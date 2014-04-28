@@ -52,6 +52,8 @@ def convert(z, v, F, base_normale = zero):
     B = []
     
 #Calculer uniquement Tr(v*v^(p^(n-i))) puisque la matrice est circulante
+#TODO : On pourrait utiliser Karatsuba ou autre chose pour améliorer la 
+#complexité
     for i in range(n):    
         B.append((v*base_normale[-i]).trace())
 
@@ -66,17 +68,15 @@ def convert(z, v, F, base_normale = zero):
     temp_elem = 0
     for i in range(n):
         temp_elem = temp_elem + B[i]*base_cycl[i]
-        
-#TODO : Pour que A*B = Id, on a via l'isomorphisme et les propriétés 
-#sur les matrices circulantes que c'est équivalent à (pour une matrice 3x3):
-#a_00.b_00 + a_02.b_01 + a_01.b_02 = 1
-#On pourra y appliquer un calcul de pgcd
+
         
     temp = temp_elem**(-1)
     inv_list = temp.list()  
 
     val_trz = []        #Liste contenant les valeurs de Tr(v.z^(p^(n-1)))
 
+#TODO : Pareillement ici, l'utilisation de Karatsuba ou autre serait
+#probablement souhaitable
     for i in range(n):
         val_trz.append((v*(z**p**(n-i))).trace())
     
@@ -111,4 +111,5 @@ def calcul_isom_normal(elem, F, G, img_x):
     for i in range(n):
         puis_img.append(puis_img[-1]*img_x)
         
+    #TODO: Encore un karatsuba ici...
     return sum([elem_vector[i]*puis_img[i] for i in range(n)])
