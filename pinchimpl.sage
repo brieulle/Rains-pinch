@@ -1,10 +1,3 @@
-files = attached_files()
-
-#On va commencer par donner une valeur à p et n, respectivement la caractéristique du
-# corps premier et le degré de l'extension qu'on va considérer, pour pouvoir 
-#commencer à taper un peu de code
-
-
 def	pinch_method(p, n, m, f = zero, g = zero):		#le m est temporaire
 
 	c, w = cputime(), walltime()
