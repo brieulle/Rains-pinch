@@ -3,7 +3,7 @@ files = attached_files()
 
 #v élément normale de F, z l'élément à exprimer 
 #par rapport à la base normale
-def convert(z, v, F):
+def convert(z, v, F, base_normale = zero):
     '''
     Le but va être d'implémenter la "conversion" en base normale, i.e. 
     le passage de la base x**i à la base v**p**i pour v un élément normale
@@ -15,9 +15,10 @@ def convert(z, v, F):
     temp.<U> = PolynomialRing(GF(p))
     Cycl.<u> = temp.quo(U**n - 1) 
 
-    base_normale = [v]
-    for i in range(n-1):
-        base_normale.append(base_normale[-1]**p)
+    if base_normale == zero:
+        base_normale = [v]
+        for i in range(n-1):
+            base_normale.append(base_normale[-1]**p)
 
 
     B = []
@@ -71,13 +72,16 @@ def convert(z, v, F):
     return [c, base_normale, B, inv_list]
         
         
-def isom_normal(v, w, F, G, base_normale_v = zero, base_normale_w = zero):
+def isom_normal(v, w, F, G, base_normale_w = zero, base_normale_v = zero):
     '''
-    On prend deux élémets normaux qui sont égaux via un isomorphisme phi,
-    le but est alors de récupérer ce morphisme phi.
-
-    Concrètement, on exprime x en fonction de la base v^(p^i), on récupère
-    les coefficients et on les applique à la base w^(p^i). Et c'est terminé.
+    On prend deux éléments normaux qui correspondent via un isomorphisme phi.
+    Le but est de récupérer cet isomorphisme.
+    
+    Concrètement, l'isomorphisme étant entièrement déterminer par l'image de x,
+    il suffit d'exprimer x en fonction de la base normale v^{p^i} puis en
+    fonction de la base normale w^{p^i}, en tenant compte du fait que :
+    
+    x = sum_i c_i*v^{p^i} => phi(x) = sum_i c_i*w^{p^i}
     '''
 
     p = F.characteristic()
@@ -93,7 +97,7 @@ def isom_normal(v, w, F, G, base_normale_v = zero, base_normale_w = zero):
             base_normale_w.append(base_normale_w[-1]**p)
 
     temp_normal = convert(F.gen(), v, F)[0] #On récupère les coeff de x
-                                            #en fonction de la base normal
+                                            #en fonction de la base normale
                                             #définie par v
 
     return sum([temp_normal[i]*base_normale_w[i]    #On renvoie l'image de x
@@ -104,7 +108,7 @@ def isom_normal(v, w, F, G, base_normale_v = zero, base_normale_w = zero):
 def calcul_isom_normal(elem, F, G, img_x):
     '''
     Fonction qui prend un élément elem de F et exprime son image dans G par 
-    l'isomorphisme définie par l'image du générateur x, img_x := phi(x).
+    l'isomorphisme défini par l'image du générateur x, img_x := phi(x).
     '''
     
     n = F.degree()
