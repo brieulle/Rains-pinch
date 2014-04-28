@@ -154,8 +154,8 @@ def calcul_img(mat, elem, F, G, bs = zero, img_gen = zero):   #le but c'est de c
 			if tempvec[i] != 0:
 				res = res + tempvec[i]*img_gen**i
 				
-    	print 'CPU %s, Wall %s' % (cputime(c), walltime(w))
-    	return res
+    		print 'CPU %s, Wall %s' % (cputime(c), walltime(w))
+    		return res
 			
 		
 
