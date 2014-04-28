@@ -1,6 +1,38 @@
 files = attached_files()
 
 
+
+def isom_normal(v, w, F, G, base_normale_w = zero, base_normale_v = zero):
+    '''
+    On prend deux éléments normaux qui correspondent via un isomorphisme phi.
+    Le but est de récupérer cet isomorphisme.
+    
+    Concrètement, l'isomorphisme étant entièrement déterminer par l'image de x,
+    il suffit d'exprimer x en fonction de la base normale v^{p^i} puis en
+    fonction de la base normale w^{p^i}, en tenant compte du fait que :
+    
+    x = sum_i c_i*v^{p^i} => phi(x) = sum_i c_i*w^{p^i}
+    '''
+
+    p = F.characteristic()
+    n = F.degree()
+
+    #Cette boucle serait éventuellement à améliorer et si possible
+    #les récupérer de précédentes fonctions ou alors les renvoyer pour
+    #éviter de les recalculer à chaque fois
+
+    if base_normale_w == zero:
+        base_normale_w = [w]
+        for i in range(n):
+            base_normale_w.append(base_normale_w[-1]**p)
+
+    temp_normal = convert(F.gen(), v, F)[0] #On récupère les coeff de x
+                                            #en fonction de la base normale
+                                            #définie par v
+
+    return sum([temp_normal[i]*base_normale_w[i]    #On renvoie l'image de x
+                for i in range(len(temp_normal))])
+                
 #v élément normale de F, z l'élément à exprimer 
 #par rapport à la base normale
 def convert(z, v, F, base_normale = zero):
@@ -69,41 +101,7 @@ def convert(z, v, F, base_normale = zero):
         inv_list.insert(0, temp_coeff)
 
 
-    return [c, base_normale, B, inv_list]
-        
-        
-def isom_normal(v, w, F, G, base_normale_w = zero, base_normale_v = zero):
-    '''
-    On prend deux éléments normaux qui correspondent via un isomorphisme phi.
-    Le but est de récupérer cet isomorphisme.
-    
-    Concrètement, l'isomorphisme étant entièrement déterminer par l'image de x,
-    il suffit d'exprimer x en fonction de la base normale v^{p^i} puis en
-    fonction de la base normale w^{p^i}, en tenant compte du fait que :
-    
-    x = sum_i c_i*v^{p^i} => phi(x) = sum_i c_i*w^{p^i}
-    '''
-
-    p = F.characteristic()
-    n = F.degree()
-
-    #Cette boucle serait éventuellement à améliorer et si possible
-    #les récupérer de précédentes fonctions ou alors les renvoyer pour
-    #éviter de les recalculer à chaque fois
-
-    if base_normale_w == zero:
-        base_normale_w = [w]
-        for i in range(n):
-            base_normale_w.append(base_normale_w[-1]**p)
-
-    temp_normal = convert(F.gen(), v, F)[0] #On récupère les coeff de x
-                                            #en fonction de la base normale
-                                            #définie par v
-
-    return sum([temp_normal[i]*base_normale_w[i]    #On renvoie l'image de x
-                for i in range(len(temp_normal))])
-                
-                
+    return [c, base_normale, B, inv_list]                
                 
 def calcul_isom_normal(elem, F, G, img_x):
     '''
