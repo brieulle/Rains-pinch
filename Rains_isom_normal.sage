@@ -1,7 +1,3 @@
-files = attached_files()
-
-
-
 def isom_normal(v, w, F, G, base_normale_w = zero, base_normale_v = zero):
     '''
     On prend deux éléments normaux qui correspondent via un isomorphisme phi.
@@ -31,7 +27,7 @@ def isom_normal(v, w, F, G, base_normale_w = zero, base_normale_v = zero):
                                             #définie par v
 
     return sum([temp_normal[i]*base_normale_w[i]    #On renvoie l'image de x
-                for i in range(len(temp_normal))])
+                for i in range(n)])
                 
 #v élément normale de F, z l'élément à exprimer 
 #par rapport à la base normale
@@ -82,15 +78,12 @@ def convert(z, v, F, base_normale = zero):
     val_trz = []        #Liste contenant les valeurs de Tr(v.z^(p^(n-1)))
 
     for i in range(n):
-        temp = (v*(z**p**(n-i)))
-        val_trz.append(temp.trace())
+        val_trz.append((v*(z**p**(n-i))).trace())
     
     c = []
 
     #On écrit l'élément en fonction de la base normale
     for j in range(n):                
-
-        temp = 0
 
         c.append(sum([inv_list[i]*var_trz[i] for i in range(n)]))
 
