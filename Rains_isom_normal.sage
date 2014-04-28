@@ -52,14 +52,13 @@ def convert(z, v, F, base_normale = zero):
     B = []
     
 #Calculer uniquement Tr(v*v^(p^(n-i))) puisque la matrice est circulante
-#TODO : On pourrait utiliser Karatsuba ou autre chose pour améliorer la 
-#complexité
+
     for i in range(n):    
         B.append((v*base_normale[-i]).trace())
 
 
 #calcul de la base de l'anneau cyclotomique
-#TODO : La calculer de façon plus optimisée
+
     base_cycl = [1]
     for i in range(n):
         base_cycl.append(u*base_cycl[-1])
@@ -111,5 +110,4 @@ def calcul_isom_normal(elem, F, G, img_x):
     for i in range(n):
         puis_img.append(puis_img[-1]*img_x)
         
-    #TODO: Encore un karatsuba ici...
     return sum([elem_vector[i]*puis_img[i] for i in range(n)])
