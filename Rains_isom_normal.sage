@@ -34,7 +34,7 @@ def isom_normal(v, w, F, G, base_normale_w = zero, base_normale_v = zero):
 def convert(z, v, F, base_normale = zero):
     '''
     Le but va être d'implémenter la "conversion" en base normale, i.e. 
-    le passage de la base x**i à la base v**p**i pour v un élément normale
+    le passage de la base x**i à la base v**p**i pour v un élément normal
     '''
     n = F.degree()
     p = F.characteristic()
