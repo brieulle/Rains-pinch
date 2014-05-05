@@ -84,7 +84,7 @@ def convert(z, v, F, base_normale = zero):
     #On écrit l'élément en fonction de la base normale
     for j in range(n):                
 
-        c.append(sum([inv_list[i]*var_trz[i] for i in range(n)]))
+        c.append(sum([inv_list[i]*val_trz[i] for i in range(n)]))
 
 #On passe à la ligne suivante en utilisant la structure des matrices circulante, 
 #i.e. b_ij = b_i+1j+1. Ou pour résumer encore mieux, on applique une permutation 
