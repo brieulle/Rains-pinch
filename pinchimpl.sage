@@ -23,7 +23,7 @@ def	pinch_method(p, n, m, f = None, g = None):
     # We compute two fields of cardinality p^n and two primitive m-rooth
     rootmf, rootmg, F, G = find_mroots_and_fields(p, n, m, f, g)
 
-    # The matrixes will contain the coefficients of rootmf and rootmg from the 
+    # The matrixes will contain the coefficients of rootmf and rootmg in the 
     # basis x^i and y^i respectively
     A = matrix(GF(p), n, n)
     B = matrix(GF(p), n, n)
