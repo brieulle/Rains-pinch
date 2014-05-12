@@ -1,164 +1,122 @@
-Enter file contents heredef	pinch_method(p, n, m, f = zero, g = zero):		#le m est temporaire
-
-	c, w = cputime(), walltime()
-	R.<x> = PolynomialRing(GF(p))
-	
-	#Pour commencer on met deux polynômes au hasard, on pourra peut-être préciser 
-	#deux arguments au cas où on veut donner des polynômes particuliers
-	
-	if f == zero:
-		f = R.irreducible_element(n, algorithm='random')
-	if g == zero:
-		g = R.irreducible_element(n, algorithm='random')
-#f = x**23 + 8*x**2 + x + 9
-#g = y**23 + 3*y**2 + 4*y + 9
-
-#On ne veut pas avoir la même extension (il suffirait de prendre l'identité comme isomorphisme):
-	while f == g:
-		g = R.irreductible_element(n, algorithm='random')
-
-
-#On créé les deux extensions
-	F.<a> = GF(p^n, modulus = f)
-	G.<b> = GF(p^n, modulus = g)
-
-#TODO : Il faut trouver un moyen de chercher un m "petit" qui diviser l'ordre de F* 
-#(et donc de G*)  pour appliquer la méthode cyclotomique : Appliquer une 
-#factorisation ? Chercher le modulo de l'ordre jusqu'à un certain nombre ?
-# Ou bien carrément essayer de diviser l'ordre par tous les nombres en-dessous d'une 
-#certaine borne ? 
-
-
-	cofact = F.cardinality() // m	#On peut ne le faire qu'une fois puisque F & G 
-                                    #ont le même cardinal
-
-	
-	#Une fois qu'on a m, on prend un élément au hasard dans F* et on l'élève 
-	#à la puissance (F.order() - 1)/m en espérant tomber sur une racine primitive qui 
-	#en plus engendre F (En gros, le m doit diviser qu'une seule fois l'ordre du groupe, 
-	#si j'ai bien compris)
-
-	fact = m.factor()
-	rootmf = 1 			#Recherche d'une racine primitive de l'unité dans F
-	while any(rootmf**(m // k[0]) == 1 for k in fact):
-			rootmf = F.random_element()**cofact
-
-	rootmg = 1 	    	#Recherche d'une racine primitive de l'unité dans G
-	while any(rootmg**(m // k[0]) == 1 for k in fact):
-			rootmg = G.random_element()**cofact
-
-
-#On défini les matrices qui contiendront les coefficiens qui nous intéressent, 
-#c'est le début de la partie "algèbre linéaire"
-	A = matrix(GF(p), n, n)
-	B = matrix(GF(p), n, n)
-
-	for i in range(n):  #Calcul de la matrice A qui contient les coefficients 
-                            #de chaque élément de la base par rapport à l'élement 
-                            #qui engendre l'extension (la classe de X)
-
-		temp = rootmf**(p**i)	#En fait, c'est une base si alpha est normal,
-                                # ce dont on est pas assuré 
-                                #(encore, il s'agira de l'implémentation de Rains)
-		A[i,:] = temp.vector()
-
-	try:
-		Ainv = A.inverse()  	#Ça ne fonctionnera que si alpha est 
-                                #effectivement normal
-	except ZeroDivisionError:
-		print 'erreur'
-
-#La puissance est celle qui sert à calculer le beta pour trouver 
-#effectivement l'isomorphisme
-	puissance = 1	
-
-#Dans la méthode de Pinch, il est précisé que si alpha est une puissance primitive 
-#m-ième de l'unité alors son image par l'isomorphisme est égal à une puissance de 
-#beta; si c'est effectivement un isomorphisme, c'est ce que cette boucle essaie de 
-#vérifier
-
-	while puissance <= m :	
-		for i in range(n):
-			temp = rootmg**(puissance*p**i)
-			B[i,:] = temp.vector()
-
-
-		C = Ainv*B	
-
-		v = C[1,:]	#On prend la deuxième ligne qui correspond à l'image de x
-		res = 0
-
-		bs = [1]
-		for i in range(n-1):
-			bs.append(b*bs[-1])
-
-		for k in range(n):				
-			res = res + v[0,k]*bs[k]
-
-		if f(res) == 0:
-			print 'CPU %s, Wall %s' % (cputime(c), walltime(w))	
-			return [res,C,rootmf,rootmg, puissance,f, F, G, bs]
-
-		puissance = puissance + 1
-	
-	print 'Pas trouver isomorphisme'
-	
-#TODO : ptit rappel : trouver une façon plus pratiquer d'exprimer un vecteur 
-#sous la forme une somme de puissance de a
-
-
-
-def calcul_img(mat, elem, F, G, bs = zero, img_gen = zero):   #le but c'est de calculer phi(elem)
-    
+def	pinch_method(p, n, m, f = None, g = None):
     '''
-    Fonction qui calcule l'image d'un élément elem par l'isomorphisme dont l'image de x est img_elem.
-    Si l'image n'est pas fournie, on utilise la matrice de passage mat pour recalculer son image.
-    La matrice mat doit être la matrice de la base x_i à la base y_i tel que phi(x_i) = y_i
+    Function that given three integers p, n and m such as :
+
+    - p is prime,
+    - m is dividing n and there exists a primitive mth root that spans F_{p^n} 
+    and none of its subfields,
+
+    returns the image, in a finite field G, of the polynomial generator of a 
+    finite field F with the same cardinality as G.
     '''
-    
-    
     c, w = cputime(), walltime()
-    n = F.degree()
-    p = F.characteristic()
     R.<x> = PolynomialRing(GF(p))
 
-    tempvec = elem.vector()
+    # If no polynomials are given, we compute both of them randomly.
+    if f is None:
+        f = R.irreducible_element(n, algorithm='random')
+    if g is None:
+        g = R.irreducible_element(n, algorithm='random')
+    while f == g:
+        g = R.irreductible_element(n, algorithm='random')
+
+    # We compute two fields of cardinality p^n and two primitive m-rooth
+    rootmf, rootmg, F, G = find_mroots_and_fields(p, n, m, f, g)
+
+    # The matrixes will contain the coefficients of rootmf and rootmg from the 
+    # basis x^i and y^i respectively
+    A = matrix(GF(p), n, n)
+    B = matrix(GF(p), n, n)
+
+    for i in range(n):
+    	A[i,:] = (rootmf**i).vector()
+
+    # Failsafe
+    try:
+    	Ainv = A.inverse()
+    except ZeroDivisionError:
+    	print 'erreur'
+        return A
+
+    # We will try to find the power s such as phi(rootmf) = rootmg^s, since 
+    # rootmg and rootmf are both primitive mrooth it is bound to happen if 
+    # m is prime and statifies the conditions we gave above.
+    s = 1	
+
+
+    while s <= m :	
+    	for i in range(n):
+			B[i,:] = ((rootmg**s)**i).vector()
+
+
+        # This will be the isomorphism's matrix
+    	C = Ainv*B	
+
+    	v = C[1,:]	  # The second line correponds to the image of x
+        res = G(v[0])
+
+        # I realized that you could try to find if the image of rootmf is also
+        # a zero of the minimal polynomial of rootmg but it would force us to 
+        # to compute yet another minimal polynomials. Instead, if you find that
+        # the image is a root of the minimal polynomial of x, then you win!
+        if f(res) == 0:
+	    	print 'CPU %s, Wall %s' % (cputime(c), walltime(w))	
+	    	return (res, C, rootmf, rootmg, s, f, F, G)
+
+    	s = s + 1
+	
+    print 'No isomorphism found, check your m.'
+    return 1
+	
+def find_mroots_and_fields(p, n, m, f, g):
+    '''
+    Computes explicitly two finite fields of cardinality of p^n and two 
+    primitive m-rooths in both of them.
+    '''    
+    F.<a> = GF(p^n, modulus = f)
+    G.<b> = GF(p^n, modulus = g)
+
+    fact = m.factor()
+    cofact = F.cardinality() // m
+
+
+    # We look for m-rooth of order exactly m.
+    rootmf = 1
+    while any(rootmf**(m // k[0]) == 1 for k in fact):
+        rootmf = F.random_element()**cofact
+    rootmg = 1
+    while any(rootmg**(m // k[0]) == 1 for k in fact):
+        rootmg = G.random_element()**cofact
+
+    return (rootmf, rootmg, F, G)
+
+def calcul_img(elem, img_gen, F, G, mat = None): 
+    '''
+    Function that computes the image by an isomorphism of 
+    an elem in F from the image of a generator or the matrix of said isomorphim.
+
+    F, G : finite fields of the same cardinality,
+    elem : the element of which we wish to find the image,
+    img_gen : the image of F.gen()
+    mat : the matrix of the isomorphism
+    '''
+    c, w = cputime(), walltime()
+    p = F.characteristic()
+    n = F.degree()
     res = 0
-
     
+    if mat is None:
+        for i in range(n):
+            if elem[i] != 0:
+                res = res + elem[i]*(img_gen)**i
+    else:
+        res = sum(G(C[i]) for i in range(n))
 
-    if bs == zero:
-        bs = [1]
-        for i in range(n-1):
-            bs.append(G.gen()*bs[i])
-
-	if img_gen == zero:		#On calcul l'image du générateur, si on ne l'a pas
-		img_gen = 0
-		v = mat[1,:]		#Colonne qui correspond à l'image du generateur
-
-		for i in range(n):
-			img_gen = img_gen + v[0,i]*bs[i]
-		
-		if elem == F.gen():
-			print 'CPU %s, Wall %s'
-			return img_gen
-			
-		for i in range(n):
-			if tempvec[i] != 0:
-				res = res + tempvec[i]*img_gen**i
-				
-    		print 'CPU %s, Wall %s' % (cputime(c), walltime(w))
-    		return res
-			
-		
-
-    #Sinon on calcul l'image directement
-	for i in range(n):
-		if tempvec[i] != 0:
-			res = res + tempvec[i]*img_gen**i
-			
     print 'CPU %s, Wall %s' % (cputime(c), walltime(w))
     return res
+
+
+
 
     
     
