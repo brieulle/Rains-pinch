@@ -1,4 +1,4 @@
-Enter file contents heredef isom_normal(v, w, F, G, base_normale_w = zero, base_normale_v = zero):
+def isom_normal(v, w, F, G, base_normale_w = zero, base_normale_v = zero):
     '''
     On prend deux éléments normaux qui correspondent via un isomorphisme phi.
     Le but est de récupérer cet isomorphisme.
