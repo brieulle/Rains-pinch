@@ -1,3 +1,6 @@
+# Every review, remarks and corrections are welcomed  
+# and to be sent to l.brieulle(at)gmail(dot)com
+
 from sage.rings.polynomial.polynomial_ring_constructor import PolynomialRing
 
 def convert(z, v, normal_basis = None): 
