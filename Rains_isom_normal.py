@@ -28,7 +28,7 @@ def convert(z, v, normal_basis = None):
 
 
     inv = R(B).inverse_mod(U**n - 1)    # We compute the inverse of the image of
-                                        # the matrix B in the cyclotomic ring 
+                                        # the circulant matrix B in the cyclotomic ring 
                                         # GF(p^n)[U]/(U^n - 1) 
     
     val_trz = []   
