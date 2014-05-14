@@ -4,7 +4,7 @@
 
 from sage.rings.polynomial.polynomial_ring_constructor import PolynomialRing
 
-def	pinch_method(p, n, m, f = None, g = None):
+def pinch_method(p, n, m, f = None, g = None):
     '''
     Function that given three integers p, n and m such as :
 
@@ -37,7 +37,7 @@ def	pinch_method(p, n, m, f = None, g = None):
     for i in range(n):
     	A[i,:] = (rootmf**i).vector()
 
-    # Failsafe
+    # Failsafe, but probably outdated
     try:
     	Ainv = A.inverse()
     except ZeroDivisionError:
@@ -45,8 +45,8 @@ def	pinch_method(p, n, m, f = None, g = None):
         return A
 
     # We will try to find the power s such as phi(rootmf) = rootmg^s, since 
-    # rootmg and rootmf are both primitive mrooth it is bound to happen if 
-    # m is prime and statifies the conditions we gave above.
+    # rootmg and rootmf are both primitive mrooth it is bound to happen 
+    # since the multiplicative group is cyclic.
     s = 1	
 
 
@@ -61,12 +61,14 @@ def	pinch_method(p, n, m, f = None, g = None):
     	v = C[1,:]	  # The second line correponds to the image of x
         res = G(v[0])
 
-        # I realized that you could try to find if the image of rootmf is also
-        # a zero of the minimal polynomial of rootmg but it would force us to 
-        # to compute yet another minimal polynomials. Instead, if you find that
-        # the image is a root of the minimal polynomial of x, then you win!
+	# I realized that you could try to find if the image of rootmf is also
+	# a zero of the minimal polynomial of rootmf but it would force us to 
+	# to compute yet another minimal polynomials. Instead, if you find that
+	# the image of x is a root of f, then you win!
         if f(res) == 0:
-	    	print 'CPU %s, Wall %s' % (cputime(c), walltime(w))	
+	    	print 'CPU %s, Wall %s' % (cputime(c), walltime(w))
+	    	# Some of what is returned is probably useless and only here 
+	    	# for testing purposes.
 	    	return (res, C, rootmf, rootmg, s, f, F, G)
 
     	s = s + 1
@@ -96,13 +98,14 @@ def find_mroots_and_fields(p, n, m, f, g):
 
     return (rootmf, rootmg, F, G)
 
-def calcul_img(elem, img_gen, F, G, mat = None): 
+def calcul_img(z, img_gen, F, G, mat = None): 
     '''
     Function that computes the image by an isomorphism of 
-    an elem in F from the image of a generator or the matrix of said isomorphim.
+    a z in F from the image of a generator or the matrix 
+    of said isomorphim.
 
     F, G : finite fields of the same cardinality,
-    elem : the element of which we wish to find the image,
+    z : the element of which we wish to find the image,
     img_gen : the image of F.gen()
     mat : the matrix of the isomorphism
     '''
@@ -113,10 +116,10 @@ def calcul_img(elem, img_gen, F, G, mat = None):
     
     if mat is None:
         for i in range(n):
-            if elem[i] != 0:
-                res = res + elem[i]*(img_gen)**i
+            if z[i] != 0:
+                res = res + z[i]*(img_gen)**i
     else:
-        res = sum(G(C[i]) for i in range(n))
+        res = sum(G(C[i])*z[i] for i in range(n))
 
     print 'CPU %s, Wall %s' % (cputime(c), walltime(w))
     return res
