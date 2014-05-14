@@ -61,10 +61,11 @@ def pinch_method(p, n, m, f = None, g = None):
     	v = C[1,:]	  # The second line correponds to the image of x
         res = G(v[0])
 
-	# I realized that you could try to find if the image of rootmf is also
-	# a zero of the minimal polynomial of rootmf but it would force us to 
-	# to compute yet another minimal polynomials. Instead, if you find that
-	# the image of x is a root of f, then you win!
+	# I realized that you could try to find if the image of 
+	# rootmf is also a zero of the minimal polynomial of rootmf 
+	# but it would force us to compute yet another minimal polynomials.
+	# Instead, if you find that the image of x is a root of f, 
+	# then you win!
         if f(res) == 0:
 	    	print 'CPU %s, Wall %s' % (cputime(c), walltime(w))
 	    	# Some of what is returned is probably useless and only here 
