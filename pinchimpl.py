@@ -16,7 +16,7 @@ def pinch_method(p, n, m, f = None, g = None):
     finite field F with the same cardinality as G.
     '''
     c, w = cputime(), walltime()
-    R.<x> = PolynomialRing(GF(p))
+    R = PolynomialRing(GF(p), 'X')
 
     # If no polynomials are given, we compute both of them randomly.
     if f is None:
@@ -82,8 +82,8 @@ def find_mroots_and_fields(p, n, m, f, g):
     Computes explicitly two finite fields of cardinality of p^n and two 
     primitive m-rooths in both of them.
     '''    
-    F.<a> = GF(p^n, modulus = f)
-    G.<b> = GF(p^n, modulus = g)
+    F = GF(p^n, name='a', modulus = f)
+    G = GF(p^n, name='b', modulus = g)
 
     fact = m.factor()
     cofact = F.cardinality() // m
