@@ -79,4 +79,4 @@ def routine(p,n,m, E, f = None, g = None):
         facteur = facteur + 1
         
     print 'boohoo...'
-    return [res, M, N, C, facteur, tab]
+    return [res, M, N, C, facteur]
