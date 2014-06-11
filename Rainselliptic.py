@@ -335,6 +335,95 @@ def accept_elliptic(r, e, n):
 
 
 
+def find_root_order_elliptic(p, n, accept = None):
+    '''
+    Search for a small integer m such that:
+
+    1. the order of <p> ⊂ ℤ/m* is equal to n⋅o;
+    2. gcd(n, o) = 1;
+    3. ℤ/m* = <p^o> × G for some G ⊂ ℤ/m*;
+
+    then return o and a set of generators for G, together with their
+    respective orders.
+
+    Rains also requires m to be square-free, but we like to live
+    dangerously.
+
+    The first condition implies that the m-th roots of unity generate
+    a superfield of F_{p^n}. The second condition is not strictly
+    necessary, but it makes the algorithm much more efficient by
+    insuring that the superfield is generated over F_{p^n} by a
+    polynomial with coefficients in F_p.
+
+    The third condition is needed so that the construction of
+    `find_unique_orbit` applies. In his paper, Rains' gives a
+    sufficient condition for (3), namely that
+
+    3'. gcd(n, φ(m)/n) = 1.
+
+    It is easy to see that this condition is also necessary when ℤ/m*
+    is cyclic, but there are easy counterexamples when it is not
+    (e.g., take p=233, n=6, m=21).
+
+    The integer m and the decomposition of ℤ/m are computed by the
+    function `sieve` below, with acceptance criterion given by (1),
+    (2) and (3').
+    
+    To conclude: bounds on m, hard to tell. When n is prime, m must be
+    prime, and under GRH the best bound is m ∈ O(n^{2.4 + ε})
+    [1]. Heuristically m ∈ O(n log n).  Pinch [2] and Rains give some
+    tabulations.
+
+    Note: this algorithm loops forever if p=2 and 8|n. Rains proposes
+    two fixes in his paper, which we haven't implemented yet.
+
+    [1]: D. R. Heath-Brown, Zero-free regions for Dirichlet L-functions, and
+    the least prime in an arithmetic progression
+    [2]: R. G. E. Pinch. Recognizing elements of finite fields.
+    '''
+    if accept is None:
+        def accept(r, e, n):
+            '''
+            This function is passed down to `sieve`. It accepts only if:
+
+            (1)  the order of p in ℤ/r^e is a multiple of n;
+            (3') λ(r^e) / n is coprime to n (λ is the Carmichael function).
+
+            These two conditions are equivalent to the conditions (1)-(3)
+            above when r is prime.
+            '''
+            # Generic case
+            if r != 2 and p != r:
+                m = r**e
+                ord = (r - 1) * r**(e-1)
+                return ((ord // n.expand()).gcd(n.expand()) == 1 and          # (3')
+                        all(Zmod(m)(p)**(ord // ell) != 1 for (ell,_) in n))  # (1)
+
+            # Special treatement for ℤ/2^x
+            elif r == 2:
+                return ((e == 2 and p % 4 == 3) or
+                        (p != 2 and e - n[0][1] == 2 and     # (3')
+                        Zmod(2**e)(p)**(n.expand() // 2)))  # (1)
+
+            else:
+                return False
+    
+    # For each prime power, find the smallest multiplier k.
+    m = sieve(n, accept)
+
+    # Construct ℤ/m* as the product of the factors ℤ/f*
+    R = Zmod(prod(r for r, _, _ in m))
+    crt = map(R, crt_basis([r for r, _, _ in m]))
+    G = [(sum(crt[:i])
+          + R(-1 if r % 2 == 0 and r != 4 else (Zmod(r).unit_gens()[0]**o)) * crt[i]
+          + sum(crt[i+1:]), 
+          c)
+         for i, (r, o, c) in enumerate(m)]
+    assert(all(g**e == 1 for (g,e) in G))
+
+    ord = R(p).multiplicative_order()
+        
+    return ord // n, G
 
 
 
