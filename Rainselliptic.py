@@ -68,7 +68,7 @@ def isom_elliptic(k1, k2, k = None, Y_coordinates = False):
     # need for the method to work.
     # See Luca De Feo's page for more informations :
     # https://www.github.com/defeo/ffisom/blob.master/rains.py
-    G = find_root_order(p,n, accept_elliptic)[1]
+    G = find_root_order_elliptic(p,n, accept_elliptic)[1]
     m = G[0][0].parent().order()
     
     # Finding the elliptic curve on which we can work. 
