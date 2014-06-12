@@ -76,8 +76,5 @@ def find_trace(n,m,k):
                     else:
                         count += 1
                         sol.append((q/a, a + q/a)) #return (q/a, a + q/a)
-                # If we pass through all invertible and none corresponds, then 
-                # the m is probably incorrect.
-
     else:
         raise NotImplementedError, 'm composite is not implemented yet'
