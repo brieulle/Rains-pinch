@@ -2,7 +2,7 @@
 def find_trace(n,m,k):
     '''
     We look for t's in ZZ such that ord_m(t) = n if  m is a power of p or a's in
-    CC such that ord_m(a) = n or ord_m(q/a) = n whether ord_m(a) < ord_m(q/a) or
+    Z/m such that ord_m(a) = n or ord_m(q/a) = n whether ord_m(a) < ord_m(q/a) or
     ord_m(q/a) < ord_m(a) and a + q/a is in ZZ if m is just a power of a prime.
     The element a will be one of the roots of the minimal polynomail of the
     frobenius : 
