@@ -5,7 +5,10 @@ def find_trace(n,m,k):
     It returns a list of trace of order n in (Z/m)* if m%p = 0
     and a list of couple (a, t) when m is a prime power; where 
     a is the root of X² -tX + q of smallest order equal to n in
-    (Z/m)*
+    (Z/m)*.
+    We could possibly just return the trace in the second case.
+    But I don't know yet how the group (Z/m)*/<a> = S will be 
+    implemented.
     '''
     Zm = Zmod(m)
     PZm = PolynomialRing(Zm, 'X')
