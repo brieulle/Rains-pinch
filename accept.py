@@ -44,7 +44,7 @@ def find_trace(n,m,k):
         sol = []
         while true:
             for a in Zm:
-                if (count >= 500):
+                if count >= euler_phi(m):
                     return list(set(sol)) #raise RuntimeError, 'Did not found any workable trace'
                 # If a is not invertible in Z/m, we can't compute any order.
                 # We'll probably have to look for an element of order exactlu n
