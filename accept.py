@@ -1,15 +1,11 @@
 # -*- coding: utf-8 -*-
 def find_trace(n,m,k):
     '''
-    We look for t's in ZZ such that ord_m(t) = n if  m is a power of p or a's in
-    Z/m such that ord_m(a) = n or ord_m(q/a) = n whether ord_m(a) < ord_m(q/a) or
-    ord_m(q/a) < ord_m(a) and a + q/a is in ZZ if m is just a power of a prime.
-    The element a will be one of the roots of the minimal polynomail of the
-    frobenius : 
-
-    X - (a + a/q)X + a.(q/a)
-
-    So actually, we also need the above polynomial to be separable in Z/m.
+    Function that gives a list of candidates for the trace.
+    It returns a list of trace of order n in (Z/m)* if m%p = 0
+    and a list of couple (a, t) when m is a prime power; where 
+    a is the root of X² -tX + q of smallest order equal to n in
+    (Z/m)*
     '''
     Zm = Zmod(m)
     PZm = PolynomialRing(Zm, 'X')
