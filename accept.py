@@ -16,7 +16,6 @@ def find_trace(n,m,k):
     p = k.characteristic()
     q = k.cardinality()
 
-
     # If m is a multiple of p, then we just need the trace to be of order 
     #exactly n in (Z/m)*
     if m%p == 0:
