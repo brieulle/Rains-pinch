@@ -69,13 +69,13 @@ def find_trace(n,m,k):
                             continue
                         else:
                             count += 1
-                            sol.append(a) #return (a, a + q/a, q, q/a)
+                            sol.append((a, a + q/a)) #return (a, a + q/a, q, q/a)
                     elif (ord_b > ord_a):
                         count += 1
                         continue
                     else:
                         count += 1
-                        sol.append(q/a) #return (q/a, a + q/a)
+                        sol.append((q/a, a + q/a)) #return (q/a, a + q/a)
                 # If we pass through all invertible and none corresponds, then 
                 # the m is probably incorrect.
 
