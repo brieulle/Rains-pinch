@@ -26,35 +26,34 @@ def isom_elliptic(k1, k2, k = None, Y_coordinates = False):
     find_unique_orbit_elliptic, on an curve E which is determined by the 
     function find_elliptic_curve.
 
-    First we have to find an integer m and  an elliptic curve E  over k such 
+    First we have to find an integer m and an elliptic curve E  over k such 
     that :
 
     - m divides the number of points of E over the extensions k1 and k2.
 
     - if m is power of p, we want that the trace t of the Frobenius on E over k 
-      is of order n, the degree of the extension, in (Z/m)*.
+      is of order n, the degree of the extension in (Z/m)*.
 
     - if m is a prime power, we want that the root of smallest order in (Z/m)*
       of the characteristic polynomial of the Frobenius over k is of order n,
       the degree of the extension, i.e.:
 
-      For x**2 -tx + q = (x - a)(x - b) mod m, we want that ord_m(a) = n.
+      For x**2 -tx + q = (x - a)(x - b) mod m, we want that ord_m(a) = n nd
+      ord_m(a) < ord_m(b).
 
     - if m is composite, there is no algorithm yet.
 
-    This is the work of both functions find_root_order and find_elliptic_curve.
-
-    Once we have both of these, we have to compute two m torsion points P and Q 
+    Once we have both of them, we have to compute two m torsion points P and Q 
     of order m in E/k1 and E/k2 respectively and then we compute their Gaussian
     elliptic periods with abscissas or ordinates depending on the boolean given 
     in arguments; that is done in find_unique_orbit_elliptic.
     
-    Thus we found two elements alpha and beta such that there's exist an 
+    Thus we found two unique elements alpha and beta such that there's exist an 
     isomorphism phi with :
 
     phi(alpha) = beta
 
-    and you can find phi from there using the function conver as done in the 
+    and you can find phi from there using the function convert as done in the 
     function isom_normal.
     '''
     c, w = cputime(), walltime()
@@ -64,12 +63,12 @@ def isom_elliptic(k1, k2, k = None, Y_coordinates = False):
     n = k1.degree()  
     q = k1.cardinality()
     
-    m = function_that_finds_m()
+    m = find_m()
     
     # Finding the elliptic curve on which we can work. 
     E = find_elliptic_curve(k, k1, m)
 
-    G = function_that_finds_G_from_m_and_something_else_maybe()
+    G = find_G_from_m_and_something_else_maybe()
 
     Ek1 = E.change_ring(k1)
     Ek2 = E.change_ring(k2)
@@ -131,7 +130,8 @@ def find_elliptic_curve(k, K, m):
 
     OUTPUT : 
     
-    an elliptic curve over k
+    an elliptic curve over k, a trace and eventually a tuple containing a
+    element of order n in (Z/m)* and the class of the trace modulo m.
 
     Algorithm :
 
@@ -148,16 +148,17 @@ def find_elliptic_curve(k, K, m):
     - If m is a power of p, the charateristic of the base field k, then we shall
       proceed as follow :
 
-        We still pick a random curve E/k and we set down t = Tr_k(Fr_E), for the
+        We pick a random curve E/k and we set down t = Tr_k(Fr_E), for the
         curve to be what we want, we need :
 
           - (Z/m)* = <t> x S or #<t> = n (or something)
           - m divides #E/K but not #E/L, for any intermediate extension L 
             of K/k; so we can construct points of order m such that their 
-            abscissas or ordinates span exactly K.
+            abscissas or ordinates span exactly K. Or that we haven't any point
+            of order m in any sub-extension.
 
         Then we test those conditions for both E and its quadratic twist, if one
-        of hem meet the requirements, we return it. If no elliptic curves are 
+        of them meet the requirements, we return it and its trace. If no elliptic curves are 
         found an error is returned.
 
     - If m is primer power, then we shall proceed as follow :
@@ -172,17 +173,15 @@ def find_elliptic_curve(k, K, m):
 
           - We have x**2 - tx + q = (x - a)(x - b) mod m, meaning the polynomial
             splits in Z/m,
-          - (Z/m)* = <a> x S, with <a> the Galois group of the extension K/k or
-            equivalently #<a> = n, 
-            (!!! IMPORTANT !!! : I'm not yet sure about the second part of 
-            this statement)
+          - (Z/m)* = <a> x S, with #<a> = n, 
           - ord_m(a) < ord_m(b),
           - m divides #E/K but not #E/L, for any intermediate extension L 
             of K/k; so we can construct points of order m such that their 
             abscissas or ordinates span exactly K.
 
         Once again, we test all that for both E and its quadratic twist; if one 
-        them meet the requirements, we return it. If none are found, there is 
+        them meet the requirements, we return it, its trace and a tuple
+        containing the root a and t mod m. If none are found, there is 
         something wrong.
 
 
@@ -190,6 +189,11 @@ def find_elliptic_curve(k, K, m):
     '''
     def test_curve(E, t, S, m_case):
         '''
+        INPUT : An elliptic curve E, an integer t, a list S and an integer
+        m_case
+
+        OUTPUT : a boolean or a tuple with a bolean and an integer
+
         Function that is passed down to find_elliptic. It deterines if the curve
         meets the desired requirements depending on the nature of m : a power of
         p(1), a prime power(2) or a composite number(3).
@@ -212,7 +216,6 @@ def find_elliptic_curve(k, K, m):
                 return False
             else:
                 return True
-        # m is prime power di
         elif m_case == 1:
             # We're trying to find if t mod m is equal to one of the trace in
             # S (a list of tuple). Then we want to remember the index for
@@ -240,15 +243,14 @@ def find_elliptic_curve(k, K, m):
     if not m.is_prime_power():
         raise NotImplementedError, 'Case m composite is not implemened yet.'
     else:
-        # This method is far from optimal, but we assume that after q draws we 
-        # have a good chance of trying enough curves.
-
         if m%p == 0:
             # Picking the candidates class modulo m
             S_t = find_trace(n, m, k)
             E_rejected = []
 
             while True:
+                # This method is far from optimal, but we assume that after q 
+                # draws we have a good chance of trying enough curves.
                 if len(E_rejected) > q:
                     raise RuntimeError, 'No suitable elliptic curves found.'
 
@@ -258,7 +260,8 @@ def find_elliptic_curve(k, K, m):
 
                 t = E.trace_of_frobenius()
 
-                # We want an ordinary curve.
+                # We want an ordinary curve. More precisely, we can't find an
+                # order for a zero element.
 	        if t%p == 0:
 	            continue
 
@@ -268,7 +271,7 @@ def find_elliptic_curve(k, K, m):
                     if test_curve(EE, tt, S_t, 0):
                         return EE, tt
 
-                # We don't want to work on those curve anymore.
+                # We don't want to work on those curves anymore.
                 E_rejected.append(E)
                 E_rejected.append(E.quadratic_twist())
 
@@ -298,6 +301,10 @@ def find_elliptic_curve(k, K, m):
 
 def find_trace(n,m,k):
     '''
+    INPUT : an integer n, an integer m, a base field k
+
+    OUTPUT : a list of integer mod m or a list of a couple of integers mod m
+
     Function that gives a list of candidates for the trace.
     It returns a list of trace of order n in (Z/m)* if m%p = 0
     and a list of couple (a, t) when m is a prime power; where 
@@ -308,6 +315,8 @@ def find_trace(n,m,k):
     implemented.
     '''
     Zm = Zmod(m)
+    PZm = PolynomialRing(Zm, 'X')
+    X = PZm.gen()
     p = k.characteristic()
     q = k.cardinality()
 
