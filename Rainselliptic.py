@@ -212,6 +212,7 @@ def find_elliptic_curve(k, K, m):
                 return False
             else:
                 return True
+        # m is prime power di
         elif m_case == 1:
             # We're trying to find if t mod m is equal to one of the trace in
             # S (a list of tuple). Then we want to remember the index for
@@ -257,8 +258,7 @@ def find_elliptic_curve(k, K, m):
 
                 t = E.trace_of_frobenius()
 
-                # We want an ordinary curve. More precisely, if t = 0, we can't 
-                # compute its order in (Z/m)*
+                # We want an ordinary curve.
 	        if t%p == 0:
 	            continue
 
@@ -289,7 +289,7 @@ def find_elliptic_curve(k, K, m):
                 for EE,tt in [(E,t), (E.quadratic_twist(), -t)]:
                     res = test_curve(EE, tt, S_at, 1)
                     if res[0]:
-                        # Are we only interested in the class of t mod m ?
+                        # Are we only interested in the class of a mod m ?
                         return EE, tt, S_at[res[1]]
 
                 E_rejected.append(E)
