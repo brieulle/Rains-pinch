@@ -222,6 +222,7 @@ def find_elliptic_curve(k, K, m):
             # which it is right because we will need the root associated to
             # compute the Galois group.
             index = None
+            
             for i in range(len(S)):
                 if Zm(t) == S[i][1]:
                     index = i
