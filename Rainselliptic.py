@@ -17,7 +17,7 @@ def isom_elliptic(k1, k2, k = None, Y_coordinates = False):
     returns two normal elements using abscissas of torsion point. If you want to
     use the ordinates, write 
     
-    isom_elliptic(k, k1, k2, true)
+    isom_elliptic(k, k1, k2, True)
 
     Algorithm:
 
@@ -61,18 +61,15 @@ def isom_elliptic(k1, k2, k = None, Y_coordinates = False):
     if k is None:
 	k = k1.base_ring()
     p = k.characteristic()
-    n = k1.degree()
-
-    # Computing the quotient group of the Galois group with which we will 
-    # compute the Gaussian elliptic periods. It will also gives the m we 
-    # need for the method to work.
-    # See Luca De Feo's page for more informations :
-    # https://www.github.com/defeo/ffisom/blob.master/rains.py
-    G = find_root_order_elliptic(p,n, accept_elliptic)[1]
-    m = G[0][0].parent().order()
+    n = k1.degree()  
+    q = k1.cardinality()
+    
+    m = function_that_finds_m()
     
     # Finding the elliptic curve on which we can work. 
     E = find_elliptic_curve(k, k1, m)
+
+    G = function_that_finds_G_from_m_and_something_else_maybe()
 
     Ek1 = E.change_ring(k1)
     Ek2 = E.change_ring(k2)
@@ -99,7 +96,7 @@ def find_unique_orbit_elliptic(E, G, m, Y_coordinates = False):
     returns a Gaussian elliptic periods using the X-coordinates of a point P of 
     order m. If you want to use the Y-coordinates, type :
 
-    find_unique_orbit_elliptic(E,G,true)
+    find_unique_orbit_elliptic(E,G,True)
 
     Algorithm:
 
@@ -120,18 +117,17 @@ def find_unique_orbit_elliptic(E, G, m, Y_coordinates = False):
     if not Y_coordinates:
         # Return the sum of ([a]P)_X for a in G.
         return sum((prod(ZZ(g)**e for (g, _), e in zip(G, exps))*P)[0]
-               for exps in CProd(*map(lambda (_,x): xrange(x), G)))
+            for exps in CProd(*map(lambda (_,x): xrange(x), G)))
     else:
         return sum((prod(ZZ(g)**e for (g, _), e in zip(G, exps))*P)[1]
-               for exps in CProd(*map(lambda (_,x): xrange(x), G)))
+            for exps in CProd(*map(lambda (_,x): xrange(x), G)))
 
 
 def find_elliptic_curve(k, K, m):
     '''
     INPUT : 
 
-    a base field k, an extension K, a integer m, a integer n, degree of 
-    the extension
+    a base field k, an extension K, a integer m 
 
     OUTPUT : 
     
@@ -192,249 +188,173 @@ def find_elliptic_curve(k, K, m):
 
     - If m is composite, TODO.
     '''
-    counter = 0
+    def test_curve(E, t, S, m_case):
+        '''
+        Function that is passed down to find_elliptic. It deterines if the curve
+        meets the desired requirements depending on the nature of m : a power of
+        p(1), a prime power(2) or a composite number(3).
+        '''
+        Zm = Zmod(m)
+
+        # m = p^e
+        if m_case == 0:
+            # If the trace is none of the candidate for trace of order n in
+            # (Z/m)*, then we don't want this curve.
+            if all(Zm(t) != t_m for t_m in S):
+                return False
+            # If we can't find point of order m, we don't want this curve either
+            elif E.change_ring(K).cardinality()%m != 0:
+                return False
+            # We want the point of order m to span exactly K/k and not any
+            # sub-extension.
+            elif any(E.change_ring(k.extension(n//d)).cardinality()%m != 0
+                    for d in n.prime_divisors()):
+                return False
+            else:
+                return True
+        elif m_case == 1:
+            # We're trying to find if t mod m is equal to one of the trace in
+            # S (a list of tuple). Then we want to remember the index for
+            # which it is right because we will need the root associated to
+            # compute the Galois group.
+            index = None
+            for i in range(len(S)):
+                if Zm(t) == S[i][1]:
+                    index = i
+                    break
+            if index is None:
+                return (False, None)
+            elif E.change_ring(K).cardinality()%m != 0:
+                return (False, None)
+            elif any(E.change_ring(k.extension(n//d)).cardinality()%m != 0
+                    for d in n.prime_divisors()):
+                return (True, index)
+        elif m_case == 2:
+            raise NotImplementedError, 'm composite is not implemented yet'
+
     p = k.characteristic()
     q = K.cardinality()
     n = K.degree()
-    Zm = Integers(m)
-    #f = m.factor()
 
     if not m.is_prime_power():
-        raise NotImplementedError, 'Case m composite not implemened yet.'
+        raise NotImplementedError, 'Case m composite is not implemened yet.'
     else:
         # This method is far from optimal, but we assume that after q draws we 
         # have a good chance of trying enough curves.
-        while counter < q:
-            # We pick a random elliptic curve and we'll try to see if it 
-            # corresponds to what we want (i.e. trace of E = a good t).
-            E = EllipticCurve(j = k.random_element())
-            t = E.trace_of_frobenius()
-            #EK = E.change_ring(K)
 
-            if m%p == 0:
+        if m%p == 0:
+            # Picking the candidates class modulo m
+            S_t = find_trace(n, m, k)
+            E_rejected = []
+
+            while True:
+                if len(E_rejected) > q:
+                    raise RuntimeError, 'No suitable elliptic curves found.'
+
+                E = EllipticCurve(j = k.random_element())
+                while any(E == Ef for Ef in E_found):
+                    E = EllipticCurve(j = k.random_element())
+
+                t = E.trace_of_frobenius()
+
                 # We want an ordinary curve. More precisely, if t = 0, we can't 
                 # compute its order in (Z/m)*
-				if not (t%p):
-					counter = counter + 1
-					continue
+	        if t%p == 0:
+	            continue
 
-				sucess = false
                 # We try to see if E or its quadratic twist meets the 
                 # requirements
-				for EE,tt in [(E,t), (E.quadratic_twist(), -t)]:
-					if Zm(tt).multiplicative_order() == n  and ( 
-                     all(EE.change_ring(k.extension(n//d)).cardinality()%m != 0
-                     for d in n.prime_divisors()))  and (
-                        EE.change_ring(K).cardinality()%m == 0):
-						success = true
-						return EE
-				if not success:
-					counter = counter + 1 
-            else:
-                # For now, we focus on the case m exactly prime.
-                PZm = PolynomialRing(Zm, 'X')
-                roots = PZm(E.frobenius_polynomial()).roots()
-        
-                # If it splits in GF(l) then it splits in GF(l^r)
-                if len(roots) == 0:
-                    counter = counter + 1
-                    continue
+                for EE,tt in [(E,t), (E.quadratic_twist(), -t)]:
+                    if test_curve(EE, tt, S_t, 0):
+                        return EE, tt
 
-                alpha = roots[0][0]
-                beta = roots[1][0]
-
-                # TODO : pensez a gerer ce cas, peut-etre
-                if(Zm(alpha).multiplicative_order() ==
-                        Zm(beta).multiplicative_order()):
-                    continue
-
-                # Root of the characteristic polynomials for the quadratic 
-                # twist of E.
-                # If r & t are roots of X + aX + b, then -r & -t are roots of
-                # X - aX + b
-                alpha_t = -alpha
-                beta_t = -beta
-
-
-                # We want the root of smallest order in (Z/m)*.
-                if (Zm(alpha).multiplicative_order() 
-                                > Zm(beta).multiplicative_order()):
-                    alpha = beta
-
-                # We could probably deduce that from the above condition.
-                if (Zm(alpha_t).multiplicative_order()
-                                > Zm(beta).multiplicative_order()):
-                    alpha_t = beta_t
-
-                success = false 
-
-                for EE, a, b in [(E, alpha, beta), (E.quadratic_twist(),
-                    alpha_t, beta_t)]:
-                    if Zm(a).multiplicative_order() == n and (
-                     all(EE.change_ring(k.extension(n//d,
-                         conway= true, prefix = 'z')).cardinality()%m != 0
-                     for d in n.prime_divisors())) and (
-                           EE.change_ring(K).cardinality()%m == 0) and (
-                        Zm(a).multiplicative_order != 
-                        Zm(b).multiplicative_order):
-                           success = true
-                           return EE
-                if not success:
-                    counter = counter + 1
-
-        return RuntimeError, 'No appropriate elliptic curves found.'
-
-def accept_elliptic(r, e, n):
-    '''
-    This function accepts only if :
-
-    (1) the order of t in Z/r^e is a multiple of n;
-    (2) phi(m)/n is prime to n.
-
-    or
-
-    (1) for a root alpha of X^2 - tX + q, alpha or alpha/t has for order 
-    a multiple of n in Z/m, the polynome must be separable.
-    (2) phi(m)/n is prime to n.
-
-    '''
-    if r!=2 and t != p:
-        m = r**e
-        ord = (r-1) * r**(e-1) # Euler/Carmichael function.
-        Zm = Zmod(m)
-        if m%p == 0:
-
-            return ( (ord // n.expand()).gcd(n.expand()) == 1 and
-                    all(Zm(t)**(ord // ell) != 1 for (ell, _) in n))
+                # We don't want to work on those curve anymore.
+                E_rejected.append(E)
+                E_rejected.append(E.quadratic_twist())
 
         else:
-            PZm = PolynomialRing(Zm, 'X'); X = PZm.gen()
-            f = X**2 - Zm(t)*X + Zm(q)
-            roots = f.roots(multiplicities=false)
+            S_at = find_trace(n,m,k)
+            E_rejected = []
 
-            # If we have a root of multiplicity two, we don't want this trace
-            if len(roots) <= 1:
-                return false
+            while True:
+                if len(E_rejected) > q:
+                    raise RuntimeError, 'No suitable elliptic curves found.'
 
-            # We are interested in the roots of smallest order in (Z/m)*
-            if (Zm(roots[1]).multiplicative_order() >
-                    Zm(roots[0]).multiplicative_order()):
-                a = roots[0]
-            else:
-                a = roots[1]
+                E = EllipticCurve(j = k.random_element())
+                while any(E == Ef for Ef in E_rejected):
+                    E = EllipticCurve(j = k.random_element())
 
-            return( (ord // n.expand()).gcd(n.expand()) == 1 and
-                    all(Zm(a)**(ord//ell) != 1 for (ell, _) in n))
-    elif r == 2:
-        raise NotImplementedError, 'm = 2 is not implemented yet'
-    else:
-        return false
+                t = E.trace_of_frobenius()
 
+                for EE,tt in [(E,t), (E.quadratic_twist(), -t)]:
+                    res = test_curve(EE, tt, S_at, 1)
+                    if res[0]:
+                        # Are we only interested in the class of t mod m ?
+                        return EE, tt, S_at[res[1]]
 
+                E_rejected.append(E)
+                E_rejected.append(E.quadratic_twist())
+                    
 
-
-
-
-def find_root_order_elliptic(p, n, accept = None):
+def find_trace(n,m,k):
     '''
-    Search for a small integer m such that:
-
-    1. the order of <p> ⊂ ℤ/m* is equal to n⋅o;
-    2. gcd(n, o) = 1;
-    3. ℤ/m* = <p^o> × G for some G ⊂ ℤ/m*;
-
-    then return o and a set of generators for G, together with their
-    respective orders.
-
-    Rains also requires m to be square-free, but we like to live
-    dangerously.
-
-    The first condition implies that the m-th roots of unity generate
-    a superfield of F_{p^n}. The second condition is not strictly
-    necessary, but it makes the algorithm much more efficient by
-    insuring that the superfield is generated over F_{p^n} by a
-    polynomial with coefficients in F_p.
-
-    The third condition is needed so that the construction of
-    `find_unique_orbit` applies. In his paper, Rains' gives a
-    sufficient condition for (3), namely that
-
-    3'. gcd(n, φ(m)/n) = 1.
-
-    It is easy to see that this condition is also necessary when ℤ/m*
-    is cyclic, but there are easy counterexamples when it is not
-    (e.g., take p=233, n=6, m=21).
-
-    The integer m and the decomposition of ℤ/m are computed by the
-    function `sieve` below, with acceptance criterion given by (1),
-    (2) and (3').
-    
-    To conclude: bounds on m, hard to tell. When n is prime, m must be
-    prime, and under GRH the best bound is m ∈ O(n^{2.4 + ε})
-    [1]. Heuristically m ∈ O(n log n).  Pinch [2] and Rains give some
-    tabulations.
-
-    Note: this algorithm loops forever if p=2 and 8|n. Rains proposes
-    two fixes in his paper, which we haven't implemented yet.
-
-    [1]: D. R. Heath-Brown, Zero-free regions for Dirichlet L-functions, and
-    the least prime in an arithmetic progression
-    [2]: R. G. E. Pinch. Recognizing elements of finite fields.
+    Function that gives a list of candidates for the trace.
+    It returns a list of trace of order n in (Z/m)* if m%p = 0
+    and a list of couple (a, t) when m is a prime power; where 
+    a is the root of X² -tX + q of smallest order equal to n in
+    (Z/m)*.
+    We could possibly just return the trace in the second case.
+    But I don't know yet how the group (Z/m)*/<a> = S will be 
+    implemented.
     '''
-    if accept is None:
-        def accept(r, e, n):
-            '''
-            This function is passed down to `sieve`. It accepts only if:
+    Zm = Zmod(m)
+    p = k.characteristic()
+    q = k.cardinality()
 
-            (1)  the order of p in ℤ/r^e is a multiple of n;
-            (3') λ(r^e) / n is coprime to n (λ is the Carmichael function).
-
-            These two conditions are equivalent to the conditions (1)-(3)
-            above when r is prime.
-            '''
-            # Generic case
-            if r != 2 and p != r:
-                m = r**e
-                ord = (r - 1) * r**(e-1)
-                return ((ord // n.expand()).gcd(n.expand()) == 1 and          # (3')
-                        all(Zmod(m)(p)**(ord // ell) != 1 for (ell,_) in n))  # (1)
-
-            # Special treatement for ℤ/2^x
-            elif r == 2:
-                return ((e == 2 and p % 4 == 3) or
-                        (p != 2 and e - n[0][1] == 2 and     # (3')
-                        Zmod(2**e)(p)**(n.expand() // 2)))  # (1)
-
+    # If m is a multiple of p, then we just need the trace to be of order 
+    #exactly n in (Z/m)*
+    if m%p == 0:
+        sol = []
+        for t in Zm:
+            # We only want the trace to be of order exactly n in (Z/m)* and not 
+            # to define supersingular curves.
+            if not t.is_unit():
+                continue
+            elif (Zm(t).multiplicative_order() != n):
+                continue
             else:
-                return False
-    
-    # For each prime power, find the smallest multiplier k.
-    m = sieve(n, accept)
-
-    # Construct ℤ/m* as the product of the factors ℤ/f*
-    R = Zmod(prod(r for r, _, _ in m))
-    crt = map(R, crt_basis([r for r, _, _ in m]))
-    G = [(sum(crt[:i])
-          + R(-1 if r % 2 == 0 and r != 4 else (Zmod(r).unit_gens()[0]**o)) * crt[i]
-          + sum(crt[i+1:]), 
-          c)
-         for i, (r, o, c) in enumerate(m)]
-    assert(all(g**e == 1 for (g,e) in G))
-
-    ord = R(p).multiplicative_order()
+                sol.append(t)
+        return sol
+    # If m is prime (power), then we need to look at the roots
+    # Probably a temporary condition
+    elif m.is_prime_power():
+        sol = []
+        for a in Zm:
+            # If a is not invertible in Z/m, we can't compute any order.
+            # We'll probably have to look for an element of order exactlu n
+            # We don't want a = 0 mod m. 
+            if not a.is_unit():
+                continue
+            else:
+                ord_a = Zm(a).multiplicative_order()
+                ord_b = Zm(q/a).multiplicative_order()
+                # We need an element of order n
+                if (ord_a != n and ord_b !=n):
+                    continue
+                # We want ord_a != ord_b
+                elif (ord_a == ord_b):
+                    continue
+                elif (ord_b != n): 
+                    if (ord_a > ord_b):
+                        continue
+                    else:
+                        sol.append((a, a + q/a)) #return (a, a + q/a, q, q/a)
+                elif (ord_a != n):
+                    if (ord_b > ord_a):
+                        continue
+                    else:
+                        sol.append((q/a, a + q/a))
+        return sol
         
-    return ord // n, G
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    else:
+        raise NotImplementedError, 'm composite is not implemented yet'
