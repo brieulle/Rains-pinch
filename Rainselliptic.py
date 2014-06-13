@@ -316,8 +316,6 @@ def find_trace(n,m,k):
     implemented.
     '''
     Zm = Zmod(m)
-    PZm = PolynomialRing(Zm, 'X')
-    X = PZm.gen()
     p = k.characteristic()
     q = k.cardinality()
 
