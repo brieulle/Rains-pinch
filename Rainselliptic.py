@@ -211,7 +211,7 @@ def find_elliptic_curve(k, K, m):
                 return False
             # We want the point of order m to span exactly K/k and not any
             # sub-extension.
-            elif any(E.change_ring(k.extension(n//d)).cardinality()%m != 0
+            elif any(E.change_ring(k.extension(n//d)).cardinality()%m == 0
                     for d in n.prime_divisors()):
                 return False
             else:
@@ -231,9 +231,11 @@ def find_elliptic_curve(k, K, m):
                 return (False, None)
             elif E.change_ring(K).cardinality()%m != 0:
                 return (False, None)
-            elif any(E.change_ring(k.extension(n//d)).cardinality()%m != 0
+            elif any(E.change_ring(k.extension(n//d)).cardinality()%m == 0
                     for d in n.prime_divisors()):
-                return (True, index)
+                return (False, None)
+            else:
+            	return (True, index)
         elif m_case == 2:
             raise NotImplementedError, 'm composite is not implemented yet'
 
