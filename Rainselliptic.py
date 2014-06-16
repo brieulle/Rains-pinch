@@ -258,7 +258,7 @@ def find_elliptic_curve(k, K, m):
                     raise RuntimeError, 'No suitable elliptic curves found.'
 
                 E = EllipticCurve(j = k.random_element())
-                while any(E == Ef for Ef in E_found):
+                while any(E == Er for Er in E_rejected):
                     E = EllipticCurve(j = k.random_element())
 
                 t = E.trace_of_frobenius()
@@ -287,7 +287,7 @@ def find_elliptic_curve(k, K, m):
                     raise RuntimeError, 'No suitable elliptic curves found.'
 
                 E = EllipticCurve(j = k.random_element())
-                while any(E == Ef for Ef in E_rejected):
+                while any(E == Er for Er in E_rejected):
                     E = EllipticCurve(j = k.random_element())
 
                 t = E.trace_of_frobenius()
