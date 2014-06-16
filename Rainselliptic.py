@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-from rains import *
 
-def isom_elliptic(k1, k2, k = None, Y_coordinates = False):
+def isom_elliptic(k1, k2, k = None, Y_coordinates = False, bound = None):
     '''
     INPUT : 
     a base field k, 
@@ -58,20 +57,20 @@ def isom_elliptic(k1, k2, k = None, Y_coordinates = False):
     '''
     c, w = cputime(), walltime()
     if k is None:
-	k = k1.base_ring()
+	    k = k1.base_ring()
     p = k.characteristic()
     n = k1.degree()  
     q = k1.cardinality()
     
-    m = find_m()
+    # We take the smallest m, we can change that later.
+    m = find_m(n, bound)[0]
     
     # Finding the elliptic curve on which we can work. 
-    E = find_elliptic_curve(k, k1, m)
+    E_s= find_elliptic_curve(k, k1, m) 
+    G = find_group_gen(n, m, E_s[1])
 
-    G = find_G_from_m_and_something_else_maybe()
-
-    Ek1 = E.change_ring(k1)
-    Ek2 = E.change_ring(k2)
+    Ek1 = E_s[0].change_ring(k1)
+    Ek2 = E_s[0].change_ring(k2)
 
     a, b = (find_unique_orbit_elliptic(Ek1, G, m, Y_coordinates), 
     find_unique_orbit_elliptic(Ek2, G, m, Y_coordinates))
@@ -107,19 +106,20 @@ def find_unique_orbit_elliptic(E, G, m, Y_coordinates = False):
     with T = X or Y depending on the boolean given in arguments.
     '''
     cofactor = E.cardinality()//m
+    sum_P = []
 
     # Searching for a point of order exactly m.
     P = E(0)
     while any((m//i)*P == 0 for i in m.prime_divisors()):
         P = cofactor*E.random_point()
 
+    for i in range(G[1]):
+            sum_P.append(ZZ(G[0]**i)*P)
+
     if not Y_coordinates:
-        # Return the sum of ([a]P)_X for a in G.
-        return sum((prod(ZZ(g)**e for (g, _), e in zip(G, exps))*P)[0]
-            for exps in CProd(*map(lambda (_,x): xrange(x), G)))
+        return sum(P[0] for P in sum_P)
     else:
-        return sum((prod(ZZ(g)**e for (g, _), e in zip(G, exps))*P)[1]
-            for exps in CProd(*map(lambda (_,x): xrange(x), G)))
+        raise NotImplementedError, 'No algorithm for Y-coordinates yet.'
 
 
 def find_elliptic_curve(k, K, m):
@@ -158,8 +158,8 @@ def find_elliptic_curve(k, K, m):
             of order m in any sub-extension.
 
         Then we test those conditions for both E and its quadratic twist, if one
-        of them meet the requirements, we return it and its trace. If no elliptic curves are 
-        found an error is returned.
+        of them meet the requirements, we return it and its trace. If no 
+        elliptic curves are found an error is returned.
 
     - If m is primer power, then we shall proceed as follow :
 
@@ -296,7 +296,7 @@ def find_elliptic_curve(k, K, m):
                     res = test_curve(EE, tt, S_at, 1)
                     if res[0]:
                         # Are we only interested in the class of a mod m ?
-                        return EE, tt, S_at[res[1]]
+                        return EE, S_at[res[1]][0]
 
                 E_rejected.append(E)
                 E_rejected.append(E.quadratic_twist())
@@ -368,3 +368,91 @@ def find_trace(n,m,k):
         
     else:
         raise NotImplementedError, 'm composite is not implemented yet'
+
+def find_m(degree, q, bound = None):
+    '''
+    INPUT : three integers degree & q & bound
+
+    OUTPUT : an integer m
+
+    Algorithm :
+
+    Functions that given an integer n (degree of an extension) and a bound 
+    returns all the candidates m, such that :
+
+    - n|phi(m), the euler totient function,
+
+    - (n, phi(m)/n) = 1,
+
+    - Another one ? Maybe for q = p^d we'd want (n,d) = 1,
+
+    - m <= bound, the bound is at most q^n + 2*sqrt(q^n) + 1 since we wish for 
+    it to divide E(F_q^n). Also, this generally too big to handle.
+
+    We can note that if m = r^e with (e-1,n) = 1 or e = 1, then r = a*n + 1 with
+    (a,n) = 1 is a suitable form for m as then phi(m) = (a*n)(an + 1)^(e-1);
+    n|phi(m) and n doesn't divide (an+1)^(e-1), it's even coprime with it (not 
+    so sure about that, it'd be nice; or we could add that as a 
+    condition if need be).
+    It also works in the general case if all the prime factors of m are of the 
+    form a*n + 1 with (a,n) = 1. You just have to apply that to them and 
+    multiply the results.
+    '''
+    if bound is None:
+        bound_a = 100  # Arbitrary value.  
+    else:
+        # if m = a*n + 1 < b, then a < (b- 1)/n.
+        bound_a = (bound - 1) / degree 
+
+    sol = []
+
+    for a in range(bound_a):
+        m = a*degree + 1
+        if not m.is_prime_power():
+            continue 
+        else:
+            if (euler_phi(m)//degree).gcd(degree) == 1:
+                sol.append(m) 
+        
+    return sol
+
+
+def find_group_gen(n, m, a_t):
+    '''
+    INPUT : an integer p, characteristic of the ambient base field,
+        an integer q, the cardinality of the ambient base field,
+        an integer n, the degree of the considered extension.
+
+    OUTPUT : a generator of G and its order
+
+    Algorithm :
+
+    For now, we still focus solely on the case m a prime power. The 
+    situation is as follow :
+
+    We have the cyclic finite groupe (Z/m)* and a subgroup of order n 
+    <alpha> or <t>, depending on the situation. We are trying to determine 
+    the generator of the quotient subgroup (Z/m)*/<alpha>. It shall be of order 
+    phi(m)/n.
+    '''
+    gen = Zmod(m).unit_gens()
+    sol = []
+
+    if not m.is_prime_power():
+        raise NotImplementedError, 'm composite is not implemented yet.'
+    else:
+        order = euler_phi(m) / n
+        sub_group = [a_t**i for i in range(n)]
+
+        for i in range(euler_phi(m)):
+            if any(gen[0]**i == s for s in sub_group):
+                continue
+            else:
+                if any(((gen[0]**i)*s == sol[k] for s in sub_group)
+                        for k in range(len(sol))):
+                    continue
+                else:
+                    sol.append(gen[0]**i)# ord
+
+        return sol[0], order #raise RuntimeError, 'No generator found.'
+
