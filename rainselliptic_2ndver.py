@@ -208,14 +208,6 @@ def find_elliptic_curve(k, K, m_f):
         # (Z/m)*, then we don't want this curve.
         if all(Zm(t) != t_m for t_m in S):
             return False
-        # If we can't find point of order m, we don't want this curve either
-        elif E.change_ring(K).cardinality()%m != 0:
-            return False
-        # We want the point of order m to span exactly K/k and not any
-        # sub-extension.
-        elif any(E.cardinality(extension_degree = n//d)%m == 0
-                for d in n.prime_divisors()):
-            return False
         else:
             return True
 
