@@ -223,7 +223,7 @@ def find_elliptic_curve(k, K, m_t):
 
     if not m.is_prime_power():
         raise NotImplementedError, 'Case m composite is not implemened yet.'
-    elif m%p == 0:
+    else:
         E_rejected = []
 
         while True:
