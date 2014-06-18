@@ -77,12 +77,14 @@ def isom_elliptic(k1, k2, k = None, Y_coordinates = False, bound = None):
     print 'Finding E : CPU %s, Walltime %s' % (cputime(c), walltime(w))
     
     if E is None:
-    	raise RuntimeError, 'No suitable elliptic curve found, check your parameters'
+    	raise RuntimeError, 'No suitable elliptic curve found, check your \
+    								  parameters'
 
     c, w = cputime(), walltime()
     Ek1 = E.change_ring(k1)
     Ek2 = E.change_ring(k2)
-    print 'Computing E in extensions : CPU %s, Walltime %s' % (cputime(c), walltime(w))
+    print 'Computing E in extensions : CPU %s, Walltime %s' % (cputime(c), 
+    								walltime(w))
 
     c, w = cputime(), walltime()
     a, b = (find_unique_orbit_elliptic(Ek1, m_t[0], Y_coordinates), 
@@ -293,7 +295,9 @@ def find_trace(n,m,k):
 
     # If m is a multiple of p, then we just need the trace to be of order 
     #exactly n in (Z/m)*
-    if m%p == 0:
+    if not m.is_prime_power():
+    	raise NotImplementedError
+    elif m%p == 0:
         sol = []
         for t in Zm:
             # We only want the trace to be of order exactly n in (Z/m)* and not 
@@ -307,7 +311,7 @@ def find_trace(n,m,k):
         return sol
     # If m is prime (power), then we need to look at the roots
     # Probably a temporary condition
-    elif m.is_prime_power():
+    else:
         sol = []
         for a in Zm:
             # If a is not invertible in Z/m, we can't compute any order.
@@ -324,9 +328,7 @@ def find_trace(n,m,k):
                 else:
                     sol.append(a + q/a)
         return sol
-        
-    else:
-        raise NotImplementedError, 'm composite is not implemented yet'
+
 
 def find_m(n, k, bound = None):
     '''
