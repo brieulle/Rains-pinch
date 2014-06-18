@@ -75,6 +75,9 @@ def isom_elliptic(k1, k2, k = None, Y_coordinates = False, bound = None):
     c, w = cputime(), walltime()
     E = find_elliptic_curve(k, k1, m_t) 
     print 'Finding E : CPU %s, Walltime %s' % (cputime(c), walltime(w))
+    
+    if E is None:
+    	raise RuntimeError, 'No suitable elliptic curve found, check your parameters'
 
     c, w = cputime(), walltime()
     Ek1 = E.change_ring(k1)
@@ -250,26 +253,8 @@ def find_elliptic_curve(k, K, m_t):
             # We don't want to work on those curves anymore.
             E_rejected.append(E)
             E_rejected.append(E.quadratic_twist())
-
-    else:
-        E_rejected = []
-
-        while True:
-            if len(E_rejected) > q:
-                raise RuntimeError, 'No suitable elliptic curves found.'
-
-            E = EllipticCurve(j = k.random_element())
-            while any(E == Er for Er in E_rejected):
-                E = EllipticCurve(j = k.random_element())
-
-            t = E.trace_of_frobenius()
-
-            for EE,tt in [(E,t), (E.quadratic_twist(), -t)]:
-                if (Zmod(m)(tt) in S_t):
-                    return EE
-
-            E_rejected.append(E)
-            E_rejected.append(E.quadratic_twist())
+            
+	return None
                     
 
 def find_trace(n,m,k):
