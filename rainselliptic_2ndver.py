@@ -125,7 +125,7 @@ def find_unique_orbit_elliptic(E, m, Y_coordinates = False):
         raise NotImplementedError, 'case m composite not implemented yet.' 
     else:
         # Looking for a generator of order exactly phi(m)/n
-        gen_G = Zmod(m).unit_gens()[0]
+        gen_G = Zmod(m).unit_gens()[0]**n
 
         # Searching for a point of order exactly m.
         P = E(0)
@@ -206,26 +206,6 @@ def find_elliptic_curve(k, K, m_t):
 
     - If m is composite, TODO.
     '''
-    def _test_curve(E, t, S):
-        '''
-        INPUT : An elliptic curve E, an integer t, a list S of class modulo m 
-
-        OUTPUT : a boolean
-
-        Algorithm :
-
-        Function that determines if a curve E has its trace t = t_m mod m for 
-        t_m in S; plus that m divides only the number of point of E/K.
-        '''
-        Zm = Zmod(m)
-
-        # If the trace is none of the candidate for trace of order n in
-        # (Z/m)*, then we don't want this curve.
-        if all(Zm(t) != t_m for t_m in S):
-            return False
-        else:
-            return True
-
     p = k.characteristic()
     q = K.cardinality()
     n = K.degree()
@@ -253,7 +233,7 @@ def find_elliptic_curve(k, K, m_t):
                 raise RuntimeError, 'No suitable elliptic curves found.'
 
             E = EllipticCurve(j = k.random_element())
-            while any(E == Ef for Ef in E_found):
+            while any(E == Er for Er in E_rejected):
                 E = EllipticCurve(j = k.random_element())
 
             t = E.trace_of_frobenius()
@@ -267,7 +247,7 @@ def find_elliptic_curve(k, K, m_t):
             # We try to see if E or its quadratic twist meets the 
             # requirements
             for EE,tt in [(E,t), (E.quadratic_twist(), -t)]:
-                if _test_curve(EE, tt, S_t):
+                if (Zmod(m)(tt) in S):
                     return EE
 
             # We don't want to work on those curves anymore.
@@ -282,13 +262,13 @@ def find_elliptic_curve(k, K, m_t):
                 raise RuntimeError, 'No suitable elliptic curves found.'
 
             E = EllipticCurve(j = k.random_element())
-            while any(E == Ef for Ef in E_rejected):
+            while any(E == Er for Er in E_rejected):
                 E = EllipticCurve(j = k.random_element())
 
             t = E.trace_of_frobenius()
 
             for EE,tt in [(E,t), (E.quadratic_twist(), -t)]:
-                if _test_curve(EE, tt, S_t):
+                if (Zmod(m)(tt) in S):
                     return EE
 
             E_rejected.append(E)
