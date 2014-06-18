@@ -61,18 +61,31 @@ def isom_elliptic(k1, k2, k = None, Y_coordinates = False, bound = None):
     n = k1.degree()  
     q = k1.cardinality()
     
+    c_comp, w_comp = cputime(), walltime()
     # We compute a list of candidates for m (i.e. such that n divides phi(m) 
     # and (phi(m)/n,n) = 1. It lacks the conditions on the trace.
-    m_f = find_m(n, bound)
+    c, w = cputime(), walltime()
+    m_t = find_m(n, k, bound)
+    print 'Computing the m\'s : CPU %s, Walltime %s' % (cputime(c), walltime(w))
     
+    if m_t is None:
+        raise RuntimeError, 'No suitable m found, increase your bound'
+
     # Finding the elliptic curve on which we can work. 
-    E_s = find_elliptic_curve(k, k1, m_f) 
+    c, w = cputime(), walltime()
+    E = find_elliptic_curve(k, k1, m_t) 
+    print 'Finding E : CPU %s, Walltime %s' % (cputime(c), walltime(w))
 
-    Ek1 = E_s[0].change_ring(k1)
-    Ek2 = E_s[0].change_ring(k2)
+    c, w = cputime(), walltime()
+    Ek1 = E.change_ring(k1)
+    Ek2 = E.change_ring(k2)
+    print 'Computing E in extension : CPU %s, Walltime %s' % (cputime(c), walltime(w))
 
-    a, b = (find_unique_orbit_elliptic(Ek1, E_s[1], Y_coordinates), 
-    find_unique_orbit_elliptic(Ek2, E_s[1], Y_coordinates))
+    c, w = cputime(), walltime()
+    a, b = (find_unique_orbit_elliptic(Ek1, m_t[0], Y_coordinates), 
+    find_unique_orbit_elliptic(Ek2, m_t[0], Y_coordinates))
+    print 'Computing periods : CPU %s, Walltime %s' % (cputime(c), walltime(w))
+    print 'Total time : CPU %s, Walltime %s' % (cputime(c_comp), walltime(w_comp))
 
     return a, b
 
@@ -107,9 +120,11 @@ def find_unique_orbit_elliptic(E, m, Y_coordinates = False):
     n = E.base_ring().degree()
     sum_P = []
     order = euler_phi(m)//n
+
     if not m.is_prime_power():
         raise NotImplementedError, 'case m composite not implemented yet.' 
     else:
+        # Looking for a generator of order exactly phi(m)/n
         gen_G = Zmod(m).unit_gens()[0]
 
         # Searching for a point of order exactly m.
@@ -126,7 +141,7 @@ def find_unique_orbit_elliptic(E, m, Y_coordinates = False):
             raise NotImplementedError
 
 
-def find_elliptic_curve(k, K, m_f):
+def find_elliptic_curve(k, K, m_t):
     '''
     INPUT : 
 
@@ -214,20 +229,17 @@ def find_elliptic_curve(k, K, m_f):
     p = k.characteristic()
     q = K.cardinality()
     n = K.degree()
-    m = 0
+
+    
+    # Maybe we could do a loop to try different m when we'll have more 
+    # specification on m. Or we could get rid of that list of m and just 
+    # take the smallest one right from the beginning.
+    m = m_t[0]
+    S_t = m_t[1]
 
     # We look for the proper m, i.e. the one such that we can find an eigenvalue
     # a such that ord_m(a) = n < ord_m(q/a) or the other way around, or a trace
     # such that ord(t) = n
-    for M in m_f:
-        S_t = find_trace(n, M, k)
-        if len(S_t) != 0:
-            m = M
-            break
-
-    if m == 0:
-        raise RuntimeError, 'No proper m found.'
-
 
     if not m.is_prime_power():
         raise NotImplementedError, 'Case m composite is not implemened yet.'
@@ -256,9 +268,7 @@ def find_elliptic_curve(k, K, m_f):
             # requirements
             for EE,tt in [(E,t), (E.quadratic_twist(), -t)]:
                 if _test_curve(EE, tt, S_t):
-                    print 'Temps pour trouver E : CPU %s, Wall %s' %(
-                                            cputime(c), walltime(w))
-                    return EE, m
+                    return EE
 
             # We don't want to work on those curves anymore.
             E_rejected.append(E)
@@ -279,7 +289,7 @@ def find_elliptic_curve(k, K, m_f):
 
             for EE,tt in [(E,t), (E.quadratic_twist(), -t)]:
                 if _test_curve(EE, tt, S_t):
-                    return EE, m
+                    return EE
 
             E_rejected.append(E)
             E_rejected.append(E.quadratic_twist())
@@ -356,11 +366,11 @@ def find_trace(n,m,k):
     else:
         raise NotImplementedError, 'm composite is not implemented yet'
 
-def find_m(degree, bound = None):
+def find_m(n, k, bound = None):
     '''
-    INPUT : an integers degree, an integer bound
+    INPUT : an integers n, a base field k, an integer bound
 
-    OUTPUT : a list of integer
+    OUTPUT : an integer
 
     Algorithm :
 
@@ -381,20 +391,24 @@ def find_m(degree, bound = None):
     multiply the results.
     '''
     if bound is None:
-        bound_a = 100  # Arbitrary value.  
+        bound_a = 10  # Arbitrary value.  
     else:
         # if m = a*n + 1 < b, then a < (b- 1)/n.
-        bound_a = (bound - 1) / degree 
+        bound_a = (bound - 1) / n 
 
     sol = []
 
     for a in range(bound_a):
-        m = a*degree + 1
+        m = a*n + 1
         if not m.is_prime_power():
             continue 
-        elif (euler_phi(m)//degree).gcd(degree) != 1:
+        elif (euler_phi(m)//n).gcd(n) != 1:
             continue
         else:
-            sol.append(m) 
-        
-    return sol
+            S_t = find_trace(n, m, k)
+            if len(S_t) == 0:   # Some time in the future we'd like to have a 
+                continue       # better bound than just 1
+            else:
+                return m, S_t        
+
+    return None
