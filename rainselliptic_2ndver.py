@@ -79,7 +79,7 @@ def isom_elliptic(k1, k2, k = None, Y_coordinates = False, bound = None):
     c, w = cputime(), walltime()
     Ek1 = E.change_ring(k1)
     Ek2 = E.change_ring(k2)
-    print 'Computing E in extension : CPU %s, Walltime %s' % (cputime(c), walltime(w))
+    print 'Computing E in extensions : CPU %s, Walltime %s' % (cputime(c), walltime(w))
 
     c, w = cputime(), walltime()
     a, b = (find_unique_orbit_elliptic(Ek1, m_t[0], Y_coordinates), 
