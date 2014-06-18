@@ -391,7 +391,7 @@ def find_m(n, k, bound = None):
     multiply the results.
     '''
     if bound is None:
-        bound_a = 10  # Arbitrary value.  
+        bound_a = 100  # Arbitrary value.  
     else:
         # if m = a*n + 1 < b, then a < (b- 1)/n.
         bound_a = (bound - 1) / n 
@@ -406,7 +406,7 @@ def find_m(n, k, bound = None):
             continue
         else:
             S_t = find_trace(n, m, k)
-            if len(S_t) == 0:   # Some time in the future we'd like to have a 
+            if len(S_t) < 1:   # Some time in the future we'd like to have a 
                 continue       # better bound than just 1
             else:
                 return m, S_t        
