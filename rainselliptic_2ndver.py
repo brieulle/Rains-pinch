@@ -132,11 +132,8 @@ def find_unique_orbit_elliptic(E, m, Y_coordinates = False):
         while any((m//i)*P == 0 for i in m.prime_divisors()):
             P = cofactor*E.random_point()
 
-        for i in range(order):
-            sum_P.append(ZZ(gen_G**i)*P)
-
         if not Y_coordinates:
-            return sum(P[0] for P in sum_P)
+            return sum((ZZ(gen_G**i)*P)[0] for i in range(order))`.
         else:
             raise NotImplementedError
 
@@ -247,7 +244,7 @@ def find_elliptic_curve(k, K, m_t):
             # We try to see if E or its quadratic twist meets the 
             # requirements
             for EE,tt in [(E,t), (E.quadratic_twist(), -t)]:
-                if (Zmod(m)(tt) in S):
+                if (Zmod(m)(tt) in S_t):
                     return EE
 
             # We don't want to work on those curves anymore.
@@ -268,7 +265,7 @@ def find_elliptic_curve(k, K, m_t):
             t = E.trace_of_frobenius()
 
             for EE,tt in [(E,t), (E.quadratic_twist(), -t)]:
-                if (Zmod(m)(tt) in S):
+                if (Zmod(m)(tt) in S_t):
                     return EE
 
             E_rejected.append(E)
