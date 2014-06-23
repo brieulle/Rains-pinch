@@ -136,9 +136,7 @@ def find_unique_orbit_elliptic(E, m, Y_coordinates = False, case = None):
     while any((m//i)*P == 0 for i in m.prime_divisors()):
         P = cofactor*E.random_point()
 
-    if not m.is_prime_power():
-        raise NotImplementedError, 'case m composite not implemented yet.' 
-    elif case is None:
+	if case is None:
         # Looking for a generator of order exactly phi(m)/n in 
         # phi(m)/something.
         gen_G = Zmod(m).unit_gens()[0]**n
