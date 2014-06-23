@@ -261,6 +261,7 @@ def find_elliptic_curve(k, K, m_t):
         # requirements
         if j == 1728 :
 
+            '''
             if t == 0:
                 j_rejected.append(j)
                 continue
@@ -283,6 +284,9 @@ def find_elliptic_curve(k, K, m_t):
                     return EE, 1, m
             
             j_rejected.append(j)
+            '''
+
+            raise NotImplementedError
                 
         elif j == 0 :
             raise NotImplementedError
@@ -373,7 +377,7 @@ def find_trace(n,m,k):
                     continue
                 else:
                     sol.append(a + q/a)
-        return sol
+        return set(sol)
 
 def find_m(n, k, bound = None):
     '''
