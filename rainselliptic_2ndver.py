@@ -61,40 +61,43 @@ def isom_elliptic(k1, k2, k = None, Y_coordinates = False, bound = None):
     n = k1.degree()  
     q = k1.cardinality()
     
-    c_comp, w_comp = cputime(), walltime()
     # We compute a list of candidates for m (i.e. such that n divides phi(m) 
     # and (phi(m)/n,n) = 1. It lacks the conditions on the trace.
-    c, w = cputime(), walltime()
+    #c_comp, w_comp = cputime(), walltime()
+    #c, w = cputime(), walltime()
     m_t = find_m(n, k, bound)
-    print 'Computing the m\'s : CPU %s, Walltime %s' % (cputime(c), walltime(w))
+    #print 'Computing the m\'s : CPU %s, Walltime %s' % (cputime(c), walltime(w))
     
     if m_t is None:
-        raise RuntimeError, 'No suitable m found, increase your bound'
+        raise RuntimeError, 'No suitable m found, increase your bound.'
 
     # Finding the elliptic curve on which we can work. 
-    c, w = cputime(), walltime()
-    E = find_elliptic_curve(k, k1, m_t) 
-    print 'Finding E : CPU %s, Walltime %s' % (cputime(c), walltime(w))
-    
-    if E is None:
-    	raise RuntimeError, 'No suitable elliptic curve found, check your \
-    								  parameters'
+    #c, w = cputime(), walltime()
+    E, case, m = find_elliptic_curve(k, k1, m_t) 
+    #print 'Finding E : CPU %s, Walltime %s' % (cputime(c), walltime(w))
 
-    c, w = cputime(), walltime()
+    if E is None:
+        raise RuntimeError, 'No suitable elliptic curve found, check your \
+                                                                    parameters'
+
+    #c, w = cputime(), walltime()
     Ek1 = E.change_ring(k1)
     Ek2 = E.change_ring(k2)
-    print 'Computing E in extensions : CPU %s, Walltime %s' % (cputime(c), 
-    								walltime(w))
+    #print 'Computing E in extension : CPU %s, Walltime %s' % (cputime(c),
+    #                                                             walltime(w))
 
-    c, w = cputime(), walltime()
-    a, b = (find_unique_orbit_elliptic(Ek1, m_t[0], Y_coordinates), 
-    find_unique_orbit_elliptic(Ek2, m_t[0], Y_coordinates))
-    print 'Computing periods : CPU %s, Walltime %s' % (cputime(c), walltime(w))
-    print 'Total time : CPU %s, Walltime %s' % (cputime(c_comp), walltime(w_comp))
+    #c, w = cputime(), walltime()
+    a, b = (find_unique_orbit_elliptic(Ek1, m, Y_coordinates, case),
+    find_unique_orbit_elliptic(Ek2, m, Y_coordinates, case))
+    #print 'Computing periods : CPU %s, Walltime %s' % (cputime(c), walltime(w))
+    #print 'Total time : CPU %s, Walltime %s' % (cputime(c_comp),
+    #                                                         walltime(w_comp))
+    #if not a or not b:
+    #    return m_t, E
 
     return a, b
 
-def find_unique_orbit_elliptic(E, m, Y_coordinates = False):
+def find_unique_orbit_elliptic(E, m, Y_coordinates = False, case = None):
     '''
     INPUT : 
     
@@ -112,6 +115,10 @@ def find_unique_orbit_elliptic(E, m, Y_coordinates = False):
 
     find_unique_orbit_elliptic(E, m, True)
 
+    case = None => default case : j != 0, 1728 or t = 0
+    case = 1 => j = 1728 and t != 0
+    case = 2 => j = 0 and t != 0
+
     Algorithm:
 
     Function that given an elliptic curve and a group G returns the following 
@@ -123,24 +130,43 @@ def find_unique_orbit_elliptic(E, m, Y_coordinates = False):
     '''
     cofactor = E.cardinality()//m
     n = E.base_ring().degree()
-    sum_P = []
-    order = euler_phi(m)//n
+
+    # Searching for a point of order exactly m.
+    P = E(0)
+    while any((m//i)*P == 0 for i in m.prime_divisors()):
+        P = cofactor*E.random_point()
 
     if not m.is_prime_power():
         raise NotImplementedError, 'case m composite not implemented yet.' 
-    else:
-        # Looking for a generator of order exactly phi(m)/n
+    elif case is None:
+        # Looking for a generator of order exactly phi(m)/n in 
+        # phi(m)/something.
         gen_G = Zmod(m).unit_gens()[0]**n
-
-        # Searching for a point of order exactly m.
-        P = E(0)
-        while any((m//i)*P == 0 for i in m.prime_divisors()):
-            P = cofactor*E.random_point()
+        # Note : Ã  priori, l'ordre peut Ãªtre le mÃªme en utilisant les X ou 
+        # les Y. Donc il faudrait quotienter par {+-1} mÃªme pour les Y. 
+        # Sauf si la puissance carrÃ© dans la somme Ã©quivaut au final Ã  
+        # quotienter par i.
+        order = euler_phi(m)//(2*n)
 
         if not Y_coordinates:
-            return sum((ZZ(gen_G**i)*P)[0] for i in range(order))`.
+            return sum((ZZ(gen_G**i)*P)[0] for i in range(order))
+        else:
+            return sum(((ZZ(gen_G**i)*P)[1])**2 for i in range(order))
+    elif case == 1:
+        gen_G = Zmod(m).unit_gens()[0]**n
+        order = euler_phi(m)//(4*n)
+        
+        if not Y_coordinates:
+            return sum(((ZZ(gen_G**i)*P)[1])**2 for i in range(order))
         else:
             raise NotImplementedError
+
+    elif case == 2:
+        if not Y_coordinates:
+            raise NotImplementedError
+        else:
+            raise NotImplementedError
+
 
 
 def find_elliptic_curve(k, K, m_t):
@@ -212,52 +238,72 @@ def find_elliptic_curve(k, K, m_t):
     q = K.cardinality()
     n = K.degree()
 
-    
-    # Maybe we could do a loop to try different m when we'll have more 
-    # specification on m. Or we could get rid of that list of m and just 
-    # take the smallest one right from the beginning.
-    m = m_t[0]
-    S_t = m_t[1]
-
-    # We look for the proper m, i.e. the one such that we can find an eigenvalue
     # a such that ord_m(a) = n < ord_m(q/a) or the other way around, or a trace
     # such that ord(t) = n
 
-    if not m.is_prime_power():
-        raise NotImplementedError, 'Case m composite is not implemened yet.'
-    else:
-        E_rejected = []
+    j_rejected = []
 
-        while True:
-            # This method is far from optimal, but we assume that after q 
-            # draws we have a good chance of trying enough curves.
-            if len(E_rejected) > q:
-                raise RuntimeError, 'No suitable elliptic curves found.'
+    while True:
+        # This method is far from optimal, but we assume that after q 
+        # draws we have a good chance of trying enough curves.
+        if len(j_rejected) > q:
+            raise RuntimeError, 'No suitable elliptic curves found.'
 
-            E = EllipticCurve(j = k.random_element())
-            while any(E == Er for Er in E_rejected):
-                E = EllipticCurve(j = k.random_element())
+        j = k.random_element()
+        E = EllipticCurve(j = j)
+        while any(j == jr for jr in j_rejected):
+            j = k.random_element()
+            E = EllipticCurve(j = j)
 
-            t = E.trace_of_frobenius()
-            # We want an ordinary curve. More precisely, we can't find an
-            # order for a zero element.
-            if t%p == 0:
-                E_rejected.append(E)
-                E_rejected.append(E.quadratic_twist())
+        t = E.trace_of_frobenius()
+
+        # We try to see if E or its quadratic twist meets the 
+        # requirements
+        if j == 1728 :
+
+            if t == 0:
+                j_rejected.append(j)
                 continue
 
-            # We try to see if E or its quadratic twist meets the 
-            # requirements
-            for EE,tt in [(E,t), (E.quadratic_twist(), -t)]:
-                if (Zmod(m)(tt) in S_t):
-                    return EE
+            # We need a m with the additionnal property that 4 divides 
+            # phi(m)
+            for i in range(len(m_t)):
+                if not m_t[i][0]%4:
+                    m = None
+                    continue
+                else:
+                    m = m_t[i][0]
+                    S_t = m_t[i][1] 
 
-            # We don't want to work on those curves anymore.
-            E_rejected.append(E)
-            E_rejected.append(E.quadratic_twist())
+            # TODO : A test on m to see if it's a prime power or not
+            L = [(E,t), (E.quadratic_twist(), -t), (E.quartic_twist(?), ?t),
+                    (E.quartic_twist(?), ?t)] 
+            for EE, tt in L:
+                if (Zmod(m)(tt) in S_t):
+                    return EE, 1, m
             
-	return None
-                    
+            j_rejected.append(j)
+                
+        elif j == 0 :
+            raise NotImplementedError
+        else:
+            # There's no additional requirements for m in this case, so 
+            # we just take the first one.
+            m = m_t[0][0]
+            S_t = m_t[0][1]
+
+            # TODO : A test on m to see if it's a prime power or not
+            L = [(E,t), (E.quadratic_twist(), -t)]
+            for EE,tt in L:
+                if (Zmod(m)(tt) in S_t):
+                    print 'grrrrrrrrrrr'
+                    return EE, None, m
+
+        # We don't want to work on those curves anymore.
+        j_rejected.append(j)
+
+    # No elliptic curve found. At least, not in q random draws.
+    return None
 
 def find_trace(n,m,k):
     '''
@@ -296,7 +342,7 @@ def find_trace(n,m,k):
     # If m is a multiple of p, then we just need the trace to be of order 
     #exactly n in (Z/m)*
     if not m.is_prime_power():
-    	raise NotImplementedError
+        raise NotImplementedError
     elif m%p == 0:
         sol = []
         for t in Zm:
@@ -329,7 +375,6 @@ def find_trace(n,m,k):
                     sol.append(a + q/a)
         return sol
 
-
 def find_m(n, k, bound = None):
     '''
     INPUT : an integers n, a base field k, an integer bound
@@ -355,7 +400,7 @@ def find_m(n, k, bound = None):
     multiply the results.
     '''
     if bound is None:
-        bound_a = 100  # Arbitrary value.  
+        bound_a = 100 # Arbitrary value.  
     else:
         # if m = a*n + 1 < b, then a < (b- 1)/n.
         bound_a = (bound - 1) / n 
@@ -364,6 +409,7 @@ def find_m(n, k, bound = None):
 
     for a in range(bound_a):
         m = a*n + 1
+        # m composite not implemented yet
         if not m.is_prime_power():
             continue 
         elif (euler_phi(m)//n).gcd(n) != 1:
@@ -371,8 +417,11 @@ def find_m(n, k, bound = None):
         else:
             S_t = find_trace(n, m, k)
             if len(S_t) < 1:   # Some time in the future we'd like to have a 
-                continue       # better bound than just 1
+                continue       # better bound than just 1.
             else:
-                return m, S_t        
+                sol.append((m, S_t))
 
-    return None
+    if sol == []:
+        return None
+    else:
+        return sol
