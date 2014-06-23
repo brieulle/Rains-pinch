@@ -300,7 +300,6 @@ def find_elliptic_curve(k, K, m_t):
             L = [(E,t), (E.quadratic_twist(), -t)]
             for EE,tt in L:
                 if (Zmod(m)(tt) in S_t):
-                    print 'grrrrrrrrrrr'
                     return EE, None, m
 
         # We don't want to work on those curves anymore.
