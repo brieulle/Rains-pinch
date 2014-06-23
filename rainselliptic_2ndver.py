@@ -245,7 +245,7 @@ def find_elliptic_curve(k, K, m_t):
         # This method is far from optimal, but we assume that after q 
         # draws we have a good chance of trying enough curves.
         if len(j_rejected) > q:
-            raise RuntimeError, 'No suitable elliptic curves found.'
+            break
 
         j = k.random_element()
         E = EllipticCurve(j = j)
