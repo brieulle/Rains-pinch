@@ -114,19 +114,54 @@ def find_unique_orbit_elliptic(E, m, Y_coordinates = False, case = 0):
 
     EXAMPLES :
 
-    sage: E = EllipticCurve(j = GF(5)(1))
+    - Case j != 0, 1728
 
-    sage: EK = E.change_ring(GF(5**19, prefix = 'z', conway = True)
+        sage: E = EllipticCurve(j = GF(5)(1))
 
-    sage: m = 229
+        sage: EK = E.change_ring(GF(5**19, prefix = 'z', conway = True)
 
-    sage: elem1 = find_unique_orbit_elliptic(EK,m)
+        sage: m = 229
 
-    sage: elem2 = find_unique_orbit_elliptic(EK,m)
+        sage: elem1 = find_unique_orbit_elliptic(EK,m)
 
-    sage: elem1.minpoly() == elem2.minpoly()
+        sage: elem2 = find_unique_orbit_elliptic(EK,m)
 
-    True
+        sage: elem1.minpoly() == elem2.minpoly()
+
+        True
+
+    - Case j = 1728 and trace != 0
+
+        sage : E = EllipticCurve(j = GF(5)(1728))
+
+        sage: EK = E.change_ring(GF(5**19, prefix = 'z', conway = True)
+
+        sage: m = 229
+
+        sage: elem1 = find_unique_orbit_elliptic(EK,m)
+
+        sage: elem2 = find_unique_orbit_elliptic(EK,m)
+
+        sage: elem1.minpoly() == elem2.minpoly()
+
+        True
+
+    - Case j = 0 and trace != 0
+
+        sage: E = EllipticCurve(j = GF(7)(1728)
+
+        sage: EK = E.change_ring(GF(7**23, prefix = 'z', conway = True)
+
+        sage: m = 139
+
+        sage: elem1 = find_unique_orbit_elliptic(EK,m)
+
+        sage: elem2 = find_unique_orbit_elliptic(EK,m)
+
+        sage: elem1.minpoly() == elem2.minpoly()
+
+        True
+
 
     ALGORITHM:
     TODO
