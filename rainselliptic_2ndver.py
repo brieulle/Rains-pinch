@@ -102,7 +102,7 @@ def find_unique_orbit_elliptic(E, m, Y_coordinates = False, case = 0):
       coordinates are used.
 
     - ``case`` -- integer (default : 0) depends on the j-invariant's value :
-        - ``0`` means j is not 0 nor 1728,
+        - ``0`` means j is not 0 nor 1728 or t = 0,
         - ``1`` means j is 1728,
         - ``2`` means j is 0.
 
@@ -148,7 +148,7 @@ def find_unique_orbit_elliptic(E, m, Y_coordinates = False, case = 0):
 
     - Case j = 0 and trace != 0
 
-        sage: E = EllipticCurve(j = GF(7)(1728)
+        sage: E = EllipticCurve(j = GF(7)(0))
 
         sage: EK = E.change_ring(GF(7**23, prefix = 'z', conway = True)
 
@@ -204,7 +204,8 @@ def find_unique_orbit_elliptic(E, m, Y_coordinates = False, case = 0):
         if not Y_coordinates:
             return sum(((ZZ(gen_G**i)*P)[0])**3 for i in range(order))
         else:
-            return sum(((ZZ(gen_G**i)*P)[1])**2 for i in range(order))
+            return sum(((ZZ(gen_G**i)*P)[1])**6 for i in range(order))
+
 
 
 
@@ -331,7 +332,7 @@ def find_elliptic_curve(k, K, m_t):
         # all the quartic twist are already in k and the trace is 0. We just
         # have to test the only curve y² = x³ + x.
         if 0 in S_t:
-            return E_j1728, 1, m
+            return E_j1728, 0, m
     else:
         # If q = 1 mod 4, then the trace is not 0, and we have to try four
         # trace to see which is the best candidate.
@@ -363,7 +364,7 @@ def find_elliptic_curve(k, K, m_t):
         # GF(q) and the trace is 0 (that's pretty quick reasoning.. :D).
         # Justification will come later.
         if 0 in S_t:
-            return E_j0, 2, 0
+            return E_j0, 0, m
     else:
         g = k.unit_gens()[0]
         c = g**((q-1)/6)
