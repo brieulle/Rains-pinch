@@ -102,7 +102,7 @@ def find_unique_orbit_elliptic(E, m, Y_coordinates = False, case = 0):
       coordinates are used.
 
     - ``case`` -- integer (default : 0) depends on the j-invariant's value :
-        - ``0`` means j is neither 0 or 1728,
+        - ``0`` means j is not 0 nor 1728,
         - ``1`` means j is 1728,
         - ``2`` means j is 0.
 
@@ -178,9 +178,9 @@ def find_unique_orbit_elliptic(E, m, Y_coordinates = False, case = 0):
         # Looking for a generator of order exactly phi(m)/n in 
         # phi(m)/something.
         gen_G = Zmod(m).unit_gens()[0]**n
-        # Note : Ã  priori, l'ordre peut Ãªtre le mÃªme en utilisant les X ou 
-        # les Y. Donc il faudrait quotienter par {+-1} mÃªme pour les Y. 
-        # Sauf si la puissance carrÃ© dans la somme Ã©quivaut au final Ã  
+        # Note : à priori, l'ordre peut être le même en utilisant les X ou 
+        # les Y. Donc il faudrait quotienter par {+-1} même pour les Y. 
+        # Sauf si la puissance carré dans la somme équivaut au final à 
         # quotienter par i.
         order = euler_phi(m)//(2*n)
 
@@ -242,7 +242,7 @@ def find_elliptic_curve(k, K, m_t):
 
     sage: K = GF(5**19, names = 'x', modulus = f)
 
-    sage: m_t = [(229,set([2,37,70,49,200,41,61,194,143,112,113,51,52,54,215,123,157]))]
+    sage: m_t = [(229,{0, 1, 3})]
 
     sage: find_elliptic(GF(5), K, m_t)
 
@@ -310,77 +310,101 @@ def find_elliptic_curve(k, K, m_t):
     p = k.characteristic()
     q = K.cardinality()
     n = K.degree()
+    m = None
 
-    # a such that ord_m(a) = n < ord_m(q/a) or the other way around, or a trace
-    # such that ord(t) = n
+    #We start by the special cases j = 0, 1728
 
-    j_rejected = []
+    E_j1728 = EllipticCurve(j = k(1728))
 
-    while True:
-        # This method is far from optimal, but we assume that after q 
-        # draws we have a good chance of trying enough curves.
-        if len(j_rejected) > q:
-            break
-
-        j = k.random_element()
-        E = EllipticCurve(j = j)
-        while any(j == jr for jr in j_rejected):
-            j = k.random_element()
-            E = EllipticCurve(j = j)
-
-        t = E.trace_of_frobenius()
-
-        # We try to see if E or its quadratic twist meets the 
-        # requirements
-        if j == 1728 :
-
-            if t == 0:
-                j_rejected.append(j)
-                continue
-
-            # We need a m with the additionnal property that 4 divides 
-            # phi(m)
-            for i in range(len(m_t)):
-                if euler_phi(m_t[i][0])%4 != 0:
-                    m = 0
-                    continue
-                else:
-                    m = m_t[i][0]
-                    S_t = m_t[i][1] 
-
-            if m is None:
-                raise RuntimeError, 'No suitable m found, something\'s wrong.'
-            
-            L = [(E,t), (E.quadratic_twist(), -t), (E.quartic_twist(), t),
-                    (E.quartic_twist(), t)] 
-
-            for EE, tt in L:
-                if (Zmod(m)(tt) in S_t):
-                    return EE, 1, m
-            
-            j_rejected.append(j)
-
-            #raise NotImplementedError
-                
-        elif j == 0 :
-            raise NotImplementedError
+    for i in range(len(m_t)):
+        if euler_phi(m_t[i][0])%4 != 0:
+            continue
         else:
-            # There's no additional requirements for m in this case, so 
-            # we just take the first one.
-            m = m_t[0][0]
-            S_t = m_t[0][1]
+            m = m_t[i][0]
+            S_t = m_t[i][1]
 
-            # TODO : A test on m to see if it's a prime power or not
-            L = [(E,t), (E.quadratic_twist(), -t)]
-            for EE,tt in L:
-                if (Zmod(m)(tt) in S_t):
-                    return EE, 0, m
+    # If there's a m that works for this curve, we do all the work; if not we
+    # pass it.
+    if m is None:
+        pass
+    else:
+        if q%4 != 1:
+            # If q != 1 mod 4, then there's no 4th root of unity, then magically
+            # all the quartic twist are already in k and the trace is 0. We just
+            # have to test the only curve y² = x³ + x.
+            if 0 in S_t:
+                return E_j1728, 1, m
+        else:
+            # If q = 1 mod 4, then the trace is not 0, and we have to try four
+            # trace to see which is the best candidate.
 
-        # We don't want to work on those curves anymore.
-        j_rejected.append(j)
+            # We want a fourth root of unity.
+            g = k.unit_gens()[0]
+            c = g**(q-1)/4
 
-    # No elliptic curve found. At least, not in q random draws.
+            t = E_j1728.trace_of_frobenius()
+            L = [(t*c**i, g**i) for i in range(4)]
+
+            for l in L:
+                if Zmod(m)(l[0]) in S_t:
+                    # E, case, t
+                    return E.quartic_twist(l[1]), 1, m
+
+    E_j0 = EllipticCurve(j = k(0))
+
+    # Picking the right m.
+    for i in range(len(m_t)):
+        if euler_phi(m_t[i][0])%6 != 0:
+            continue
+        else:
+            m = m_t[i][0]
+            S_t = m_t[i][1]
+
+
+    if m is None:
+        pass
+    else:
+        if q%6 != 1:
+            # Same as before, if q != 1 mod 6, there's no 6th root of unity in
+            # GF(q) and the trace is 0 (that's pretty quick reasoning.. :D).
+            # Justification will come later.
+
+            if 0 in S_t:
+                return E_j0, 2, 0
+        else:
+
+            g = k.unit_gens()[0]
+            c = g**((q-1)/6)
+
+            t = E_j0.trace_of_frobenius()
+            L = [(t*c**i, g**i) for i in range(6)]
+
+            for l in L:
+                if Zmod(m)(l[0]) in S_t:
+                    return E.sextic_twist(l[1]), 2, m
+
+    # General case
+    for j in k:
+        if j == 0 or j == k(1728):
+            continue
+
+        E = EllipticCurve(j = j)
+        t = E.trace_of_frobenius()
+        L = [(t, E), (-t, E.quadratic_twist())]
+
+        # The smallest one is ok
+        m = m_t[0][0]
+        S_t = m_t[0][1]
+
+        for l in L:
+            if Zmod(m)(l[0]) in S_t:
+                return l[1], 0, m
+
+    # If no elliptic curve has been found.
     return None
+
+
+    
 
 def find_trace(n,m,k):
     '''
@@ -425,7 +449,9 @@ def find_trace(n,m,k):
         for t in Zm:
             # We only want the trace to be of order exactly n in (Z/m)* and not 
             # to define supersingular curves.
-            if not t.is_unit():
+            if ZZ(t) > 2*sqrt(q):
+                break
+            elif not t.is_unit():
                 continue
             elif (Zm(t).multiplicative_order() != n):
                 continue
@@ -447,6 +473,8 @@ def find_trace(n,m,k):
                 if (ord_a == ord_b):
                     continue
                 elif min(ord_a, ord_b) != n:
+                    continue
+                elif ZZ(a + q/a) > 2*sqrt(q):
                     continue
                 else:
                     sol.append(a + q/a)
