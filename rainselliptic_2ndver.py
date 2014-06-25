@@ -312,8 +312,7 @@ def find_elliptic_curve(k, K, m_t):
     n = K.degree()
     m = None
 
-    #We start by the special cases j = 0, 1728
-
+    #We start by the special cases j = 1728, 0
     E_j1728 = EllipticCurve(j = k(1728))
 
     for i in range(len(m_t)):
@@ -327,28 +326,24 @@ def find_elliptic_curve(k, K, m_t):
     # pass it.
     if m is None:
         pass
+    elif q%4 != 1:
+        # If q != 1 mod 4, then there's no 4th root of unity, then magically
+        # all the quartic twist are already in k and the trace is 0. We just
+        # have to test the only curve y² = x³ + x.
+        if 0 in S_t:
+            return E_j1728, 1, m
     else:
-        if q%4 != 1:
-            # If q != 1 mod 4, then there's no 4th root of unity, then magically
-            # all the quartic twist are already in k and the trace is 0. We just
-            # have to test the only curve y² = x³ + x.
-            if 0 in S_t:
-                return E_j1728, 1, m
-        else:
-            # If q = 1 mod 4, then the trace is not 0, and we have to try four
-            # trace to see which is the best candidate.
+        # If q = 1 mod 4, then the trace is not 0, and we have to try four
+        # trace to see which is the best candidate.
+        g = k.unit_gens()[0]
+        c = g**(q-1)/4
+        t = E_j1728.trace_of_frobenius()
+        L = [(t*c**i, g**i) for i in range(4)]
 
-            # We want a fourth root of unity.
-            g = k.unit_gens()[0]
-            c = g**(q-1)/4
-
-            t = E_j1728.trace_of_frobenius()
-            L = [(t*c**i, g**i) for i in range(4)]
-
-            for l in L:
-                if Zmod(m)(l[0]) in S_t:
-                    # E, case, t
-                    return E.quartic_twist(l[1]), 1, m
+        for l in L:
+            if Zmod(m)(l[0]) in S_t:
+                # E, case, t
+                return E.quartic_twist(l[1]), 1, m
 
     E_j0 = EllipticCurve(j = k(0))
 
@@ -363,25 +358,21 @@ def find_elliptic_curve(k, K, m_t):
 
     if m is None:
         pass
+    elif q%6 != 1:
+        # Same as before, if q != 1 mod 6, there's no 6th root of unity in
+        # GF(q) and the trace is 0 (that's pretty quick reasoning.. :D).
+        # Justification will come later.
+        if 0 in S_t:
+            return E_j0, 2, 0
     else:
-        if q%6 != 1:
-            # Same as before, if q != 1 mod 6, there's no 6th root of unity in
-            # GF(q) and the trace is 0 (that's pretty quick reasoning.. :D).
-            # Justification will come later.
+        g = k.unit_gens()[0]
+        c = g**((q-1)/6)
+        t = E_j0.trace_of_frobenius()
+        L = [(t*c**i, g**i) for i in range(6)]
 
-            if 0 in S_t:
-                return E_j0, 2, 0
-        else:
-
-            g = k.unit_gens()[0]
-            c = g**((q-1)/6)
-
-            t = E_j0.trace_of_frobenius()
-            L = [(t*c**i, g**i) for i in range(6)]
-
-            for l in L:
-                if Zmod(m)(l[0]) in S_t:
-                    return E.sextic_twist(l[1]), 2, m
+        for l in L:
+            if Zmod(m)(l[0]) in S_t:
+                return E.sextic_twist(l[1]), 2, m
 
     # General case
     for j in k:
