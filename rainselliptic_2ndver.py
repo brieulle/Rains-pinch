@@ -199,8 +199,6 @@ def find_unique_orbit_elliptic(E, m, Y_coordinates = False, case = 0):
 
         if not Y_coordinates:
             return sum((ZZ(gen_G**i)*P)[0] for i in range(order))
-            print 'Computing the period : CPU %s, Walltime %s' % (cputime(c),
-                    walltime(c))
         else:
             return sum(((ZZ(gen_G**i)*P)[1])**2 for i in range(order))
     elif case == 1:
@@ -209,8 +207,6 @@ def find_unique_orbit_elliptic(E, m, Y_coordinates = False, case = 0):
         
         if not Y_coordinates:
             return sum(((ZZ(gen_G**i)*P)[0])**2 for i in range(order))
-            print 'Computing the period j = 1728 : CPU %s, Walltime %s' % (
-                    cputime(c), walltime(c))
         else:
             return sum(((ZZ(gen_G**i)*P)[1])**4 for i in range(order))
 
@@ -220,8 +216,6 @@ def find_unique_orbit_elliptic(E, m, Y_coordinates = False, case = 0):
 
         if not Y_coordinates:
             return sum(((ZZ(gen_G**i)*P)[0])**3 for i in range(order))
-            print 'Computing the period j = 0: CPU %s, Walltime %s' % (cputime(c),
-                    walltime(c))
         else:
             return sum(((ZZ(gen_G**i)*P)[1])**6 for i in range(order))
 
