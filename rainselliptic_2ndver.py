@@ -376,9 +376,6 @@ def find_elliptic_curve(k, K, m_t):
         t = E.trace_of_frobenius()
         L = [(t, E), (-t, E.quadratic_twist())]
 
-        # The smallest one is ok
-
-
         for l in L:
             if Zmod(m)(l[0]) in S_t:
                 return l[1], 0
