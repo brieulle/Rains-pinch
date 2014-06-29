@@ -198,10 +198,9 @@ def find_unique_orbit_elliptic(E, m, Y_coordinates = False, case = 0):
         order = euler_phi(m)//(2*n)
 
         if not Y_coordinates:
-            r = sum((ZZ(gen_G**i)*P)[0] for i in range(order))
+            return sum((ZZ(gen_G**i)*P)[0] for i in range(order))
             print 'Computing the period : CPU %s, Walltime %s' % (cputime(c),
                     walltime(c))
-            return r
         else:
             return sum(((ZZ(gen_G**i)*P)[1])**2 for i in range(order))
     elif case == 1:
@@ -331,21 +330,13 @@ def find_elliptic_curve(k, K, m_t):
     p = k.characteristic()
     q = K.cardinality()
     n = K.degree()
+    m = m_t[0]
+    S_t = m_t[1]
 
     #We start by the special cases j = 1728, 0
     E_j1728 = EllipticCurve(j = k(1728))
 
-    if euler_phi(m_t[0])%4 != 0:
-        m = None
-    else:
-        m = m_t[0]
-        S_t = m_t[1]
-
-    # If there's a m that works for this curve, we do all the work; if not we
-    # pass it.
-    if m is None:
-        pass
-    elif q%4 != 1:
+    if q%4 != 1:
         # If q != 1 mod 4, then there's no 4th root of unity, then magically
         # all the quartic twist are already in k and the trace is 0. We just
         # have to test the only curve y² = x³ + x.
@@ -366,22 +357,12 @@ def find_elliptic_curve(k, K, m_t):
 
     E_j0 = EllipticCurve(j = k(0))
 
-    # Picking the right m.
-    if euler_phi(m_t[0])%6 != 0:
-        m = None
-    else:
-        m = m_t[0]
-        S_t = m_t[1]
-
-
-    if m is None:
-        pass
-    elif q%6 != 1:
+    if q%6 != 1:
         # Same as before, if q != 1 mod 6, there's no 6th root of unity in
         # GF(q) and the trace is 0 (that's pretty quick reasoning.. :D).
         # Justification will come later.
         if 0 in S_t:
-            return E_j0, 0, m
+            return E_j0, 0
     else:
         g = k.unit_gens()[0]
         c = g**((q-1)/6)
@@ -402,8 +383,7 @@ def find_elliptic_curve(k, K, m_t):
         L = [(t, E), (-t, E.quadratic_twist())]
 
         # The smallest one is ok
-        m = m_t[0]
-        S_t = m_t[1]
+
 
         for l in L:
             if Zmod(m)(l[0]) in S_t:
