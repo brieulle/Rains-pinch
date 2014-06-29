@@ -65,16 +65,23 @@ def isom_elliptic(k1, k2, k = None, Y_coordinates = False, bound = None):
     p = k.characteristic()
     n = k1.degree()  
     q = k1.cardinality()
+    c_comp, w_comp = cputime(), walltime()
     
     # We compute a list of candidates for m (i.e. such that n divides phi(m) 
     # and (phi(m)/n,n) = 1. It lacks the conditions on the trace.
+    c, w = cputime(), walltime()
     m_t = find_m(n, k, bound)
+    print 'Generating the m\'s : CPU %s, Walltime %s' % (cputime(c),
+            walltime(w))
     
     if m_t is None:
         raise RuntimeError, 'No suitable m found, increase your bound.'
 
     # Finding the elliptic curve on which we can work. 
-    E, case, m = find_elliptic_curve(k, k1, m_t) 
+    c, w = cputime(), walltime()
+    E, case = find_elliptic_curve(k, k1, m_t) 
+    print 'Finding E : CPU %s, Walltime %s' % (cputime(c),
+            walltime(w))
 
     if E is None:
         raise RuntimeError, 'No suitable elliptic curve found, check your \
@@ -83,10 +90,12 @@ def isom_elliptic(k1, k2, k = None, Y_coordinates = False, bound = None):
     Ek1 = E.change_ring(k1)
     Ek2 = E.change_ring(k2)
 
-    a, b = (find_unique_orbit_elliptic(Ek1, m, Y_coordinates, case),
-    find_unique_orbit_elliptic(Ek2, m, Y_coordinates, case))
+    a, b = (find_unique_orbit_elliptic(Ek1, m_t[0], Y_coordinates, case),
+    find_unique_orbit_elliptic(Ek2, m_t[0], Y_coordinates, case))
+    print 'Total time : CPU %s, Walltime %s' % (cputime(c_comp),
+            walltime(w_comp))
 
-    return a, b
+    #return a, b
 
 def find_unique_orbit_elliptic(E, m, Y_coordinates = False, case = 0):
     '''
@@ -171,9 +180,13 @@ def find_unique_orbit_elliptic(E, m, Y_coordinates = False, case = 0):
 
     # Searching for a point of order exactly m.
     P = E(0)
+    c, w = cputime(), walltime()
     while any((m//i)*P == 0 for i in m.prime_divisors()):
         P = cofactor*E.random_point()
+    print 'Determining a point of order m : CPU %s, Walltime %s' % (
+            cputime(c), walltime(w))
 
+    c, w = cputime(), walltime()
     if case == 0:
         # Looking for a generator of order exactly phi(m)/n in 
         # phi(m)/something.
@@ -185,7 +198,10 @@ def find_unique_orbit_elliptic(E, m, Y_coordinates = False, case = 0):
         order = euler_phi(m)//(2*n)
 
         if not Y_coordinates:
-            return sum((ZZ(gen_G**i)*P)[0] for i in range(order))
+            r = sum((ZZ(gen_G**i)*P)[0] for i in range(order))
+            print 'Computing the period : CPU %s, Walltime %s' % (cputime(c),
+                    walltime(c))
+            return r
         else:
             return sum(((ZZ(gen_G**i)*P)[1])**2 for i in range(order))
     elif case == 1:
@@ -194,6 +210,8 @@ def find_unique_orbit_elliptic(E, m, Y_coordinates = False, case = 0):
         
         if not Y_coordinates:
             return sum(((ZZ(gen_G**i)*P)[0])**2 for i in range(order))
+            print 'Computing the period j = 1728 : CPU %s, Walltime %s' % (
+                    cputime(c), walltime(c))
         else:
             return sum(((ZZ(gen_G**i)*P)[1])**4 for i in range(order))
 
@@ -203,6 +221,8 @@ def find_unique_orbit_elliptic(E, m, Y_coordinates = False, case = 0):
 
         if not Y_coordinates:
             return sum(((ZZ(gen_G**i)*P)[0])**3 for i in range(order))
+            print 'Computing the period j = 0: CPU %s, Walltime %s' % (cputime(c),
+                    walltime(c))
         else:
             return sum(((ZZ(gen_G**i)*P)[1])**6 for i in range(order))
 
@@ -311,17 +331,15 @@ def find_elliptic_curve(k, K, m_t):
     p = k.characteristic()
     q = K.cardinality()
     n = K.degree()
-    m = None
 
     #We start by the special cases j = 1728, 0
     E_j1728 = EllipticCurve(j = k(1728))
 
-    for i in range(len(m_t)):
-        if euler_phi(m_t[i][0])%4 != 0:
-            continue
-        else:
-            m = m_t[i][0]
-            S_t = m_t[i][1]
+    if euler_phi(m_t[0])%4 != 0:
+        m = None
+    else:
+        m = m_t[0]
+        S_t = m_t[1]
 
     # If there's a m that works for this curve, we do all the work; if not we
     # pass it.
@@ -332,7 +350,7 @@ def find_elliptic_curve(k, K, m_t):
         # all the quartic twist are already in k and the trace is 0. We just
         # have to test the only curve y² = x³ + x.
         if 0 in S_t:
-            return E_j1728, 0, m
+            return E_j1728, 0
     else:
         # If q = 1 mod 4, then the trace is not 0, and we have to try four
         # trace to see which is the best candidate.
@@ -344,17 +362,16 @@ def find_elliptic_curve(k, K, m_t):
         for l in L:
             if Zmod(m)(l[0]) in S_t:
                 # E, case, t
-                return E.quartic_twist(l[1]), 1, m
+                return E_j1728.quartic_twist(l[1]), 1
 
     E_j0 = EllipticCurve(j = k(0))
 
     # Picking the right m.
-    for i in range(len(m_t)):
-        if euler_phi(m_t[i][0])%6 != 0:
-            continue
-        else:
-            m = m_t[i][0]
-            S_t = m_t[i][1]
+    if euler_phi(m_t[0])%6 != 0:
+        m = None
+    else:
+        m = m_t[0]
+        S_t = m_t[1]
 
 
     if m is None:
@@ -373,7 +390,7 @@ def find_elliptic_curve(k, K, m_t):
 
         for l in L:
             if Zmod(m)(l[0]) in S_t:
-                return E.sextic_twist(l[1]), 2, m
+                return E.sextic_twist(l[1]), 2
 
     # General case
     for j in k:
@@ -385,12 +402,12 @@ def find_elliptic_curve(k, K, m_t):
         L = [(t, E), (-t, E.quadratic_twist())]
 
         # The smallest one is ok
-        m = m_t[0][0]
-        S_t = m_t[0][1]
+        m = m_t[0]
+        S_t = m_t[1]
 
         for l in L:
             if Zmod(m)(l[0]) in S_t:
-                return l[1], 0, m
+                return l[1], 0
 
     # If no elliptic curve has been found.
     return None
@@ -438,38 +455,34 @@ def find_trace(n,m,k):
         raise NotImplementedError
     elif m%p == 0:
         sol = []
-        for t in Zm:
-            # We only want the trace to be of order exactly n in (Z/m)* and not 
-            # to define supersingular curves.
-            if ZZ(t) > 2*sqrt(q):
-                break
-            elif not t.is_unit():
-                continue
-            elif (Zm(t).multiplicative_order() != n):
+        g = Zm.unit_gens()[0]**n
+
+        for i in euler_phi(m).coprime_integers(euler_phi(m)):
+            if ZZ(g**(n*i)) > 2*sqrt(q):
                 continue
             else:
-                sol.append(t)
-        return sol
+                sol.append(g**(n*i))
+
+        return set(sol)
     # If m is prime (power), then we need to look at the roots
     # Probably a temporary condition
+    #TODO : c'est de la merde, à revoir.
     else:
         sol = []
-        for a in Zm:
-            # If a is not invertible in Z/m, we can't compute any order.
-            if not a.is_unit():
+        g = Zm.unit_gens()[0]**(euler_phi(m)/(euler_phi(m).gcd(n)))
+
+        for a in [g**(i) for i in n.coprime_integers(n)]:
+            ord_b = Zm(q/a).multiplicative_order()
+            if ord_b == n:
+                continue
+            elif ord_b < n:
+                continue
+            elif ZZ(a + q/a) > 2*sqrt(q):
                 continue
             else:
-                ord_a = Zm(a).multiplicative_order()
-                ord_b = Zm(q/a).multiplicative_order()
-                # We need an element of order n
-                if (ord_a == ord_b):
-                    continue
-                elif min(ord_a, ord_b) != n:
-                    continue
-                elif ZZ(a + q/a) > 2*sqrt(q):
-                    continue
-                else:
-                    sol.append(a + q/a)
+                sol.append(Zm(a + q/a))
+
+
         return set(sol)
 
 def find_m(n, k, bound = None):
@@ -516,9 +529,4 @@ def find_m(n, k, bound = None):
             if len(S_t) < 1:   # Some time in the future we'd like to have a 
                 continue       # better bound than just 1.
             else:
-                sol.append((m, S_t))
-
-    if sol == []:
-        return None
-    else:
-        return sol
+                return m, S_t
