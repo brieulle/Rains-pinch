@@ -20,11 +20,11 @@ cpdef doubling(object P, object a, object b):
 # Using dadd-2002-it
 cpdef dadd(object P, object Q, object diff, object a, object b):
     if Q[-1] == 0:
-        return (P[0], P[-1])
+        return point((P[0], P[-1]))
     elif P[-1] == 0:
-        return (Q[0], Q[-1])
+        return point((Q[0], Q[-1]))
     elif diff[-1] == 0:
-        return doubling(P, a, b)
+        return point(doubling(P, a, b))
     else:
         Z1 = diff[-1]
         Z2 = P[-1]
