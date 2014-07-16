@@ -12,11 +12,13 @@ cpdef doubling(object P, object a, object b):
     Z1 = P[-1]
     X1 = P[0]
 
-    T1 = X1*Z1**2
+    
     X12 = X1**2
+    Z12 = Z1**2
+    Z13 = Z12*Z1
 
-    X3 = (X1**2 - a*Z1**2)**2 - 8*b*T1*Z1
-    Z3 = 4*Z1*(X12*X1 + a*T1 + b*Z1**3)
+    X3 = (X12 - a*Z12)**2 - 8*b*X1*Z13
+    Z3 = 4*Z1*(X12*X1 + a*X1*Z12 + b*Z13)
 
     return X3, Z3
 
