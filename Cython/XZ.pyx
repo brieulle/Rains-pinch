@@ -83,7 +83,5 @@ cpdef find_ordm(object E, object m):
 
         if count != size:
             P = ladder(E.random_point(), cofactor, E.a4(), E.a6())
-        elif ladder(P, m, E.a4(), E.a6())[1] != 0:
-            P = ladder(E.random_point(), cofactor, E.a4(), E.a6())
         else:
             return P
