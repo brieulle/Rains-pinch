@@ -12,19 +12,22 @@ cpdef doubling(object P, object a, object b):
     Z1 = P[-1]
     X1 = P[0]
 
-    X3 = (X1**2 - a*Z1**2)**2 - 8*b*X1*Z1**3
-    Z3 = 4*Z1*(X1**3 + a*X1*Z1**2 + b*Z1**3)
+    T1 = X1*Z1**2
+    X12 = X1**2
 
-    return point((X3, Z3))
+    X3 = (X1**2 - a*Z1**2)**2 - 8*b*T1*Z1
+    Z3 = 4*Z1*(X12*X1 + a*T1 + b*Z1**3)
+
+    return X3, Z3
 
 # Using dadd-2002-it
 cpdef dadd(object P, object Q, object diff, object a, object b):
     if Q[-1] == 0:
-        return point((P[0], P[-1]))
+        return (P[0], P[-1])
     elif P[-1] == 0:
-        return point((Q[0], Q[-1]))
+        return (Q[0], Q[-1])
     elif diff[-1] == 0:
-        return point(doubling(P, a, b))
+        return doubling(P, a, b)
     else:
         Z1 = diff[-1]
         Z2 = P[-1]
@@ -33,10 +36,13 @@ cpdef dadd(object P, object Q, object diff, object a, object b):
         X2 = P[0]
         X3 = Q[0]
 
-        X5 = Z1*((X2*X3 - a*Z2*Z3)**2 - 4*b*Z2*Z3*(X2*Z3 + X3*Z2))
-        Z5 = X1*(X2*Z3 - X3*Z2)**2
+        T1 = X2*Z3
+        S1 = X3*Z2
 
-        return point((X5, Z5))
+        X5 = Z1*((X2*X3 - a*Z2*Z3)**2 - 4*b*Z2*Z3*(T1 + S1))
+        Z5 = X1*(T1 - S1)**2
+
+        return X5, Z5
 
 cpdef ladder(object P, object m, object a, object b, object E = None):
     if E is None:
@@ -62,7 +68,6 @@ cpdef find_ordm(object E, object m):
     size = len(coprime)
 
     P = E(0)
-
 
     while(1):
         count = 0
