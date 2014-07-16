@@ -1,6 +1,12 @@
 cpdef getBit(object n, int k):
     return (n & (1 << k)) >> k
 
+cpdef point(object P):
+    if P[-1] == 0:
+        return (0,0)
+    else:
+        return (P[0]/P[-1], 1)
+
 # Using dbl-2002-bj
 cpdef doubling(object P, object a, object b):
     Z1 = P[-1]
@@ -9,9 +15,7 @@ cpdef doubling(object P, object a, object b):
     X3 = (X1**2 - a*Z1**2)**2 - 8*b*X1*Z1**3
     Z3 = 4*Z1*(X1**3 + a*X1*Z1**2 + b*Z1**3)
 
-    return X3, Z3
-
-
+    return point((X3, Z3))
 
 # Using dadd-2002-it
 cpdef dadd(object P, object Q, object diff, object a, object b):
@@ -32,7 +36,7 @@ cpdef dadd(object P, object Q, object diff, object a, object b):
         X5 = Z1*((X2*X3 - a*Z2*Z3)**2 - 4*b*Z2*Z3*(X2*Z3 + X3*Z2))
         Z5 = X1*(X2*Z3 - X3*Z2)**2
 
-        return X5, Z5
+        return point((X5, Z5))
 
 cpdef ladder(object P, object m, object a, object b, object E = None):
     if E is None:
@@ -50,4 +54,28 @@ cpdef ladder(object P, object m, object a, object b, object E = None):
             S = dadd(S, R, P, a, b)
             R = doubling(R, a, b)
 
-    return S
+    return point(S)
+
+cpdef find_ordm(object E, object m):
+    cofactor = E.cardinality()//m
+    coprime = m.prime_divisors()
+    size = len(coprime)
+
+    P = E(0)
+
+
+    while(1):
+        count = 0
+        for a in coprime:
+            m_a = m//a
+            if ladder(P, m_a, E.a4(), E.a6())[1] == 0:
+                continue
+            else:
+                count += 1
+
+        if count != size:
+            P = ladder(E.random_point(), cofactor, E.a4(), E.a6())
+        elif ladder(P, m, E.a4(), E.a6())[1] != 0:
+            P = ladder(E.random_point(), cofactor, E.a4(), E.a6())
+        else:
+            return P
