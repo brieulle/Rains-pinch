@@ -40,8 +40,9 @@ cpdef dadd(object P, object Q, object diff, object a, object b):
 
         T1 = X2*Z3
         S1 = X3*Z2
+        R1 = Z2*Z3
 
-        X5 = Z1*((X2*X3 - a*Z2*Z3)**2 - 4*b*Z2*Z3*(T1 + S1))
+        X5 = Z1*((X2*X3 - a*R1)**2 - 4*b*R1*(T1 + S1))
         Z5 = X1*(T1 - S1)**2
 
         return X5, Z5
