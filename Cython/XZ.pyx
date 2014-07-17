@@ -1,6 +1,3 @@
-cpdef getBit(object n, int k):
-    return (n & (1 << k)) >> k
-
 cpdef point(object P):
     if P[-1] == 0:
         return (0,0)
@@ -12,7 +9,6 @@ cpdef doubling(object P, object a, object b):
     Z1 = P[-1]
     X1 = P[0]
 
-    
     X12 = X1**2
     Z12 = Z1**2
     Z13 = Z12*Z1
@@ -54,9 +50,10 @@ cpdef ladder(object P, object m, object a, object b, object E = None):
         S = E(0)
 
     R = P
+    bit = m.binary()
 
-    for k from 0 <= k <= m.nbits():
-        if getBit(m, m.nbits() - k) == 0:
+    for k from 0 <= k < len(bit):
+        if int(bit[k]) == 0:
             R = dadd(R, S, P, a, b)
             S = doubling(S, a, b)
         else:
