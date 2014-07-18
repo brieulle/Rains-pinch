@@ -358,7 +358,7 @@ def find_elliptic_curve(k, K, m_t):
 
     E_j0 = EllipticCurve(j = k(0))
 
-    if q%6 != 1:
+    if q%3 != 1:
         # Same as before, if q != 1 mod 6, there's no 6th root of unity in
         # GF(q) and the trace is 0 (that's pretty quick reasoning.. :D).
         # Justification will come later.
@@ -390,7 +390,7 @@ def find_elliptic_curve(k, K, m_t):
                 return l[1], 0, compteur
 
     # If no elliptic curve has been found.
-    return None
+    return None, -1, -1
 
 def find_trace(n,m,k):
     '''
@@ -519,5 +519,4 @@ def find_m(n, k, bound = None):
             if len(S_t) < 1:   # Some time in the future we'd like to have a 
                 continue       # better bound than just 1.
             else:
-                return m, S_t #sol.append((m, S_t))
-    #return sol
+                return m, S_t 
