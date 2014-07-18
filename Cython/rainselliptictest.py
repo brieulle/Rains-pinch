@@ -181,7 +181,6 @@ def find_unique_orbit_elliptic(E, m, Y_coordinates = False, case = 0):
     ALGORITHM:
     TODO
     '''
-    cofactor = E.cardinality()//m
     n = E.base_ring().degree()
 
     # Searching for a point of order exactly m.
