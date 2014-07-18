@@ -1,12 +1,12 @@
-cpdef point(object P):
-    if P[-1] == 0:
+cdef point(object P):
+    if P[1] == 0:
         return (0,0)
     else:
-        return (P[0]/P[-1], 1)
+        return (P[0]/P[1], 1)
 
 # Using dbl-2002-bj
-cpdef doubling(object P, object a, object b):
-    Z1 = P[-1]
+cdef doubling(object P, object a, object b):
+    Z1 = P[1]
     X1 = P[0]
 
     X12 = X1**2
@@ -19,17 +19,17 @@ cpdef doubling(object P, object a, object b):
     return X3, Z3
 
 # Using dadd-2002-it
-cpdef dadd(object P, object Q, object diff, object a, object b):
-    if Q[-1] == 0:
-        return (P[0], P[-1])
-    elif P[-1] == 0:
-        return (Q[0], Q[-1])
-    elif diff[-1] == 0:
+cdef dadd(object P, object Q, object diff, object a, object b):
+    if Q[1] == 0:
+        return (P[0], P[1])
+    elif P[1] == 0:
+        return (Q[0], Q[1])
+    elif diff[1] == 0:
         return doubling(P, a, b)
     else:
-        Z1 = diff[-1]
-        Z2 = P[-1]
-        Z3 = Q[-1]
+        Z1 = diff[1]
+        Z2 = P[1]
+        Z3 = Q[1]
         X1 = diff[0]
         X2 = P[0]
         X3 = Q[0]
@@ -43,17 +43,17 @@ cpdef dadd(object P, object Q, object diff, object a, object b):
 
         return X5, Z5
 
-cpdef ladder(object P, object m, object a, object b, object E = None):
+cdef ladder(object P, object m, object a, object b, object E = None):
     if E is None:
         S = (0, 0)
     else:
         S = E(0)
 
     R = P
-    bit = m.binary()
+    bits = m.binary()
 
-    for k from 0 <= k < len(bit):
-        if int(bit[k]) == 0:
+    for bit in bits:
+        if bit == '0':
             R = dadd(R, S, P, a, b)
             S = doubling(S, a, b)
         else:
@@ -67,18 +67,18 @@ cpdef find_ordm(object E, object m):
     coprime = m.prime_divisors()
     size = len(coprime)
 
-    P = E(0)
-
     while(1):
         count = 0
         for a in coprime:
             m_a = m//a
-            if ladder(P, m_a, E.a4(), E.a6())[1] == 0:
+            if ladder((0,0), m_a, E.a4(), E.a6())[1] == 0:
                 continue
             else:
                 count += 1
 
         if count != size:
-            P = ladder(E.random_point(), cofactor, E.a4(), E.a6())
+            temp = E.random_point()
+            P = ladder((temp[0], 1), cofactor, E.a4(), E.a6())
         else:
             return P
+
