@@ -1,139 +1,259 @@
 # -*- coding: utf-8 -*-
+from sage.misc.misc import cputime, walltime
+from sage.rings.arith import euler_phi
+from sage.rings.finite_rings.integer_mod_ring import Integers
+from sage.rings.integer_ring import ZZ
+from sage.functions.other import sqrt
+from sage.schemes.elliptic_curves.constructor import EllipticCurve
+import XZ
+
 
 def isom_elliptic(k1, k2, k = None, Y_coordinates = False, bound = None):
     '''
     INPUT : 
-    a base field k, 
-    two extensions of the same degree k1, k2,
-    a boolean Y_coordinates. 
+    - ``k1`` -- a finite field, extension of degree n of k.
 
-    OUTPUT : a tuple with normal elements in k1 and k2 respectively.
+    - ``k2`` -- a finite field, extension of degree n of k; k1 != k2.
 
-    Use :
+    - ``k`` -- (default : None) a  finite field of characteristic p!=2, it plays
+      the role of the base field for k1 & k2.
 
-    isom_elliptic(k1, k2, k)
+    - ``Y_coordinates`` -- (default : False) a boolean that will be used to 
+      know whether to use Y or X coordinates for the Gaussian elliptic periods.
 
-    returns two normal elements using abscissas of torsion point. If you want to
-    use the ordinates, write 
+    - ``bound`` -- (default : None) a positive integer used as the max for m.
+
+    OUTPUT : 
     
-    isom_elliptic(k, k1, k2, True)
+    - A tuple of unique elements with the same minimal polynomial in k1 and k2 
+      respectively
 
-    Algorithm:
+    EXAMPLES :
+
+        sage : R.<X> = PolynomialRing(GF(5))
+
+        sage : f = X^19 + X^16 + 3*X^15 + 4*X^14 + 3*X^12 + 3*X^9 + 2*X^8 + 2*X^7 + 2*X^4 + X^3 + 4*X^2 + 4*X + 2)
+        
+        sage : g = X^19 + 2*X^18 + 2*X^17 + 4*X^16 + X^15 + 3*X^14 + 2*X^13 + X^12 + 2*X^11 + 2*X^10 + 2*X^9 + X^8 + 4*X^6 + X^5 + 3*X^4 + 2*X^2 + 4*X + 4
+
+        sage : k1 = GF(5**19, name = 'x', modulus = f)
+
+        sage : k2 = GF(5**19, name = 'y', modulus = g)
+
+        sage : tuple = isom_elliptic(k1, k2)
+
+        sage : tuple[0].minpoly() == tuple[1].minpoly()
+
+        True
+
+        sage : tuple_Y = isom_elliptic(k1, k2, Y_coordinates = True)
+
+        sage : tuple_Y[0].minpoly() == tuple_Y[1].minpoly()
+
+        True
+
+    ALGORITHM:
 
     Given two extensions of the same base field and the same degree, we return 
-    two normal elements the use of Gaussian elliptic period, via the function 
-    find_unique_orbit_elliptic, on an curve E which is determined by the 
-    function find_elliptic_curve.
+    two unique elements the use of Gaussian elliptic period on normal elements,
+    via the function find_unique_orbit_elliptic, on an curve E which is 
+    determined by the function find_elliptic_curve.
 
     First we have to find an integer m and an elliptic curve E  over k such 
     that :
+    TODO 
 
-    - m divides the number of points of E over the extensions k1 and k2.
+    .. TODO::
 
-    - if m is power of p, we want that the trace t of the Frobenius on E over k 
-      is of order n, the degree of the extension in (Z/m)*.
-
-    - if m is a prime power, we want that the root of smallest order in (Z/m)*
-      of the characteristic polynomial of the Frobenius over k is of order n,
-      the degree of the extension, i.e.:
-
-      For x**2 -tx + q = (x - a)(x - b) mod m, we want that ord_m(a) = n nd
-      ord_m(a) < ord_m(b).
-
-    - if m is composite, there is no algorithm yet.
-
-    Once we have both of them, we have to compute two m torsion points P and Q 
-    of order m in E/k1 and E/k2 respectively and then we compute their Gaussian
-    elliptic periods with abscissas or ordinates depending on the boolean given 
-    in arguments; that is done in find_unique_orbit_elliptic.
-    
-    Thus we found two unique elements alpha and beta such that there's exist an 
-    isomorphism phi with :
-
-    phi(alpha) = beta
-
-    and you can find phi from there using the function convert as done in the 
-    function isom_normal.
+        The case j = 1728 and j = 0.
     '''
-    c, w = cputime(), walltime()
     if k is None:
 	    k = k1.base_ring()
     p = k.characteristic()
     n = k1.degree()  
-    q = k1.cardinality()
+    q = k.cardinality()
     
-    # We take the smallest m, we can change that later.
-    m = find_m(n, bound)[0]
+    # We compute a list of candidates for m (i.e. such that n divides phi(m) 
+    # and (phi(m)/n,n) = 1. It lacks the conditions on the trace.
+    m_t = find_m(n, k, bound)
     
+    if m_t is None:
+        raise RuntimeError, 'No suitable m found, increase your bound.'
+
     # Finding the elliptic curve on which we can work. 
-    E_s= find_elliptic_curve(k, k1, m) 
-    G = find_group_gen(n, m, E_s[1])
+    E, case = find_elliptic_curve(k, k1, m_t) 
 
-    Ek1 = E_s[0].change_ring(k1)
-    Ek2 = E_s[0].change_ring(k2)
+    if E is None:
+        raise RuntimeError, 'No suitable elliptic curve found, check your \
+                                                                    parameters'
 
-    a, b = (find_unique_orbit_elliptic(Ek1, G, m, Y_coordinates), 
-    find_unique_orbit_elliptic(Ek2, G, m, Y_coordinates))
-    print 'CPU %s, Wall %s' % (cputime(c), walltime(w))
+    Ek1 = E.change_ring(k1)
+    Ek2 = E.change_ring(k2)
+
+    a, b = (find_unique_orbit_elliptic(Ek1, m_t[0], Y_coordinates, 
+        case), find_unique_orbit_elliptic(Ek2, m_t[0], Y_coordinates, case))
 
     return a, b
 
-def find_unique_orbit_elliptic(E, G, m, Y_coordinates = False):
+def find_unique_orbit_elliptic(E, m, Y_coordinates = False, case = 0):
     '''
     INPUT : 
     
-    an elliptic curve E, a tuple G, an intger m, a boolean Y_coordinates
+    - ``E`` -- an elliptic curve with the properties given in isom_elliptic 
+      and/or find_elliptic_curve.
+
+    - ``m`` -- an integer with the properties given in isom_elliptic and/or in 
+      find_m.
+
+    - ``Y_coordinates`` -- boolean (default : False) determines if X or Y 
+      coordinates are used.
+
+    - ``case`` -- integer (default : 0) depends on the j-invariant's value :
+        - ``0`` means j is not 0 nor 1728 or t = 0,
+        - ``1`` means j is 1728,
+        - ``2`` means j is 0.
 
     OUPUT : 
     
-    a Gaussian elliptic periods of point P of order m in E/k, k a finite field
+    - A uniquely defined element of the field where E is defined, namely the 
+      extension of degree n considered; unique means every produced elements 
+      have the same minimal polynomial.
 
-    Use : 
-    find_unique_orbit_elliptic(E,G)
+    EXAMPLES :
 
-    returns a Gaussian elliptic periods using the X-coordinates of a point P of 
-    order m. If you want to use the Y-coordinates, type :
+    - Case j != 0, 1728
 
-    find_unique_orbit_elliptic(E,G,True)
+        sage: E = EllipticCurve(j = GF(5)(1))
 
-    Algorithm:
+        sage: EK = E.change_ring(GF(5**19, prefix = 'z', conway = True)
 
-    Function that given an elliptic curve and a group G returns the following 
-    Gaussian elliptic periods :
+        sage: m = 229
 
-    sum_{\sigma\in G}{([\sigma]P)_{T}}
+        sage: elem1 = find_unique_orbit_elliptic(EK,m)
 
-    with T = X or Y depending on the boolean given in arguments.
+        sage: elem2 = find_unique_orbit_elliptic(EK,m)
+
+        sage: elem1.minpoly() == elem2.minpoly()
+
+        True
+
+    - Case j = 1728 and trace != 0
+
+        sage : E = EllipticCurve(j = GF(5)(1728))
+
+        sage: EK = E.change_ring(GF(5**19, prefix = 'z', conway = True)
+
+        sage: m = 229
+
+        sage: elem1 = find_unique_orbit_elliptic(EK,m)
+
+        sage: elem2 = find_unique_orbit_elliptic(EK,m)
+
+        sage: elem1.minpoly() == elem2.minpoly()
+
+        True
+
+    - Case j = 0 and trace != 0
+
+        sage: E = EllipticCurve(j = GF(7)(0))
+
+        sage: EK = E.change_ring(GF(7**23, prefix = 'z', conway = True)
+
+        sage: m = 139
+
+        sage: elem1 = find_unique_orbit_elliptic(EK,m)
+
+        sage: elem2 = find_unique_orbit_elliptic(EK,m)
+
+        sage: elem1.minpoly() == elem2.minpoly()
+
+        True
+
+
+    ALGORITHM:
+    TODO
     '''
-    cofactor = E.cardinality()//m
-    sum_P = []
+    n = E.base_ring().degree()
 
     # Searching for a point of order exactly m.
-    P = E(0)
-    while any((m//i)*P == 0 for i in m.prime_divisors()):
-        P = cofactor*E.random_point()
+    P = XZ.find_ordm(E, m)
 
-    for i in range(G[1]):
-            sum_P.append(ZZ(G[0]**i)*P)
+    if case == 0:
+        # Looking for a generator of order exactly phi(m)/n in 
+        # (Z/m)*/something.
+        gen_G = Integers(m).unit_gens()[0]**n
+        order = euler_phi(m)//(2*n)
 
-    if not Y_coordinates:
-        return sum(P[0] for P in sum_P)
-    else:
-        raise NotImplementedError, 'No algorithm for Y-coordinates yet.'
+        if not Y_coordinates:
+            return sum((ZZ(gen_G**i)*P)[0] for i in range(order))
+        else:
+            return sum(((ZZ(gen_G**i)*P)[1])**2 for i in range(order))
+    elif case == 1:
+        gen_G = Integers(m).unit_gens()[0]**n
+        order = euler_phi(m)/(4*n)
+        
+        if not Y_coordinates:
+            return sum(((ZZ(gen_G**i)*P)[0])**2 for i in range(order))
+        else:
+            return sum(((ZZ(gen_G**i)*P)[1])**4 for i in range(order))
+
+    elif case == 2:
+        gen_G = Integers(m).unit_gens()[0]**n
+        order = euler_phi(m)/(6*n)
+
+        if not Y_coordinates:
+            return sum(((ZZ(gen_G**i)*P)[0])**3 for i in range(order))
+        else:
+            return sum(((ZZ(gen_G**i)*P)[1])**6 for i in range(order))
 
 
-def find_elliptic_curve(k, K, m):
+
+
+def find_elliptic_curve(k, K, m_t):
     '''
-    INPUT : 
+    INPUT: 
 
-    a base field k, an extension K, a integer m 
+    - ``k`` -- a base field
 
-    OUTPUT : 
+    - ``K`` -- an extension of K of degree n.
+
+    - ``m_t`` -- a list of tuple containing a integer and a set of candidates 
+      for the trace.
+
+    OUTPUT: 
     
-    an elliptic curve over k, a trace and eventually a tuple containing a
-    element of order n in (Z/m)* and the class of the trace modulo m.
+    - An elliptic curve defined over k with the required properties.
 
-    Algorithm :
+    - An integer case, depending on the value of the j-invariant of said 
+      elliptic curve.
+
+    - An integer m statisfying the properties described in isom_elliptic which 
+      we will be using to compute Gaussian periods.
+
+    ..NOTE::
+
+        The case j = 0 or 1728 are not implemented yet. They shall raise 
+        NotImplementedError.
+
+    EXAMPLES:
+    
+    sage: R.<X> = PolynomialRing(GF(5))
+
+    sage: f = R.irreducible_element(19, algorithm = 'random')
+
+    sage: K = GF(5**19, names = 'x', modulus = f)
+
+    sage: m_t = [(229,{0, 1, 3})]
+
+    sage: find_elliptic(GF(5), K, m_t)
+
+    (Elliptic Curve defined by y^2 = x^3 + x + 2 over Finite Field of size 5,
+    0,
+    229)
+
+    ALGORITHM:
+
+    TODO : Doc is deprecated, to be redone.
 
     Function that finds an elliptic curve with the required charateristics, 
     those given in the function isom_elliptic.
@@ -151,7 +271,8 @@ def find_elliptic_curve(k, K, m):
         We pick a random curve E/k and we set down t = Tr_k(Fr_E), for the
         curve to be what we want, we need :
 
-          - (Z/m)* = <t> x S or #<t> = n (or something)
+          - t not zero,
+          - (Z/m)* = <t> x S or #<t> = n 
           - m divides #E/K but not #E/L, for any intermediate extension L 
             of K/k; so we can construct points of order m such that their 
             abscissas or ordinates span exactly K. Or that we haven't any point
@@ -187,120 +308,68 @@ def find_elliptic_curve(k, K, m):
 
     - If m is composite, TODO.
     '''
-    def test_curve(E, t, S, m_case):
-        '''
-        INPUT : An elliptic curve E, an integer t, a list S and an integer
-        m_case
-
-        OUTPUT : a boolean or a tuple with a bolean and an integer
-
-        Function that is passed down to find_elliptic. It deterines if the curve
-        meets the desired requirements depending on the nature of m : a power of
-        p(1), a prime power(2) or a composite number(3).
-        '''
-        Zm = Zmod(m)
-
-        # m = p^e
-        if m_case == 0:
-            # If the trace is none of the candidate for trace of order n in
-            # (Z/m)*, then we don't want this curve.
-            if all(Zm(t) != t_m for t_m in S):
-                return False
-            # If we can't find point of order m, we don't want this curve either
-            elif E.change_ring(K).cardinality()%m != 0:
-                return False
-            # We want the point of order m to span exactly K/k and not any
-            # sub-extension.
-            elif any(E.change_ring(k.extension(n//d)).cardinality()%m == 0
-                    for d in n.prime_divisors()):
-                return False
-            else:
-                return True
-        elif m_case == 1:
-            # We're trying to find if t mod m is equal to one of the trace in
-            # S (a list of tuple). Then we want to remember the index for
-            # which it is right because we will need the root associated to
-            # compute the Galois group.
-            index = None
-            
-            for i in range(len(S)):
-                if Zm(t) == S[i][1]:
-                    index = i
-                    break
-            if index is None:
-                return (False, None)
-            elif E.change_ring(K).cardinality()%m != 0:
-                return (False, None)
-            elif any(E.change_ring(k.extension(n//d)).cardinality()%m == 0
-                    for d in n.prime_divisors()):
-                return (False, None)
-            else:
-            	return (True, index)
-        elif m_case == 2:
-            raise NotImplementedError, 'm composite is not implemented yet'
-
     p = k.characteristic()
-    q = K.cardinality()
+    q = k.cardinality()
     n = K.degree()
+    m = m_t[0]
+    S_t = m_t[1]
 
-    if not m.is_prime_power():
-        raise NotImplementedError, 'Case m composite is not implemened yet.'
+    #We start by the special cases j = 1728, 0
+    E_j1728 = EllipticCurve(j = k(1728))
+
+    if q%4 != 1:
+        # If q != 1 mod 4, then there's no 4th root of unity, then magically
+        # all the quartic twist are already in k and the trace is 0. We just
+        # have to test the only curve y² = x³ + x.
+        if 0 in S_t:
+            return E_j1728, 0
     else:
-        if m%p == 0:
-            # Picking the candidates class modulo m
-            S_t = find_trace(n, m, k)
-            E_rejected = []
+        # If q = 1 mod 4, then the trace is not 0, and we have to try four
+        # trace to see which is the best candidate.
+        g = k.unit_gens()[0]
+        c = g**((q-1)/4)
+        t = E_j1728.trace_of_frobenius()
+        L = [(t*(c**i).lift(), g**i) for i in range(4)]
 
-            while True:
-                # This method is far from optimal, but we assume that after q 
-                # draws we have a good chance of trying enough curves.
-                if len(E_rejected) > q:
-                    raise RuntimeError, 'No suitable elliptic curves found.'
+        for i in range(4):
+            if Integers(m)(L[i][0]) in S_t:
+                # E, case, t
+                return E_j1728.quartic_twist(L[i][1]), 1
 
-                E = EllipticCurve(j = k.random_element())
-                while any(E == Er for Er in E_rejected):
-                    E = EllipticCurve(j = k.random_element())
+    E_j0 = EllipticCurve(j = k(0))
 
-                t = E.trace_of_frobenius()
+    if q%3 != 1:
+        # Same as before, if q != 1 mod 6, there's no 6th root of unity in
+        # GF(q) and the trace is 0 (that's pretty quick reasoning.. :D).
+        # Justification will come later. Since q = 1 mod 2, if q = 1 mod 3
+        # then q = 1 mod 6.
+        if 0 in S_t:
+            return E_j0, 0
+    else:
+        g = k.unit_gens()[0]
+        c = g**((q-1)/6)
+        t = E_j0.trace_of_frobenius()
+        L = [(t*(c**i).lift(), g**i) for i in range(6)]
 
-                # We want an ordinary curve. More precisely, we can't find an
-                # order for a zero element.
-	        if t%p == 0:
-	            continue
+        for l in L:
+            if Integers(m)(l[0]) in S_t:
+                return E_j0.sextic_twist(l[1]), 2
 
-                # We try to see if E or its quadratic twist meets the 
-                # requirements
-                for EE,tt in [(E,t), (E.quadratic_twist(), -t)]:
-                    if test_curve(EE, tt, S_t, 0):
-                        return EE, tt
+    # General case
+    for j in k:
+        if j == 0 or j == k(1728):
+            continue
 
-                # We don't want to work on those curves anymore.
-                E_rejected.append(E)
-                E_rejected.append(E.quadratic_twist())
+        E = EllipticCurve(j = j)
+        t = E.trace_of_frobenius()
+        L = [(t, E), (-t, E.quadratic_twist())]
 
-        else:
-            S_at = find_trace(n,m,k)
-            E_rejected = []
+        for l in L:
+            if Integers(m)(l[0]) in S_t:
+                return l[1], 0
 
-            while True:
-                if len(E_rejected) > q:
-                    raise RuntimeError, 'No suitable elliptic curves found.'
-
-                E = EllipticCurve(j = k.random_element())
-                while any(E == Er for Er in E_rejected):
-                    E = EllipticCurve(j = k.random_element())
-
-                t = E.trace_of_frobenius()
-
-                for EE,tt in [(E,t), (E.quadratic_twist(), -t)]:
-                    res = test_curve(EE, tt, S_at, 1)
-                    if res[0]:
-                        # Are we only interested in the class of a mod m ?
-                        return EE, S_at[res[1]][0]
-
-                E_rejected.append(E)
-                E_rejected.append(E.quadratic_twist())
-                    
+    # If no elliptic curve has been found.
+    return None, -1
 
 def find_trace(n,m,k):
     '''
@@ -308,72 +377,88 @@ def find_trace(n,m,k):
 
     OUTPUT : a list of integer mod m or a list of a couple of integers mod m
 
-    Function that gives a list of candidates for the trace.
-    It returns a list of trace of order n in (Z/m)* if m%p = 0
-    and a list of couple (a, t) when m is a prime power; where 
-    a is the root of XÂ² -tX + q of smallest order equal to n in
-    (Z/m)*.
-    We could possibly just return the trace in the second case.
-    But I don't know yet how the group (Z/m)*/<a> = S will be 
-    implemented.
+    Algorithm :
+
+    If m is a power of p, then we look for class modulo m with order equal to n.
+    Then, we return the list of all such class.
+
+    If m is a power of prime different from p, we look for a in (Z/m)* such 
+    that :
+
+    - ord_m(a) < ord_m(q/a) and ord_m(a) = n,
+
+    or
+
+    - ord_m(q/a) < ord_a and ord_m(q/a) = n.
+
+    And we return a + q/a.
+
+    Here a plays the role of one of the two roots of the future characteristic 
+    polynomial of the Frobenius of the elliptic curve we'll use; i.e.
+
+    X^2 - (a + q/a)*X + a*(q/a) = X^2 - t*X + q
+
+    if we write t = a + q/a. From that, we will pick elliptic curves which have 
+    one of the t's as trace of its Frobenius.
     '''
-    Zm = Zmod(m)
+    Zm = Integers(m)
     p = k.characteristic()
     q = k.cardinality()
+    sq = sqrt(float(2*q))
+    q_m = Zm(q)
 
     # If m is a multiple of p, then we just need the trace to be of order 
     #exactly n in (Z/m)*
-    if m%p == 0:
+    if not m.is_prime_power():
+        raise NotImplementedError
+    elif m%p == 0:
         sol = []
-        for t in Zm:
-            # We only want the trace to be of order exactly n in (Z/m)* and not 
-            # to define supersingular curves.
-            if not t.is_unit():
-                continue
-            elif (Zm(t).multiplicative_order() != n):
+        phi_m = euler_phi(m)
+        alpha = phi_m/n
+        g = Zm.unit_gens()[0]
+
+        log_t = [i*alpha for i in n.coprime_integers(n)]
+
+        for t in [g**i for i in log_t]:
+            if abs(t.centerlift()) > sq:
                 continue
             else:
                 sol.append(t)
-        return sol
-    # If m is prime (power), then we need to look at the roots
-    # Probably a temporary condition
-    elif m.is_prime_power():
+
+        return set(sol)
+    # We don't want q to be of order n or dividing n, then q/a would be of order
+    # n; which is unacceptable.
+    elif q_m**n == 1:
+        return []
+    else:
         sol = []
-        for a in Zm:
-            # If a is not invertible in Z/m, we can't compute any order.
-            # We'll probably have to look for an element of order exactlu n
-            # We don't want a = 0 mod m. 
-            if not a.is_unit():
+        phi_m = euler_phi(m)
+        alpha = phi_m/phi_m.gcd(n)
+        g = Zm.unit_gens()[0]
+        Zphi_m = Integers(phi_m)
+        
+        log_a = [i*alpha for i in n.coprime_integers(n)]
+        a = [g**i for i in log_a]
+        log_q = q_m.log(g)
+
+        for i in range(len(log_a)):
+            diff = log_q - log_a[i]
+            b = g**diff
+            ord_b = diff.order()
+
+            if ord_b <= n:
+                continue
+            elif abs((a[i] + b).centerlift()) > sq:
                 continue
             else:
-                ord_a = Zm(a).multiplicative_order()
-                ord_b = Zm(q/a).multiplicative_order()
-                # We need an element of order n
-                if (ord_a != n and ord_b !=n):
-                    continue
-                # We want ord_a != ord_b
-                elif (ord_a == ord_b):
-                    continue
-                elif (ord_b != n): 
-                    if (ord_a > ord_b):
-                        continue
-                    else:
-                        sol.append((a, a + q/a)) #return (a, a + q/a, q, q/a)
-                elif (ord_a != n):
-                    if (ord_b > ord_a):
-                        continue
-                    else:
-                        sol.append((q/a, a + q/a))
-        return sol
-        
-    else:
-        raise NotImplementedError, 'm composite is not implemented yet'
+                sol.append(a[i] + b)
 
-def find_m(degree, q, bound = None):
+        return set(sol)
+def find_m(n, k, bound = None):
     '''
-    INPUT : three integers degree & q & bound
+    INPUT : an integers n, a base field k, an integer bound
 
-    OUTPUT : an integer m
+    OUTPUT : an integer
 
     Algorithm :
 
@@ -386,73 +471,29 @@ def find_m(degree, q, bound = None):
 
     - Another one ? Maybe for q = p^d we'd want (n,d) = 1,
 
-    - m <= bound, the bound is at most q^n + 2*sqrt(q^n) + 1 since we wish for 
-    it to divide E(F_q^n). Also, this generally too big to handle.
-
     We can note that if m = r^e with (e-1,n) = 1 or e = 1, then r = a*n + 1 with
     (a,n) = 1 is a suitable form for m as then phi(m) = (a*n)(an + 1)^(e-1);
-    n|phi(m) and n doesn't divide (an+1)^(e-1), it's even coprime with it (not 
-    so sure about that, it'd be nice; or we could add that as a 
-    condition if need be).
+
     It also works in the general case if all the prime factors of m are of the 
     form a*n + 1 with (a,n) = 1. You just have to apply that to them and 
     multiply the results.
     '''
     if bound is None:
-        bound_a = 100  # Arbitrary value.  
+        bound_a = 100 # Arbitrary value.  
     else:
         # if m = a*n + 1 < b, then a < (b- 1)/n.
-        bound_a = (bound - 1) / degree 
-
-    sol = []
+        bound_a = (bound - 1) / n 
 
     for a in range(bound_a):
-        m = a*degree + 1
+        m = a*n + 1
+        # m composite not implemented yet
         if not m.is_prime_power():
             continue 
+        elif (euler_phi(m)/n).gcd(n) != 1:
+            continue
         else:
-            if (euler_phi(m)//degree).gcd(degree) == 1:
-                sol.append(m) 
-        
-    return sol
-
-
-def find_group_gen(n, m, a_t):
-    '''
-    INPUT : an integer p, characteristic of the ambient base field,
-        an integer q, the cardinality of the ambient base field,
-        an integer n, the degree of the considered extension.
-
-    OUTPUT : a generator of G and its order
-
-    Algorithm :
-
-    For now, we still focus solely on the case m a prime power. The 
-    situation is as follow :
-
-    We have the cyclic finite groupe (Z/m)* and a subgroup of order n 
-    <alpha> or <t>, depending on the situation. We are trying to determine 
-    the generator of the quotient subgroup (Z/m)*/<alpha>. It shall be of order 
-    phi(m)/n.
-    '''
-    gen = Zmod(m).unit_gens()
-    sol = []
-
-    if not m.is_prime_power():
-        raise NotImplementedError, 'm composite is not implemented yet.'
-    else:
-        order = euler_phi(m) / n
-        sub_group = [a_t**i for i in range(n)]
-
-        for i in range(euler_phi(m)):
-            if any(gen[0]**i == s for s in sub_group):
-                continue
+            S_t = find_trace(n, m, k)
+            if len(S_t) < 1:   # Some time in the future we'd like to have a 
+                continue       # better bound than just 1.
             else:
-                if any(((gen[0]**i)*s == sol[k] for s in sub_group)
-                        for k in range(len(sol))):
-                    continue
-                else:
-                    sol.append(gen[0]**i)# ord
-
-        return sol[0], order #raise RuntimeError, 'No generator found.'
-
+                return m, S_t 
