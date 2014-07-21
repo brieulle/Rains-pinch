@@ -38,9 +38,22 @@ Soit $\GF{q}$ le corps fini à $q = p^r$ éléments, avec $p$ un nombre premier.
 définit alors $\overline{\GF{q}}$ sa clôture algébrique. Lorsqu'on a besoin de
 faire des calculs dans cette clôture, il est peut être plus aisé de calculer
 directement sur un corps finis en particulier. Il est donc important de pouvoir
-se déplacer rapidement du corps premier au corps sur lequel on veut effectuer
-ces calculs.\par
-Pour construire des extensions, il faut parfois pouvoir utiliser
+se déplacer rapidement entre les différents sous-corps de cette clôture.\par
+Il est connu et prouvé que de deux corps finis de même cardinal sont reliés par
+un isomorphisme. Cependant la preuve de ce résultat n'est pas constructive,
+trouver un tel isomorphisme demande alors un travail supplémentaire.\par
+La situation est la suivante, nous avons deux extensions de $\GF{q}$ de même
+degré et définies par deux polynôme irréductible distincts $f$ et $g$. On notera
+:
+\[k_1=\GF{q}[X]/(f)\textup{ et }k_2=\GF{q}[Y]/(g)\]
+le but est donc de trouver un isormophisme reliant ces deux corps. Une méthode
+simple et immédiate est d'envoyer $x = \bar{X}$ sur une racine de $f$ dans
+$k_2$. Le problème est que cela revient à factoriser le polynôme $f$ ce qui est
+beaucoup trop lent.\par
+On va donc dans ce rapport étudier deux méthodes permettant, \textit{via}
+l'utilisation de racines de l'unité et de courbes elliptique, de calculer
+rapidement de tels isomorphismes.
+
 
 \section{Préliminaire/contexte théorique}
 \subsection{Corps finis}
