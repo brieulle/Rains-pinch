@@ -34,44 +34,58 @@
 \newtheorem{rem}{Remarque}[thm]
 \section*{Remerciements}
 \section*{Introduction}
-Exposé rapide de la situation, mise en contexte cryptographique/avec le 
-projet de recherche (pour avoir un point de vue plus large).
+Soit $\GF{q}$ le corps fini à $q = p^r$ éléments, avec $p$ un nombre premier. On
+définit alors $\overline{\GF{q}}$ sa clôture algébrique. Lorsqu'on a besoin de
+faire des calculs dans cette clôture, il est peut être plus aisé de calculer
+directement sur un corps finis en particulier. Il est donc important de pouvoir
+se déplacer rapidement du corps premier au corps sur lequel on veut effectuer
+ces calculs.\par
+Pour construire des extensions, il faut parfois pouvoir utiliser
+
 \section{Préliminaire/contexte théorique}
 \subsection{Corps finis}
 Définitions, extensions, galois (Frobenius etc.), racines de l'unités, 
 polynôme/corps cyclotomique.
-\subsection{Courbes elliptiques}
-Définitions (j-invariant, nombres de points, tordues, module de Tate (?) 
-etc.), résultats généraux, sur les corps finis
 \subsection{Théorie des nombres/Idéaux}
 Tout ce qui concerne la preuve de Rains avec les idéaux premiers, les normes
  d'ideaux, la factorisation unique, Galois, les périodes de Gauss, les 
  périodes elliptiques (Mihailescu et al.) ou plus précisément ce qui permet 
  d'y arriver.
+\subsection{Courbes elliptiques}
+Définitions (j-invariant, nombres de points, tordues, module de Tate (?) 
+etc.), résultats généraux, sur les corps finis
+
+
 \section{Isomorphismes de corps finis}
 Présentation du problème, énonciation des difficultés etc.
 \subsection{Algorithme de Pinch (peut-être à mettre dans l'introduction de 
 la section ?)}
 Énonciation et descriptions de la méthode de Pinch, justification des 
 résultats, explication des inconvénients et autre.
-\subsection{Algorithme de Rains}
-Commencer par une explication concise de la méthode, ce qu'elle change par 
-rapport à Pinch.
-\subsubsection{Méthode cyclotomique}
+\subsection{Algorithme de Rains : méthode cyclotomique}
+\textit{Résumé :}Commencer par une explication concise de la méthode, ce 
+qu'elle change par rapport à Pinch.\par
 Présenter pas à pas l'article de Rains (en gros), en enlevant ce qui nous 
 concernerait moins et en rajoutant ce qu'il n'a pas mis (tous les détails 
 sur l'algorithme convert et sa complexité).
-\subsubsection{Méthode elliptique}
-Résumer/Détailler le papier de Luca, rajouter les résultats sur les twists, 
-les périodes, détaillés l'algorithme et sa complexité, le prouver 
+\subsubsection{Principe}
+\subsubsection{Éléments normaux}
+\subsubsection{Algorithme}
+\subsubsection{Analyse de complexité}
+\subsection{Algorithme de Rains : méthode elliptique}
+\textit{Résumé :}Résumer/Détailler le papier de Luca, rajouter les résultats sur
+les twists, les périodes, détaillés l'algorithme et sa complexité, le prouver 
 (probablement fait avec le papier de Luca et Mihailescu pour les périodes ?)
 , détailler les différentes étapes, les paramètres, la façon de trouver m 
 etc.
-\subsubsection{Comparatif}
+\subsubsection{Principe}
+\subsubsection{Choix des paramètres}
+\subsubsection{Analyse de complexité}
+\subsection{Comparatif}
 Comparer les deux méthodes ou même avec l'implémentation de base de SAGE 
 (retrouver une simple racine).
 \section{"Conclusion"}
-Expliquer ce qu'il peut rester à faire (cas général, coupe et appliquer 
+Expliquer ce qu'il peut rester à faire (cas général, couper et appliquer 
 l'une des deux méthodes selon la nature du m ou s'il y a besoin de calculer 
 une extension, etc.), où est-ce qu'on peut récupérer des performances 
 (produit scalaire)
