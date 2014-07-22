@@ -56,25 +56,65 @@ rapidement de tels isomorphismes.
 
 
 \section{Préliminaire/contexte théorique}
+
 \subsection{Corps finis}
-Définitions, extensions, galois (Frobenius etc.), racines de l'unités, 
-polynôme/corps cyclotomique.
+\textit{Résumé :}Définitions, extensions, galois (Frobenius etc.), racines de 
+l'unités, polynôme/corps cyclotomique.
+\subsubsection{Définitions}
+Définition d'un corps finis, définition de morphismes/isomorphismes et donc des
+extensions.
+\subsubsection{Extensions de corps}
+Esquisse de la théorie général + résultats particuliers sur les corps finis
+\subsubsection{Théorie de Galois}
+
 \subsection{Théorie des nombres/Idéaux}
-Tout ce qui concerne la preuve de Rains avec les idéaux premiers, les normes
- d'ideaux, la factorisation unique, Galois, les périodes de Gauss, les 
- périodes elliptiques (Mihailescu et al.) ou plus précisément ce qui permet 
- d'y arriver.
+\textit{Résumé :} Tout ce qui concerne la preuve de Rains avec les idéaux 
+premiers, les normes d'ideaux, la factorisation unique, Galois, les périodes de 
+Gauss, les périodes elliptiques (Mihailescu et al.) ou plus précisément ce qui 
+permet d'y arriver.
+\subsubsection{Corps de nombres}
+Définitions (normes, traces, éléments algébriques, etc.)
+\subsubsection{Idéaux premiers}
+ Idéaux premiers sur les anneaux d'entiers de corps de nombres,
+ décomposition unique, résultat de la théorie de Galois.
+\subsubsection{Périodes de Gauss, elliptiques}
+Énoncé et justifier les résultats donnés par Rains (notamment le lemme
+expliquant la forme de $\GF{q}[X]/I$ pour $I$ sous-groupe du groupe de Galois);
+peut-être à mettre directement dans la partie cyclotomique de la section
+algorithme de Rains cyclotomique.
+
 \subsection{Courbes elliptiques}
-Définitions (j-invariant, nombres de points, tordues, module de Tate (?) 
-etc.), résultats généraux, sur les corps finis
+\textit{Résumé :}Définitions (j-invariant, nombres de points, tordues, module de
+Tate (?) etc.), résultats généraux, sur les corps finis
+\subsubsection{Équation de Weierstrass}
+Rapide énoncé des changements de variable, comment on arrive à la forme
+"simple"; liste des différents paramètres/invariants qui nous intéressent.
+\subsubsection{Loi de groupe}
+Je suis pas sûr pour cette partie, c'est un peu long à tout justifier et ce
+n'est pas ce qu'on veut faire. Mais peut-être expliquer rapidement.\par
+Cela dit, je suis très tenté de renvoyer au Silverman pour toute la théorie de
+base en ne mettant uniquement les résultats dont on aurait besoin (donc on saute
+cette partie).
+\subsubsection{Sur les corps finis}
+Nombres de points, théorème de Hasse, Frobenius, trace
+\subsubsection{Tordues}
+Twists quadratiques, courbes $y^2 = x^3 + x$ et $y^2 = x^3 + 1$ et leurs
+tordues, pour préparer le terrain pour la partie elliptique de Rains
 
 
 \section{Isomorphismes de corps finis}
 Présentation du problème, énonciation des difficultés etc.
+
 \subsection{Algorithme de Pinch (peut-être à mettre dans l'introduction de 
 la section ?)}
 Énonciation et descriptions de la méthode de Pinch, justification des 
 résultats, explication des inconvénients et autre.
+\subsubsection{Principe}
+Explication de la méthode et illustration avec l'exempe de l'article, peut-être
+?
+\subsubsection{Problèmes/limitations}
+Taille de m, choisir un élément au hasard
+
 \subsection{Algorithme de Rains : méthode cyclotomique}
 \textit{Résumé :}Commencer par une explication concise de la méthode, ce 
 qu'elle change par rapport à Pinch.\par
@@ -82,9 +122,17 @@ Présenter pas à pas l'article de Rains (en gros), en enlevant ce qui nous
 concernerait moins et en rajoutant ce qu'il n'a pas mis (tous les détails 
 sur l'algorithme convert et sa complexité).
 \subsubsection{Principe}
+Passer par une petite extension pour réduire la taille de m, utilisation des
+éléments normaux, utilisation des périodes de Gauss.
 \subsubsection{Éléments normaux}
-\subsubsection{Algorithme}
-\subsubsection{Analyse de complexité}
+Définitions et résultats utiles pour l'algorithme, justification de
+l'algorithme (peut-être à mettre dans la partie Galois de la section corps
+finis), conversion de la base polynomiale à la base normale.
+\subsubsection{Algorithme \& analyse de complexité}
+Détailler l'algorithme de l'article/code de Luca + analyser la complexité de ces
+algos et les "prouver" (montrer que ça marche bien, cela dit c'est peut-être
+largement faisable avant).
+
 \subsection{Algorithme de Rains : méthode elliptique}
 \textit{Résumé :}Résumer/Détailler le papier de Luca, rajouter les résultats sur
 les twists, les périodes, détaillés l'algorithme et sa complexité, le prouver 
@@ -93,10 +141,13 @@ les twists, les périodes, détaillés l'algorithme et sa complexité, le prouve
 etc.
 \subsubsection{Principe}
 \subsubsection{Choix des paramètres}
-\subsubsection{Analyse de complexité}
-\subsection{Comparatif}
+\subsubsection{Algorithme \& Analyse de complexité}
+
+\section{Comparatif/Implémentation/Résultats numériques}
 Comparer les deux méthodes ou même avec l'implémentation de base de SAGE 
-(retrouver une simple racine).
+(retrouver une simple racine). Détailler les limitations dû à SAGE, peut-être
+prendre une partie de la conclusion en expliquant ce qui pourrait être changer.
+
 \section{"Conclusion"}
 Expliquer ce qu'il peut rester à faire (cas général, couper et appliquer 
 l'une des deux méthodes selon la nature du m ou s'il y a besoin de calculer 
