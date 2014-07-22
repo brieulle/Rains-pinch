@@ -18,9 +18,6 @@ def isom_elliptic(k1, k2, k = None, bound = None):
     - ``k`` -- (default : None) a  finite field of characteristic p!=2, it plays
       the role of the base field for k1 & k2.
 
-    - ``Y_coordinates`` -- (default : False) a boolean that will be used to 
-      know whether to use Y or X coordinates for the Gaussian elliptic periods.
-
     - ``bound`` -- (default : None) a positive integer used as the max for m.
 
     OUTPUT : 
@@ -46,26 +43,36 @@ def isom_elliptic(k1, k2, k = None, bound = None):
 
         True
 
-        sage : tuple_Y = isom_elliptic(k1, k2, Y_coordinates = True)
-
-        sage : tuple_Y[0].minpoly() == tuple_Y[1].minpoly()
-
-        True
-
     ALGORITHM:
 
-    Given two extensions of the same base field and the same degree, we return 
-    two unique elements the use of Gaussian elliptic period on normal elements,
-    via the function find_unique_orbit_elliptic, on an curve E which is 
-    determined by the function find_elliptic_curve.
+    Given two extensions of the same degree defined by two different
+    polynomials, we want to find, with the help of elliptic period, two elements
+    with an unique orbit under the action of the Galois group. The algorithm is
+    as follows :
 
-    First we have to find an integer m and an elliptic curve E  over k such 
-    that :
-    TODO 
+        - First we have to find an integer m with the following properties :
 
-    .. TODO::
+            - We want to have n | phi(m) and (phi(m)/n, n) = 1.
+            - We need m such that there exist an eigenvalue of the Frobenius of
+              order n in (Z/m)* and for that egeinvalue to be of minimal order. 
+              From there we can construct a good class for the trace of the 
+              Frobenius, if we have one or more of those classes, we slect this 
+              m.
 
-        The case j = 1728 and j = 0.
+          This is done by the function find_m.
+    
+        - After that, we need to pick a good elliptic curve. Which is an 
+          elliptic curve defined over GF(q) with its trace of Frobenius has its 
+          class modulo m equal to one of the good candidates, the one returned 
+          by the function find_m. The properties on m ensure that the elliptic 
+          curve over GF(q^n) has points of order m and that the abscissas of 
+          such points span GF(q^n). The function doing that is 
+          find_elliptic_curve.
+
+        - Finally, we compute the elliptic periods u1 and u2 on both E/k1 and 
+          E/k2 using the abscissas of a point of order m on each curves, 
+          the isomorphism we are looking for is the one sending u1 on u2. 
+
     '''
     if k is None:
 	    k = k1.base_ring()
@@ -105,19 +112,15 @@ def find_unique_orbit_elliptic(E, m, case = 0):
     - ``m`` -- an integer with the properties given in isom_elliptic and/or in 
       find_m.
 
-    - ``Y_coordinates`` -- boolean (default : False) determines if X or Y 
-      coordinates are used.
-
     - ``case`` -- integer (default : 0) depends on the j-invariant's value :
-        - ``0`` means j is not 0 nor 1728 or t = 0,
+        - ``0`` means j is not 0 nor 1728 or E is supersingular,
         - ``1`` means j is 1728,
         - ``2`` means j is 0.
 
     OUPUT : 
     
-    - A uniquely defined element of the field where E is defined, namely the 
-      extension of degree n considered; unique means every produced elements 
-      have the same minimal polynomial.
+    - An element in the field K_E over which E is defined, with a unique orbit 
+      under the action of the Galois group  K_E/k.
 
     EXAMPLES :
 
@@ -171,7 +174,17 @@ def find_unique_orbit_elliptic(E, m, case = 0):
 
 
     ALGORITHM:
-    TODO
+
+    From a point of order m on E/GF(q^n), we use its abscissas to generate a 
+    uniquely defined element. To defined such element, we need to calculate 
+    periods of the Galois action. The trace of the elliptic curve we are using 
+    is of the form t = a + q/a, with a of order n in (Z/m)*. So for S a subgroup
+    of the Galois groupe, we have (Z/m)* = <a> x S. To compute the elliptic
+    periods, we use the formulas :
+
+        - u = sum_{i \in S} (([i]P)[0])^2, for j not 0 nor 1728 or t = 0,
+        - u = sum_{i \in S} (([i]P)[0])^4, for j = 1728,
+        - u = sum_{i \in S} (([i]P)[0])^6, for j = 0.
     '''
     n = E.base_ring().degree()
 
