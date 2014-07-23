@@ -7,7 +7,6 @@ from sage.functions.other import sqrt
 from sage.schemes.elliptic_curves.constructor import EllipticCurve
 import XZ
 
-
 def isom_elliptic(k1, k2, k = None, bound = None):
     '''
     INPUT : 
@@ -172,7 +171,6 @@ def find_unique_orbit_elliptic(E, m, case = 0):
 
         True
 
-
     ALGORITHM:
 
     From a point of order m on E/GF(q^n), we use its abscissas to generate a 
@@ -188,7 +186,7 @@ def find_unique_orbit_elliptic(E, m, case = 0):
     '''
     n = E.base_ring().degree()
 
-    # Searching for a point of order exactly m.
+    # Loking for a point of order exactly m.
     P = XZ.find_ordm(E, m)
 
     if case == 0:
@@ -210,34 +208,23 @@ def find_unique_orbit_elliptic(E, m, case = 0):
 
         return sum(((ZZ(gen_G**i)*P)[0])**3 for i in range(order))
 
-
-
-
 def find_elliptic_curve(k, K, m_t):
     '''
     INPUT: 
 
-    - ``k`` -- a base field
+    - ``k`` -- a base field,
 
-    - ``K`` -- an extension of K of degree n.
+    - ``K`` -- an extension of K of degree n,
 
-    - ``m_t`` -- a list of tuple containing a integer and a set of candidates 
+    - ``m_t`` -- a list of tuple containing an integer and a set of candidates 
       for the trace.
 
     OUTPUT: 
     
     - An elliptic curve defined over k with the required properties.
 
-    - An integer case, depending on the value of the j-invariant of said 
-      elliptic curve.
-
-    - An integer m statisfying the properties described in isom_elliptic which 
-      we will be using to compute Gaussian periods.
-
-    ..NOTE::
-
-        The case j = 0 or 1728 are not implemented yet. They shall raise 
-        NotImplementedError.
+    - An integer case, depending on the value of the j-invariant or the 
+      the supersingularity of said elliptic curve.
 
     EXAMPLES:
     
@@ -247,70 +234,39 @@ def find_elliptic_curve(k, K, m_t):
 
     sage: K = GF(5**19, names = 'x', modulus = f)
 
-    sage: m_t = [(229,{0, 1, 3})]
+    sage: m_t = (229,{2})
 
-    sage: find_elliptic(GF(5), K, m_t)
+    sage: find_elliptic_curve(GF(5), K, m_t)
 
-    (Elliptic Curve defined by y^2 = x^3 + x + 2 over Finite Field of size 5,
-    0,
-    229)
+    (Elliptic Curve defined by y^2 = x^3 + x over Finite Field of size 5, 1)
 
     ALGORITHM:
 
-    TODO : Doc is deprecated, to be redone.
+    The goal is top pick an elliptic curve of which the trace of its Frobenius 
+    t is among the right class modulo m, the ones in S_t. We do that in order to 
+    have point of order m only on E/GF(q^n) or above, since then the abscissas 
+    of a point of order m will span GF(q^n) and we'll be able to compute the 
+    elliptic periods as it was planned.
 
-    Function that finds an elliptic curve with the required charateristics, 
-    those given in the function isom_elliptic.
+    We start by looking at the two special cases j = 0 and 1728. If q is not 1 
+    modulo 4 and 3 respectively, then the curves are supersingular (t = 0) and 
+    if 0 is among the good traces, they are to be treated like the other 
+    curves.
 
-    First, we have to determine if m is composite, a prime power or a power of 
-    p, the characteristic of the base field. The first case is not implemented 
-    yet. 
-    We also note that the m given should satisfies several conditions based
-    on the characteristic and the degree of K. See the docstrings of 
-    isom_elliptic for more information.
+    If for j = 0 we have q = 1 mod 3, then we have to tests E(j = 0) and all of
+    its sextic twists. Once again if t is in S_t, then we return the right 
+    curves and the case 2 to compute the periods accordingly.
 
-    - If m is a power of p, the charateristic of the base field k, then we shall
-      proceed as follow :
+    If for j = 1728 we have q = 1 mod 4, then we have to tests  E(j = 1728) and
+    all of its quartic twists. If one the trace is in S_t, we return the right 
+    curves and the case 1.
 
-        We pick a random curve E/k and we set down t = Tr_k(Fr_E), for the
-        curve to be what we want, we need :
+    If j != 0 and 1728, then we tests all the elements of GF(q) to find the 
+    right curve. For each j we test if t or -t is in S_t and return the curve 
+    accordingly plus the case 0.
 
-          - t not zero,
-          - (Z/m)* = <t> x S or #<t> = n 
-          - m divides #E/K but not #E/L, for any intermediate extension L 
-            of K/k; so we can construct points of order m such that their 
-            abscissas or ordinates span exactly K. Or that we haven't any point
-            of order m in any sub-extension.
-
-        Then we test those conditions for both E and its quadratic twist, if one
-        of them meet the requirements, we return it and its trace. If no 
-        elliptic curves are found an error is returned.
-
-    - If m is primer power, then we shall proceed as follow :
-
-        We have m = l^r, for l a prime. For this method to work, we need l to 
-        be an Elkies prime. A prime l is an Elkies prime for an elliptic curve 
-        if the charateristic polynomial of the aforesaid elliptic curve splits 
-        in GF(l).
-
-        For now, we pick a random curve E/k and for it to work, if we set down 
-        t = Tr_k(Fr_E), we need the following :
-
-          - We have x**2 - tx + q = (x - a)(x - b) mod m, meaning the polynomial
-            splits in Z/m,
-          - (Z/m)* = <a> x S, with #<a> = n, 
-          - ord_m(a) < ord_m(b),
-          - m divides #E/K but not #E/L, for any intermediate extension L 
-            of K/k; so we can construct points of order m such that their 
-            abscissas or ordinates span exactly K.
-
-        Once again, we test all that for both E and its quadratic twist; if one 
-        them meet the requirements, we return it, its trace and a tuple
-        containing the root a and t mod m. If none are found, there is 
-        something wrong.
-
-
-    - If m is composite, TODO.
+    If no curves are found, we return None and the case -1, which will raise an
+    runtimeError in the main code.
     '''
     p = k.characteristic()
     q = k.cardinality()
@@ -377,33 +333,46 @@ def find_elliptic_curve(k, K, m_t):
 
 def find_trace(n,m,k):
     '''
-    INPUT : an integer n, an integer m, a base field k
+    INPUT :
 
-    OUTPUT : a list of integer mod m or a list of a couple of integers mod m
+    - ``n`` -- an integer, the degree of the extension,
+    - ``m`` -- an integer, a candidate for the paramater m,
+    - ``k`` -- a finite field, the base field.
 
-    Algorithm :
+    OUTPUT : 
 
-    If m is a power of p, then we look for class modulo m with order equal to n.
-    Then, we return the list of all such class.
+    - A list of integer modulo m with the good properties.
 
-    If m is a power of prime different from p, we look for a in (Z/m)* such 
-    that :
+    EXAMPLES :
 
-    - ord_m(a) < ord_m(q/a) and ord_m(a) = n,
+    sage: n = 281
 
-    or
+    sage: m = 3373
 
-    - ord_m(q/a) < ord_a and ord_m(q/a) = n.
+    sage: k = GF(1747)
 
-    And we return a + q/a.
+    sage: find_trace(n,m,k)
 
-    Here a plays the role of one of the two roots of the future characteristic 
-    polynomial of the Frobenius of the elliptic curve we'll use; i.e.
+    {4, 14, 18, 43, 57, 3325, 3337, 3348, 3354, 3357, 3364}
 
-    X^2 - (a + q/a)*X + a*(q/a) = X^2 - t*X + q
+    ALGORITHM :
 
-    if we write t = a + q/a. From that, we will pick elliptic curves which have 
-    one of the t's as trace of its Frobenius.
+    The algorithm is pretty straightforward. We select all the elements of 
+    order n and look for some properties of their class modulo m and add 
+    them to list if they meet the requirements. They will be the class 
+    candidates for the trace of the future elliptic curves.
+
+    - If m is a power of p, the characteristic, then we look for all the 
+    elements of order n and check if they end in the Hasse interval. 
+
+    - If m is a prime (power) different from p, then we start by computing the 
+    logarithm of elements of order n in (Z/m)*. You have the minimal polynomial
+    of the Frobenius equal to X**2 - t*X + q = (X - a)(X - q/a) mod m. We look 
+    for a among the element of order n modulo m such that the other root q/a is
+    of greater order. If their sum a + q/a = t falls into the Hasse interval, 
+    then we add t in the good candidates.
+
+    - If m is composite, we raise a NotImplementedError.
     '''
     Zm = Integers(m)
     p = k.characteristic()
@@ -411,10 +380,11 @@ def find_trace(n,m,k):
     sq = sqrt(float(2*q))
     q_m = Zm(q)
 
-    # If m is a multiple of p, then we just need the trace to be of order 
-    #exactly n in (Z/m)*
+    # This test may be obsolete if the function is used inside 'isom_elliptic'.
     if not m.is_prime_power():
         raise NotImplementedError
+    # If m is a power of p, then we just need the trace to be of order 
+    # exactly n in (Z/m)*
     elif m%p == 0:
         sol = []
         phi_m = euler_phi(m)
@@ -441,6 +411,7 @@ def find_trace(n,m,k):
         g = Zm.unit_gens()[0]
         Zphi_m = Integers(phi_m)
         
+        # Computing the logarithm of element of order n.
         log_a = [i*alpha for i in n.coprime_integers(n)]
         a = [g**i for i in log_a]
         log_q = q_m.log(g)
@@ -458,29 +429,50 @@ def find_trace(n,m,k):
                 sol.append(a[i] + b)
 
         return set(sol)
+
 def find_m(n, k, bound = None):
     '''
-    INPUT : an integers n, a base field k, an integer bound
+    INPUT :
 
-    OUTPUT : an integer
+    - ``n`` -- an integer, the degree,
 
-    Algorithm :
+    - ``k`` -- a finite field, the base field,
 
-    Functions that given an integer n (degree of an extension) and a bound 
-    returns all the candidates m, such that :
+    - ``bound`` -- (default : None) a positive integer used as the max for m.
 
-    - n|phi(m), the euler totient function,
+    OUTPUT :
 
-    - (n, phi(m)/n) = 1,
+    - A tuple containing an integer and a set of class modulo m.
 
-    - Another one ? Maybe for q = p^d we'd want (n,d) = 1,
+    EXAMPLES :
 
-    We can note that if m = r^e with (e-1,n) = 1 or e = 1, then r = a*n + 1 with
-    (a,n) = 1 is a suitable form for m as then phi(m) = (a*n)(an + 1)^(e-1);
+    sage: find_m(281, GF(1747))
 
-    It also works in the general case if all the prime factors of m are of the 
-    form a*n + 1 with (a,n) = 1. You just have to apply that to them and 
-    multiply the results.
+    (3373, {4, 14, 18, 43, 57, 3325, 3337, 3348, 3354, 3357, 3364})
+
+    sage: find_m(23, GF(11))
+
+    (47, {0, 1, 2, 3, 44, 45, 46})
+
+    ALGORITHM :
+    
+    First and foremost we are looking for an integer m for which n | phi(m). A 
+    good way to obtain such integers is to look for those of the form 
+
+    m = an + 1, 
+
+    because then phi(m) = d.(an) which is divisible by n. We also want phi(m) 
+    to be coprime with n, then choosing m to be a prime (which is possible 
+    thanks to Dirichlet's theorem on the arithmetic progressions) we ensure 
+    that it is actually the case.
+
+    It still works fine, theoratically, if an + 1 is a prime power. Though, we 
+    almost get to pick a m that is prime.
+    
+    Once we have that integers, we try to compute good candidates for the 
+    traces and see how many works. If less than a certain number works (this 
+    number is equal to 1 at the moment), we discard it and test the next prime 
+    power. When one is found, we return it with its trace class candidates.
     '''
     if bound is None:
         bound_a = 100 # Arbitrary value.  
@@ -497,7 +489,9 @@ def find_m(n, k, bound = None):
             continue
         else:
             S_t = find_trace(n, m, k)
-            if len(S_t) < 1:   # Some time in the future we'd like to have a 
-                continue       # better bound than just 1.
+            # Some time in the future we'd like to have a 
+            # better bound than just 1.
+            if len(S_t) < 1:   
+                continue       
             else:
                 return m, S_t 
