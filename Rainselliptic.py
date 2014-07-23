@@ -242,7 +242,7 @@ def find_elliptic_curve(k, K, m_t):
 
     ALGORITHM:
 
-    The goal is top pick an elliptic curve of which the trace of its Frobenius 
+    The goal is to pick an elliptic curve of which the trace of its Frobenius 
     t is among the right class modulo m, the ones in S_t. We do that in order to 
     have point of order m only on E/GF(q^n) or above, since then the abscissas 
     of a point of order m will span GF(q^n) and we'll be able to compute the 
@@ -469,7 +469,7 @@ def find_m(n, k, bound = None):
     It still works fine, theoratically, if an + 1 is a prime power. Though, we 
     almost get to pick a m that is prime.
     
-    Once we have that integers, we try to compute good candidates for the 
+    Once we have that integer, we try to compute good candidates for the 
     traces and see how many works. If less than a certain number works (this 
     number is equal to 1 at the moment), we discard it and test the next prime 
     power. When one is found, we return it with its trace class candidates.
