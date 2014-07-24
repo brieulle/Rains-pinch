@@ -55,8 +55,8 @@ def isom_elliptic(k1, k2, k = None, bound = None):
             - We need m such that there exist an eigenvalue of the Frobenius of
               order n in (Z/m)* and for that egeinvalue to be of minimal order. 
               From there we can construct a good class for the trace of the 
-              Frobenius, if we have one or more of those classes, we slect this 
-              m.
+              Frobenius, if we have one or more of those classes, we select 
+              this m (note : for now, m is just a prime or a prime power).
 
           This is done by the function find_m.
     
@@ -71,7 +71,6 @@ def isom_elliptic(k1, k2, k = None, bound = None):
         - Finally, we compute the elliptic periods u1 and u2 on both E/k1 and 
           E/k2 using the abscissas of a point of order m on each curves, 
           the isomorphism we are looking for is the one sending u1 on u2. 
-
     '''
     if k is None:
 	    k = k1.base_ring()
@@ -336,7 +335,9 @@ def find_trace(n,m,k):
     INPUT :
 
     - ``n`` -- an integer, the degree of the extension,
+
     - ``m`` -- an integer, a candidate for the paramater m,
+
     - ``k`` -- a finite field, the base field.
 
     OUTPUT : 
