@@ -82,8 +82,8 @@ On appelle la caractéristique d'un corps $K$, le plus petit entier $p$ tel que 
 tout $x\in K$ on ait :
 \[p(x) = \underbrace{x + x + \dots + x}_{p fois} = 0\]
 Elle peut être nulle ou égale à nombre premier. Dans notre cas, on s'intéressera
-au corps finis, c'est-à-dire tels que $K$ soit un ensemble fini et la caractéristique 
-est non-nulle.\\\par
+au corps finis, c'est-à-dire tels que $K$ soit un ensemble fini et la 
+caractéristique est non-nulle.\\\par
 Un homomorphisme de corps est nécessairement injectif. En effet, soit deux corps 
 $K$ et $L$ de caractéristique positive ou nulle. Soit $f : K \to L$, on a alors : 
 \[f(x) = 0 \Leftrightarrow x.f(1) = 0 \Leftrightarrow x = 0\]
@@ -102,7 +102,7 @@ caractéristique du corps premier et $n$ le degré de $K/\GF{p}$.
 \begin{proof}
 De façon informelle, on appelle le degré de $L$ sur $K$ la dimension de $L$
 en tant que $K$-espace vectoriel. On discutera plus en détails de cette
-notion dans le point suivant \textit{(réf au résultat)}.\par
+notion dans le point suivant \ref{defdegext}.\par
 Montrons le lemme suivant :
 \begin{lem}
 Un corps fini a pour caractéristique un nombre premier.
@@ -129,9 +129,13 @@ $q$ valeurs possibles, d'où $K$ à $q^m$ éléments; ce qui achève la démonst
 du lemme. Il suffit alors de remplacer $k$ par $\GF{p}$ et $q$ par $p$ et le
 théorème est démontré.\\
 \end{proof}
-Le prochain théorème assure la commutativité des corps finis, et même d'autre
-structures plus générales, on ne va pas le démontrer. Pour une preuve se référer
-par exemple à \cite{
+
+\begin{thm}[Wedderburn]
+Tout corps fini est commutatif.
+\end{thm}
+La preuve est sympathique mais un peu hors-sujet, se référer par exemple à 
+\cite[p.~70-73]{LiNi}.\\\par
+
 
 Si $K$ est un corps à $q$ éléments, alors pour tout $x\in K$ on a $x^q = x$. En
 effet, pour $x = 0$ c'est immédiat. Pour $x\neq 0$, on sait que le groupe
@@ -142,7 +146,7 @@ résultat voulu.\par
 On en déduit immédiatement que le polynôme $X^q - X$ se scinde dans $K$
 puisque étant de degré $q$, il a au maximum $q$ racines qui sont déjà les
 éléments de $K$. On peut dire que $K$ est un corps de décomposition
-\textit{(mettre une réf à la définition)} de $X^q - X$ sur le corps premier de
+\ref{defdec} de $X^q - X$ sur le corps premier de
 $K$.\par
 On notera que dans les corps finis et leurs extensions, l'élévation à une
 puissance égal au cardinal d'un corps fini est un automorphisme particulier. On
@@ -173,12 +177,13 @@ Ainsi, $S$ contient toutes les racines de $X^q - X$ mais comme $K$ a déjà $q$
 \textit{(Unicité)} Soit $K$ le corps à $q = p^n$ éléments, d'après le théorème
 \ref{corfincarprem}, est de caractéristique $p$ et contient $\GF{p}$. On en
 déduit que $K$ est un corps de décomposition de $X^q - X$ sur $\GF{p}$,
-puisqu'il est scindé sur $K$, et l'unicité de déduit de l'unicité des corps de
+puisqu'il est scindé sur $K$, et l'unicité se déduit de l'unicité des corps de
 décomposition, théorème \ref{cordec}.
 \end{proof}
 
 
 \subsubsection{Extensions de corps}
+\label{defdegext}
 On dit que $K$ est une extension de corps de $k$ s'il existe un morphisme de corps 
 $\varphi : k \to K$. Ou de façon équivalente, si $k \subseteq K$ alors $K$ est une 
 extension (de corps) de $k$. On note aussi $K/k$ une extension de corps.
@@ -194,63 +199,136 @@ $k$-algèbre. On appelle $[K:k] := dim_k(K)$ le degré de l'extension. On dit qu
 extension $K/k$ est de degré fini si $[K:k] < \infty$.\par
 
 \begin{thm}
-Soit $k \subseteq L \subseteq L$ des extensions de corps de degré fini. Alors on a :
+Soit $k \subseteq L \subseteq L$ des extensions de corps de degré fini. Alors on 
+a :
 \[[K:k] = [K:L][L:k]\]
 \end{thm}
 \begin{proof}
-Soit $[K:L] = m$ et $[L:k] = n$. On a donc que $K$ est un $L$-espace vectoriel de dimension $m$ et $L$ est un $k$-espace vectoriel de dimension $n$, le théorème revient à montrer que $K$ est un $k$-espace vectoriel de dimension $mn$. Or, d'après ce qui précède, on a $L \simeq k^n$ et $K \simeq L^m$, d'où
-\[K \simeq \underbrace{L \oplus\dots\oplus L}_{m fois}\simeq\underbrace{k^n\oplus\dots\oplus k^n}_{m fois} \simeq k^{nm}\]
+Soit $[K:L] = m$ et $[L:k] = n$. On a donc que $K$ est un $L$-espace vectoriel de 
+dimension $m$ et $L$ est un $k$-espace vectoriel de dimension $n$, le théorème 
+revient à montrer que $K$ est un $k$-espace vectoriel de dimension $mn$. Or, 
+d'après ce qui précède, on a $L \simeq k^n$ et $K \simeq L^m$, d'où
+\[K \simeq \underbrace{L \oplus\dots\oplus L}_{m fois}\simeq\underbrace
+{k^n\oplus\dots\oplus k^n}_{m fois} \simeq k^{nm}\]
 ce qui prouve le théorème.\\
 \end{proof}
 
-On dit qu'un élément $x\in K$ est algèbrique sur $k$ s'il existe un polynôme unitaire à coefficient dans $k$ qui annule $x$. L'ensemble des éléments algébrique d'un corps (sur un sous-corps) forme un corps \textit{(CF. Cours d'algèbre de Perrin ou autre)}. On dit qu'une extension $K/k$ est algébrique si tous les éléments de $K$ sont algébriques sur $k$.
+On dit qu'un élément $x\in K$ est algèbrique sur $k$ s'il existe un polynôme 
+unitaire à coefficient dans $k$ qui annule $x$. L'ensemble des éléments 
+algébrique d'un corps (sur un sous-corps) forme un corps \cite[p.~64, théorème
+1.14]{Per}. On dit qu'une extension $K/k$ est algébrique si tous les éléments de $K$ sont algébriques sur $k$.
 
 \begin{prop}
 Toute extension de degré fini est algébrique et de type fini.
 \end{prop}
 \begin{proof}
-Si l'extension $K/k$ est de degré fini alors elle admet une base finie $(\alpha_1,\dots,\alpha_n)$ en tant que $k$-espace vectoriel, on a alors $K = k(\alpha_1,\dots,\alpha_n)$. Comme $[K:k] = n < \infty$, si $\alpha\in K$ alors $1, \alpha, \dots, \alpha^n$ satisfont une relation de dépendance linéaire, \textit{i.e.} il existe $a_0, \dots, a_n$ dans $k$ tels que :
+Si l'extension $K/k$ est de degré fini alors elle admet une base finie 
+$(\alpha_1,\dots,\alpha_n)$ en tant que $k$-espace vectoriel, on a alors $K 
+= k(\alpha_1,\dots,\alpha_n)$. Comme $[K:k] = n < \infty$, si $\alpha\in K$ 
+alors $1, \alpha, \dots, \alpha^n$ satisfont une relation de dépendance 
+linéaire, \textit{i.e.} il existe $a_0, \dots, a_n$ dans $k$ tels que :
 \[a_0 + a_1.\alpha + \dots + a_n.\alpha^n = 0\]
-puisque $K$ est un $k$-espace vectoriel. D'où tout $\alpha$ est algébrique sur $k$.\\
+puisque $K$ est un $k$-espace vectoriel. D'où tout $\alpha$ est algébrique 
+sur $k$.\\
 \end{proof}
 
 \begin{prop}
-Soit $\alpha\in L$ un élément algébrique sur $k$ et $f = X^d + a_1X^{d-1} + \dots + a_d$ son polynôme minimal sur $k$. Si on pose $d := \textup{deg }f$ alors on a :
+Soit $\alpha\in L$ un élément algébrique sur $k$ et $f = X^d + a_1X^{d-1} + 
+\dots + a_d$ son polynôme minimal sur $k$. Si on pose $d := \textup{deg }f$ 
+alors on a :
 \begin{enumerate}[(i)]
-\item Les éléments $1, \alpha,\dots,\alpha^{d-1}$ forment une base de $k[\alpha]$ en tant qu'espace vectoriel.
+\item Les éléments $1, \alpha,\dots,\alpha^{d-1}$ forment une base de 
+$k[\alpha]$ en tant qu'espace vectoriel.
 \item $k[\alpha]$ est un corps, on a alors $k[\alpha] = k(\alpha)$.
 \item On a $[k(\alpha):k] = d$.
 \end{enumerate}
 \end{prop}
+
 \begin{proof}
-(i) Il suffit de multiplier l'identité $\alpha^d = -a_1\alpha^{d-1} - \dots - a_d$ par $\alpha^i$ pour $i\geq0$ et on montre par récurrence que :
+(i) Il suffit de multiplier l'identité $\alpha^d = -a_1\alpha^{d-1} - \dots 
+- a_d$ par $\alpha^i$ pour $i\geq0$ et on montre par récurrence que :
 \[\alpha^{d+i} \in k\cdot1 + \dots k\cdot\alpha^{d-1}\]
-d'où $k[\alpha] = k\cdot1 + \dots k\cdot\alpha^{d-1}$. De plus, les éléments $1,\alpha,\dots,\alpha^{d-1}$ sont linéairement indépendant puisque si :
+d'où $k[\alpha] = k\cdot1 + \dots k\cdot\alpha^{d-1}$. De plus, les éléments 
+$1,\alpha,\dots,\alpha^{d-1}$ sont linéairement indépendant puisque si :
 \[u_0\cdots1 + u_1\cdots\alpha + \dots u_{d-1}\cdots\alpha^{d-1} = 0\]
 avec les $u_i\neq0$ cela contredirait la minimalité du degré de $f$.\par
-(ii) $k[\alpha] \subset L$ est le sous-anneau d'un corps, il est donc intègre. De plus, pour tout $\beta\in k[\alpha]$ l'application $m_{\beta}$ de la multiplication par $\beta$ dans $k[\alpha]$ est $k$-linéaire et injective, puisque l'anneau est intègre. Pour finir, elle est aussi surjective puisque nous sommes en dimension finie, donc il existe $x\in k[\alpha]$ tel que $m_{\beta}(x) = \beta x = 1$.\par
+(ii) $k[\alpha] \subset L$ est le sous-anneau d'un corps, il est donc intègre. 
+De plus, pour tout $\beta\in k[\alpha]$ l'application $m_{\beta}$ de la 
+multiplication par $\beta$ dans $k[\alpha]$ est $k$-linéaire et injective, 
+puisque l'anneau est intègre. Pour finir, elle est aussi surjective puisque 
+nous sommes en dimension finie, donc il existe $x\in k[\alpha]$ tel que 
+$m_{\beta}(x) = \beta x = 1$.\par
 (iii) Il résulte directement des deux points précédents.\\
 \end{proof}
 
-\subsubsection{Corps de rupture et corps de décomposition}
-
-On peut aussi construire des extensions de corps \textit{via} des polynômes irréductibles. Concrètement, soit $k$ un corps et $P$ un polynôme irréductible unitaire dans $k[X]$. Comme $k[X]$ est principal (il est même euclidien) alors $(P)$ est un idéal maximal, on peut alors faire le quotient $k[X]$ par $(P)$ est on obtient un corps $K \simeq k[X]/(P)$. Dans ce cas, la classe de $X$ qu'on notera $x := \overline{X}$, est une racine du polynôme $P$ et engendre $K$ sur $k$.\par
- Pour encore aller plus loin, considérons une extension $L/k$ telle que $P$ admette une racine $\alpha\in L$. Si on note $\Irr{k}{\alpha}$ le polynôme minimal de $\alpha$, alors $\Irr{k}{\alpha}$ divise $P$, donc est égal à $\lambda P$ pour $\lambda\in k^{\times}$, puisque $P$ est irréductible. Alors le morphisme $k$-algèbre $\phi : k[X] \to L$ défini par $\phi(X) = \alpha$ induit un morphisme de $k$-algèbre $\varphi : K \to L$ tel que $\varphi(x) = \alpha$. Ce morphisme est unique puisque $x$ engendre $K = k(x)$.\\\par
- On vient de montrer en particulier le théorème suivant :
+On peut aussi construire des extensions de corps \textit{via} des polynômes 
+irréductibles. Concrètement, soit $k$ un corps et $P$ un polynôme irréductible 
+unitaire dans $k[X]$. Comme $k[X]$ est principal (il est même euclidien) alors 
+$(P)$ est un idéal maximal, on peut alors faire le quotient $k[X]$ par $(P)$ 
+est on obtient un corps $K \simeq k[X]/(P)$. Dans ce cas, la classe de $X$ qu'on 
+notera $x := \overline{X}$, est une racine du polynôme $P$ et engendre $K$ sur 
+$k$.\par
+Pour encore aller plus loin, considérons une extension $L/k$ telle que $P$ 
+admette une racine $\alpha\in L$. Si on note $\Irr{k}{\alpha}$ le polynôme 
+minimal de $\alpha$, alors $\Irr{k}{\alpha}$ divise $P$, donc est égal à 
+$\lambda P$ pour $\lambda\in k^{\times}$, puisque $P$ est irréductible. Alors 
+le morphisme $k$-algèbre $\phi : k[X] \to L$ défini par $\phi(X) = \alpha$ 
+induit un morphisme de $k$-algèbre $\varphi : K \to L$ tel que $\varphi(x) 
+= \alpha$. Ce morphisme est unique puisque $x$ engendre $K = k(x)$.\\\par
+On vient de montrer en particulier le théorème suivant :
 
 \begin{thm}
-Soit $k$ un corps et $P$ un polynôme irréductible dans $k[X]$. Alors $K := k[X]/(P)$ est un sur-corps de $k$ dans lequel $P$ a au moins une racine, la classe de $\overline{X} = x$. On l'appelle le corps de rupture de $P$ sur $k$.\par
+Soit $k$ un corps et $P$ un polynôme irréductible dans $k[X]$. Alors $K := 
+k[X]/(P)$ est un sur-corps de $k$ dans lequel $P$ a au moins une racine, la 
+classe de $\overline{X} = x$. On l'appelle le corps de rupture de $P$ sur 
+$k$.\par
 \end{thm}
 
-Une autre notion importante est celle de corps de décomposition d'un polynôme non constant sur un corps $k$. Il s'agit du sur-corps $K \supset k$ contenant toutes les racines de $P$, qui est engendré par les racines susnommées.
+Une autre notion importante est celle de corps de décomposition d'un polynôme 
+non constant sur un corps $k$.
+
+\begin{defn}
+\label{defdec}
+Le corps de décomposition d'un polynôme $P\in k[X]$ est le sur-corps $K \supset k$ 
+contenant toutes les racines de $P$, qui est engendré par les racines susnommées.
+\end{defn}
 
 \begin{thm}
 \label{cordec}
-Tout $P\in k[X]$ non constant admet un corps de décomposition unique à isomorphisme près.
+Tout $P\in k[X]$ non constant admet un corps de décomposition unique à 
+isomorphisme près.
 \end{thm}
 \begin{proof}
-%TODO: À toi de voir si tu fais toute la démonstration ou non. C'est un peu long, mais il y a des résultats sympas.
-Pour prouver l'existence du corps de décomposition, il suffit de se placer dans la clôture algèbrique de $k$, alors si on note $K_0$ le corps engendré par $\alpha_1,\dots,\alpha_n$ les racines de $P$, il est clair que $K_0$ est le corps de décomposition de $P$.\par
+%TODO: À toi de voir si tu fais toute la démonstration ou non. C'est un peu 
+%long, mais il y a des résultats sympas.
+\textit{(Existence)}
+Pour prouver l'existence du corps de décomposition, il suffit de se placer 
+dans la clôture algèbrique de $k$, alors si on note $K_0$ le corps engendré 
+par $\alpha_1,\dots,\alpha_n$ les racines de $P$, il est clair que $K_0$ est 
+le corps de décomposition de $P$.\par
+\textit{(Unicité)}
+On veut réalité montrer que si on a deux corps de décompositions, alors ils ont
+isomorphes. Soit deux corps $k$ et $k^{\prime}$ isomorphes, on note $\phi$
+l'isomorphise, qu'on étend alors de façon évidente à un isomorphismes de $k[X]$ 
+dans $k^{\prime}[X]$; \textit{i.e.} on applique $\phi$ au coefficients des 
+polynômes. Soit maintenant on note $L$ et $L'$ les corps de décomposition 
+de $P\in k[X]$ et $P' = \phi(P) \in k^{\prime}[X]$ respectivement.\par
+Raisonnons par récurrence sur $[L:k]$, si $L = k$ alors $L^{\prime} =
+k^{\prime}$. Sinon prenons $\alpha\in L$ une racine de $P$ qui n'est pas dans
+$k$ et notons $Q$ son polynôme minimal sur $k$. On a alors $\alpha'$ racine de 
+$P'$ et $Q'$ son polynôme minimal sur $k'$. Posons $M = k(\alpha)$ et $M' =
+k'(\alpha)$, ainsi $M$ (resp. $M'$) est un corps de décomposition de $Q$ (resp.
+$Q'$) sur $k$ (resp. $k'$). Puisque les corps de rupture sont uniques, modulo
+l'isomorphisme qui envoie une racine sur l'autre, il existe donc un isomorphisme
+$\psi : M \to M'$ tel que $\psi(\alpha) = \alpha'$. On a la situation suivante :
+\begin{align*}
+&P = (X - \alpha)S(X)\in M[X]\\
+&P' = (X - \alpha')S'(X)\in M[X]
+\end{align*}
+Comme $\alpha' = \psi(\alpha)$ alors $S'=\psi{\alpha}$, ainsi $L$ est un corps
+de décomposition pour $S$ et $L'$ pour $S'$; d'où par l'hypothèse de récurrence,
+on a un isomorphisme de $L \to L'$ prolongeant $\psi$ et on a démontré ce qu'il
+fallait.\\
 \end{proof}
 
 \subsubsection{Théorie de Galois}
