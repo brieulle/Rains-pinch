@@ -279,7 +279,7 @@ def find_elliptic_curve(k, K, m_t):
     if q%4 != 1:
         # If q != 1 mod 4, then there's no 4th root of unity, then magically
         # all the quartic twist are already in k and the trace is 0. We just
-        # have to test the only curve y² = x³ + x.
+        # have to test the only curve yï¿½ = xï¿½ + x.
         if 0 in S_t:
             return E_j1728, 0
     else:
@@ -458,7 +458,7 @@ def find_m(n, k, bound = None):
     ALGORITHM :
     
     First and foremost we are looking for an integer m for which n | phi(m). A 
-    good way to obtain such integers is to look for those of the form 
+    good way to obtain such integers is to look for prime power of  the form 
 
     m = an + 1, 
 
