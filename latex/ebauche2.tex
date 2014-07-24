@@ -1,0 +1,372 @@
+\documentclass[a4paper]{article} % papier A4
+\usepackage[utf8]{inputenc}      % accents dans le source
+\usepackage[T1]{fontenc}         % accents dans le pdf
+\usepackage{textcomp}            % symboles complémentaires (euro)
+\usepackage[frenchb]{babel}      % titres en français
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage[colorlinks=false]{hyperref}
+\usepackage{enumerate}
+\usepackage{algorithmic}
+\usepackage{pgf}
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usetikzlibrary{matrix,arrows,decorations.pathmorphing}
+\numberwithin{equation}{section}
+\newcommand\nroot[1]{\textit{#1}\up{\textit{ième}}}
+\newcommand\zmodn[1]{\mathbb{Z}/#1\mathbb{Z}}
+\newcommand\zmodninv[1]{(\mathbb{Z}/#1\mathbb{Z})^{\times}}
+\newcommand\GF[1]{\mathbb{F}_{#1}}
+\newcommand\Irr[2]{\textup{Irr}_{#1}(#2)}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Ouput:}}
+\newcommand\Tr[1]{\textup{Tr}\left(#1\right)}
+\begin{document}
+\newtheorem{thm}{Thèorème}[section]
+\newtheorem{lem}[thm]{Lemme}
+\newtheorem{cor}{Corollaire}[thm]
+\newtheorem{prop}[thm]{Proposition}
+\theoremstyle{definition}
+\newtheorem{defn}[thm]{Définition}
+\newtheorem*{ex}{Exemple}
+\theoremstyle{remark}
+\newtheorem{rem}{Remarque}[thm]
+\section*{Remerciements}
+\section*{Introduction}
+Soit $\GF{q}$ le corps fini à $q = p^r$ éléments, avec $p$ un nombre premier. On
+définit alors $\overline{\GF{q}}$ sa clôture algébrique. Lorsqu'on a besoin de
+faire des calculs dans cette clôture, il est peut être plus aisé de calculer
+directement sur un corps finis en particulier. Il est donc important de pouvoir
+se déplacer rapidement entre les différents sous-corps de cette clôture.\par
+Il est connu et prouvé que de deux corps finis de même cardinal sont reliés par
+un isomorphisme. Cependant la preuve de ce résultat n'est pas constructive,
+trouver un tel isomorphisme demande alors un travail supplémentaire.\par
+La situation est la suivante, nous avons deux extensions de $\GF{q}$ de même
+degré et définies par deux polynôme irréductible distincts $f$ et $g$. On notera
+:
+\[k_1=\GF{q}[X]/(f)\textup{ et }k_2=\GF{q}[Y]/(g)\]
+le but est donc de trouver un isormophisme reliant ces deux corps. Une méthode
+simple et immédiate est d'envoyer $x = \bar{X}$ sur une racine de $f$ dans
+$k_2$. Le problème est que cela revient à factoriser le polynôme $f$ ce qui est
+beaucoup trop lent.\par
+On va donc dans ce rapport étudier deux méthodes permettant, \textit{via}
+l'utilisation de racines de l'unité et de courbes elliptique, de calculer
+rapidement de tels isomorphismes.
+
+
+\section{Préliminaire/contexte théorique}
+
+\subsection{Corps finis}
+Dans cette section on va rappeler les définitions et démontrer certains 
+résultats liés aux corps finis. Principalement, on étudiera les extensions 
+de corps et la théorie de Galois de base sur les corps finis. On ne considérera
+que des corps commutatifs.
+
+\subsubsection{Définitions}
+
+Soit $\Omega = (K, +, .)$ un triplet où $K$ est un ensemble et $+$ et $.$ deux
+lois de composition interne sur $K$. On dit que $\Omega$ est un corps si : 
+\begin{enumerate}[(i)]
+\item $(K, +)$ est un groupe abélien,
+\item $(K\setminus\lbrace0\rbrace,.)$ est un groupe (abélien ou non, dans la 
+littérature francophone),
+\item la première loi est distributive par rapport à la seconde,
+\item $K$ n'a pas de diviseurs de $0$.
+\end{enumerate}
+Par abus de notation, on désignera désormais le corps $\Omega$ par son ensemble
+$K$. On notera $0$ et $1$ les éléments neutres de la première et seconde loi 
+respectivement; on omettra régulièrement de noter la seconde loi dans les 
+opérations sur $K$.\par
+On appelle la caractéristique d'un corps $K$, le plus petit entier $p$ tel que pour 
+tout $x\in K$ on ait :
+\[p(x) = \underbrace{x + x + \dots + x}_{p fois} = 0\]
+Elle peut être nulle ou égale à nombre premier. Dans notre cas, on s'intéressera
+au corps finis, c'est-à-dire tels que $K$ soit un ensemble fini et la caractéristique 
+est non-nulle.\\\par
+Un homomorphisme de corps est nécessairement injectif. En effet, soit deux corps 
+$K$ et $L$ de caractéristique positive ou nulle. Soit $f : K \to L$, on a alors : 
+\[f(x) = 0 \Leftrightarrow x.f(1) = 0 \Leftrightarrow x = 0\]
+puisque un homomorphisme doit conserver la structure, $f(1) = 1$. S'il existe un
+tel homomorphisme entre deux corps, on a $K\subset L$ et on dit que $L$ est un
+surcorps de $L$ ou $K$ est un sous-corps de $L$.\par
+On appelle corps premier un corps qui n'a aucun sous-corps. Dans le cas des
+corps finis, il s'agit du corps $\GF{p}$ à $p$ éléments, pour $p$ premier. Ce
+qui nous donne le théorème suivant :
+
+\begin{thm}
+\label{corfincarprem}
+Soit $K$ un corps fini, alors $K$ a $p^n$ éléments, où $p$ premier est la
+caractéristique du corps premier et $n$ le degré de $K/\GF{p}$.
+\end{thm}
+\begin{proof}
+De façon informelle, on appelle le degré de $L$ sur $K$ la dimension de $L$
+en tant que $K$-espace vectoriel. On discutera plus en détails de cette
+notion dans le point suivant \textit{(réf au résultat)}.\par
+Montrons le lemme suivant :
+\begin{lem}
+Un corps fini a pour caractéristique un nombre premier.
+\end{lem}
+\begin{proof}
+Comme $K$ est intègre en tant qu'anneau, sa caractéristique est plus grande ou
+égale à $2$. Supposons que la caractéristique de $K$ soit $p = km$ pour $k,
+m\in\mathbb{Z}$. Alors pour $e\in K$ on a e :
+\[0 = ne = (km)e = (ke)(me)\]
+puisque $K$ n'a pas de diviseurs de $0$, alors soit $ke = 0$ ou $me = 0$. Il
+s'ensuit que pour tout $r\in K$, on a $kr = (ke)r = 0$ ou $mr = (me)r = 0$ ce
+qui contredit la minimalité de la caractéristique.
+\end{proof}
+Donc $K$ est de caractéristique $p$ premier et son corps premier est (isomorphe
+à) $\GF{p}$. On fini avec le lemme qui suit :
+\begin{lem}
+Soit $K$ un corps fini contenant un corps fini $k$ à q éléments. Alors $K$ a
+$q^m$ élément où $m$ est le degré de $K$ en tant que $k$-espace vectoriel.
+\end{lem}
+Si $K$ est un $k$-espace vectoriel de dimension fini, il admet alors une base
+d'éléments de $k$. Si on écrit chaque éléments de $K$ comme une combinaison
+linéaire des éléments de cette base, chaque coeffecient de cette combinaison a
+$q$ valeurs possibles, d'où $K$ à $q^m$ éléments; ce qui achève la démonstration
+du lemme. Il suffit alors de remplacer $k$ par $\GF{p}$ et $q$ par $p$ et le
+théorème est démontré.\\
+\end{proof}
+Le prochain théorème assure la commutativité des corps finis, et même d'autre
+structures plus générales, on ne va pas le démontrer. Pour une preuve se référer
+par exemple à \cite{
+
+Si $K$ est un corps à $q$ éléments, alors pour tout $x\in K$ on a $x^q = x$. En
+effet, pour $x = 0$ c'est immédiat. Pour $x\neq 0$, on sait que le groupe
+multiplicative de $K$, noté $K^{\times} = K\setminus\lbrace0\rbrace$, est un
+groupe fini à $q-1$ éléments par définition, donc $x^{q-1} = 1$ pour tout $x\in
+K^{\times}$ et il suffit de multiplier encore une fois par $x$ pour obtenir le
+résultat voulu.\par
+On en déduit immédiatement que le polynôme $X^q - X$ se scinde dans $K$
+puisque étant de degré $q$, il a au maximum $q$ racines qui sont déjà les
+éléments de $K$. On peut dire que $K$ est un corps de décomposition
+\textit{(mettre une réf à la définition)} de $X^q - X$ sur le corps premier de
+$K$.\par
+On notera que dans les corps finis et leurs extensions, l'élévation à une
+puissance égal au cardinal d'un corps fini est un automorphisme particulier. On
+l'appelle l'automorphisme de Frobenius et on le note $Fr_q$ pour $Fr_q(x) =
+x^q$. Ce n'est pas immédiat qu'il s'agit là d'un homomorphisme, mais un simple
+calcul permet de s'en assurer.\\\par
+Finissons ce point par le théorème suivant qui assure l'existence et l'unicité
+à isomorphisme près des corps finis; c'est à partir de ce théorème que le
+travail de tout ce rapport va se faire :
+
+\begin{thm}
+Pour tout nombre premier $p$ et tout entier positif $n$, il existe un corps
+fini à $p^n$ éléments. Tout corps fini à $q = p^n$ éléments est isomorphe au
+corps de décomposition de $X^q - X$ sur $\GF{p}$. On parlera alors du corps à
+$q$ éléments et on le notera $\GF{q}$.
+\end{thm}
+\begin{proof}
+\textit{(Existence)} Pour $q = p^n$, on considère le polynôme $X^q - X$ dans 
+$\GF{p}[X]$ et on note $K$ son corps de décomposition sur $\GF{p}$. Le polynôme 
+est séparable ou n'a aucune racine multiple puisque sa dérivée est égale à $qX^{q-1}
+- 1 = -1$. Posons $S = \lbrace x\in K : x^q - x = 0\rbrace$, alors $S$ est un 
+sous-corps de $K$; $0$ et $1$ sont dans $K$ et d'après les propriétés sur le 
+Frobenius et les résultats obtenus plus haut on a :
+\[(a - b)^q = a^q - b^q = a - b \textup{ et }(ab^{-1})^q = a^q - b^{-q} =
+ab^{-1}\]
+Ainsi, $S$ contient toutes les racines de $X^q - X$ mais comme $K$ a déjà $q$
+élémens, alors $K = S$ est un corps à $q$ éléments.\par
+\textit{(Unicité)} Soit $K$ le corps à $q = p^n$ éléments, d'après le théorème
+\ref{corfincarprem}, est de caractéristique $p$ et contient $\GF{p}$. On en
+déduit que $K$ est un corps de décomposition de $X^q - X$ sur $\GF{p}$,
+puisqu'il est scindé sur $K$, et l'unicité de déduit de l'unicité des corps de
+décomposition, théorème \ref{cordec}.
+\end{proof}
+
+
+\subsubsection{Extensions de corps}
+On dit que $K$ est une extension de corps de $k$ s'il existe un morphisme de corps 
+$\varphi : k \to K$. Ou de façon équivalente, si $k \subseteq K$ alors $K$ est une 
+extension (de corps) de $k$. On note aussi $K/k$ une extension de corps.
+Si on a $k\subseteq L \subseteq K$, alors $L/k$ est une sous-extension de
+$K/k$.\par
+Soit $K/k$ une extension de corps et $S$ une partie de $K$. Le sous-corps $L := 
+k(S)$ de $K$ engendré par $S$ sur $k$ est le plus petite sous-corps de $K$ contenant 
+$S$ et $l$. Si $S = \lbrace x_1,\dots,x_n \rbrace$ est fini, alors on note $L = 
+K(x_1,\dots,x_n)$, on dit alors que l'extension est de type fini. L'extension $L/k$ 
+est dite monogène ou simple si elle est engendré par un seul élément.\par
+Si $K/k$ est une extension on peut voir $K$ comme un $k$-espace vectoriel ou une 
+$k$-algèbre. On appelle $[K:k] := dim_k(K)$ le degré de l'extension. On dit qu'une 
+extension $K/k$ est de degré fini si $[K:k] < \infty$.\par
+
+\begin{thm}
+Soit $k \subseteq L \subseteq L$ des extensions de corps de degré fini. Alors on a :
+\[[K:k] = [K:L][L:k]\]
+\end{thm}
+\begin{proof}
+Soit $[K:L] = m$ et $[L:k] = n$. On a donc que $K$ est un $L$-espace vectoriel de dimension $m$ et $L$ est un $k$-espace vectoriel de dimension $n$, le théorème revient à montrer que $K$ est un $k$-espace vectoriel de dimension $mn$. Or, d'après ce qui précède, on a $L \simeq k^n$ et $K \simeq L^m$, d'où
+\[K \simeq \underbrace{L \oplus\dots\oplus L}_{m fois}\simeq\underbrace{k^n\oplus\dots\oplus k^n}_{m fois} \simeq k^{nm}\]
+ce qui prouve le théorème.\\
+\end{proof}
+
+On dit qu'un élément $x\in K$ est algèbrique sur $k$ s'il existe un polynôme unitaire à coefficient dans $k$ qui annule $x$. L'ensemble des éléments algébrique d'un corps (sur un sous-corps) forme un corps \textit{(CF. Cours d'algèbre de Perrin ou autre)}. On dit qu'une extension $K/k$ est algébrique si tous les éléments de $K$ sont algébriques sur $k$.
+
+\begin{prop}
+Toute extension de degré fini est algébrique et de type fini.
+\end{prop}
+\begin{proof}
+Si l'extension $K/k$ est de degré fini alors elle admet une base finie $(\alpha_1,\dots,\alpha_n)$ en tant que $k$-espace vectoriel, on a alors $K = k(\alpha_1,\dots,\alpha_n)$. Comme $[K:k] = n < \infty$, si $\alpha\in K$ alors $1, \alpha, \dots, \alpha^n$ satisfont une relation de dépendance linéaire, \textit{i.e.} il existe $a_0, \dots, a_n$ dans $k$ tels que :
+\[a_0 + a_1.\alpha + \dots + a_n.\alpha^n = 0\]
+puisque $K$ est un $k$-espace vectoriel. D'où tout $\alpha$ est algébrique sur $k$.\\
+\end{proof}
+
+\begin{prop}
+Soit $\alpha\in L$ un élément algébrique sur $k$ et $f = X^d + a_1X^{d-1} + \dots + a_d$ son polynôme minimal sur $k$. Si on pose $d := \textup{deg }f$ alors on a :
+\begin{enumerate}[(i)]
+\item Les éléments $1, \alpha,\dots,\alpha^{d-1}$ forment une base de $k[\alpha]$ en tant qu'espace vectoriel.
+\item $k[\alpha]$ est un corps, on a alors $k[\alpha] = k(\alpha)$.
+\item On a $[k(\alpha):k] = d$.
+\end{enumerate}
+\end{prop}
+\begin{proof}
+(i) Il suffit de multiplier l'identité $\alpha^d = -a_1\alpha^{d-1} - \dots - a_d$ par $\alpha^i$ pour $i\geq0$ et on montre par récurrence que :
+\[\alpha^{d+i} \in k\cdot1 + \dots k\cdot\alpha^{d-1}\]
+d'où $k[\alpha] = k\cdot1 + \dots k\cdot\alpha^{d-1}$. De plus, les éléments $1,\alpha,\dots,\alpha^{d-1}$ sont linéairement indépendant puisque si :
+\[u_0\cdots1 + u_1\cdots\alpha + \dots u_{d-1}\cdots\alpha^{d-1} = 0\]
+avec les $u_i\neq0$ cela contredirait la minimalité du degré de $f$.\par
+(ii) $k[\alpha] \subset L$ est le sous-anneau d'un corps, il est donc intègre. De plus, pour tout $\beta\in k[\alpha]$ l'application $m_{\beta}$ de la multiplication par $\beta$ dans $k[\alpha]$ est $k$-linéaire et injective, puisque l'anneau est intègre. Pour finir, elle est aussi surjective puisque nous sommes en dimension finie, donc il existe $x\in k[\alpha]$ tel que $m_{\beta}(x) = \beta x = 1$.\par
+(iii) Il résulte directement des deux points précédents.\\
+\end{proof}
+
+\subsubsection{Corps de rupture et corps de décomposition}
+
+On peut aussi construire des extensions de corps \textit{via} des polynômes irréductibles. Concrètement, soit $k$ un corps et $P$ un polynôme irréductible unitaire dans $k[X]$. Comme $k[X]$ est principal (il est même euclidien) alors $(P)$ est un idéal maximal, on peut alors faire le quotient $k[X]$ par $(P)$ est on obtient un corps $K \simeq k[X]/(P)$. Dans ce cas, la classe de $X$ qu'on notera $x := \overline{X}$, est une racine du polynôme $P$ et engendre $K$ sur $k$.\par
+ Pour encore aller plus loin, considérons une extension $L/k$ telle que $P$ admette une racine $\alpha\in L$. Si on note $\Irr{k}{\alpha}$ le polynôme minimal de $\alpha$, alors $\Irr{k}{\alpha}$ divise $P$, donc est égal à $\lambda P$ pour $\lambda\in k^{\times}$, puisque $P$ est irréductible. Alors le morphisme $k$-algèbre $\phi : k[X] \to L$ défini par $\phi(X) = \alpha$ induit un morphisme de $k$-algèbre $\varphi : K \to L$ tel que $\varphi(x) = \alpha$. Ce morphisme est unique puisque $x$ engendre $K = k(x)$.\\\par
+ On vient de montrer en particulier le théorème suivant :
+
+\begin{thm}
+Soit $k$ un corps et $P$ un polynôme irréductible dans $k[X]$. Alors $K := k[X]/(P)$ est un sur-corps de $k$ dans lequel $P$ a au moins une racine, la classe de $\overline{X} = x$. On l'appelle le corps de rupture de $P$ sur $k$.\par
+\end{thm}
+
+Une autre notion importante est celle de corps de décomposition d'un polynôme non constant sur un corps $k$. Il s'agit du sur-corps $K \supset k$ contenant toutes les racines de $P$, qui est engendré par les racines susnommées.
+
+\begin{thm}
+\label{cordec}
+Tout $P\in k[X]$ non constant admet un corps de décomposition unique à isomorphisme près.
+\end{thm}
+\begin{proof}
+%TODO: À toi de voir si tu fais toute la démonstration ou non. C'est un peu long, mais il y a des résultats sympas.
+Pour prouver l'existence du corps de décomposition, il suffit de se placer dans la clôture algèbrique de $k$, alors si on note $K_0$ le corps engendré par $\alpha_1,\dots,\alpha_n$ les racines de $P$, il est clair que $K_0$ est le corps de décomposition de $P$.\par
+\end{proof}
+
+\subsubsection{Théorie de Galois}
+Définitions et résutlats de base (sans forcément tout prouver), Frobenius, 
+Groupe de Galois, élément primitif, extensions galoisiennes, etc.
+
+\subsubsection{Extensions et polynômes cyclotomiques}
+Racines de l'unités et quelques mots sur les polynômes cyclotomiques et leurs 
+extensions. Peut-être rajouter un ou deux mots sur le cas des corps finis (ça 
+pourrait se mettre dans la section du dessus).
+
+\subsection{Théorie des nombres/Idéaux}
+\textit{Résumé :} Tout ce qui concerne la preuve de Rains avec les idéaux 
+premiers, les normes d'ideaux, la factorisation unique, Galois, les périodes de 
+Gauss, les périodes elliptiques (Mihailescu et al.) ou plus précisément ce qui 
+permet d'y arriver.
+\subsubsection{Corps de nombres}
+Définitions (normes, traces, éléments algébriques, etc.)
+\subsubsection{Idéaux premiers}
+ Idéaux premiers sur les anneaux d'entiers de corps de nombres,
+ décomposition unique, résultat de la théorie de Galois.
+\subsubsection{Périodes de Gauss, elliptiques}
+Énoncé et justifier les résultats donnés par Rains (notamment le lemme
+expliquant la forme de $\GF{q}[X]/I$ pour $I$ sous-groupe du groupe de Galois);
+peut-être à mettre directement dans la partie cyclotomique de la section
+algorithme de Rains cyclotomique.
+
+\subsection{Courbes elliptiques}
+\textit{Résumé :}Définitions (j-invariant, nombres de points, tordues, module de
+Tate (?) etc.), résultats généraux, sur les corps finis
+\subsubsection{Équation de Weierstrass}
+Rapide énoncé des changements de variable, comment on arrive à la forme
+"simple"; liste des différents paramètres/invariants qui nous intéressent.
+\subsubsection{Loi de groupe}
+Je suis pas sûr pour cette partie, c'est un peu long à tout justifier et ce
+n'est pas ce qu'on veut faire. Mais peut-être expliquer rapidement.\par
+Cela dit, je suis très tenté de renvoyer au Silverman pour toute la théorie de
+base en ne mettant uniquement les résultats dont on aurait besoin (donc on saute
+cette partie).
+\subsubsection{Sur les corps finis}
+Nombres de points, théorème de Hasse, Frobenius, trace
+\subsubsection{Tordues}
+Twists quadratiques, courbes $y^2 = x^3 + x$ et $y^2 = x^3 + 1$ et leurs
+tordues, pour préparer le terrain pour la partie elliptique de Rains
+
+
+\section{Isomorphismes de corps finis}
+Présentation du problème, énonciation des difficultés etc.
+
+\subsection{Algorithme de Pinch (peut-être à mettre dans l'introduction de 
+la section ?)}
+Énonciation et descriptions de la méthode de Pinch, justification des 
+résultats, explication des inconvénients et autre.
+\subsubsection{Principe}
+Explication de la méthode et illustration avec l'exempe de l'article, peut-être
+?
+\subsubsection{Problèmes/limitations}
+Taille de m, choisir un élément au hasard
+
+\subsection{Algorithme de Rains : méthode cyclotomique}
+\textit{Résumé :}Commencer par une explication concise de la méthode, ce 
+qu'elle change par rapport à Pinch.\par
+Présenter pas à pas l'article de Rains (en gros), en enlevant ce qui nous 
+concernerait moins et en rajoutant ce qu'il n'a pas mis (tous les détails 
+sur l'algorithme convert et sa complexité).
+\subsubsection{Principe}
+Passer par une petite extension pour réduire la taille de m, utilisation des
+éléments normaux, utilisation des périodes de Gauss.
+\subsubsection{Éléments normaux}
+Définitions et résultats utiles pour l'algorithme, justification de
+l'algorithme (peut-être à mettre dans la partie Galois de la section corps
+finis), conversion de la base polynomiale à la base normale.
+\subsubsection{Algorithme \& analyse de complexité}
+Détailler l'algorithme de l'article/code de Luca + analyser la complexité de ces
+algos et les "prouver" (montrer que ça marche bien, cela dit c'est peut-être
+largement faisable avant).
+
+\subsection{Algorithme de Rains : méthode elliptique}
+\textit{Résumé :}Résumer/Détailler le papier de Luca, rajouter les résultats sur
+les twists, les périodes, détaillés l'algorithme et sa complexité, le prouver 
+(probablement fait avec le papier de Luca et Mihailescu pour les périodes ?)
+, détailler les différentes étapes, les paramètres, la façon de trouver m 
+etc.
+\subsubsection{Principe}
+Choix d'un point d'ordre m sur une bonne courbe elliptique engendre 
+l'extension, utilisation des périodes elliptiques afin d'avoir un élément 
+stable par l'action du groupe de Galois (Énoncer les lemmes etc.)
+\subsubsection{Choix des paramètres}
+Justifier le choix de m par rapport à n et q, tout ce qui concerne la valeur 
+propre d'ordre n et donc le choix de traces qui s'en suit, expliquer comment on
+pick les courbes (à ce moment là on pourra aussi justifier avec le résultat 
+sur les tordues).
+\subsubsection{Algorithme \& Analyse de complexité}
+Décrire l'algorithme et donner sa complexité.
+
+\section{Comparatif/Implémentation/Résultats numériques}
+Comparer les deux méthodes ou même avec l'implémentation de base de SAGE 
+(retrouver une simple racine). Détailler les limitations dû à SAGE, peut-être
+prendre une partie de la conclusion en expliquant ce qui pourrait être changer.
+
+\section{"Conclusion"}
+Expliquer ce qu'il peut rester à faire (cas général, car(K) = 2 et n 
+composé, couper et appliquer l'une des deux méthodes selon la nature du m ou 
+s'il y a besoin de calculer une extension, etc.), où est-ce qu'on peut 
+récupérer des performances (produit scalaire).
+
+\begin{thebibliography}{LC}
+\bibitem{Sam} \emph{Théorie algébrique des nombres}, \bsc{Pierre Samuel}, Hermann, 1971.
+\bibitem{Nek} \emph{Théorie de Galois}, \bsc{Jan Nekov\'a\v{r}}, Université Pierre et Marie Curie, 2003, \bsc{url :} \url{http://www.math.jussieu.fr/~nekovar/co/ln/gal/g.pdf}.
+\bibitem{Per} \emph{Cours d'algèbre}, \bsc{Daniel Perrin}, ellipses, 1996.
+\bibitem{Rai} \emph{Efficient computation of isomorphism between finite fields}, \bsc{Eric M. Rains}, 2008.
+\bibitem{LiNi} \emph{Finite fields}, \bsc{Rudolf Lidl} \& \bsc{Harald Niederreiter}, Encyclopedia of mathematics and its applications vol. 20, Cambridge, 1983.
+\bibitem{Pin} \emph{Recognising elements of finite fields}, \bsc{Richard G.E. Pinch}, Cryptography and coding II, p. 193-197, Oxford University Press, 1992.
+\bibitem{Pol} \emph{Algèbre et théorie de Galois}, \bsc{Patrick Polo}, Université Pierre et Marie Curie, 2007, \bsc{url :} \url{http://www.math.jussieu.fr/~polo/M1/ATG07chIV.pdf}.
+\bibitem{Law} \emph{Introduction to cyclotomic fields}, \bsc{Lawrence C. Washington}, Graduate texts in mathematics, Springer-Verlag, 1982.
+\bibitem{Sil} \emph{The arithmetic of elliptic curves}, \bsc{Joseph H. Silverman}, Graduate texts in mathematics, Springer, 2nd ed. 2009.
+\bibitem{GarD} \emph{Handbook of finite fields}, \bsc{Gary L. Mullen} \& \bsc{Daniel Panario}, Discrete mathematics and its applications, Series Editor Kenneth H. Rosen, CRC Press.
+\end{thebibliography}
+\end{document}
