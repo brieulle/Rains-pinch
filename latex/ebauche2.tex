@@ -78,17 +78,19 @@ Par abus de notation, on désignera désormais le corps $\Omega$ par son ensembl
 $K$. On notera $0$ et $1$ les éléments neutres de la première et seconde loi 
 respectivement; on omettra régulièrement de noter la seconde loi dans les 
 opérations sur $K$.\par
-On appelle la caractéristique d'un corps $K$, le plus petit entier $p$ tel que pour 
-tout $x\in K$ on ait :
+On appelle la caractéristique d'un corps $K$, le plus petit entier $p$ tel que 
+pour tout $x\in K$ on ait :
 \[p(x) = \underbrace{x + x + \dots + x}_{p fois} = 0\]
-Elle peut être nulle ou égale à nombre premier. Dans notre cas, on s'intéressera
-au corps finis, c'est-à-dire tels que $K$ soit un ensemble fini et la 
-caractéristique est non-nulle.\\\par
-Un homomorphisme de corps est nécessairement injectif. En effet, soit deux corps 
-$K$ et $L$ de caractéristique positive ou nulle. Soit $f : K \to L$, on a alors : 
+Elle peut être nulle ou positive, en pratique elle sera nulle ou égale à un
+nombre premier. Dans notre cas, on s'intéressera au corps finis, c'est-à-dire 
+tels que $K$ soit un ensemble fini et la caractéristique est non-nulle.\\\par
+Un homomorphisme de corps est nécessairement injectif. En effet, soit deux corps
+$K$ et $L$ de caractéristique positive ou nulle. Soit $f : K \to L$, on a alors 
+:
 \[f(x) = 0 \Leftrightarrow x.f(1) = 0 \Leftrightarrow x = 0\]
-puisque un homomorphisme doit conserver la structure, $f(1) = 1$. S'il existe un
-tel homomorphisme entre deux corps, on a $K\subset L$ et on dit que $L$ est un
+puisque un homomorphisme doit conserver la structure et que $K$ n'a pas de
+diviseurs de zéro, $x = 0$ et $f(1) = 1$. S'il existe un
+tel homomorphisme entre deux corps, on a $K\subseteq L$ et on dit que $L$ est un
 surcorps de $L$ ou $K$ est un sous-corps de $L$.\par
 On appelle corps premier un corps qui n'a aucun sous-corps. Dans le cas des
 corps finis, il s'agit du corps $\GF{p}$ à $p$ éléments, pour $p$ premier. Ce
@@ -112,42 +114,39 @@ Comme $K$ est intègre en tant qu'anneau, sa caractéristique est plus grande ou
 égale à $2$. Supposons que la caractéristique de $K$ soit $p = km$ pour $k,
 m\in\mathbb{Z}$. Alors pour $e\in K$ on a e :
 \[0 = ne = (km)e = (ke)(me)\]
-puisque $K$ n'a pas de diviseurs de $0$, alors soit $ke = 0$ ou $me = 0$. Il
-s'ensuit que pour tout $r\in K$, on a $kr = (ke)r = 0$ ou $mr = (me)r = 0$ ce
-qui contredit la minimalité de la caractéristique.
+puisque $K$ n'a pas de diviseurs de $0$, alors $ke = 0$ ou $me = 0$, ce
+qui contredit la minimalité de la caractéristique.\\
 \end{proof}
 Donc $K$ est de caractéristique $p$ premier et son corps premier est (isomorphe
 à) $\GF{p}$. On fini avec le lemme qui suit :
 \begin{lem}
-Soit $K$ un corps fini contenant un corps fini $k$ à q éléments. Alors $K$ a
-$q^m$ élément où $m$ est le degré de $K$ en tant que $k$-espace vectoriel.
+Soit $K$ un corps fini contenant un corps fini $L$ à q éléments. Alors $K$ a
+$q^m$ élément où $m$ est le degré de $K$ en tant que $L$-espace vectoriel.
 \end{lem}
-Si $K$ est un $k$-espace vectoriel de dimension fini, il admet alors une base
-d'éléments de $k$. Si on écrit chaque éléments de $K$ comme une combinaison
+Si $K$ est un $L$-espace vectoriel de dimension fini, il admet alors une base
+d'éléments de $L$. Si on écrit chaque éléments de $K$ comme une combinaison
 linéaire des éléments de cette base, chaque coeffecient de cette combinaison a
 $q$ valeurs possibles, d'où $K$ à $q^m$ éléments; ce qui achève la démonstration
-du lemme. Il suffit alors de remplacer $k$ par $\GF{p}$ et $q$ par $p$ et le
+du lemme. Il suffit alors de remplacer $L$ par $\GF{p}$ et $q$ par $p$ et le
 théorème est démontré.\\
 \end{proof}
 
 \begin{thm}[Wedderburn]
 Tout corps fini est commutatif.
 \end{thm}
-La preuve est sympathique mais un peu hors-sujet, se référer par exemple à 
-\cite[p.~70-73]{LiNi}.\\\par
+On passera la preuve bien qu'elle soit intéressante, se référer par exemple à 
+\cite[p.~70-73]{LiNi} ou \cite[p.~82]{Per}.\\\par
 
-
-Si $K$ est un corps à $q$ éléments, alors pour tout $x\in K$ on a $x^q = x$. En
+Si $K$ est un corps à $q$ éléments, alors pour tout $x\in K$, on a $x^q = x$. En
 effet, pour $x = 0$ c'est immédiat. Pour $x\neq 0$, on sait que le groupe
-multiplicative de $K$, noté $K^{\times} = K\setminus\lbrace0\rbrace$, est un
-groupe fini à $q-1$ éléments par définition, donc $x^{q-1} = 1$ pour tout $x\in
+multiplicatif de $K$, noté $K^{\times} = K\setminus\lbrace0\rbrace$, est un
+groupe fini à $q-1$ éléments par définition; donc $x^{q-1} = 1$ pour tout $x\in
 K^{\times}$ et il suffit de multiplier encore une fois par $x$ pour obtenir le
 résultat voulu.\par
 On en déduit immédiatement que le polynôme $X^q - X$ se scinde dans $K$
 puisque étant de degré $q$, il a au maximum $q$ racines qui sont déjà les
 éléments de $K$. On peut dire que $K$ est un corps de décomposition
-\ref{defdec} de $X^q - X$ sur le corps premier de
-$K$.\par
+\ref{defdec} de $X^q - X$ sur $\GF{p}$.\par
 On notera que dans les corps finis et leurs extensions, l'élévation à une
 puissance égal au cardinal d'un corps fini est un automorphisme particulier. On
 l'appelle l'automorphisme de Frobenius et on le note $Fr_q$ pour $Fr_q(x) =
@@ -158,18 +157,18 @@ Finissons ce point par le théorème suivant qui assure l'existence et l'unicit�
 travail de tout ce rapport va se faire :
 
 \begin{thm}
-Pour tout nombre premier $p$ et tout entier positif $n$, il existe un corps
-fini à $p^n$ éléments. Tout corps fini à $q = p^n$ éléments est isomorphe au
-corps de décomposition de $X^q - X$ sur $\GF{p}$. On parlera alors du corps à
-$q$ éléments et on le notera $\GF{q}$.
+Pour tout nombre premier $p$ et tout entier strictement positif $n$, il existe 
+un corps fini à $p^n$ éléments. Tout corps fini à $q = p^n$ éléments est 
+isomorphe au corps de décomposition de $X^q - X$ sur $\GF{p}$. On parlera alors 
+du corps fini à $q$ éléments et on le notera $\GF{q}$.
 \end{thm}
 \begin{proof}
 \textit{(Existence)} Pour $q = p^n$, on considère le polynôme $X^q - X$ dans 
 $\GF{p}[X]$ et on note $K$ son corps de décomposition sur $\GF{p}$. Le polynôme 
-est séparable ou n'a aucune racine multiple puisque sa dérivée est égale à $qX^{q-1}
-- 1 = -1$. Posons $S = \lbrace x\in K : x^q - x = 0\rbrace$, alors $S$ est un 
-sous-corps de $K$; $0$ et $1$ sont dans $K$ et d'après les propriétés sur le 
-Frobenius et les résultats obtenus plus haut on a :
+est séparable ou n'a aucune racine multiple puisque sa dérivée est égale à 
+$qX^{q-1} - 1 = -1$. Posons $S = \lbrace x\in K : x^q - x = 0\rbrace$, alors $S$
+est un sous-corps de $K$; $0$ et $1$ sont dans $K$ et d'après les propriétés sur
+le Frobenius et les résultats obtenus plus haut on a :
 \[(a - b)^q = a^q - b^q = a - b \textup{ et }(ab^{-1})^q = a^q - b^{-q} =
 ab^{-1}\]
 Ainsi, $S$ contient toutes les racines de $X^q - X$ mais comme $K$ a déjà $q$
@@ -182,32 +181,33 @@ décomposition, théorème \ref{cordec}.
 \end{proof}
 
 
-\subsubsection{Extensions de corps}
+\subsubsection{Extension de corps}
 \label{defdegext}
-On dit que $K$ est une extension de corps de $k$ s'il existe un morphisme de corps 
-$\varphi : k \to K$. Ou de façon équivalente, si $k \subseteq K$ alors $K$ est une 
-extension (de corps) de $k$. On note aussi $K/k$ une extension de corps.
+On dit que $K$ est une extension de corps de $k$ s'il existe un morphisme de 
+corps $\varphi : k \to K$. Ou de façon équivalente, si $k \subseteq K$ alors $K$
+est une extension (de corps) de $k$; on note aussi $K/k$ une extension de corps.
 Si on a $k\subseteq L \subseteq K$, alors $L/k$ est une sous-extension de
 $K/k$.\par
 Soit $K/k$ une extension de corps et $S$ une partie de $K$. Le sous-corps $L := 
-k(S)$ de $K$ engendré par $S$ sur $k$ est le plus petite sous-corps de $K$ contenant 
-$S$ et $l$. Si $S = \lbrace x_1,\dots,x_n \rbrace$ est fini, alors on note $L = 
-K(x_1,\dots,x_n)$, on dit alors que l'extension est de type fini. L'extension $L/k$ 
-est dite monogène ou simple si elle est engendré par un seul élément.\par
-Si $K/k$ est une extension on peut voir $K$ comme un $k$-espace vectoriel ou une 
-$k$-algèbre. On appelle $[K:k] := dim_k(K)$ le degré de l'extension. On dit qu'une 
-extension $K/k$ est de degré fini si $[K:k] < \infty$.\par
+k(S)$ de $K$ engendré par $S$ sur $k$ est le plus petit sous-corps de $K$ 
+contenant $S$ et $k$. Si $S = \lbrace x_1,\dots,x_n \rbrace$ est fini, alors on 
+note $L = K(x_1,\dots,x_n)$, on dit alors que l'extension est de type fini. 
+L'extension $L/k$ est dite monogène ou simple si elle est engendré par un seul 
+élément.\par
+Si $K/k$ est une extension on peut voir $K$ comme un $k$-espace vectoriel ou une
+$k$-algèbre. On appelle $[K:k] := dim_k(K)$ le degré de l'extension. On dit 
+qu'une extension $K/k$ est de degré fini si $[K:k] < \infty$.\par
 
 \begin{thm}
-Soit $k \subseteq L \subseteq L$ des extensions de corps de degré fini. Alors on 
+Soit $k \subseteq L \subseteq L$ des extensions de corps de degré fini. Alors on
 a :
 \[[K:k] = [K:L][L:k]\]
 \end{thm}
 \begin{proof}
-Soit $[K:L] = m$ et $[L:k] = n$. On a donc que $K$ est un $L$-espace vectoriel de 
-dimension $m$ et $L$ est un $k$-espace vectoriel de dimension $n$, le théorème 
-revient à montrer que $K$ est un $k$-espace vectoriel de dimension $mn$. Or, 
-d'après ce qui précède, on a $L \simeq k^n$ et $K \simeq L^m$, d'où
+Soit $[K:L] = m$ et $[L:k] = n$. On a donc que $K$ est un $L$-espace vectoriel 
+de dimension $m$ et $L$ est un $k$-espace vectoriel de dimension $n$, le 
+théorème revient à montrer que $K$ est un $k$-espace vectoriel de dimension 
+$mn$. Or, d'après ce qui précède, on a $L \simeq k^n$ et $K \simeq L^m$, d'où
 \[K \simeq \underbrace{L \oplus\dots\oplus L}_{m fois}\simeq\underbrace
 {k^n\oplus\dots\oplus k^n}_{m fois} \simeq k^{nm}\]
 ce qui prouve le théorème.\\
@@ -216,7 +216,8 @@ ce qui prouve le théorème.\\
 On dit qu'un élément $x\in K$ est algèbrique sur $k$ s'il existe un polynôme 
 unitaire à coefficient dans $k$ qui annule $x$. L'ensemble des éléments 
 algébrique d'un corps (sur un sous-corps) forme un corps \cite[p.~64, théorème
-1.14]{Per}. On dit qu'une extension $K/k$ est algébrique si tous les éléments de $K$ sont algébriques sur $k$.
+1.14]{Per}. On dit qu'une extension $K/k$ est algébrique si tous les éléments 
+de $K$ sont algébriques sur $k$.
 
 \begin{prop}
 Toute extension de degré fini est algébrique et de type fini.
@@ -247,10 +248,10 @@ $k[\alpha]$ en tant qu'espace vectoriel.
 \begin{proof}
 (i) Il suffit de multiplier l'identité $\alpha^d = -a_1\alpha^{d-1} - \dots 
 - a_d$ par $\alpha^i$ pour $i\geq0$ et on montre par récurrence que :
-\[\alpha^{d+i} \in k\cdot1 + \dots k\cdot\alpha^{d-1}\]
-d'où $k[\alpha] = k\cdot1 + \dots k\cdot\alpha^{d-1}$. De plus, les éléments 
-$1,\alpha,\dots,\alpha^{d-1}$ sont linéairement indépendant puisque si :
-\[u_0\cdots1 + u_1\cdots\alpha + \dots u_{d-1}\cdots\alpha^{d-1} = 0\]
+\[\alpha^{d+i} \in k\cdot1 + \dots + k\cdot\alpha^{d-1}\]
+d'où $k[\alpha] = k\cdot1 + \dots + k\cdot\alpha^{d-1}$. De plus, les éléments 
+$1,\alpha,\dots,\alpha^{d-1}$ sont linéairement indépendants puisque si :
+\[u_0\cdot1 + u_1\cdot\alpha + \dots + u_{d-1}\cdot\alpha^{d-1} = 0\]
 avec les $u_i\neq0$ cela contredirait la minimalité du degré de $f$.\par
 (ii) $k[\alpha] \subset L$ est le sous-anneau d'un corps, il est donc intègre. 
 De plus, pour tout $\beta\in k[\alpha]$ l'application $m_{\beta}$ de la 
@@ -261,13 +262,13 @@ $m_{\beta}(x) = \beta x = 1$.\par
 (iii) Il résulte directement des deux points précédents.\\
 \end{proof}
 
-On peut aussi construire des extensions de corps \textit{via} des polynômes 
-irréductibles. Concrètement, soit $k$ un corps et $P$ un polynôme irréductible 
-unitaire dans $k[X]$. Comme $k[X]$ est principal (il est même euclidien) alors 
-$(P)$ est un idéal maximal, on peut alors faire le quotient $k[X]$ par $(P)$ 
-est on obtient un corps $K \simeq k[X]/(P)$. Dans ce cas, la classe de $X$ qu'on 
-notera $x := \overline{X}$, est une racine du polynôme $P$ et engendre $K$ sur 
-$k$.\par
+On vient de décrire plus ou moins la construction d'extension de corps 
+\textit{via} des polynômes irréductibles ou par "adjonction de racines". 
+Concrètement, soit $k$ un corps et $P$ un polynôme irréductible unitaire 
+dans $k[X]$. Comme $k[X]$ est principal (il est même euclidien) alors $(P)$ est 
+un idéal maximal, on peut alors faire le quotient $k[X]$ par $(P)$ est on 
+obtient un corps $K \simeq k[X]/(P)$. Dans ce cas, la classe de $X$ qu'on notera
+$x := \overline{X}$, est une racine du polynôme $P$ et engendre $K$ sur $k$.\par
 Pour encore aller plus loin, considérons une extension $L/k$ telle que $P$ 
 admette une racine $\alpha\in L$. Si on note $\Irr{k}{\alpha}$ le polynôme 
 minimal de $\alpha$, alors $\Irr{k}{\alpha}$ divise $P$, donc est égal à 
@@ -275,7 +276,7 @@ $\lambda P$ pour $\lambda\in k^{\times}$, puisque $P$ est irréductible. Alors
 le morphisme $k$-algèbre $\phi : k[X] \to L$ défini par $\phi(X) = \alpha$ 
 induit un morphisme de $k$-algèbre $\varphi : K \to L$ tel que $\varphi(x) 
 = \alpha$. Ce morphisme est unique puisque $x$ engendre $K = k(x)$.\\\par
-On vient de montrer en particulier le théorème suivant :
+On a montré en particulier le théorème suivant :
 
 \begin{thm}
 Soit $k$ un corps et $P$ un polynôme irréductible dans $k[X]$. Alors $K := 
@@ -289,8 +290,9 @@ non constant sur un corps $k$.
 
 \begin{defn}
 \label{defdec}
-Le corps de décomposition d'un polynôme $P\in k[X]$ est le sur-corps $K \supset k$ 
-contenant toutes les racines de $P$, qui est engendré par les racines susnommées.
+Le corps de décomposition d'un polynôme $P\in k[X]$ est le sur-corps $K \supset 
+k$ contenant toutes les racines de $P$, qui est engendré par les racines 
+susnommées.
 \end{defn}
 
 \begin{thm}
@@ -299,8 +301,6 @@ Tout $P\in k[X]$ non constant admet un corps de décomposition unique à
 isomorphisme près.
 \end{thm}
 \begin{proof}
-%TODO: À toi de voir si tu fais toute la démonstration ou non. C'est un peu 
-%long, mais il y a des résultats sympas.
 \textit{(Existence)}
 Pour prouver l'existence du corps de décomposition, il suffit de se placer 
 dans la clôture algèbrique de $k$, alors si on note $K_0$ le corps engendré 
@@ -311,8 +311,8 @@ On veut réalité montrer que si on a deux corps de décompositions, alors ils o
 isomorphes. Soit deux corps $k$ et $k^{\prime}$ isomorphes, on note $\phi$
 l'isomorphise, qu'on étend alors de façon évidente à un isomorphismes de $k[X]$ 
 dans $k^{\prime}[X]$; \textit{i.e.} on applique $\phi$ au coefficients des 
-polynômes. Soit maintenant on note $L$ et $L'$ les corps de décomposition 
-de $P\in k[X]$ et $P' = \phi(P) \in k^{\prime}[X]$ respectivement.\par
+polynômes. On pose  $L$ et $L'$ les corps de décomposition de $P\in k[X]$ et $P'
+= \phi(P) \in k^{\prime}[X]$ respectivement.\par
 Raisonnons par récurrence sur $[L:k]$, si $L = k$ alors $L^{\prime} =
 k^{\prime}$. Sinon prenons $\alpha\in L$ une racine de $P$ qui n'est pas dans
 $k$ et notons $Q$ son polynôme minimal sur $k$. On a alors $\alpha'$ racine de 
@@ -323,12 +323,51 @@ l'isomorphisme qui envoie une racine sur l'autre, il existe donc un isomorphisme
 $\psi : M \to M'$ tel que $\psi(\alpha) = \alpha'$. On a la situation suivante :
 \begin{align*}
 &P = (X - \alpha)S(X)\in M[X]\\
-&P' = (X - \alpha')S'(X)\in M[X]
+&P' = (X - \alpha')S'(X)\in M'[X]
 \end{align*}
 Comme $\alpha' = \psi(\alpha)$ alors $S'=\psi{\alpha}$, ainsi $L$ est un corps
-de décomposition pour $S$ et $L'$ pour $S'$; d'où par l'hypothèse de récurrence,
-on a un isomorphisme de $L \to L'$ prolongeant $\psi$ et on a démontré ce qu'il
-fallait.\\
+de décomposition pour $S$ et $L'$ pour $S'$; d'où par l'hypothèse de récurrence
+sur les degrés, on a un isomorphisme de $L \to L'$ prolongeant $\psi$ et on a 
+démontré ce qu'il fallait.\\
+\end{proof}
+
+Penchons-nous alors plus en détails sur les corps finis. On peut se demander
+étant donné un corps finis $\GF{p^n}$ quels peuvent être les corps qui le
+contiennent. Dans un premier temps, il faut que les deux corps aient la même
+caractéristique. Supposons qu'il existe un isomorphisme $f : \GF{p^n} \to 
+\GF{l^m}$ pour $p$ et $l$ premiers. En particulier, on a pour $x\in\GF{p^n}$ :
+\[f(p.x) = 0 = p.f(x)\]
+pour $f(x)\in\GF{l^m}$, donc nécessairement $l = p$.\par
+Ainsi, si le morphisme existe alors $\GF{p^n}^{\times}$ est un sous-groupe
+d'ordre $p^n - 1$ de $\GF{p^m}^{\times}$ d'ordre $p^m - 1$. Donc, on a $p^n - 1$
+qui divise $p^m - 1$. Si on écrit $m = q.n + r$ avec $r < n$ alors on obtient :
+\[p^m - 1 = p^r((p^n)^q - 1) + p^r - 1\]
+Or $p^n - 1$ divise $(p^n)^q - 1$ donc comme $p^n - 1$ divise aussi $p^m - 1$ la
+seule possibilité pour $r$ est $0$ et donc $n|m$. On vient de prouver la
+nécessité du critère suivant :
+
+\begin{prop}
+Soit $\GF{q}$ un corps fini à $q = p^m$ éléments, alors tout ces sous-corps sont
+de la forme $\GF{p^n}$ avec $n|m$. Réciproquement, soit $n|m$ alors il existe un
+(et un seul) sous-corps de $\GF{q}$ de cardinal $p^n$.
+\end{prop}
+\begin{proof}
+Pour montrer l'autre sens, il suffit de remarquer que $\GF{p^n}$ correspond aux
+éléments satisfaisant l'équation $X^{p^n} - X$ puisque $p^n - 1$ divise $p^m -
+1$. L'unicité est à isomorphisme près comme énoncé dans le point précédent.\\
+\end{proof}
+%TODO : Théorème de l'élément primitif et... ?
+
+\begin{thm}
+Toute extension séparable et finie est simple.
+\end{thm}
+\begin{proof}
+On va se contenter de le prouver dans le cas d'un corps fini; le cas général
+demande un peu plus de travail et pourra être démontrer après le point
+suivant.\par
+Si $K$ est un corps fini alors son groupe mulitplicatif $K^{\times}$ est
+cyclique (voir par exemple la preuve de la proposition \ref{proprootcycl} ou
+\cite[p.~50]{LiNi}).
 \end{proof}
 
 \subsubsection{Théorie de Galois}
@@ -336,9 +375,207 @@ Définitions et résutlats de base (sans forcément tout prouver), Frobenius,
 Groupe de Galois, élément primitif, extensions galoisiennes, etc.
 
 \subsubsection{Extensions et polynômes cyclotomiques}
-Racines de l'unités et quelques mots sur les polynômes cyclotomiques et leurs 
-extensions. Peut-être rajouter un ou deux mots sur le cas des corps finis (ça 
-pourrait se mettre dans la section du dessus).
+%TODO : Racines de l'unités et quelques mots sur les polynômes 
+%cyclotomiques et leurs extensions. Peut-être rajouter un ou deux mots sur le 
+%cas des corps finis.
+On définit une racine \nroot{n} de l'unité dans un corps $K$ 
+comme un élément $u\in K$ tel que pour $n\in\mathbb{N}$ on ait $u^n = 1$. Ce 
+sont exactement les racines du polynômes $X^n - 1$.
+On note $U_n$ l'ensemble des racines \nroot{n} de l'unité dans une clôture 
+algébrique de $K$ et $U_n(K)$ l'ensemble des racines \nroot{n} de l'unité 
+appartenant à $K$.
+
+\begin{prop}
+\label{proprootcycl}
+Soit $K$ un corps, s'il contient $n$ racines \nroot{n} de l'unité alors elles 
+forment un groupe cyclique $U_n(K)$ d'ordre $n$ isomorphe à $\zmodn{n}$.
+\end{prop}
+\begin{proof}
+La proposition découle d'un théorème plus général disant que tout sous-groupe 
+fini $G$ du groupe multiplicatif $K^*$ est formé de racine de l'unité et est 
+cyclique. Lui-même est tiré de deux corollaires du théorème suivant (voir 
+\cite[p.~26-27]{Sam} pour une démonstration détaillée) :
+
+\begin{thm}
+Soit $A$ un anneau principal, $M$ un $A$-module libre de type fini et $M'$ un 
+sous-module de $M$. Alors :
+\begin{enumerate}[1)]
+\item $M'$ est un module libre de rang $\leq n$.
+\item Il existe une base $(e_1,\dots,e_n)$ de $M$, un entier $q\leq n$ et des 
+éléments $a_1,\dots,a_q$ non nuls de $A$ tels que $(a_1e_1,\dots,a_qe_q)$ soit 
+une base $M'$ avec $a_i|a_{i+1}$ pour tout $1\leq i\leq q-1$.
+\end{enumerate}
+\end{thm}
+
+\begin{cor}
+Soit $E$ un $A$-module de type fini. Alors $E$ est isomorphe à un produit 
+$(A/\mathfrak{a}_1)\times\dots\times(A/\mathfrak{a}_n)$, où les $\mathfrak{a}_i$
+sont des idéaux de $A$ tels que $\mathfrak{a}_1\supset\mathfrak{a}_2\supset
+\dots\supset\mathfrak{a}_n$.
+\end{cor}
+
+\begin{cor}
+Soit $G$ un groupe commutatif fini. Il existe $x\in G$ dont l'ordre est le 
+$ppcm$ des ordres des éléments de $G$.
+\end{cor}
+\begin{proof}
+On sait qu'un groupe commutatif est un $\mathbb{Z}$-module (si on le note 
+additivement). D'après le corollaire ci-dessus, $G$ est donc isomorphique à 
+un produit $\zmodn{a_1}\times\dots\times\zmodn{a_n}$ où $a_1|a_2|\dots|a_n$. 
+Aucun des $a_i$ n'est nul, sinon $G$ serait infini; ce serait le produit de 
+$\mathbb{Z}^r$ avec des groupes finis. On note $y$ la classe de $1$ dans 
+$\zmodn{a_n}$ et on pose $x = (0,\dots,0,y)$. Alors $x$ est d'ordre $a_n$ et si 
+on prend un élément $z\in G$, avec $z = (z_1,\dots,z_n)$, on a aussi $a_nz = 0$ 
+car $a_i|a_n$ pour tout $1\leq i \leq n$. $x$ est donc l'élément recherché.\\
+\end{proof}
+
+De là, on en déduit qu'il existe un $z\in G$ d'ordre $n$ tel que $y^n = 1$ pour 
+tout $y\in G$. Comme le nombre de racines de $X^n - 1$ sur un corps est au plus 
+$n$ alors $G$ a au plus $n$ éléments. Or $z$ est d'ordre $n$ donc $G$ contient 
+les éléments $z, z^2,\dots,z^n = 1$ qui sont distincts. Donc $G$ est formé par 
+ces éléments et est cyclique d'ordre $n$. La proposition en découle 
+naturellement.\\
+\end{proof}
+
+\begin{defn}
+On appelle racine primitive \nroot{n} de l'unité les racines qui engendrent 
+$U_n$.
+\end{defn}
+
+\begin{prop}
+Les racines primitives \nroot{n} de l'unité forment un sous-groupe $U^{\times}_n
+$ 
+isomorphe à $(\zmodn{n})^*$. En particulier, il y en a $\varphi(n)$.
+\end{prop}
+\begin{proof}
+D'après \ref{proprootcycl} les éléments qui engendrent $U_n$ sont exactement 
+les éléments dont l'image engendre $\zmodn{n}$. D'où l'isomorphisme et l'ordre 
+de $U^{\times}_n$.\\
+\end{proof}
+
+Lorsqu'on les considère sur $\mathbb{C}$, les racines \nroot{n} de l'unité sont 
+de la forme $e^{2ik\pi/n}$ et les racines primitives définissent un polynôme 
+qu'on appelle polynôme cyclotomique défini comme suit : 
+\[\phi_n(X) = \prod_{\zeta\in U_n^{\times}}{(X - \zeta)}\]
+On va montrer qu'il s'agit du polynôme minimal de ces racines sur $\mathbb{Q}$, 
+commençons par la proposition suivante :
+
+\begin{prop}
+Le polynôme $\phi_n$ appartient à $\mathbb{Z}[X]$ et est de degré égal à 
+$\varphi(n)$.
+\end{prop}
+\begin{proof}
+Nous allons utiliser les deux résultats suivants; on ira voir 
+\cite[p.~72, 80]{Per} pour des démonstrations détaillées.
+
+\begin{lem}
+Soit $n\in\mathbb{N}^*$ alors on a $n = \sum_{d|n}{\varphi(d)}$.
+\end{lem}
+
+\begin{prop}
+On a $X^n - 1 = \prod_{d|n}{\phi_d(X)}$.
+\end{prop}
+
+On va alors raisonner par récurrence sur $n$. On a $\phi_1(X) = X-1 
+\in\mathbb{Z}[X]$. Supposons alors que le résultat soit vrai pour $d<n$. Posons 
+$F(X) = \prod_{d|n\atop{d\neq n}}{\phi_d(X)}$, alors $F\in\mathbb{Z}[X]$ et est 
+unitaire. Si on fait la division euclidienne de $X^n - 1$ par $F$ dans 
+$\mathbb{Z}[X]$, alors on obtient :
+\[X^n - 1 = F(X)P(X) + R(X)\]
+avec $P, R \in\mathbb{Z}[X]$ et $\textup{deg~}R < \textup{deg~}F$. Or, on a déjà
+$X^n - 1 = \phi_n(X).F(X)$ dans $\mathbb{Q}[X]$, \textit{i.e.} $F(X)(\phi_n(X) -
+P(X)) = R(X)$, mais le degré de $R$ étant plus petit que celui de $F$, on a 
+nécessairement $\phi_n = P \in\mathbb{Z}[X]$. Le résultat sur le degré résulte 
+de la proposition et du lemme ci-dessus.\\
+\end{proof}
+\begin{thm}
+Le polynôme $\phi_n$ est irréductible sur $\mathbb{Q}$.
+\end{thm}
+\begin{proof}
+Soit $K$ un corps de décomposition de $\phi_n$ sur $\mathbb{Q}$, $\zeta$ une 
+racine primitive \nroot{n} de l'unité et $p$ un nombre premier ne divisant pas 
+$n$. Les racines primitives de l'unité sont toutes de la forme $\zeta^m$ avec 
+$(m, n) = 1$ puisqu'elles doivent être d'ordre exactement égal à $n$; cela ce 
+soit sur leur expression exponentielle. On veut alors montrer que $\zeta$ et 
+$\zeta^p$ ont exactement le même polynôme minimal.\par
+Posons alors $f$ et $g$ les polynômes minimaux sur $\mathbb{Q}$ de $\zeta$ et 
+$\zeta^p$ respectivement. Ils sont dans $\mathbb{Z}[X]$ puisqu'ils divisent tous
+les deux $\phi_n(X)$. En effet, comme $\mathbb{Z}[X]$ est factoriel, on a :
+\[\phi_n = f_1^{a_1}\dots f_r^{a_r}\]
+avec $f_i$ unitaire, irreductible et dans $\mathbb{Z}[X]$; puisque $\phi_n$ est
+unitaire et dans $\mathbb{Z}[X]$. Alors un $f_i$ annule $\zeta$ et un $f_j$ 
+annule $\zeta^p$; or ils sont, d'après Gauss, irréductibles et unitaires dans 
+$\mathbb{Q}[X]$, il s'agit donc de $f$ et $g$. En particulier, $f$ et $g$ 
+divisent $\phi_n$ dans $\mathbb{Z}[X]$.\par
+Supposons alors que $f \neq g$. Comme ils sont irréductibles et disctincts, leur
+produit $f.g$ divise $\phi_n$. Comme $g(\zeta^p) = 0$, alors $\zeta$ est racine 
+de $g(X^p)$, ainsi $f$ divise $g(X^p)$ dans $\mathbb{Q}[X]$ mais aussi dans 
+$\mathbb{Z}[X]$ d'après le lemme de Gauss sur les contenus de polynômes. On va 
+alors considérer les polynômes dans $\GF{p}[X]$, on note $\bar{f}$ et $\bar{g}$ 
+leurs réductions modulo $p$. Par Frobenius, on obtient que $\bar{g}(X^p) = 
+\bar{g}(X)^p$, ainsi si on prend $r$ un facteur irréductible de $\bar{f}$ et on 
+écrit :
+\[\bar{g}(X)^p = \bar{f}(X)\bar{h}(X)\]
+alors $r$ divise aussi $\bar{g}$ par le lemme d'Euclide. Puique $f.g$ divise 
+$\phi_n$ alors $\bar{f}.\bar{g}$ divise $\bar{\phi_n}$, on a $r^2$ qui divise 
+$\bar{\phi_n}$. Ceci implique en particulier que $\bar{\phi_n}$ aurait une 
+racine double, donc $\bar{X}^n - 1$ aussi. Or, $\bar{X}^n - 1$ est séparable sur
+$\GF{p}$ puisque $(X^n - 1)' = nX^{n-1}$ et $p$ ne divise pas $n$, il ne peut 
+donc pas avoir de racines multiples, d'où une contradiction.\par
+Reste alors à montrer que tous les conjugués de $\zeta$ sont exactement les 
+autres racines primitives \nroot{n} de l'unité. Si on prend une racine primitive
+\nroot{n} $\zeta'$ quelconque, alors on a $\zeta' = \zeta^m$ où $m = p_1^{a_1}
+\dots p_l^{a_l}$ avec $p_i \nmid n$. Il suffit alors de faire de procéder par 
+récurrence en utilisant le raisonnement ci-dessus pour s'appercevoir que $\zeta$
+et $\zeta'$ ont effectivement le même polynôme minimal. De sorte que $f$ admet 
+toutes les racines primitives comme zéros, \textit{i.e.} $\textup{deg~}f \geq 
+\textup{deg~}\phi_n$, et $f\mid\phi_n$ alors on a bien $f = \phi_n$ irréductible
+sur $\mathbb{Q}$ comme on voulait.\\
+\end{proof}
+
+\begin{rem}
+Comme $\phi_n$ est unitaire alors son contenu est égal à $1$ ce qui implique, 
+avec ce qui précède, qu'il est alors aussi irréductible dans $\mathbb{Z}[X]$.
+\end{rem}
+
+Grâce à ce résultat on peut alors introduire une notion qui nous sera utile dans
+la suite, celle de corps cyclotomique.
+
+\begin{defn}
+Soit $K$ un corps commutatif, on appelle corps cyclotomique $K^{(n)}$ sur $K$ le
+corps de décomposition de $X^n - 1$ sur $K$.
+\end{defn}
+
+\begin{rem}
+D'après les résultats ci-dessus, on voit que dans le cas $K = \mathbb{Q}$, le 
+corps de décomposition de $X^n - 1$ est exactement $\mathbb{Q}(\zeta_n) \simeq 
+\mathbb{Q}[X]/\phi_n(X)$, où $\zeta_n$ est une racine primitive. C'est en 
+particulier une extension algébrique simple.
+\end{rem}
+
+%TODO: Parler des racines de l'unité dans les corps finis avant de foutre le
+%résultat.
+Le théorème suivant sera cruciale dans la suite du mémoire, il servira notament 
+à justifier théoriquement la méthode de Rains.
+
+\begin{thm}
+\label{polycycldecomp}
+Si $K = \GF{q}$ et $(n,q) = 1$, alors $\phi_n$ se factorise en $\varphi(n)/d$ 
+polynômes unitaires irréductibles dans $\GF{q}[X]$ de même degré égal à $d$. 
+$K^{(n)}$ est le corps de décomposition de n'importe lequel de ces polynôme et 
+on a :
+\[[K^{(n)}:K] = d\]
+avec $d$ l'ordre multiplicatif de $q$ dans $\zmodn{n}$.
+\end{thm}
+\begin{proof}
+Soit $\zeta$ une racine primitive \nroot{n} de l'unité dans $\GF{q}$, alors 
+$\zeta$ appartient a un sur-corps $\GF{q^k}$ si et seulement si $\zeta^{q^k} = 
+\zeta$; ce qui est équivalent à $q^k \equiv 1 \bmod n$ puisque $\zeta^n = 1$ par
+définition. On pose alors $d$ égal au plus petit $K$ satisfaisant cette 
+condition, dans ce cas $\zeta\in\GF{q^d}$ et ne peut pas être dans un sous-corps
+de celui-ci. Ainsi, le polynôme minimal de $\zeta$ est de degré $d$ et comme on 
+a choisi $\zeta$ arbitrairement, on obtient le résultat voulu.
+\end{proof}
 
 \subsection{Théorie des nombres/Idéaux}
 \textit{Résumé :} Tout ce qui concerne la preuve de Rains avec les idéaux 
