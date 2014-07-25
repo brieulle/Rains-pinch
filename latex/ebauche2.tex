@@ -83,7 +83,8 @@ pour tout $x\in K$ on ait :
 \[p(x) = \underbrace{x + x + \dots + x}_{p fois} = 0\]
 Elle peut être nulle ou positive, en pratique elle sera nulle ou égale à un
 nombre premier. Dans notre cas, on s'intéressera au corps finis, c'est-à-dire 
-tels que $K$ soit un ensemble fini et la caractéristique est non-nulle.\\\par
+tels que $K$ soit un ensemble fini et la caractéristique est non-nulle.\par
+\vspace{0.3cm}
 Un homomorphisme de corps est nécessairement injectif. En effet, soit deux corps
 $K$ et $L$ de caractéristique positive ou nulle. Soit $f : K \to L$, on a alors 
 :
@@ -135,8 +136,8 @@ théorème est démontré.\\
 Tout corps fini est commutatif.
 \end{thm}
 On passera la preuve bien qu'elle soit intéressante, se référer par exemple à 
-\cite[p.~70-73]{LiNi} ou \cite[p.~82]{Per}.\\\par
-
+\cite[p.~70-73]{LiNi} ou \cite[p.~82]{Per}.\par
+\vspace{0.3cm}
 Si $K$ est un corps à $q$ éléments, alors pour tout $x\in K$, on a $x^q = x$. En
 effet, pour $x = 0$ c'est immédiat. Pour $x\neq 0$, on sait que le groupe
 multiplicatif de $K$, noté $K^{\times} = K\setminus\lbrace0\rbrace$, est un
@@ -151,7 +152,8 @@ On notera que dans les corps finis et leurs extensions, l'élévation à une
 puissance égal au cardinal d'un corps fini est un automorphisme particulier. On
 l'appelle l'automorphisme de Frobenius et on le note $Fr_q$ pour $Fr_q(x) =
 x^q$. Ce n'est pas immédiat qu'il s'agit là d'un homomorphisme, mais un simple
-calcul permet de s'en assurer.\\\par
+calcul permet de s'en assurer.\par
+\vspace{0.3cm}
 Finissons ce point par le théorème suivant qui assure l'existence et l'unicité
 à isomorphisme près des corps finis; c'est à partir de ce théorème que le
 travail de tout ce rapport va se faire :
@@ -179,7 +181,6 @@ déduit que $K$ est un corps de décomposition de $X^q - X$ sur $\GF{p}$,
 puisqu'il est scindé sur $K$, et l'unicité se déduit de l'unicité des corps de
 décomposition, théorème \ref{cordec}.
 \end{proof}
-
 
 \subsubsection{Extension de corps}
 \label{defdegext}
@@ -275,7 +276,8 @@ minimal de $\alpha$, alors $\Irr{k}{\alpha}$ divise $P$, donc est égal à
 $\lambda P$ pour $\lambda\in k^{\times}$, puisque $P$ est irréductible. Alors 
 le morphisme $k$-algèbre $\phi : k[X] \to L$ défini par $\phi(X) = \alpha$ 
 induit un morphisme de $k$-algèbre $\varphi : K \to L$ tel que $\varphi(x) 
-= \alpha$. Ce morphisme est unique puisque $x$ engendre $K = k(x)$.\\\par
+= \alpha$. Ce morphisme est unique puisque $x$ engendre $K = k(x)$.\par
+\vspace{0.3cm}
 On a montré en particulier le théorème suivant :
 
 \begin{thm}
@@ -321,10 +323,12 @@ k'(\alpha)$, ainsi $M$ (resp. $M'$) est un corps de décomposition de $Q$ (resp.
 $Q'$) sur $k$ (resp. $k'$). Puisque les corps de rupture sont uniques, modulo
 l'isomorphisme qui envoie une racine sur l'autre, il existe donc un isomorphisme
 $\psi : M \to M'$ tel que $\psi(\alpha) = \alpha'$. On a la situation suivante :
+
 \begin{align*}
 &P = (X - \alpha)S(X)\in M[X]\\
 &P' = (X - \alpha')S'(X)\in M'[X]
 \end{align*}
+
 Comme $\alpha' = \psi(\alpha)$ alors $S'=\psi{\alpha}$, ainsi $L$ est un corps
 de décomposition pour $S$ et $L'$ pour $S'$; d'où par l'hypothèse de récurrence
 sur les degrés, on a un isomorphisme de $L \to L'$ prolongeant $\psi$ et on a 
@@ -367,11 +371,18 @@ demande un peu plus de travail et pourra être démontrer après le point
 suivant.\par
 Si $K$ est un corps fini alors son groupe mulitplicatif $K^{\times}$ est
 cyclique (voir par exemple la preuve de la proposition \ref{proprootcycl} ou
-\cite[p.~50]{LiNi}).
+\cite[p.~50]{LiNi}). Dans ce cas, il suffit de prendre pour générateur d'une
+extension $L/k$, le générateur du groupe mulitplicatif de $L$ et c'est gagné.\\
 \end{proof}
 
+Cela implique en particulier que toutes extensions de corps finis peut s'écrire
+comme combinaison linéaire de puissances d'un unique élément, en pratique cet
+élément sera la racine du polynôme par lequel on quotiente le corps premier afin
+d'obtenir l'extension.
+
 \subsubsection{Théorie de Galois}
-Définitions et résutlats de base (sans forcément tout prouver), Frobenius, 
+%TODO :Définitions et résutlats de base (sans forcément tout prouver),
+%Frobenius, action de groupes ? Ça me parait raisonnable...
 Groupe de Galois, élément primitif, extensions galoisiennes, etc.
 
 \subsubsection{Extensions et polynômes cyclotomiques}
@@ -537,7 +548,7 @@ sur $\mathbb{Q}$ comme on voulait.\\
 Comme $\phi_n$ est unitaire alors son contenu est égal à $1$ ce qui implique, 
 avec ce qui précède, qu'il est alors aussi irréductible dans $\mathbb{Z}[X]$.
 \end{rem}
-
+\vspace{0.3cm}
 Grâce à ce résultat on peut alors introduire une notion qui nous sera utile dans
 la suite, celle de corps cyclotomique.
 
@@ -574,114 +585,154 @@ $\zeta$ appartient a un sur-corps $\GF{q^k}$ si et seulement si $\zeta^{q^k} =
 définition. On pose alors $d$ égal au plus petit $K$ satisfaisant cette 
 condition, dans ce cas $\zeta\in\GF{q^d}$ et ne peut pas être dans un sous-corps
 de celui-ci. Ainsi, le polynôme minimal de $\zeta$ est de degré $d$ et comme on 
-a choisi $\zeta$ arbitrairement, on obtient le résultat voulu.
+a choisi $\zeta$ arbitrairement, on obtient le résultat voulu.\\
 \end{proof}
 
 \subsection{Théorie des nombres/Idéaux}
-\textit{Résumé :} Tout ce qui concerne la preuve de Rains avec les idéaux 
-premiers, les normes d'ideaux, la factorisation unique, Galois, les périodes de 
-Gauss, les périodes elliptiques (Mihailescu et al.) ou plus précisément ce qui 
-permet d'y arriver.
+%TODO: Tout ce qui concerne la preuve de Rains avec les idéaux 
+%premiers, les normes d'ideaux, la factorisation unique, Galois, les périodes de
+%Gauss, les périodes elliptiques (Mihailescu et al.) ou plus précisément ce qui 
+%permet d'y arriver.
+
 \subsubsection{Corps de nombres}
-Définitions (normes, traces, éléments algébriques, etc.)
+%TODO :Définitions (normes, traces, éléments algébriques, etc.)
+
 \subsubsection{Idéaux premiers}
- Idéaux premiers sur les anneaux d'entiers de corps de nombres,
- décomposition unique, résultat de la théorie de Galois.
+%TODO: Idéaux premiers sur les anneaux d'entiers de corps de nombres,
+%décomposition unique, résultat de la théorie de Galois.
+
 \subsubsection{Périodes de Gauss, elliptiques}
-Énoncé et justifier les résultats donnés par Rains (notamment le lemme
-expliquant la forme de $\GF{q}[X]/I$ pour $I$ sous-groupe du groupe de Galois);
-peut-être à mettre directement dans la partie cyclotomique de la section
-algorithme de Rains cyclotomique.
+%TODO: Énoncé et justifier les résultats donnés par Rains (notamment le lemme
+%expliquant la forme de $\GF{q}[X]/I$ pour $I$ sous-groupe du groupe de Galois);
+%peut-être à mettre directement dans la partie cyclotomique de la section
+%algorithme de Rains cyclotomique.
 
 \subsection{Courbes elliptiques}
-\textit{Résumé :}Définitions (j-invariant, nombres de points, tordues, module de
-Tate (?) etc.), résultats généraux, sur les corps finis
+%TODO: Définitions (j-invariant, nombres de points, tordues, module de
+%Tate (?) etc.), résultats généraux, sur les corps finis
+
 \subsubsection{Équation de Weierstrass}
-Rapide énoncé des changements de variable, comment on arrive à la forme
-"simple"; liste des différents paramètres/invariants qui nous intéressent.
+%TODO: Rapide énoncé des changements de variable, comment on arrive à la forme
+%"simple"; liste des différents paramètres/invariants qui nous intéressent.
+
 \subsubsection{Loi de groupe}
-Je suis pas sûr pour cette partie, c'est un peu long à tout justifier et ce
-n'est pas ce qu'on veut faire. Mais peut-être expliquer rapidement.\par
-Cela dit, je suis très tenté de renvoyer au Silverman pour toute la théorie de
-base en ne mettant uniquement les résultats dont on aurait besoin (donc on saute
-cette partie).
+%TODO : Je suis pas sûr pour cette partie, c'est un peu long à tout justifier et
+%ce n'est pas ce qu'on veut faire. Mais peut-être expliquer rapidement.\par
+%Cela dit, je suis très tenté de renvoyer au Silverman pour toute la théorie de
+%base en ne mettant uniquement les résultats dont on aurait besoin 
+%(donc on saute cette partie).
+
 \subsubsection{Sur les corps finis}
-Nombres de points, théorème de Hasse, Frobenius, trace
-\subsubsection{Tordues}
-Twists quadratiques, courbes $y^2 = x^3 + x$ et $y^2 = x^3 + 1$ et leurs
-tordues, pour préparer le terrain pour la partie elliptique de Rains
+%TODO: Nombres de points, théorème de Hasse, Frobenius, trace
+
+\subsubsection{Courbes supersingulières}
+%TODO: Définitions Twists quadratiques, courbes $y^2 = x^3 + x$ et 
+%$y^2 = x^3 + 1$ et leurs tordues, pour préparer le terrain pour la partie 
+%elliptique de Rains
 
 
 \section{Isomorphismes de corps finis}
-Présentation du problème, énonciation des difficultés etc.
+%TODO: Présentation du problème, énonciation des difficultés etc.
 
 \subsection{Algorithme de Pinch (peut-être à mettre dans l'introduction de 
 la section ?)}
-Énonciation et descriptions de la méthode de Pinch, justification des 
-résultats, explication des inconvénients et autre.
+%TODO: Énonciation et descriptions de la méthode de Pinch, justification des 
+%résultats, explication des inconvénients et autre.
+
 \subsubsection{Principe}
-Explication de la méthode et illustration avec l'exempe de l'article, peut-être
-?
+%TODO: Explication de la méthode et illustration avec l'exempe de l'article, 
+%peut-être ?
+
 \subsubsection{Problèmes/limitations}
-Taille de m, choisir un élément au hasard
+%TODO: Taille de m, choisir un élément au hasard
 
 \subsection{Algorithme de Rains : méthode cyclotomique}
-\textit{Résumé :}Commencer par une explication concise de la méthode, ce 
-qu'elle change par rapport à Pinch.\par
-Présenter pas à pas l'article de Rains (en gros), en enlevant ce qui nous 
-concernerait moins et en rajoutant ce qu'il n'a pas mis (tous les détails 
-sur l'algorithme convert et sa complexité).
+%TODO  Commencer par une explication concise de la méthode, ce 
+%qu'elle change par rapport à Pinch.\par
+%Présenter pas à pas l'article de Rains (en gros), en enlevant ce qui nous 
+%concernerait moins et en rajoutant ce qu'il n'a pas mis (tous les détails 
+%sur l'algorithme convert et sa complexité).
+
 \subsubsection{Principe}
-Passer par une petite extension pour réduire la taille de m, utilisation des
-éléments normaux, utilisation des périodes de Gauss.
+%TODO: Passer par une petite extension pour réduire la taille de m, utilisation
+%des éléments normaux, utilisation des périodes de Gauss.
+
 \subsubsection{Éléments normaux}
-Définitions et résultats utiles pour l'algorithme, justification de
-l'algorithme (peut-être à mettre dans la partie Galois de la section corps
-finis), conversion de la base polynomiale à la base normale.
+%TODO: Définitions et résultats utiles pour l'algorithme, justification de
+%l'algorithme (peut-être à mettre dans la partie Galois de la section corps
+%finis), conversion de la base polynomiale à la base normale.
+
 \subsubsection{Algorithme \& analyse de complexité}
-Détailler l'algorithme de l'article/code de Luca + analyser la complexité de ces
-algos et les "prouver" (montrer que ça marche bien, cela dit c'est peut-être
-largement faisable avant).
+%TODO: Détailler l'algorithme de l'article/code de Luca + analyser la complexité
+%de ces algos et les "prouver" (montrer que ça marche bien, cela dit c'est 
+%peut-être largement faisable avant).
 
 \subsection{Algorithme de Rains : méthode elliptique}
-\textit{Résumé :}Résumer/Détailler le papier de Luca, rajouter les résultats sur
-les twists, les périodes, détaillés l'algorithme et sa complexité, le prouver 
-(probablement fait avec le papier de Luca et Mihailescu pour les périodes ?)
-, détailler les différentes étapes, les paramètres, la façon de trouver m 
-etc.
+%TODO: Résumer/Détailler le papier de Luca, rajouter les résultats sur
+%les twists, les périodes, détaillés l'algorithme et sa complexité, le prouver 
+%(probablement fait avec le papier de Luca et Mihailescu pour les périodes ?)
+%, détailler les différentes étapes, les paramètres, la façon de trouver m 
+%etc.
 \subsubsection{Principe}
-Choix d'un point d'ordre m sur une bonne courbe elliptique engendre 
-l'extension, utilisation des périodes elliptiques afin d'avoir un élément 
-stable par l'action du groupe de Galois (Énoncer les lemmes etc.)
+%TODO: Choix d'un point d'ordre m sur une bonne courbe elliptique engendre 
+%l'extension, utilisation des périodes elliptiques afin d'avoir un élément 
+%stable par l'action du groupe de Galois (Énoncer les lemmes etc.)
+
 \subsubsection{Choix des paramètres}
-Justifier le choix de m par rapport à n et q, tout ce qui concerne la valeur 
-propre d'ordre n et donc le choix de traces qui s'en suit, expliquer comment on
-pick les courbes (à ce moment là on pourra aussi justifier avec le résultat 
-sur les tordues).
+%TODO: Justifier le choix de m par rapport à n et q, tout ce qui concerne la 
+%valeur propre d'ordre n et donc le choix de traces qui s'en suit, expliquer 
+%comment on pick les courbes (à ce moment là on pourra aussi justifier avec le 
+%résultat sur les tordues).
+
 \subsubsection{Algorithme \& Analyse de complexité}
-Décrire l'algorithme et donner sa complexité.
+%TODO: Décrire l'algorithme et donner sa complexité.
 
 \section{Comparatif/Implémentation/Résultats numériques}
-Comparer les deux méthodes ou même avec l'implémentation de base de SAGE 
-(retrouver une simple racine). Détailler les limitations dû à SAGE, peut-être
-prendre une partie de la conclusion en expliquant ce qui pourrait être changer.
+%TODO: Comparer les deux méthodes ou même avec l'implémentation de base de SAGE 
+%(retrouver une simple racine). Détailler les limitations dû à SAGE, peut-être
+%prendre une partie de la conclusion en expliquant ce qui pourrait être changer.
 
 \section{"Conclusion"}
-Expliquer ce qu'il peut rester à faire (cas général, car(K) = 2 et n 
-composé, couper et appliquer l'une des deux méthodes selon la nature du m ou 
-s'il y a besoin de calculer une extension, etc.), où est-ce qu'on peut 
-récupérer des performances (produit scalaire).
+%TODO: Expliquer ce qu'il peut rester à faire (cas général, car(K) = 2 et n 
+%composé, couper et appliquer l'une des deux méthodes selon la nature du m ou 
+%s'il y a besoin de calculer une extension, etc.), où est-ce qu'on peut 
+%récupérer des performances (produit scalaire).
 
 \begin{thebibliography}{LC}
-\bibitem{Sam} \emph{Théorie algébrique des nombres}, \bsc{Pierre Samuel}, Hermann, 1971.
-\bibitem{Nek} \emph{Théorie de Galois}, \bsc{Jan Nekov\'a\v{r}}, Université Pierre et Marie Curie, 2003, \bsc{url :} \url{http://www.math.jussieu.fr/~nekovar/co/ln/gal/g.pdf}.
+\bibitem{Sam} \emph{Théorie algébrique des nombres}, \bsc{Pierre Samuel}, 
+Hermann, 1971.
+
+\bibitem{Nek} \emph{Théorie de Galois}, \bsc{Jan Nekov\'a\v{r}}, Université 
+Pierre et Marie Curie, 2003, \bsc{url :} 
+\url{http://www.math.jussieu.fr/~nekovar/co/ln/gal/g.pdf}.
+
 \bibitem{Per} \emph{Cours d'algèbre}, \bsc{Daniel Perrin}, ellipses, 1996.
-\bibitem{Rai} \emph{Efficient computation of isomorphism between finite fields}, \bsc{Eric M. Rains}, 2008.
-\bibitem{LiNi} \emph{Finite fields}, \bsc{Rudolf Lidl} \& \bsc{Harald Niederreiter}, Encyclopedia of mathematics and its applications vol. 20, Cambridge, 1983.
-\bibitem{Pin} \emph{Recognising elements of finite fields}, \bsc{Richard G.E. Pinch}, Cryptography and coding II, p. 193-197, Oxford University Press, 1992.
-\bibitem{Pol} \emph{Algèbre et théorie de Galois}, \bsc{Patrick Polo}, Université Pierre et Marie Curie, 2007, \bsc{url :} \url{http://www.math.jussieu.fr/~polo/M1/ATG07chIV.pdf}.
-\bibitem{Law} \emph{Introduction to cyclotomic fields}, \bsc{Lawrence C. Washington}, Graduate texts in mathematics, Springer-Verlag, 1982.
-\bibitem{Sil} \emph{The arithmetic of elliptic curves}, \bsc{Joseph H. Silverman}, Graduate texts in mathematics, Springer, 2nd ed. 2009.
-\bibitem{GarD} \emph{Handbook of finite fields}, \bsc{Gary L. Mullen} \& \bsc{Daniel Panario}, Discrete mathematics and its applications, Series Editor Kenneth H. Rosen, CRC Press.
+\bibitem{Rai} \emph{Efficient computation of isomorphism between finite fields},
+\bsc{Eric M. Rains}, 2008.
+
+\bibitem{LiNi} \emph{Finite fields}, \bsc{Rudolf Lidl} \& 
+\bsc{Harald Niederreiter}, Encyclopedia of mathematics and its applications vol.
+20, Cambridge, 1983.
+
+\bibitem{Pin} \emph{Recognising elements of finite fields}, \bsc{Richard G.E. 
+Pinch}, Cryptography and coding II, p. 193-197, Oxford University Press, 1992.
+
+\bibitem{Pol} \emph{Algèbre et théorie de Galois}, \bsc{Patrick Polo}, 
+Université Pierre et Marie Curie, 2007, \bsc{url :} 
+\url{http://www.math.jussieu.fr/~polo/M1/ATG07chIV.pdf}.
+
+\bibitem{Law1} \emph{Introduction to cyclotomic fields}, \bsc{Lawrence C. 
+Washington}, Graduate texts in mathematics, Springer-Verlag, 1982.
+
+\bibitem{Law2} \emph{Elliptic curves, number theory and cryptography},
+\bsc{Lawrence C. Washington}
+
+\bibitem{Sil} \emph{The arithmetic of elliptic curves}, 
+\bsc{Joseph H. Silverman}, Graduate texts in mathematics, Springer, 2nd ed. 
+2009.
+
+\bibitem{GarD} \emph{Handbook of finite fields}, \bsc{Gary L. Mullen} \& 
+\bsc{Daniel Panario}, Discrete mathematics and its applications, Series Editor 
+Kenneth H. Rosen, CRC Press.
 \end{thebibliography}
 \end{document}
