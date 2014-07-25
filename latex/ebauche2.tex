@@ -159,6 +159,7 @@ Finissons ce point par le théorème suivant qui assure l'existence et l'unicit�
 travail de tout ce rapport va se faire :
 
 \begin{thm}
+\label{thisomGF}
 Pour tout nombre premier $p$ et tout entier strictement positif $n$, il existe 
 un corps fini à $p^n$ éléments. Tout corps fini à $q = p^n$ éléments est 
 isomorphe au corps de décomposition de $X^q - X$ sur $\GF{p}$. On parlera alors 
@@ -363,6 +364,7 @@ Pour montrer l'autre sens, il suffit de remarquer que $\GF{p^n}$ correspond aux
 %TODO : Théorème de l'élément primitif et... ?
 
 \begin{thm}
+\label{thelemprim}
 Toute extension séparable et finie est simple.
 \end{thm}
 \begin{proof}
@@ -383,8 +385,9 @@ d'obtenir l'extension.
 \subsubsection{Théorie de Galois}
 %TODO :Définitions et résutlats de base (sans forcément tout prouver),
 %Frobenius, action de groupes ? Ça me parait raisonnable...
-Groupe de Galois, élément primitif, extensions galoisiennes, etc.
+%Groupe de Galois, élément primitif, extensions galoisiennes, etc.
 
+Soit $L/K$ 
 \subsubsection{Extensions et polynômes cyclotomiques}
 %TODO : Racines de l'unités et quelques mots sur les polynômes 
 %cyclotomiques et leurs extensions. Peut-être rajouter un ou deux mots sur le 
@@ -630,14 +633,29 @@ a choisi $\zeta$ arbitrairement, on obtient le résultat voulu.\\
 %$y^2 = x^3 + 1$ et leurs tordues, pour préparer le terrain pour la partie 
 %elliptique de Rains
 
-
 \section{Isomorphismes de corps finis}
 %TODO: Présentation du problème, énonciation des difficultés etc.
+On a vu, théorème \ref{thisomGF}, qu'un corps fini était unique à isomorphisme
+près. De façons équivalente, cela équivaut à ce que deux corps finis de même
+cardinal sont donc isomorphes. Malheureusement, la preuve n'est pas constructive
+et ne permet donc pas d'expliciter ou de construire un tel isomorphisme.\par
+On a également vu, théorème \ref{thelemprim}, que tout corps fini, excépté le 
+corps premier, s'obtient par adjonction de la racine d'un polynôme irréductible
+du degré de l'extension. Il y a donc autant de corps fini "différents" de même
+cardinal que de polynôme irréductible de bon degré sur le corps premier (ou 
+$\GF{q}$ si on ne part pas du corps premier). Le problème est donc comment 
+passer de l'un à l'autre.\par
 
 \subsection{Algorithme de Pinch (peut-être à mettre dans l'introduction de 
 la section ?)}
 %TODO: Énonciation et descriptions de la méthode de Pinch, justification des 
 %résultats, explication des inconvénients et autre.
+Soit $f$ et $g$ deux polynômes irréductibles de degré $n$ sur $\GF{q}$ et 
+$k_1 := \GF{q}[X]/(f)$ et $k_2 := \GF{q}[Y]/(g)$, on veut trouver un 
+isomorphisme qui relie ces deux corps de cardinal $q^n$. Une première approche 
+naïve est de chercher une racine de $f$ dans $k_2$ et d'envoyer $x = \bar{X}$
+sur cette même racine. Cependant, cela implique de factoriser $f$ ce qui prend
+beaucoup trop de temps; on veut quelque chose de plus rapide.
 
 \subsubsection{Principe}
 %TODO: Explication de la méthode et illustration avec l'exempe de l'article, 
@@ -687,12 +705,15 @@ la section ?)}
 \subsubsection{Algorithme \& Analyse de complexité}
 %TODO: Décrire l'algorithme et donner sa complexité.
 
-\section{Comparatif/Implémentation/Résultats numériques}
+\section{Implémentation}
 %TODO: Comparer les deux méthodes ou même avec l'implémentation de base de SAGE 
 %(retrouver une simple racine). Détailler les limitations dû à SAGE, peut-être
 %prendre une partie de la conclusion en expliquant ce qui pourrait être changer.
+\subsection{Résultats numériques}
 
-\section{"Conclusion"}
+\subsection{Comparaison avec d'autres méthodes}
+
+\section{Conclusion}
 %TODO: Expliquer ce qu'il peut rester à faire (cas général, car(K) = 2 et n 
 %composé, couper et appliquer l'une des deux méthodes selon la nature du m ou 
 %s'il y a besoin de calculer une extension, etc.), où est-ce qu'on peut 
