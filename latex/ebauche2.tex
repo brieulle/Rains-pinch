@@ -635,9 +635,9 @@ a choisi $\zeta$ arbitrairement, on obtient le résultat voulu.\\
 \section{Isomorphismes de corps finis}
 %TODO: Présentation du problème, énonciation des difficultés etc.
 On a vu, théorème \ref{thisomGF}, qu'un corps fini était unique à isomorphisme
-près. De façons équivalente, cela équivaut à ce que deux corps finis de même
-cardinal sont donc isomorphes. Malheureusement, la preuve n'est pas constructive
-et ne permet donc pas d'expliciter ou de construire un tel isomorphisme.\par
+près. De façons équivalente, deux corps finis de même cardinal sont donc 
+isomorphes. Malheureusement, la preuve n'est pas constructive et ne permet donc 
+pas d'expliciter ou de construire un tel isomorphisme.\par
 On a également vu, théorème \ref{thelemprim}, que tout corps fini, excépté le 
 corps premier, s'obtient par adjonction de la racine d'un polynôme irréductible
 du degré de l'extension. Il y a donc autant de corps fini "différents" de même
@@ -654,11 +654,17 @@ $k_1 := \GF{q}[X]/(f)$ et $k_2 := \GF{q}[Y]/(g)$, on veut trouver un
 isomorphisme qui relie ces deux corps de cardinal $q^n$. Une première approche 
 naïve est de chercher une racine de $f$ dans $k_2$ et d'envoyer $x = \bar{X}$
 sur cette même racine. Cependant, cela implique de factoriser $f$ ce qui prend
-beaucoup trop de temps; on veut quelque chose de plus rapide.
+beaucoup trop de temps; on veut quelque chose de plus rapide. Une autre façon de
+s'en sortir est dû à Pinch, elle utilise les racines de l'unité.
 
 \subsubsection{Principe}
 %TODO: Explication de la méthode et illustration avec l'exempe de l'article, 
 %peut-être ?
+Pour qu'une racine \nroot{m} de l'unité soit dans un corps fini, il faut et il 
+suffit que $m$ divise l'ordre du groupe multiplicatif. Si c'est le cas, il y a
+parmis ces racines, des racines primitives ou des éléments exactement d'ordre
+$m$. Si jamais il existe un morphisme entre deux corps finis, alors les points
+d'ordre $m$ sont envoyés sur des points d'ordre $m$.
 
 \subsubsection{Problèmes/limitations}
 %TODO: Taille de m, choisir un élément au hasard
