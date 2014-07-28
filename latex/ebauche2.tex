@@ -8,11 +8,13 @@
 \usepackage{amssymb}
 \usepackage[colorlinks=false]{hyperref}
 \usepackage{enumerate}
+\usepackage{tocloft}
 \usepackage{algorithmic}
 \usepackage{pgf}
 \usepackage{tikz}
 \usepackage{tikz-cd}
 \usetikzlibrary{matrix,arrows,decorations.pathmorphing}
+\numberwithin{section}{part}
 \numberwithin{equation}{section}
 \newcommand\nroot[1]{\textit{#1}\up{\textit{ième}}}
 \newcommand\zmodn[1]{\mathbb{Z}/#1\mathbb{Z}}
@@ -22,6 +24,10 @@
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Ouput:}}
 \newcommand\Tr[1]{\textup{Tr}\left(#1\right)}
+\setlength{\cftsecnumwidth}{3em}
+\setlength{\cftsubsecnumwidth}{3em}
+
+
 \begin{document}
 \newtheorem{thm}{Thèorème}[section]
 \newtheorem{lem}[thm]{Lemme}
@@ -32,8 +38,14 @@
 \newtheorem*{ex}{Exemple}
 \theoremstyle{remark}
 \newtheorem{rem}{Remarque}[thm]
-\section*{Remerciements}
-\section*{Introduction}
+
+\addcontentsline{toc}{part}{Remerciements}
+\part*{Remerciements}
+
+\tableofcontents
+
+\addcontentsline{toc}{part}{Introduction}
+\part*{Introduction}
 Soit $\GF{q}$ le corps fini à $q = p^r$ éléments, avec $p$ un nombre premier. On
 définit alors $\overline{\GF{q}}$ sa clôture algébrique. Lorsqu'on a besoin de
 faire des calculs dans cette clôture, il est peut être plus aisé de calculer
@@ -55,20 +67,20 @@ l'utilisation de racines de l'unité et de courbes elliptique, de calculer
 rapidement de tels isomorphismes.
 
 
-\section{Préliminaire/contexte théorique}
+\part{Contexte théorique}
 
 Cette partie consistera principalement à rappeler et énoncer les résultats dont
 on se servira afin de justifier et mettre en place les deux algorithmes pour
 calculer les isomorphismes de corps finis. Le c\oe ur du sujet se trouve à la 
 partie \ref{deux}.
 
-\subsection{Corps finis}
+\section{Corps finis}
 Dans cette section on va rappeler les définitions et démontrer certains 
 résultats liés aux corps finis. Principalement, on étudiera les extensions 
 de corps et la théorie de Galois de base sur les corps finis. On ne considérera
 que des corps commutatifs.
 
-\subsubsection{Définitions}
+\subsection{Définitions}
 
 Soit $\Omega = (K, +, .)$ un triplet où $K$ est un ensemble, $+$ et $.$ deux
 lois de composition interne sur $K$. On dit que $\Omega$ est un corps si : 
@@ -187,7 +199,7 @@ puisqu'il est scindé sur $K$, et l'unicité se déduit de l'unicité des corps 
 décomposition, théorème \ref{cordec}.
 \end{proof}
 
-\subsubsection{Extension de corps}
+\subsection{Extension de corps}
 \label{defdegext}
 On dit que $K$ est une extension de corps de $k$ s'il existe un morphisme de 
 corps $\varphi : k \to K$. Ou de façon équivalente, si $k \subseteq K$ alors $K$
@@ -386,13 +398,13 @@ comme combinaison linéaire de puissances d'un unique élément, en pratique cet
 élément sera la racine du polynôme par lequel on quotiente le corps premier afin
 d'obtenir l'extension.
 
-\subsubsection{Théorie de Galois}
+\subsection{Théorie de Galois}
 %TODO :Définitions et résutlats de base (sans forcément tout prouver),
 %Frobenius, action de groupes ? Ça me parait raisonnable...
 %Groupe de Galois, élément primitif, extensions galoisiennes, etc.
 
 Soit $L/K$ 
-\subsubsection{Extensions et polynômes cyclotomiques}
+\subsection{Extensions et polynômes cyclotomiques}
 %TODO : Racines de l'unités et quelques mots sur les polynômes 
 %cyclotomiques et leurs extensions. Peut-être rajouter un ou deux mots sur le 
 %cas des corps finis.
@@ -595,49 +607,49 @@ de celui-ci. Ainsi, le polynôme minimal de $\zeta$ est de degré $d$ et comme o
 a choisi $\zeta$ arbitrairement, on obtient le résultat voulu.\\
 \end{proof}
 
-\subsection{Théorie des nombres/Idéaux}
+\section{Idéaux et théorie des nombres}
 %TODO: Tout ce qui concerne la preuve de Rains avec les idéaux 
 %premiers, les normes d'ideaux, la factorisation unique, Galois, les périodes de
 %Gauss, les périodes elliptiques (Mihailescu et al.) ou plus précisément ce qui 
 %permet d'y arriver.
 
-\subsubsection{Corps de nombres}
+\subsection{Corps de nombres}
 %TODO :Définitions (normes, traces, éléments algébriques, etc.)
 
-\subsubsection{Idéaux premiers}
+\subsection{Idéaux premiers}
 %TODO: Idéaux premiers sur les anneaux d'entiers de corps de nombres,
 %décomposition unique, résultat de la théorie de Galois.
 
-\subsubsection{Périodes de Gauss, elliptiques}
+\subsection{Périodes de Gauss, elliptiques}
 %TODO: Énoncé et justifier les résultats donnés par Rains (notamment le lemme
 %expliquant la forme de $\GF{q}[X]/I$ pour $I$ sous-groupe du groupe de Galois);
 %peut-être à mettre directement dans la partie cyclotomique de la section
 %algorithme de Rains cyclotomique.
 
-\subsection{Courbes elliptiques}
+\section{Courbes elliptiques}
 %TODO: Définitions (j-invariant, nombres de points, tordues, module de
 %Tate (?) etc.), résultats généraux, sur les corps finis
 
-\subsubsection{Équation de Weierstrass}
+\subsection{Équation de Weierstrass}
 %TODO: Rapide énoncé des changements de variable, comment on arrive à la forme
 %"simple"; liste des différents paramètres/invariants qui nous intéressent.
 
-\subsubsection{Loi de groupe}
+\subsection{Loi de groupe}
 %TODO : Je suis pas sûr pour cette partie, c'est un peu long à tout justifier et
 %ce n'est pas ce qu'on veut faire. Mais peut-être expliquer rapidement.\par
 %Cela dit, je suis très tenté de renvoyer au Silverman pour toute la théorie de
 %base en ne mettant uniquement les résultats dont on aurait besoin 
 %(donc on saute cette partie).
 
-\subsubsection{Sur les corps finis}
+\subsection{Sur les corps finis}
 %TODO: Nombres de points, théorème de Hasse, Frobenius, trace
 
-\subsubsection{Courbes supersingulières}
+\subsection{Courbes supersingulières}
 %TODO: Définitions Twists quadratiques, courbes $y^2 = x^3 + x$ et 
 %$y^2 = x^3 + 1$ et leurs tordues, pour préparer le terrain pour la partie 
 %elliptique de Rains
 
-\section{Isomorphismes de corps finis}
+\part{Isomorphismes de corps finis}
 \label{deux}
 %TODO: Présentation du problème, énonciation des difficultés etc.
 On a vu, théorème \ref{thisomGF}, qu'un corps fini était unique à isomorphisme
@@ -646,12 +658,12 @@ isomorphes. Malheureusement, la preuve n'est pas constructive et ne permet donc
 pas d'expliciter ou de construire un tel isomorphisme.\par
 On a également vu, théorème \ref{thelemprim}, que tout corps fini, excépté le 
 corps premier, s'obtient par adjonction de la racine d'un polynôme irréductible
-du degré de l'extension. Il y a donc autant de corps fini "différents" de même
-cardinal que de polynôme irréductible de bon degré sur le corps premier (ou 
+du degré de l'extension. Il y a donc autant de corps finis "différents" de même
+cardinal que de polynômes irréductibles de bon degré sur le corps premier (ou 
 $\GF{q}$ si on ne part pas du corps premier). Le problème est donc comment 
 passer de l'un à l'autre.\par
 
-\subsection{Algorithme de Pinch}
+\section{Algorithme de Pinch}
 %TODO: Énonciation et descriptions de la méthode de Pinch, justification des 
 %résultats, explication des inconvénients et autre.
 Soit $f$ et $g$ deux polynômes irréductibles de degré $n$ sur $\GF{q}$, 
@@ -663,7 +675,7 @@ beaucoup trop de temps; on veut quelque chose de plus rapide. Une autre façon d
 s'en sortir est dûe à Pinch, l'une des façons de procéder utilise les racines de
 l'unité.
 
-\subsubsection{Principe}
+\subsection{Principe}
 %TODO: Explication de la méthode et illustration avec l'exempe de l'article, 
 %peut-être ?
 Globalement, la méthode de Pinch consiste à choisir un groupe $\Gamma$ défini
@@ -738,7 +750,6 @@ $\zeta'_m$ dans $k_2$.
 
 \item  Déterminer pour quel $s\in \lbrace{1,\dots,m-1}\rbrace$, l'application
 $\phi_s$ telle que $\phi_s(\zeta_m) = (\zeta'_m)^s$, est un isomorphisme.
-
 \end{enumerate}
 \vspace{0.3cm}
 Dans le premier point, la deuxième condition est là pour assurer que, théorème
@@ -756,8 +767,8 @@ Illustrons la méthode par un exemple directement tiré du papier de Pinch
 (\cite{Pin}). On se place dans $\GF{11}$ et on considère les deux polynôme
 irréductibles sur $\GF{11}$, $f = X^{23} + 8X^2 + X + 9$ et $g = Y^{23} + 3Y^2 +
 4Y + 9$. On pose $m = 829$, on vérifiera qu'il divise bien $11^{23} - 1$ et 
-qu'il est premier avec $11$ puisqu'il est lui-même premier. On définit $k_1$ et 
-$k_2$ comme les corps de ruptures de $f$ et $g$ respectivement.\par
+qu'il est premier avec $11$; en fait, il est lui-même premier. On définit $k_1$ 
+et $k_2$ comme les corps de ruptures de $f$ et $g$ respectivement.\par
 Dans cet exemple, il se trouve que $x^{\tfrac{11^{23} - 1}{829}}$ et 
 $y^{\tfrac{11^{23} - 1}{829}}$ sont déjà des racines primitives \nroot{m} de 
 l'unité, voici leurs expressions :
@@ -788,64 +799,76 @@ $x$ dans $k_2$ sur la deuxième ligne de ladite matrice et l'image de $x$ est :
 On peut alors vérifier que $f(\phi(x)) = 0$.
 \end{ex}
 
-\subsubsection{Problèmes/limitations}
+\subsection{Limitations}
 %TODO: Taille de m, choisir un élément au hasard
+Le premier problème de cette méthode est qu'il n'y a pas toujours d'élément
+d'ordre "petit" dans $\GF{q^n}^{\times}$. Par exemple, si on prend $p = 2$ et un
+premier de Mersenne égal à $2^n - 1$, on ne trouvera pas d'élement d'ordre plus
+petit que $2^n - 1$. Il y a donc un risque qu'on soit obligé de chercher des
+éléments d'ordre proche de $q^n - 1$, ce qui peut poser problème. Dans l'exemple
+ci-dessus, on avait :
+\[q^n - 1 = 11^{23} - 1 = 895430243255237372246530\]
+cela peut vite devenir laborieux de travailler sur des entiers de cet ordre. Le
+scénario peut être encore pire avec des valeurs de $q$ et de $n$ beaucoup plus
+grandes.\par
 
-\subsection{Algorithme de Rains : méthode cyclotomique}
+
+\section{Algorithme de Rains : méthode cyclotomique}
 %TODO  Commencer par une explication concise de la méthode, ce 
 %qu'elle change par rapport à Pinch.\par
 %Présenter pas à pas l'article de Rains (en gros), en enlevant ce qui nous 
 %concernerait moins et en rajoutant ce qu'il n'a pas mis (tous les détails 
 %sur l'algorithme convert et sa complexité).
 
-\subsubsection{Principe}
+\subsection{Principe}
 %TODO: Passer par une petite extension pour réduire la taille de m, utilisation
 %des éléments normaux, utilisation des périodes de Gauss.
 
-\subsubsection{Éléments normaux}
+\subsection{Éléments normaux}
 %TODO: Définitions et résultats utiles pour l'algorithme, justification de
 %l'algorithme (peut-être à mettre dans la partie Galois de la section corps
 %finis), conversion de la base polynomiale à la base normale.
 
-\subsubsection{Algorithme \& analyse de complexité}
+\subsection{Algorithme \& analyse de complexité}
 %TODO: Détailler l'algorithme de l'article/code de Luca + analyser la complexité
 %de ces algos et les "prouver" (montrer que ça marche bien, cela dit c'est 
 %peut-être largement faisable avant).
 
-\subsection{Algorithme de Rains : méthode elliptique}
+\section{Algorithme de Rains : méthode elliptique}
 %TODO: Résumer/Détailler le papier de Luca, rajouter les résultats sur
 %les twists, les périodes, détaillés l'algorithme et sa complexité, le prouver 
 %(probablement fait avec le papier de Luca et Mihailescu pour les périodes ?)
 %, détailler les différentes étapes, les paramètres, la façon de trouver m 
 %etc.
-\subsubsection{Principe}
+\subsection{Principe}
 %TODO: Choix d'un point d'ordre m sur une bonne courbe elliptique engendre 
 %l'extension, utilisation des périodes elliptiques afin d'avoir un élément 
 %stable par l'action du groupe de Galois (Énoncer les lemmes etc.)
 
-\subsubsection{Choix des paramètres}
+\subsection{Choix des paramètres}
 %TODO: Justifier le choix de m par rapport à n et q, tout ce qui concerne la 
 %valeur propre d'ordre n et donc le choix de traces qui s'en suit, expliquer 
 %comment on pick les courbes (à ce moment là on pourra aussi justifier avec le 
 %résultat sur les tordues).
 
-\subsubsection{Algorithme \& Analyse de complexité}
+\subsection{Algorithme \& Analyse de complexité}
 %TODO: Décrire l'algorithme et donner sa complexité.
 
-\section{Implémentation}
+\part{Implémentation}
 %TODO: Comparer les deux méthodes ou même avec l'implémentation de base de SAGE 
 %(retrouver une simple racine). Détailler les limitations dû à SAGE, peut-être
 %prendre une partie de la conclusion en expliquant ce qui pourrait être changer.
-\subsection{Résultats numériques}
+\section{Résultats numériques}
 
-\subsection{Comparaison avec d'autres méthodes}
+\section{Comparaison avec d'autres méthodes}
 
-\section{Conclusion}
+\part{Conclusion}
 %TODO: Expliquer ce qu'il peut rester à faire (cas général, car(K) = 2 et n 
 %composé, couper et appliquer l'une des deux méthodes selon la nature du m ou 
 %s'il y a besoin de calculer une extension, etc.), où est-ce qu'on peut 
 %récupérer des performances (produit scalaire).
 
+\addcontentsline{toc}{part}{Références}
 \begin{thebibliography}{LC}
 \bibitem{Sam} \emph{Théorie algébrique des nombres}, \bsc{Pierre Samuel}, 
 Hermann, 1971.
@@ -879,8 +902,11 @@ Washington}, Graduate texts in mathematics, Springer-Verlag, 1982.
 \bsc{Joseph H. Silverman}, Graduate texts in mathematics, Springer, 2nd ed. 
 2009.
 
-\bibitem{GarD} \emph{Handbook of finite fields}, \bsc{Gary L. Mullen} \& 
+\bibitem{GarDa} \emph{Handbook of finite fields}, \bsc{Gary L. Mullen} \& 
 \bsc{Daniel Panario}, Discrete mathematics and its applications, Series Editor 
 Kenneth H. Rosen, CRC Press.
+
+\bibitem{GaGe} \emph{Modern computer algebra}, \bsc{Joachim von zur Gathen} \&
+\bsc{Jürgen Gerhard}, 3rd edition, Cambridge
 \end{thebibliography}
 \end{document}
