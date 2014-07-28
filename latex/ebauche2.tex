@@ -59,9 +59,8 @@ rapidement de tels isomorphismes.
 
 Cette partie consistera principalement à rappeler et énoncer les résultats dont
 on se servira afin de justifier et mettre en place les deux algorithmes pour
-calculer les isomorphismes. Le lecteur déjà familié avec ces notions pourra 
-sauter directement à la partie \ref{deux} où le c\oe ur du présent rapport est 
-traité.
+calculer les isomorphismes de corps finis. Le c\oe ur du sujet se trouve à la 
+partie \ref{deux}.
 
 \subsection{Corps finis}
 Dans cette section on va rappeler les définitions et démontrer certains 
@@ -71,7 +70,7 @@ que des corps commutatifs.
 
 \subsubsection{Définitions}
 
-Soit $\Omega = (K, +, .)$ un triplet où $K$ est un ensemble et $+$ et $.$ deux
+Soit $\Omega = (K, +, .)$ un triplet où $K$ est un ensemble, $+$ et $.$ deux
 lois de composition interne sur $K$. On dit que $\Omega$ est un corps si : 
 \begin{enumerate}[(i)]
 \item $(K, +)$ est un groupe abélien,
@@ -317,7 +316,7 @@ le corps de décomposition de $P$.\par
 \textit{(Unicité)}
 On veut réalité montrer que si on a deux corps de décompositions, alors ils ont
 isomorphes. Soit deux corps $k$ et $k^{\prime}$ isomorphes, on note $\phi$
-l'isomorphise, qu'on étend alors de façon évidente à un isomorphismes de $k[X]$ 
+l'isomorphisme, qu'on étend alors de façon évidente à un isomorphisme de $k[X]$ 
 dans $k^{\prime}[X]$; \textit{i.e.} on applique $\phi$ au coefficients des 
 polynômes. On pose  $L$ et $L'$ les corps de décomposition de $P\in k[X]$ et $P'
 = \phi(P) \in k^{\prime}[X]$ respectivement.\par
@@ -652,26 +651,142 @@ cardinal que de polynôme irréductible de bon degré sur le corps premier (ou
 $\GF{q}$ si on ne part pas du corps premier). Le problème est donc comment 
 passer de l'un à l'autre.\par
 
-\subsection{Algorithme de Pinch (peut-être à mettre dans l'introduction de 
-la section ?)}
+\subsection{Algorithme de Pinch}
 %TODO: Énonciation et descriptions de la méthode de Pinch, justification des 
 %résultats, explication des inconvénients et autre.
-Soit $f$ et $g$ deux polynômes irréductibles de degré $n$ sur $\GF{q}$ et 
-$k_1 := \GF{q}[X]/(f)$ et $k_2 := \GF{q}[Y]/(g)$, on veut trouver un 
+Soit $f$ et $g$ deux polynômes irréductibles de degré $n$ sur $\GF{q}$, 
+$k_1 := \GF{q}[X]/(f)$ et $k_2 := \GF{q}[Y]/(g)$. On veut trouver un 
 isomorphisme qui relie ces deux corps de cardinal $q^n$. Une première approche 
 naïve est de chercher une racine de $f$ dans $k_2$ et d'envoyer $x = \bar{X}$
 sur cette même racine. Cependant, cela implique de factoriser $f$ ce qui prend
 beaucoup trop de temps; on veut quelque chose de plus rapide. Une autre façon de
-s'en sortir est dû à Pinch, elle utilise les racines de l'unité.
+s'en sortir est dûe à Pinch, l'une des façons de procéder utilise les racines de
+l'unité.
 
 \subsubsection{Principe}
 %TODO: Explication de la méthode et illustration avec l'exempe de l'article, 
 %peut-être ?
+Globalement, la méthode de Pinch consiste à choisir un groupe $\Gamma$ défini
+par des relations algébriques sur $\GF{q}$. Puis, on choisit un élément 
+$\gamma\in\Gamma$ tel que :
+\vspace{0.3cm}
+\begin{itemize}
+\item il soit d'ordre $m$ "petit" et défini sur $\GF{q^n}$,
+\item il engendre exactement $\GF{q^n}$; et non un de ses sous-corps.
+\end{itemize}
+\vspace{0.3cm}
+Par suite, on exprime alors $\gamma$ en tant que polynôme en $x$ et en
+polynôme en $y$ et, pour finir, on utilise ces deux expressions pour exprimer 
+$x$ en fonction de $y$, afin d'obtenir l'isomorphisme voulu.\par
+Dans la méthode qu'on va décrire, dite cyclotomique, on utilisera $\Gamma =
+k_1^{\times}$ et $\gamma$ sera une racine primitive \nroot{m} de l'unité.
+
+\vspace{0.3cm}
+
 Pour qu'une racine \nroot{m} de l'unité soit dans un corps fini, il faut et il 
 suffit que $m$ divise l'ordre du groupe multiplicatif. Si c'est le cas, il y a
-parmis ces racines, des racines primitives ou des éléments exactement d'ordre
-$m$. Si jamais il existe un morphisme entre deux corps finis, alors les points
-d'ordre $m$ sont envoyés sur des points d'ordre $m$.
+parmis ces racines, des racines primitives \nroot{m}. Imaginons qu'on ait un 
+élément $\zeta_m$ dans $k_1^{\times}$ qui soit une racine primivite \nroot{m} de
+l'unité. Un morphisme $\phi$ entre $k_1$ et $k_2$ envoie alors 
+$\zeta_m$ sur racine primitive \nroot{m} de l'unité dans $k_2$; le problème est
+de trouver laquelle. On choisit $\zeta'_m$ une racine primitive \nroot{m} de 
+l'unité dans $k_2$ alors $\zeta_m$ s'enverra sur une puissance $\zeta'_m$
+puisque le groupe mulitplicatif d'un corps est cyclique. On définit alors les 
+applications $\phi_s : k_1 \to k_2$ pour $0 < s < m$, telles que :
+\[\phi(\zeta_m) = (\zeta'_m)^s\]
+Le but va être de déterminer quel $\phi_s$ définit un isomorphisme.\par
+Pour cela, on va utiliser un peu d'algèbre linéaire. De façon générale, si on a
+deux bases $(x_i)_{i\in I}$, $(y_i)_{i\in I}$ de $k_1$, $k_2$ respectivement,
+telles qu'il existe un isomorphisme $\phi$ qui envoie $x_i$ sur $y_i$ pour tout
+$i\in I = \lbrace{1,\dots,n}\rbrace$, on a alors :
+\begin{align*}
+x_i &= \sum_{0\leq j < n}{a_{ij}x^j}\\
+y_i &= \sum_{0\leq k < n}{b_{ik}y^k}\\
+\phi(x^j) &= \sum_{0\leq k < n}{c_{jk}y^k}\\
+\end{align*}
+avec comme objectif de déterminer la valeur de $c_{jk}$. Or pour tout $i\in I$, 
+on a : 
+\begin{align*}
+\sum_{0\leq j < n}{a_{ij}\phi{(x^j)}}&= \sum_{0\leq j < n}{a_{ij}c_{jk}y^k}\\
+&= \sum_{0\leq k < n}{b_{ik}y^k}\\
+\end{align*}
+Ou de façon équivalente, si on pose $A$, $B$ et $C$ les matrices avec comme 
+coefficients respectifs $a_{ij}$, $b_{ik}$ et $c_{kj}$, on a :
+\[AC = B\]\par
+
+Reste alors à déterminer les bases $(x_i)$ et $(y_i)$. Par exemple, si on trouve
+deux racines $\nu_1$ et $\nu_2$ de $f$ et $g$ respectivement, telles que 
+$\phi(\nu_1) = \nu_2$, on pourra prendre comme bases $x_i = \nu_1^i$ et 
+$y_i = \nu_2^i$.\par
+Mais comme les racines $\zeta_m$ et $\zeta'_m$ sont censées être choisies de 
+telle sorte qu'elles n'engendrent aucun des sous-corps de $\GF{q^n}$ cela veut 
+dire, en particulier, qu'elles sont racines de $f$ et $g$. On peut donc poser 
+$x_i = \zeta_m^i$ et $y_i = (\zeta'_m)^{si}$ selon l'application $\phi_s$ qu'on 
+souhaite tester. De $C$ définie comme ci-dessus avec les nouvelles bases,
+on déduit l'image de $x$, dont les coefficients dans la base monomial $y$ sont 
+sur la deuxième ligne. Alors, si $\phi_s(x)$ est racine de $f$ sur $k_2$,
+l'application $\phi_s$ est effectivement un isomorphisme.\par
+\vspace{0.3cm}
+La méthode peut se résumer ainsi :
+\vspace{0.3cm}
+\begin{enumerate}[1.]
+\item Trouver un entier $m$ "petit" divisant $q^n - 1$ et tel que 
+$(q,m) = 1$. 
+
+\item Déterminer une racine \nroot{m} primitive $\zeta_m$ dans $k_1$ et
+$\zeta'_m$ dans $k_2$.
+
+\item  Déterminer pour quel $s\in \lbrace{1,\dots,m-1}\rbrace$, l'application
+$\phi_s$ telle que $\phi_s(\zeta_m) = (\zeta'_m)^s$, est un isomorphisme.
+
+\end{enumerate}
+\vspace{0.3cm}
+Dans le premier point, la deuxième condition est là pour assurer que, théorème
+\ref{polycycldecomp}, une racine \nroot{m} primitive de l'unité 
+n'engendre aucun sous-corps de $\GF{q^n}$. Pour le deuxième point, il suffit de 
+prendre au hasard un $z\in k_1^{\times}$ et de l'élever à la puissance 
+$(q^n - 1)/m$ jusqu'à tomber sur un élément d'ordre $m$, la probabalité 
+que cela arrive est de $\varphi(m)/m$; il y a au plus $m$ éléments solutions de
+$X^m - 1$ dans $\GF{q^n}$ et seulement $\varphi(m)$ éléments d'ordre exactement
+$m$. Si $m$ est premier, ce qui sera bien souvent le cas, la chance de tomber
+sur un élément d'ordre exactement $m$ est quasiment assurée par cette méthode.
+
+\begin{ex}
+Illustrons la méthode par un exemple directement tiré du papier de Pinch
+(\cite{Pin}). On se place dans $\GF{11}$ et on considère les deux polynôme
+irréductibles sur $\GF{11}$, $f = X^{23} + 8X^2 + X + 9$ et $g = Y^{23} + 3Y^2 +
+4Y + 9$. On pose $m = 829$, on vérifiera qu'il divise bien $11^{23} - 1$ et 
+qu'il est premier avec $11$ puisqu'il est lui-même premier. On définit $k_1$ et 
+$k_2$ comme les corps de ruptures de $f$ et $g$ respectivement.\par
+Dans cet exemple, il se trouve que $x^{\tfrac{11^{23} - 1}{829}}$ et 
+$y^{\tfrac{11^{23} - 1}{829}}$ sont déjà des racines primitives \nroot{m} de 
+l'unité, voici leurs expressions :
+\begin{align*}
+\alpha(x) =&\hspace{0.15cm} 7 + 8x + 4x^2 + 4x^4 + 4x^5 + 10x^6 + 4x^7 + 3x^8 + 
+5x^9\\
+& + 2x^{10} + 6x^{11} + 4x^{12} + 8x^{13} + 6x^{14} + 4x^{15} + 4x^{16}\\
+& + 5x^{17}  + 7x^{18} + 4x^{19} + x^{20} + 8x^{22}
+\end{align*}
+et
+\begin{align*}
+\beta(y) =&\hspace{0.15cm}1 + y + 4y^2 + 4y^3 + 9y^4 + y^5 + 6y^6 + 3y^7 + 3y^8 
++ 3y^9\\
+& + 6y^{10} + 5y^{11} + 6y^{12} + 8y^{13} + y^{14} + 9y^{15} + 4y^{16}\\
+& + 3y^{17} + 5y^{18} + y^{19} + 10y^{20} + 10y^{21} + 6y^{22}
+\end{align*}
+Le but va donc être de calculer les matrices de passage entre les bases
+$(\alpha(x)^i)_{i\in I}$ et $(\beta(y)^{si})_{i\in I}$, pour $s < 829$.
+Dans ce cas précis, il se trouve que la puissance $s = 14$ convient. En 
+calculant la matrice de passage, on trouve alors les coefficients de l'image de 
+$x$ dans $k_2$ sur la deuxième ligne de ladite matrice et l'image de $x$ est :
+\begin{align*}
+\phi(x) =&\hspace{0.15cm} 8 + 9y + y^2 + 2y^3 + 7y^4 + 4y^5 + 6y^6 + 10y^7 + 
+9y^8\\
+& + 10y^9 + 2y^{10} + 2y^{12} + 10y^{13} + 2y^{14} + 7y^{15} + y^{16}\\
+& + 3y^{17} + 2y^{18} + 2y^{20} + y^{21} + y^{22}
+\end{align*}
+On peut alors vérifier que $f(\phi(x)) = 0$.
+\end{ex}
 
 \subsubsection{Problèmes/limitations}
 %TODO: Taille de m, choisir un élément au hasard
