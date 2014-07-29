@@ -8,11 +8,13 @@
 \usepackage{amssymb}
 \usepackage[colorlinks=false]{hyperref}
 \usepackage{enumerate}
+\usepackage{tocloft}
 \usepackage{algorithmic}
 \usepackage{pgf}
 \usepackage{tikz}
 \usepackage{tikz-cd}
 \usetikzlibrary{matrix,arrows,decorations.pathmorphing}
+\numberwithin{section}{part}
 \numberwithin{equation}{section}
 \newcommand\nroot[1]{\textit{#1}\up{\textit{ième}}}
 \newcommand\zmodn[1]{\mathbb{Z}/#1\mathbb{Z}}
@@ -22,6 +24,10 @@
 \renewcommand{\algorithmicrequire}{\textbf{Input:}}
 \renewcommand{\algorithmicensure}{\textbf{Ouput:}}
 \newcommand\Tr[1]{\textup{Tr}\left(#1\right)}
+\setlength{\cftsecnumwidth}{3em}
+\setlength{\cftsubsecnumwidth}{3em}
+
+
 \begin{document}
 \newtheorem{thm}{Thèorème}[section]
 \newtheorem{lem}[thm]{Lemme}
@@ -32,8 +38,13 @@
 \newtheorem*{ex}{Exemple}
 \theoremstyle{remark}
 \newtheorem{rem}{Remarque}[thm]
-\section*{Remerciements}
-\section*{Introduction}
+
+\addcontentsline{toc}{part}{Remerciements}
+\part*{Remerciements}
+
+\tableofcontents
+
+\addcontentsline{toc}{part}{Introduction}
 Soit $\GF{q}$ le corps fini à $q = p^r$ éléments, avec $p$ un nombre premier. On
 définit alors $\overline{\GF{q}}$ sa clôture algébrique. Lorsqu'on a besoin de
 faire des calculs dans cette clôture, il est peut être plus aisé de calculer
@@ -55,118 +66,118 @@ l'utilisation de racines de l'unité et de courbes elliptique, de calculer
 rapidement de tels isomorphismes.
 
 
-\section{Préliminaire/contexte théorique}
+\part{Contexte théorique}
 
-\subsection{Corps finis}
+\section{Corps finis}
 Dans cette section on va rappeler les définitions et démontrer certains 
 résultats liés aux corps finis. Principalement, on étudiera les extensions 
 de corps et la théorie de base de Galois sur les corps finis.
 
-\subsubsection{Définitions}
+\subsection{Définitions}
 
 Soit $K$ 
 
-\subsubsection{Extensions de corps}
+\subsection{Extensions de corps}
 Esquisse de la théorie général + résultats particuliers sur les corps finis
-\subsubsection{Théorie de Galois}
+\subsection{Théorie de Galois}
 Définitions et résutlats de base (sans forcément tout prouver), Frobenius, 
 Groupe de Galois, élément primitif, extensions galoisiennes, etc.
 
-\subsubsection{Extensions et polynômes cyclotomiques}
+\subsection{Extensions et polynômes cyclotomiques}
 Racines de l'unités et quelques mots sur les polynômes cyclotomiques et leurs 
 extensions. Peut-être rajouter un ou deux mots sur le cas des corps finis (ça 
 pourrait se mettre dans la section du dessus).
 
-\subsection{Théorie des nombres/Idéaux}
+\section{Idéaux et théorie des nombres}
 \textit{Résumé :} Tout ce qui concerne la preuve de Rains avec les idéaux 
 premiers, les normes d'ideaux, la factorisation unique, Galois, les périodes de 
 Gauss, les périodes elliptiques (Mihailescu et al.) ou plus précisément ce qui 
 permet d'y arriver.
-\subsubsection{Corps de nombres}
+\subsection{Corps de nombres}
 Définitions (normes, traces, éléments algébriques, etc.)
-\subsubsection{Idéaux premiers}
+\subsection{Idéaux premiers}
  Idéaux premiers sur les anneaux d'entiers de corps de nombres,
  décomposition unique, résultat de la théorie de Galois.
-\subsubsection{Périodes de Gauss, elliptiques}
+\subsection{Périodes de Gauss}
 Énoncé et justifier les résultats donnés par Rains (notamment le lemme
 expliquant la forme de $\GF{q}[X]/I$ pour $I$ sous-groupe du groupe de Galois);
 peut-être à mettre directement dans la partie cyclotomique de la section
 algorithme de Rains cyclotomique.
 
-\subsection{Courbes elliptiques}
+\section{Courbes elliptiques}
 \textit{Résumé :}Définitions (j-invariant, nombres de points, tordues, module de
 Tate (?) etc.), résultats généraux, sur les corps finis
-\subsubsection{Équation de Weierstrass}
+\subsection{Définitions}
 Rapide énoncé des changements de variable, comment on arrive à la forme
 "simple"; liste des différents paramètres/invariants qui nous intéressent.
-\subsubsection{Loi de groupe}
-Je suis pas sûr pour cette partie, c'est un peu long à tout justifier et ce
-n'est pas ce qu'on veut faire. Mais peut-être expliquer rapidement.\par
-Cela dit, je suis très tenté de renvoyer au Silverman pour toute la théorie de
-base en ne mettant uniquement les résultats dont on aurait besoin (donc on saute
-cette partie).
-\subsubsection{Sur les corps finis}
+\subsection{Sur les corps finis}
 Nombres de points, théorème de Hasse, Frobenius, trace
-\subsubsection{Tordues}
+\subsection{Périodes elliptiques}
+Prouver et définir les périodes elliptiques (peut-être que ce serait à
+faire directement dans la partie algorithme elliptique de Rains ?)
+\subsection{Tordues}
 Twists quadratiques, courbes $y^2 = x^3 + x$ et $y^2 = x^3 + 1$ et leurs
 tordues, pour préparer le terrain pour la partie elliptique de Rains
 
 
-\section{Isomorphismes de corps finis}
+\part{Isomorphismes de corps finis}
 Présentation du problème, énonciation des difficultés etc.
 
-\subsection{Algorithme de Pinch (peut-être à mettre dans l'introduction de 
-la section ?)}
+\section{Algorithme de Pinch}
 Énonciation et descriptions de la méthode de Pinch, justification des 
 résultats, explication des inconvénients et autre.
-\subsubsection{Principe}
+\subsection{Principe}
 Explication de la méthode et illustration avec l'exempe de l'article, peut-être
 ?
-\subsubsection{Problèmes/limitations}
+\subsection{Limitations}
 Taille de m, choisir un élément au hasard
 
-\subsection{Algorithme de Rains : méthode cyclotomique}
+\section{Algorithme de Rains : méthode cyclotomique}
 \textit{Résumé :}Commencer par une explication concise de la méthode, ce 
 qu'elle change par rapport à Pinch.\par
 Présenter pas à pas l'article de Rains (en gros), en enlevant ce qui nous 
 concernerait moins et en rajoutant ce qu'il n'a pas mis (tous les détails 
 sur l'algorithme convert et sa complexité).
-\subsubsection{Principe}
+\subsection{Principe}
 Passer par une petite extension pour réduire la taille de m, utilisation des
 éléments normaux, utilisation des périodes de Gauss.
-\subsubsection{Éléments normaux}
+\subsection{Éléments normaux}
 Définitions et résultats utiles pour l'algorithme, justification de
 l'algorithme (peut-être à mettre dans la partie Galois de la section corps
 finis), conversion de la base polynomiale à la base normale.
-\subsubsection{Algorithme \& analyse de complexité}
+\subsection{Algorithme \& analyse de complexité}
 Détailler l'algorithme de l'article/code de Luca + analyser la complexité de ces
 algos et les "prouver" (montrer que ça marche bien, cela dit c'est peut-être
 largement faisable avant).
 
-\subsection{Algorithme de Rains : méthode elliptique}
+\section{Algorithme de Rains : méthode elliptique}
 \textit{Résumé :}Résumer/Détailler le papier de Luca, rajouter les résultats sur
 les twists, les périodes, détaillés l'algorithme et sa complexité, le prouver 
 (probablement fait avec le papier de Luca et Mihailescu pour les périodes ?)
 , détailler les différentes étapes, les paramètres, la façon de trouver m 
 etc.
-\subsubsection{Principe}
+\subsection{Principe}
 Choix d'un point d'ordre m sur une bonne courbe elliptique engendre 
 l'extension, utilisation des périodes elliptiques afin d'avoir un élément 
 stable par l'action du groupe de Galois (Énoncer les lemmes etc.)
-\subsubsection{Choix des paramètres}
+\subsection{Choix des paramètres}
 Justifier le choix de m par rapport à n et q, tout ce qui concerne la valeur 
 propre d'ordre n et donc le choix de traces qui s'en suit, expliquer comment on
 pick les courbes (à ce moment là on pourra aussi justifier avec le résultat 
 sur les tordues).
-\subsubsection{Algorithme \& Analyse de complexité}
+\subsection{Algorithme \& Analyse de complexité}
 Décrire l'algorithme et donner sa complexité.
 
-\section{Comparatif/Implémentation/Résultats numériques}
+\part{Implémentation}
 Comparer les deux méthodes ou même avec l'implémentation de base de SAGE 
 (retrouver une simple racine). Détailler les limitations dû à SAGE, peut-être
 prendre une partie de la conclusion en expliquant ce qui pourrait être changer.
 
-\section{"Conclusion"}
+\section{Résultats numériques}
+
+\section{Comparaison avec d'autres méthodes}
+
+\part{Conclusion}
 Expliquer ce qu'il peut rester à faire (cas général, couper et appliquer 
 l'une des deux méthodes selon la nature du m ou s'il y a besoin de calculer 
 une extension, etc.), où est-ce qu'on peut récupérer des performances 
