@@ -43,6 +43,7 @@
 \part*{Remerciements}
 
 \tableofcontents
+\newpage
 
 \addcontentsline{toc}{part}{Introduction}
 \part*{Introduction}
@@ -61,9 +62,9 @@ degré et définies par deux polynôme irréductible distincts $f$ et $g$. On no
 le but est donc de trouver un isormophisme reliant ces deux corps. Une méthode
 simple et immédiate est d'envoyer $x = \bar{X}$ sur une racine de $f$ dans
 $k_2$. Le problème est que cela revient à factoriser le polynôme $f$ ce qui est
-beaucoup trop lent.\par
+beaucoup trop lent.
 On va donc dans ce rapport étudier deux méthodes permettant, \textit{via}
-l'utilisation de racines de l'unité et de courbes elliptique, de calculer
+l'utilisation de racines de l'unité et de courbes elliptiques, de calculer
 rapidement de tels isomorphismes.
 
 
@@ -71,13 +72,21 @@ rapidement de tels isomorphismes.
 
 Cette partie consistera principalement à rappeler et énoncer les résultats dont
 on se servira afin de justifier et mettre en place les deux algorithmes pour
-calculer les isomorphismes de corps finis. Le c\oe ur du sujet se trouve à la 
-partie \ref{deux}.
+calculer les isomorphismes de corps finis. Cette partie n'a pas comme vocation
+de faire un exposé complet des notions abordées, pour un traité plus détaillé,
+le lecteur pourra consulter au choix \cite{LiNi}, \cite{MuPa} ou 
+\cite[chap.~III]{Per} pour les corps finis; \cite{Nek}, \cite[chap.~VIII]{Pol}
+ou \cite[chap. VI]{Sam} pour la théorie de Galois; \cite{Sam} ou \cite{Wash1}
+pour la théorie des nombres; \cite{Sil} ou \cite{Wash2} pour la théorie sur les
+courbes elliptiques; et pour finir \cite{GaGe} pour tout ce qui concerne le 
+calcul formel en général. On s'efforcera néamoins de démontrer les résultats les
+plus importants ou fondamentaux. Le c\oe ur du sujet se trouve à la partie 
+\ref{deux}.
 
 \section{Corps finis}
 Dans cette section on va rappeler les définitions et démontrer certains 
 résultats liés aux corps finis. Principalement, on étudiera les extensions 
-de corps et la théorie de Galois de base sur les corps finis. On ne considérera
+de corps et la théorie de Galois sur les corps finis. On ne considérera
 que des corps commutatifs.
 
 \subsection{Définitions}
@@ -381,7 +390,7 @@ Pour montrer l'autre sens, il suffit de remarquer que $\GF{p^n}$ correspond aux
 
 \begin{thm}
 \label{thelemprim}
-Toute extension séparable et finie est simple.
+Toute extension séparable (\textit{la bonne référence}) et finie est simple.
 \end{thm}
 \begin{proof}
 On va se contenter de le prouver dans le cas d'un corps fini; le cas général
@@ -403,7 +412,16 @@ d'obtenir l'extension.
 %Frobenius, action de groupes ? Ça me parait raisonnable...
 %Groupe de Galois, élément primitif, extensions galoisiennes, etc.
 
-Soit $L/K$ 
+Soit $L/k$ et $K/k$ deux extensions finies de corps avec $L\subseteq K$, alors 
+il existe des morphismes qui laisse $k$ inchangé. On les appelles des 
+$k$-morphismes et on note :
+\[\textup{Hom}_k(L, K)\]
+L'ensemble de tels morphismes. Si $L = K$, on parle alors de $k$-endomorphisme
+et si ceux parmis ces endomorphismes qui sont inversibles forment un groupe,
+qu'on appelle le groupe des automorphismes de $L$ et on le note :
+\[\textup{Aut}_k(L) = \lbrace{\sigma\in\textup{Aut(L)} : \sigma(x) = x
+,\;\forall x\in k}\rbrace\]
+
 \subsection{Extensions et polynômes cyclotomiques}
 %TODO : Racines de l'unités et quelques mots sur les polynômes 
 %cyclotomiques et leurs extensions. Peut-être rajouter un ou deux mots sur le 
@@ -620,7 +638,7 @@ a choisi $\zeta$ arbitrairement, on obtient le résultat voulu.\\
 %TODO: Idéaux premiers sur les anneaux d'entiers de corps de nombres,
 %décomposition unique, résultat de la théorie de Galois.
 
-\subsection{Périodes de Gauss, elliptiques}
+\subsection{Périodes de Gauss}
 %TODO: Énoncé et justifier les résultats donnés par Rains (notamment le lemme
 %expliquant la forme de $\GF{q}[X]/I$ pour $I$ sous-groupe du groupe de Galois);
 %peut-être à mettre directement dans la partie cyclotomique de la section
@@ -630,24 +648,26 @@ a choisi $\zeta$ arbitrairement, on obtient le résultat voulu.\\
 %TODO: Définitions (j-invariant, nombres de points, tordues, module de
 %Tate (?) etc.), résultats généraux, sur les corps finis
 
-\subsection{Équation de Weierstrass}
+\subsection{Définitions}
 %TODO: Rapide énoncé des changements de variable, comment on arrive à la forme
 %"simple"; liste des différents paramètres/invariants qui nous intéressent.
+%j-invariant, groupe d'automorphisme ?> c'est peut-être là que je peux utiliser
+%le module de Tate...
 
-\subsection{Loi de groupe}
-%TODO : Je suis pas sûr pour cette partie, c'est un peu long à tout justifier et
-%ce n'est pas ce qu'on veut faire. Mais peut-être expliquer rapidement.\par
-%Cela dit, je suis très tenté de renvoyer au Silverman pour toute la théorie de
-%base en ne mettant uniquement les résultats dont on aurait besoin 
-%(donc on saute cette partie).
-
-\subsection{Sur les corps finis}
+\subsection{Corps finis}
 %TODO: Nombres de points, théorème de Hasse, Frobenius, trace
+
+\subsection{Périodes elliptiques}
+%TODO: Prouver et définir les périodes elliptiques (peut-être que ce serait à
+%faire directement dans la partie algorithme elliptique de Rains ?)
 
 \subsection{Courbes supersingulières}
 %TODO: Définitions Twists quadratiques, courbes $y^2 = x^3 + x$ et 
 %$y^2 = x^3 + 1$ et leurs tordues, pour préparer le terrain pour la partie 
 %elliptique de Rains
+
+\section{Complexité \& notations}
+%TODO: Définir le $O$ et $O^{\sim}$; définir les notations etc.
 
 \part{Isomorphismes de corps finis}
 \label{deux}
@@ -671,9 +691,19 @@ $k_1 := \GF{q}[X]/(f)$ et $k_2 := \GF{q}[Y]/(g)$. On veut trouver un
 isomorphisme qui relie ces deux corps de cardinal $q^n$. Une première approche 
 naïve est de chercher une racine de $f$ dans $k_2$ et d'envoyer $x = \bar{X}$
 sur cette même racine. Cependant, cela implique de factoriser $f$ ce qui prend
-beaucoup trop de temps; on veut quelque chose de plus rapide. Une autre façon de
-s'en sortir est dûe à Pinch, l'une des façons de procéder utilise les racines de
-l'unité.
+beaucoup trop de temps. Pour être plus précis, d'après le théorème 14.14 de
+\cite[p.~390]{GaGe} factoriser complètement un polynôme de degré $n$ sur 
+$\GF{q}$ prend un $O^{\sim}(n^2\textup{log\;}q)$. Et d'après le corollaire 14.16
+du même ouvrage \cite[p.~392]{GaGe}, trouver une racine se fait en
+$O^{\sim}(n\textup{log\;}q)$. Sachant qu'on cherche une racine sur une 
+extension, la complexité devient $O^{\sim}(n^2\textup{log\;}q)$.
+
+
+
+
+
+Une autre façon de s'en sortir est dûe à Pinch, l'une des façons de procéder 
+utilise les racines de l'unité.
 
 \subsection{Principe}
 %TODO: Explication de la méthode et illustration avec l'exempe de l'article, 
@@ -892,21 +922,25 @@ Pinch}, Cryptography and coding II, p. 193-197, Oxford University Press, 1992.
 Université Pierre et Marie Curie, 2007, \bsc{url :} 
 \url{http://www.math.jussieu.fr/~polo/M1/ATG07chIV.pdf}.
 
-\bibitem{Law1} \emph{Introduction to cyclotomic fields}, \bsc{Lawrence C. 
+\bibitem{Wash1} \emph{Introduction to cyclotomic fields}, \bsc{Lawrence C. 
 Washington}, Graduate texts in mathematics, Springer-Verlag, 1982.
 
-\bibitem{Law2} \emph{Elliptic curves, number theory and cryptography},
+\bibitem{Wash2} \emph{Elliptic curves, number theory and cryptography},
 \bsc{Lawrence C. Washington}
 
 \bibitem{Sil} \emph{The arithmetic of elliptic curves}, 
 \bsc{Joseph H. Silverman}, Graduate texts in mathematics, Springer, 2nd ed. 
 2009.
 
-\bibitem{GarDa} \emph{Handbook of finite fields}, \bsc{Gary L. Mullen} \& 
+\bibitem{MuPa} \emph{Handbook of finite fields}, \bsc{Gary L. Mullen} \& 
 \bsc{Daniel Panario}, Discrete mathematics and its applications, Series Editor 
 Kenneth H. Rosen, CRC Press.
 
 \bibitem{GaGe} \emph{Modern computer algebra}, \bsc{Joachim von zur Gathen} \&
 \bsc{Jürgen Gerhard}, 3rd edition, Cambridge
+
+\bibitem{FeGaSho} \emph{Normal basis via general Gauss periods}, \bsc{Sandra
+Feisel}, \bsc{Joachim von zur Gathen} \& \bsc{M. Amin Shokrollahi}, Mathematics
+of computation, Volume 68, Number 225, January 1999, p. 271-290
 \end{thebibliography}
 \end{document}
