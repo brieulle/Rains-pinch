@@ -29,6 +29,8 @@
 
 
 \begin{document}
+\title{Implémentation de l'algorithme de Rains, méthode elliptique}
+\author{Ludovic Brieulle}
 \newtheorem{thm}{Thèorème}[section]
 \newtheorem{lem}[thm]{Lemme}
 \newtheorem{cor}{Corollaire}[thm]
@@ -39,7 +41,7 @@
 \theoremstyle{remark}
 \newtheorem{rem}{Remarque}[thm]
 
-\addcontentsline{toc}{part}{Remerciements}
+\maketitle
 \part*{Remerciements}
 
 \tableofcontents
@@ -65,7 +67,9 @@ $k_2$. Le problème est que cela revient à factoriser le polynôme $f$ ce qui e
 beaucoup trop lent.
 On va donc dans ce rapport étudier deux méthodes permettant, \textit{via}
 l'utilisation de racines de l'unité et de courbes elliptiques, de calculer
-rapidement de tels isomorphismes.
+rapidement de tels isomorphismes. On notera aussi l'existence d'une autre
+méthode dûe à J. Doliskani \cite{Dol} utilisant des résultats de B. Allombert
+\cite{All}.
 
 
 \part{Contexte théorique}
@@ -80,7 +84,7 @@ ou \cite[chap. VI]{Sam} pour la théorie de Galois; \cite{Sam} ou \cite{Wash1}
 pour la théorie des nombres; \cite{Sil} ou \cite{Wash2} pour la théorie sur les
 courbes elliptiques; et pour finir \cite{GaGe} pour tout ce qui concerne le 
 calcul formel en général. On s'efforcera néamoins de démontrer les résultats les
-plus importants ou fondamentaux. Le c\oe ur du sujet se trouve à la partie 
+plus importants ou fondamentaux. Le c\oe ur du sujet se trouve dans la partie 
 \ref{deux}.
 
 \section{Corps finis}
@@ -630,6 +634,12 @@ a choisi $\zeta$ arbitrairement, on obtient le résultat voulu.\\
 %premiers, les normes d'ideaux, la factorisation unique, Galois, les périodes de
 %Gauss, les périodes elliptiques (Mihailescu et al.) ou plus précisément ce qui 
 %permet d'y arriver.
+Dans cette section, on introduira la notions de corps de nombres, de leurs
+anneaux d'entiers et des idéaux sur ses anneaux. Les résultats sur la
+décomposition des idéaux en produits d'idéaux premiers nous permettrons ensuite
+de prouver plusieurs résultats sur ce qu'on appelle les périodes de Gauss.
+Périodes qui interviennent dans l'algorithme de Rains cyclotomique; on s'en
+inspirera pour introduire à la section suivante les périodes elliptiques.
 
 \subsection{Corps de nombres}
 %TODO :Définitions (normes, traces, éléments algébriques, etc.)
@@ -647,6 +657,10 @@ a choisi $\zeta$ arbitrairement, on obtient le résultat voulu.\\
 \section{Courbes elliptiques}
 %TODO: Définitions (j-invariant, nombres de points, tordues, module de
 %Tate (?) etc.), résultats généraux, sur les corps finis
+On va maintenant introduire les courbes elliptiques et plus en particulier les
+courbes elliptiques sur les corps finis. Parmi les notions importantes qui nous
+serons utiles, on parlera des points de torsion, des périodes elliptiques et des
+tordues d'une courbe elliptique.
 
 \subsection{Définitions}
 %TODO: Rapide énoncé des changements de variable, comment on arrive à la forme
@@ -655,7 +669,8 @@ a choisi $\zeta$ arbitrairement, on obtient le résultat voulu.\\
 %le module de Tate...
 
 \subsection{Corps finis}
-%TODO: Nombres de points, théorème de Hasse, Frobenius, trace
+%TODO: Nombres de points, théorème de Hasse, Frobenius, trace, points de 
+%torsions
 
 \subsection{Périodes elliptiques}
 %TODO: Prouver et définir les périodes elliptiques (peut-être que ce serait à
@@ -668,6 +683,9 @@ a choisi $\zeta$ arbitrairement, on obtient le résultat voulu.\\
 
 \section{Complexité \& notations}
 %TODO: Définir le $O$ et $O^{\sim}$; définir les notations etc.
+Cette courte section va nous permettre de définir quelques notions de complexité
+et surtout d'introduire les notations qu'on utilisera pour les futurs analyses
+de complexités des algorithmes étudiées.
 
 \part{Isomorphismes de corps finis}
 \label{deux}
@@ -692,24 +710,20 @@ isomorphisme qui relie ces deux corps de cardinal $q^n$. Une première approche
 naïve est de chercher une racine de $f$ dans $k_2$ et d'envoyer $x = \bar{X}$
 sur cette même racine. Cependant, cela implique de factoriser $f$ ce qui prend
 beaucoup trop de temps. Pour être plus précis, d'après le théorème 14.14 de
-\cite[p.~390]{GaGe} factoriser complètement un polynôme de degré $n$ sur 
+\cite[p.~390]{GaGe}, factoriser complètement un polynôme de degré $n$ sur 
 $\GF{q}$ prend un $O^{\sim}(n^2\textup{log\;}q)$. Et d'après le corollaire 14.16
 du même ouvrage \cite[p.~392]{GaGe}, trouver une racine se fait en
 $O^{\sim}(n\textup{log\;}q)$. Sachant qu'on cherche une racine sur une 
-extension, la complexité devient $O^{\sim}(n^2\textup{log\;}q)$.
-
-
-
-
-
-Une autre façon de s'en sortir est dûe à Pinch, l'une des façons de procéder 
-utilise les racines de l'unité.
+extension de degré $n$, la complexité devient $O^{\sim}(n^2\textup{log\;}q)$.
+Une méthode pour faire plus rapide est dûe à Pinch, l'une de ses variantes
+utililses les racines de l'unité. C'est celle qu'on va décrire dans la
+sous-section suivante.
 
 \subsection{Principe}
 %TODO: Explication de la méthode et illustration avec l'exempe de l'article, 
 %peut-être ?
-Globalement, la méthode de Pinch consiste à choisir un groupe $\Gamma$ défini
-par des relations algébriques sur $\GF{q}$. Puis, on choisit un élément 
+Globalement, la méthode de Pinch consiste au départ à choisir un groupe $\Gamma$
+défini par des relations algébriques sur $\GF{q}$. Puis, on choisit un élément 
 $\gamma\in\Gamma$ tel que :
 \vspace{0.3cm}
 \begin{itemize}
@@ -900,47 +914,65 @@ grandes.\par
 
 \addcontentsline{toc}{part}{Références}
 \begin{thebibliography}{LC}
+
+\bibitem{Rai} \emph{Efficient Computation of Isomorphism Between Finite Fields},
+\bsc{Eric M. Rains}, 1996.
+
+\bibitem{Pin} \emph{Recognising Elements of Finite Fields}, \bsc{Richard G.E. 
+Pinch}, Cryptography and coding II, p. 193-197, Oxford University Press, 1992.
+
+\bibitem{LiNi} \emph{Finite Fields}, \bsc{Rudolf Lidl} \& 
+\bsc{Harald Niederreiter}, Encyclopedia of mathematics and its applications vol.
+20, Cambridge, 1983.
+
+\bibitem{Per} \emph{Cours d'algèbre}, \bsc{Daniel Perrin}, ellipses, 1996.
+
+\bibitem{Sil} \emph{The Arithmetic Of Elliptic Curves}, 
+\bsc{Joseph H. Silverman}, Graduate texts in mathematics, Springer, 2nd ed. 
+2009.
+
+\bibitem{Wash2} \emph{Elliptic Curves, Number Theory and Cryptography},
+\bsc{Lawrence C. Washington}
+
+
 \bibitem{Sam} \emph{Théorie algébrique des nombres}, \bsc{Pierre Samuel}, 
 Hermann, 1971.
+
 
 \bibitem{Nek} \emph{Théorie de Galois}, \bsc{Jan Nekov\'a\v{r}}, Université 
 Pierre et Marie Curie, 2003, \bsc{url :} 
 \url{http://www.math.jussieu.fr/~nekovar/co/ln/gal/g.pdf}.
 
-\bibitem{Per} \emph{Cours d'algèbre}, \bsc{Daniel Perrin}, ellipses, 1996.
-\bibitem{Rai} \emph{Efficient computation of isomorphism between finite fields},
-\bsc{Eric M. Rains}, 2008.
-
-\bibitem{LiNi} \emph{Finite fields}, \bsc{Rudolf Lidl} \& 
-\bsc{Harald Niederreiter}, Encyclopedia of mathematics and its applications vol.
-20, Cambridge, 1983.
-
-\bibitem{Pin} \emph{Recognising elements of finite fields}, \bsc{Richard G.E. 
-Pinch}, Cryptography and coding II, p. 193-197, Oxford University Press, 1992.
 
 \bibitem{Pol} \emph{Algèbre et théorie de Galois}, \bsc{Patrick Polo}, 
 Université Pierre et Marie Curie, 2007, \bsc{url :} 
 \url{http://www.math.jussieu.fr/~polo/M1/ATG07chIV.pdf}.
 
-\bibitem{Wash1} \emph{Introduction to cyclotomic fields}, \bsc{Lawrence C. 
+\bibitem{Wash1} \emph{Introduction to Cyclotomic Fields}, \bsc{Lawrence C. 
 Washington}, Graduate texts in mathematics, Springer-Verlag, 1982.
 
-\bibitem{Wash2} \emph{Elliptic curves, number theory and cryptography},
-\bsc{Lawrence C. Washington}
 
-\bibitem{Sil} \emph{The arithmetic of elliptic curves}, 
-\bsc{Joseph H. Silverman}, Graduate texts in mathematics, Springer, 2nd ed. 
-2009.
-
-\bibitem{MuPa} \emph{Handbook of finite fields}, \bsc{Gary L. Mullen} \& 
+\bibitem{MuPa} \emph{Handbook of Finite Fields}, \bsc{Gary L. Mullen} \& 
 \bsc{Daniel Panario}, Discrete mathematics and its applications, Series Editor 
 Kenneth H. Rosen, CRC Press.
 
-\bibitem{GaGe} \emph{Modern computer algebra}, \bsc{Joachim von zur Gathen} \&
+\bibitem{GaGe} \emph{Modern Computer Algebra}, \bsc{Joachim von zur Gathen} \&
 \bsc{Jürgen Gerhard}, 3rd edition, Cambridge
 
-\bibitem{FeGaSho} \emph{Normal basis via general Gauss periods}, \bsc{Sandra
-Feisel}, \bsc{Joachim von zur Gathen} \& \bsc{M. Amin Shokrollahi}, Mathematics
-of computation, Volume 68, Number 225, January 1999, p. 271-290
+\bibitem{FeGaSho} \emph{Normal Basis \textup{via} General Gauss Periods},
+\bsc{Sandra Feisel}, \bsc{Joachim von zur Gathen} \& \bsc{M. Amin Shokrollahi}, 
+Mathematics of computation, Volume 68, Number 225, January 1999, p. 271-290
+
+\bibitem{MiMoScho} \emph{Computing the Eigenvalue in the Schoof-Elkies-Atkin
+Algorithm using Abelian Lifts}, \bsc{P. Mih\u{a}ilescu}, \bsc{F. Morain} \&
+\bsc{É. Schost}, 2007, \bsc{url :}
+\url{http://hal.inria.fr/LIX/inria-00130142/en/}
+
+\bibitem{Dol} \emph{Computing Finite Fields Isomorphisms}, \bsc{Javad Doliskani}
+
+\bibitem{All} \emph{Explicit Computation of Isomorphisms between Finite
+Fields}, \bsc{Bill Allombert}, Elsevier Science, \bsc{url :}
+\url{http://www.sciencedirect.com/science/article/pii/S1071579701903442}
+
 \end{thebibliography}
 \end{document}
