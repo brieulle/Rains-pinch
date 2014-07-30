@@ -412,6 +412,8 @@ comme combinaison linéaire de puissances d'un unique élément, en pratique cet
 élément sera la racine du polynôme par lequel on quotiente le corps premier afin
 d'obtenir l'extension.
 
+%TODO : Trace, norme, multiplication par un élément ?
+
 \subsection{Théorie de Galois}
 %TODO :Définitions et résutlats de base (sans forcément tout prouver),
 %Frobenius, action de groupes ? Ça me parait raisonnable...
@@ -1087,18 +1089,74 @@ extension afin de chercher un $m$ plus petit. En effet, imaginons qu'on ait deux
 extensions de petit degré $k'_1$ et $k'_2$ de $k_1$ et $k_2$ respectivement. Si
 on applique la méthode de Pinch à $k'_1$ et $k'_2$ et qu'on trouve un
 isomorphisme, il suffira alors de le restreindre à $k_1$.\par
-L'idée est la suivante, on a les corps $\GF{q^n}$ et $\GF{q^{o.n}}$ pour $o$
-petit, de tels sorte qu'il existe $m$ petit qui divise $q^{o.n} - 1$ et premier
-avec $q$. Alors, on cherche une racine primitive primitive \nroot{m} de l'unité.
-Celle-ci engendre $\GF{q^{o.n}}$ alors sa trace sur $\GF{q^n}$ engendre aussi
-$\GF{q^n}$.
+\vspace{0.3cm}
+L'idée est la suivante, on a les corps $k'_1$ et $k'_2$, extensions de degré $o$
+petit de $k_1$ et $k_2$ respectivement, tels que $m$ petit divise $q^{n.o} -
+1$ et soit premier avec $q$. On peut alors trouver deux racines primitive
+\nroot{m} de l'unité $\zeta_{m}$ et $\zeta'_m$ qui engendrent $k'_1$ et $k'_2$
+respectivement et tels que $\phi(\zeta_m) = \phi(\zeta'_m)$. Alors on a : 
+\[\phi(\textup{Tr\;}_{k'_1/k_1}(\zeta_{m})) =
+\textup{Tr\;}_{k'_2/k_2}(\zeta'_{m})\]
+De plus, les traces sont aussi des générateurs de leurs corps respectifs %TODO :
+%tu dois encore le prouver
+, ce qui fait qu'on aura besoin de ne manipuler que des matrices de taille $o$ 
+au lieu de taille $n.o$.\par %TODO : Toute ce truc sert vraiment ?!
+L'ennuie c'est qu'on a toujours une chance de devoir tester plusieurs candidats
+avant de tomber sur un isomorphisme. C'est là qu'interviennent alors les
+périodes de Gauss qu'on va introduire à la sous-section \ref{pergauss}.
+
+\vspace{0.3cm}
+
+Notre but est donc de trouver des générateurs uniques. Il se trouve qu'on peut
+encore améliorer le temps asymptotique en exigant que ses générateurs
+satisfassent une condition plus forte; cette condition sera que les générateurs
+soient des éléments normaux. Imaginons qu'on est calculé deux éléments normaux
+$v\in k_1$ et $w\in k_2$ tels que $\phi(v) = w$. Pour finir de résoudre
+le problème, il faut déterminer les images $\phi(x^i)$ pour $0\leq i < n$. Or
+comme $\phi(x^i) = \phi(x)^i$, il suffit même de déterminer uniquement l'image
+de $\phi(x)$.\par
+Pour cela, il faut pouvoir être capable à partir d'un élément normal $v$ et d'un
+autre élément $z$, trouver les coefficients de $z$ dans la base de $v$. Puisque,
+si on peut exprimer $x$ sous la forme :
+\[x = \sum_{i\in I}{c_iv^{q^i}}\]
+alors on aura :
+\begin{align*}
+\phi(x) &= \sum_{i\in I}{c_i\phi(v)^{q^i}}\\
+&= \sum_{i\in I}{c_iw^{q^i}}
+\end{align*}
+puisque $\phi$ est un morphisme. Il se trouve alors que devoir passer de la base
+normale à la base monomial en $x$ peut se faire, non pas en inversant une
+matrice, mais en inversant l'élément d'un anneau quotient. C'est ce qui va être
+exposé dans la sous-section \ref{secelemnorm}.\par
+En attendant un algorithme plus détaillé, on peut résumer la recherche d'un
+élément normal unique de la façon suivante :
+\vspace{0.3cm}
+\begin{enumerate}[1)]
+\item Trouver un polynôme $h$ de degré $o$ irréductible sur $\GF{q}$ et tel que 
+$(o, n) = 1$.
+
+\item Construire l'extension de degré $o$, $k'_1 = k_1[x]/h(x)$.
+
+\item Chercher une racine primitive \nroot{m} $\zeta_m$ dans $k'_1$.
+
+\item Calculer la periode de Gauss de $\zeta_m$.
+\end{enumerate}
+\vspace{0.3cm}
+Les points 1) et 2) ne seront nécessaires que lorsqu'on aura besoin d'utiliser
+une extension pour trouver le paramètre $m$ assez petit. Il sera bien possible
+que $o = 1$ comme on le montrera dans la sous-section \textit{(la dernière
+probablement)}. Le point 3) a déjà été évoqué pour la méthode de Pinch. Et le
+point 4) sera traité dans la sous-section \ref{pergauss} comme il a été
+mentionné plus haut.
 
 \subsection{Éléments normaux}
+\label{secelemnorm}
 %TODO: Définitions et résultats utiles pour l'algorithme, justification de
 %l'algorithme (peut-être à mettre dans la partie Galois de la section corps
 %finis), conversion de la base polynomiale à la base normale.
 
 \subsection{Périodes de Gauss}
+\label{pergauss}
 
 \subsection{Algorithme \& analyse de complexité}
 %TODO: Détailler l'algorithme de l'article/code de Luca + analyser la complexité
