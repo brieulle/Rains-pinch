@@ -194,18 +194,21 @@ def find_unique_orbit_elliptic(E, m, case = 0):
         gen_G = Integers(m).unit_gens()[0]**n
         order = euler_phi(m)//(2*n)
 
-        return sum((ZZ(gen_G**i)*P)[0] for i in range(order))
+        return sum(XZ.ladder(P, ZZ(gen_G**i), E.a4(), E.a6())[0] for i in 
+                range(order))
     elif case == 1:
         gen_G = Integers(m).unit_gens()[0]**n
         order = euler_phi(m)/(4*n)
         
-        return sum(((ZZ(gen_G**i)*P)[0])**2 for i in range(order))
+        return sum((XZ.ladder(P, ZZ(gen_G**i), E.a4(), E.a6())[0])**2 for i in 
+                range(order))
 
     elif case == 2:
         gen_G = Integers(m).unit_gens()[0]**n
         order = euler_phi(m)/(6*n)
 
-        return sum(((ZZ(gen_G**i)*P)[0])**3 for i in range(order))
+        return sum((XZ.ladder(P, ZZ(gen_G**i), E.a4(), E.a6())[0])**3 for i in
+            range(order))
 
 def find_elliptic_curve(k, K, m_t):
     '''
