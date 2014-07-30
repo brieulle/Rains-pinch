@@ -29,7 +29,8 @@
 
 
 \begin{document}
-\title{Implémentation de l'algorithme de Rains, méthode elliptique}
+\title{Implémentation de l'algorithme de Rains elliptique pour les isomorphismes
+de corps finis}
 \author{Ludovic Brieulle}
 \newtheorem{thm}{Thèorème}[section]
 \newtheorem{lem}[thm]{Lemme}
@@ -39,7 +40,7 @@
 \newtheorem{defn}[thm]{Définition}
 \newtheorem*{ex}{Exemple}
 \theoremstyle{remark}
-\newtheorem{rem}{Remarque}[thm]
+\newtheorem*{rem}{Remarque}
 
 \maketitle
 \part*{Remerciements}
@@ -79,13 +80,13 @@ on se servira afin de justifier et mettre en place les deux algorithmes pour
 calculer les isomorphismes de corps finis. Cette partie n'a pas comme vocation
 de faire un exposé complet des notions abordées, pour un traité plus détaillé,
 le lecteur pourra consulter au choix \cite{LiNi}, \cite{MuPa} ou 
-\cite[chap.~III]{Per} pour les corps finis; \cite{Nek}, \cite[chap.~VIII]{Pol}
-ou \cite[chap. VI]{Sam} pour la théorie de Galois; \cite{Sam} ou \cite{Wash1}
-pour la théorie des nombres; \cite{Sil} ou \cite{Wash2} pour la théorie sur les
-courbes elliptiques; et pour finir \cite{GaGe} pour tout ce qui concerne le 
-calcul formel en général. On s'efforcera néamoins de démontrer les résultats les
-plus importants ou fondamentaux. Le c\oe ur du sujet se trouve dans la partie 
-\ref{deux}.
+\cite[chap.~III]{Per} pour les corps finis; \cite{Nek}, \cite[chap.~VIII]{Pol},
+\cite[chap. VI]{Sam} ou \cite{Esc} pour la théorie de Galois; \cite{Sam}, 
+\cite{Wash1} ou \cite{Lan} pour la théorie des nombres; \cite{Sil} ou 
+\cite{Wash2} pour la théorie sur les courbes elliptiques; et pour finir 
+\cite{GaGe} pour tout ce qui concerne le calcul formel en général. On 
+s'efforcera néamoins de démontrer les résultats les plus importants ou 
+fondamentaux. Le c\oe ur du sujet se trouve dans la partie \ref{deux}.
 
 \section{Corps finis}
 Dans cette section on va rappeler les définitions et démontrer certains 
@@ -180,9 +181,9 @@ puisque étant de degré $q$, il a au maximum $q$ racines qui sont déjà les
 \ref{defdec} de $X^q - X$ sur $\GF{p}$.\par
 On notera que dans les corps finis et leurs extensions, l'élévation à une
 puissance égal au cardinal d'un corps fini est un automorphisme particulier. On
-l'appelle l'automorphisme de Frobenius et on le note $Fr_q$ pour $Fr_q(x) =
-x^q$. Ce n'est pas immédiat qu'il s'agit là d'un homomorphisme, mais un simple
-calcul permet de s'en assurer.\par
+l'appelle l'automorphisme de Frobenius et on le note $\textup{Fr}_q$ pour
+$\textup{Fr}_q(x) = x^q$. Ce n'est pas immédiat qu'il s'agit là d'un 
+homomorphisme, mais un simple calcul permet de s'en assurer.\par
 \vspace{0.3cm}
 Finissons ce point par le théorème suivant qui assure l'existence et l'unicité
 à isomorphisme près des corps finis; c'est à partir de ce théorème que le
@@ -394,12 +395,12 @@ Pour montrer l'autre sens, il suffit de remarquer que $\GF{p^n}$ correspond aux
 
 \begin{thm}
 \label{thelemprim}
-Toute extension séparable (\textit{la bonne référence}) et finie est simple.
+Toute extension séparable (\ref{defsep}) et finie est simple.
 \end{thm}
 \begin{proof}
 On va se contenter de le prouver dans le cas d'un corps fini; le cas général
-demande un peu plus de travail et pourra être démontrer après le point
-suivant.\par
+demande un peu plus de travail. On invitera le lecteur a consulté
+\cite[p.~87]{Esc} ou \cite[Chap. VIII]{Pol}.\par
 Si $K$ est un corps fini alors son groupe mulitplicatif $K^{\times}$ est
 cyclique (voir par exemple la preuve de la proposition \ref{proprootcycl} ou
 \cite[p.~50]{LiNi}). Dans ce cas, il suffit de prendre pour générateur d'une
@@ -415,7 +416,6 @@ d'obtenir l'extension.
 %TODO :Définitions et résutlats de base (sans forcément tout prouver),
 %Frobenius, action de groupes ? Ça me parait raisonnable...
 %Groupe de Galois, élément primitif, extensions galoisiennes, etc.
-
 Soit $L/k$ et $K/k$ deux extensions finies de corps avec $L\subseteq K$, alors 
 il existe des morphismes qui laisse $k$ inchangé. On les appelles des 
 $k$-morphismes et on note :
@@ -423,8 +423,207 @@ $k$-morphismes et on note :
 L'ensemble de tels morphismes. Si $L = K$, on parle alors de $k$-endomorphisme
 et si ceux parmis ces endomorphismes qui sont inversibles forment un groupe,
 qu'on appelle le groupe des automorphismes de $L$ et on le note :
-\[\textup{Aut}_k(L) = \lbrace{\sigma\in\textup{Aut(L)} : \sigma(x) = x
-,\;\forall x\in k}\rbrace\]
+
+\vspace{0.3cm}
+
+On dit qu'un polynôme irréductible $f$ est séparable sur un corps $K$ si toutes
+ses racines dans un corps de décompositions sont distinctes; la notion est
+indépendante du corps de décomposition choisi, puisqu'il existe un $K$-morphisme
+reliant les racines et dans ce cas leurs images sont aussi distinctes. On dit
+qu'un élément $\alpha$ est spérable sur $K$ si son polynôme minimal est 
+séparable sur $K$.
+
+\begin{defn}
+\label{defsep}
+On dit qu'une extension algébrique $L/K$ est séparable si tout les $\alpha\in L$
+sont séparables.
+\end{defn}
+
+\begin{rem}
+On peut définir la séparabilité d'un polynôme réductible en se basant sur ses
+facteurs irréductibles, un polynôme sera séparable si tous ses facteurs
+irréductibles le sont.
+\end{rem}
+
+\begin{prop}
+\label{sepder}
+Soit $P$ irréductible sur un corps $K$, on a l'équivalence suivante :
+\[P\textup{ séparable } \Leftrightarrow P'\neq 0\]
+\end{prop}
+
+\begin{prop}
+Soit $k \subset L \subset K$ des extensions de corps. Si $K/k$ est séparable
+alors $L/k$ et $K/L$ le sont aussi.
+\end{prop}
+\begin{proof}
+Le corps $L$ étant contenu dans $K$, tous ses éléments sont aussi séparables.
+Démontrons le lemme suivante :
+\begin{lem}
+\label{divsep}
+Soit $P$ un polynôme séparable sur k, $L$ une extension de $k$ et $Q$ un
+diviseur de $P$ dans $L[X]$. Alors $Q$ est spérable sur $L$.
+\end{lem}
+\begin{proof}
+Soit $K$ un corps de décomposition de $P$ sur $L$, alors $Q$ est scindé dans $L$
+et ses racines sont parmi celles de $P$ qui sont déjà deux à deux distinctes.\\
+\end{proof}
+Pour finir, soit $x\in K$ alors $Irr_L(x)$ est un diviseur de $Irr_k(x)$ dans
+$L[X]$ et on conclut en appliquant le lemme.\\
+\end{proof}
+
+\begin{prop}
+\label{nbautroot}
+Soit $K/k$ une extension algébrique simple, $P = Irr_k(\alpha)$ et $d =
+\textup{deg\;}P = [K:k]$. Alors pour toute extension $L/k$, le nombre de
+$k$-morphismes de $K \to L$ est égal au nombre de racine distinctes de $P$ dans
+$L$. On a alors :
+\[\#\textup{Hom}_k(K,L)\leq[K:k]\]
+avec égalité si et seulement si $P$ a $d$ racines distinctes dans $L$.
+\end{prop}
+\begin{proof}
+Pour tout $k$-morphsime $\phi : K\to L$, $\phi(\alpha)$ est une racine de $P$
+dans $L$. Réciproquement, toute racine $\beta$ de $P$ dans $L$ définit un
+$k$-morphisme, il suffit d'envoyer $\alpha$ sur $\beta$ et ces morphismes sont
+disctints pour chaque racine distincte.\\
+\end{proof}
+
+On admettra le théorème suivant, il fait usage de la proposition ci-dessus et
+des théorèmes 15.54 et 16.16 de \cite[Chap. VIII]{Pol}. Il nous permettra de
+prouver le corollaire suivant.
+
+\begin{thm}
+Soit $K/k$ une extension de degré finie. 
+
+\begin{enumerate}[(1)]
+\item Si $x\in K$ est séparable sur $k$, alors $k(x)/k$ est séparable.
+
+\item Soit $k \subset E \subset K$. Si $K/E$ et $E/k$ sont séparables alors
+$K/k$ l'est aussi.
+
+\item Si $K = k[x_1,\dots,x_r]$ avec chaque $x_i$ séparable sur $k$, alors $K/k$
+est séparable.
+\end{enumerate}
+\end{thm}
+
+\begin{cor}
+Soit $P\in k[X]$ un polynôme séparable et $K$ un corps de
+décomposition de $P$ sur $k$. Alors $K/k$ est séparable.
+\end{cor}
+\begin{proof}
+Soit $x_1,\dots,x_r$ les racines de $P$ dans $K$, alors $K = k[x_1,\dots,x_r]$
+par définition. On pose :
+\[P = Q_1\dots Q_n\]
+Par hypothèse, chaque $Q_j$ est séparable, lemme \ref{divsep}, or les $x_i$ sont
+racines d'un des $Q_j$ donc leurs polynômes minimaux divisent ces $Q_j$ et en
+appliquant à nouveau le lemme, on montre que tous les $x_i$ sont séparables. On
+fini en appliquant le point (3) du théorème précédent.\\
+\end{proof}
+
+Soit $f$ un polynôme irréductible de degré $n$ sur un corps $K$. Soit $\alpha_1 
+= a$ une racine de $f$ et $\alpha_2,\dots,\alpha_n$ les autres racines de $f$ 
+dans une corps de décomposition. Alors on dit que les $\alpha_i$ sont les 
+conjugués de $\alpha$ sur $K$.
+\begin{defn}
+On dit qu'une extension $L/K$ est normale ou quasi-galoisienne, si pour tout
+$a\in L$, $Irr_k(a)$ a toutes ses racines dans $L$. Ou de façon équivalente, $L$
+contient tous les conjugués de $a$.
+\end{defn}
+
+\begin{prop}
+Soit $P\in k[X]$ de degré $n\geq 1$ et $K$ un corps de décomposition de $P$ sur
+$k$. Alors $K/k$ est normale.
+\end{prop}
+\begin{proof}
+\cite[Chap. VIII, p.~167]{Pol}\\
+\end{proof}
+
+Revenons alors au groupe des $k$-automorphismes d'une extension. On a la
+proposition suivante :
+
+\begin{prop}
+Soit $K/k$ une extension algébrique et soit $\alpha\in K$. Alors pour tout
+$g\in\textup{Aut}_k(K)$, $g(\alpha)$ est racine de $\Irr{k}{\alpha}$. Si on
+pose $G = \textup{Aut}_k(K)$ alors l'orbite de $\alpha$ sous l'action de $G$,
+qu'on notera $G\alpha$ est un ensemble fini de cardinal inférieur ou égal à
+$\textup{deg}_k(x)$ et $\Irr{k}{\alpha}$ est divisible par :
+\[\prod_{\beta\in G\alpha}{(X - \beta)}\]
+\end{prop}
+\begin{proof}
+Comme $g$ est un morphisme on a $0 = g(P(\alpha)) = P(g(\alpha))$ d'où
+$g(\alpha)$ est aussi une racine.\par
+Donc pour tout $g\in G$, $X - g(\alpha)$ divise $P$, mais comme $P$ étant de
+degré $d := \textup{deg}_k(x)$ a au plus $d$ facteur distincts, $G\alpha$ est 
+forcément fini et de cardinal inférieur ou égal à $d$. Le produit des $X -
+\beta$ pour $\beta\in G\alpha$ divise alors $P$.\\
+\end{proof}
+
+On va pouvoir alors introduire la notion du groupe de Galois d'une extension
+galoisienne. On énoncera la définition et quelques propriétés de base sur ce
+groupe qui nous servirons implicitement tout le long du rapport. On ne
+démontrera pas la plupart des résultats \textit{(sauf s'il me reste du temps
+pour peaufiner à fond)}. 
+
+\begin{defn}
+Soit $K/k$ une extension de degré fini. On dit que $K/k$ est galoisienne si
+$\#\textup{Aut}_k(K) = [K:k]$. Dans ce cas, on note $\textup{Gal}(K/k) :=
+\textup{Aut}_k(K)$ et pour tout $\alpha\in K$ et $g\in\textup{Gal}(K/k)$, les
+$g(\alpha)$ seront appelés les conjugués de $\alpha$.
+On appellera le groupe de Galois d'un polynôme $P$, le groupe de Galois d'un
+corps de décomposition de $P$; on pourra le noter $\textup{Gal}(P/k)$.
+\end{defn}
+
+\begin{thm}
+Soit $K/k$ une extension de degré fini. Les conditions suivantes sont
+équivalentes :
+\begin{enumerate}
+\item L'extension $K/k$ est galoisienne.
+\item L'extension $K/k$ est normale et séparable.
+\item Le corps $K$ est le corps de décomposition d'un polynôme séparable.
+\end{enumerate}
+Sous ces conditions, pour tout $\alpha\in K$ on a :
+\[\Irr{k}{\alpha} = \prod_{\beta\in G\alpha}{(X - \beta)}\]
+\end{thm}
+\begin{proof}
+\cite[Chap. VIII, p.~169]{Pol}\\
+\end{proof}
+
+
+\begin{thm} Soit $k$ un corps, $P$ un polynôme de degré $n$ dans $k[X]$ et $K$ 
+un corps de décomposition de $P$. On a :
+\begin{enumerate}
+\item Le groupe de Galois de $K/k$ et donc de $P$ est un sous-groupe du groupe
+symétrique $\textup{S}_n$; donc son ordre divise $n!$.
+\item Si $P$ est irréductible alors le groupe de Galois de $P$ agit
+transitivement sur ses racines; son ordre est divisible par $n$.
+\end{enumerate}
+\end{thm}
+\begin{proof}
+\cite[Chap. IX, p.~206]{Pol}\\
+\end{proof}
+
+Pour les corps finis, déterminer le groupe de Galois est beaucoup plus facile
+comme le montre le théorème suivant :
+
+\begin{thm}
+Soit $n\geq1$ et $\GF{q}$ le corps à $q=p^r$ éléments, avec $p$ premier.
+L'extension $\GF{q^n}/\GF{q}$ est galoisienne et son groupe de Galois
+$\textup{Gal}(\GF{q^n}/\GF{q})$ est cyclique d'ordre $n$, engendré par 
+l'automorphisme de Frobenius $\textup{Fr}_q$.
+\end{thm}
+\begin{proof}
+On a déjà montré que $\GF{q^n}$ était le corps de décomposition de $X^{q^n} -
+X$, théorème \ref{thisomGF}. De plus, comme $Q' = -1 \neq 0$, $Q$ est séparable,
+proposition \ref{sepder}. D'où $\GF{q^n}/\GF{q}$ est galoisienne et donc :
+\[|\textup{Gal}(\GF{q^n}/\GF{q})| = [\GF{q^n}:\GF{q}] = n\].
+Comme le Frobenius est $\GF{q}$-automorphisme, c'est une morphisme et un élément
+de $\GF{q}$ élevé à la puissance $q^n$ est toujours égal à lui-même, c'est un
+élément de $\textup{Gal}(\GF{q^n}/\GF{q})$. Notons $d$ son ordre, donc
+$\textup{Fr}_q^d = Id_{\GF{q^n}}$ ou encore, pour tout $x\in\GF{q^n}$ :
+\[\textup{Fr}_q^d(x) = x^{q^d} = x \Leftrightarrow x^{q^d} - x = 0\].
+Le polynôme $X^{q^d} - X$ ayant au plus $d$ racines, on a $d\geq n$ et donc $d =
+n$ d'où $\textup{Fr}_q$ engendre $\textup{Gal}(\GF{q^n}/\GF{q})$ et donc le
+résultat.\\
+\end{proof}
 
 \subsection{Extensions et polynômes cyclotomiques}
 %TODO : Racines de l'unités et quelques mots sur les polynômes 
@@ -855,6 +1054,17 @@ ci-dessus, on avait :
 cela peut vite devenir laborieux de travailler sur des entiers de cet ordre. Le
 scénario peut être encore pire avec des valeurs de $q$ et de $n$ beaucoup plus
 grandes.\par
+Un autre problème est la recherche au hasard de racine primitive de l'unité. Le
+côté aléatoire du choix fait qu'il n'est jamais certain de pouvoir tomber sur
+deux racines qui sont dans le même facteur irréductible du polynôme
+cyclotomique. Il peut arriver qu'on soit obligé de tester $m-2$ valeurs de $s$
+pour pouvoir enfin tomber sur un isomorphisme.\par
+Il faudrait alors trouver un moyen de pouvoir travailler avec un $m$
+relativement petit même si le cardinal du groupe des inversibles n'a pas de
+facteur petit, et en même temps, pouvoir choisir des éléments uniques sous
+l'action du groupe de Galois afin d'être sûr qu'un isomorphisme existe alors
+entre les deux. C'est ce que fait, entre autre, l'algorithme de Rains 
+cyclotomique qu'on va étudier dans la section suivante.
 
 
 \section{Algorithme de Rains : méthode cyclotomique}
@@ -863,15 +1073,32 @@ grandes.\par
 %Présenter pas à pas l'article de Rains (en gros), en enlevant ce qui nous 
 %concernerait moins et en rajoutant ce qu'il n'a pas mis (tous les détails 
 %sur l'algorithme convert et sa complexité).
+On va maintenant parler de la méthode Rains dites cyclotomique pour calculer des
+isomorphismes de corps finis. Elle fera usage d'éléments normaux, pour pouvoir
+travailler sur des petites extensions, et de périodes de Gauss, afin d'avoir des
+éléments unique sous l'action du groupe de Galois de l'extension.
 
 \subsection{Principe}
 %TODO: Passer par une petite extension pour réduire la taille de m, utilisation
 %des éléments normaux, utilisation des périodes de Gauss.
+La première limitation de la méthode de Pinch est la taille du facteur
+$m$, Rains propose alors dans son article (\cite{Rai}) de passer à une petite
+extension afin de chercher un $m$ plus petit. En effet, imaginons qu'on ait deux
+extensions de petit degré $k'_1$ et $k'_2$ de $k_1$ et $k_2$ respectivement. Si
+on applique la méthode de Pinch à $k'_1$ et $k'_2$ et qu'on trouve un
+isomorphisme, il suffira alors de le restreindre à $k_1$.\par
+L'idée est la suivante, on a les corps $\GF{q^n}$ et $\GF{q^{o.n}}$ pour $o$
+petit, de tels sorte qu'il existe $m$ petit qui divise $q^{o.n} - 1$ et premier
+avec $q$. Alors, on cherche une racine primitive primitive \nroot{m} de l'unité.
+Celle-ci engendre $\GF{q^{o.n}}$ alors sa trace sur $\GF{q^n}$ engendre aussi
+$\GF{q^n}$.
 
 \subsection{Éléments normaux}
 %TODO: Définitions et résultats utiles pour l'algorithme, justification de
 %l'algorithme (peut-être à mettre dans la partie Galois de la section corps
 %finis), conversion de la base polynomiale à la base normale.
+
+\subsection{Périodes de Gauss}
 
 \subsection{Algorithme \& analyse de complexité}
 %TODO: Détailler l'algorithme de l'article/code de Luca + analyser la complexité
@@ -888,6 +1115,9 @@ grandes.\par
 %TODO: Choix d'un point d'ordre m sur une bonne courbe elliptique engendre 
 %l'extension, utilisation des périodes elliptiques afin d'avoir un élément 
 %stable par l'action du groupe de Galois (Énoncer les lemmes etc.)
+
+\subsection{Périodes elliptiques}
+
 
 \subsection{Choix des paramètres}
 %TODO: Justifier le choix de m par rapport à n et q, tout ce qui concerne la 
@@ -938,11 +1168,15 @@ Pinch}, Cryptography and coding II, p. 193-197, Oxford University Press, 1992.
 \bibitem{Sam} \emph{Théorie algébrique des nombres}, \bsc{Pierre Samuel}, 
 Hermann, 1971.
 
+\bibitem{Lan} \emph{Algebraic Number Theory}, \bsc{Serge Lang}, Graduate Texts
+in Mathematics, 2nd ed., Springer, 2000.
 
 \bibitem{Nek} \emph{Théorie de Galois}, \bsc{Jan Nekov\'a\v{r}}, Université 
 Pierre et Marie Curie, 2003, \bsc{url :} 
 \url{http://www.math.jussieu.fr/~nekovar/co/ln/gal/g.pdf}.
 
+\bibitem{Esc} \emph{Théorie de Galois}, \bsc{Jean-Pierre Escofier}, Dunod, 2nde
+éd., 2000.
 
 \bibitem{Pol} \emph{Algèbre et théorie de Galois}, \bsc{Patrick Polo}, 
 Université Pierre et Marie Curie, 2007, \bsc{url :} 
