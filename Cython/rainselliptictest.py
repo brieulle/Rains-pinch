@@ -195,7 +195,8 @@ def find_unique_orbit_elliptic(E, m, case = 0):
         gen_G = Integers(m).unit_gens()[0]**n
         order = euler_phi(m)//(2*n)
 
-        r = sum((ZZ(gen_G**i)*P)[0] for i in range(order))
+        r = sum(XZ.ladder(P, ZZ(gen_G**i), E.a4(), E.a6())[0] for i in 
+                range(order))
         w_period = cputime(w)
         return w_ordm, w_period
 
@@ -203,7 +204,8 @@ def find_unique_orbit_elliptic(E, m, case = 0):
         gen_G = Integers(m).unit_gens()[0]**n
         order = euler_phi(m)/(4*n)
         
-        r = sum(((ZZ(gen_G**i)*P)[0])**2 for i in range(order))
+        r = sum((XZ.ladder(p, zz(gen_g**i), e.a4(), e.a6())[0])**2 for i 
+                in range(order))
         w_period = cputime(w)
         return w_ordm, w_period
 
@@ -211,7 +213,8 @@ def find_unique_orbit_elliptic(E, m, case = 0):
         gen_G = Integers(m).unit_gens()[0]**n
         order = euler_phi(m)/(6*n)
 
-        r = sum(((ZZ(gen_G**i)*P)[0])**3 for i in range(order))
+        r = sum((XZ.ladder(P, ZZ(gen_G**i), E.a4(), E.a6())[0])**3 for i 
+                in range(order))
         w_period = cputime(w)
         return w_ordm, w_period
 
