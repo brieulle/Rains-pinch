@@ -928,7 +928,11 @@ carrément supprimer la partie ?}
 On va maintenant introduire les courbes elliptiques et plus en particulier les
 courbes elliptiques sur les corps finis. Parmi les notions importantes qui nous
 serons utiles, on parlera des points de torsion, des périodes elliptiques et des
-tordues d'une courbe elliptique.
+tordues d'une courbe elliptique. Dûe à la nature un peu extérieur des courbes
+elliptiques par rapport au isomorphisme de corps finis, on ne s'attardera pas 
+la plupart du temps, à définir les notions de géométrie algébriques. On invitera
+le lecteur à consulter les deux premiers chapitre de \cite{Sil} pour plus de
+précision.
 
 \subsection{Définitions}
 %TODO: Rapide énoncé des changements de variable, comment on arrive à la forme
@@ -944,9 +948,8 @@ projective lisse de genre $1$ et $\EO$ un point de $E$ qu'on appelle origine.
 
 Par abus de langage, on parlera désormais de la courbe elliptique $E$ en
 supposant l'origine $\EO$ fixée. On ne s'attardera pas sur la signification des
-termes écris dans la définition; pour un exposé plutôt complet de la géométrie 
-algébrique pour les courbes elliptiques, on invitera le lecteur à consulter les
-deux premiers chapitres de \cite{Sil}.
+termes écris dans la définition. On dira qu'une courbe E est définie sur 
+$K$ si son équation est à coefficient dans $K$ et on notera $E/K$.
 
 \begin{defn} 
 On appelle équation de Weierstrass, une équation projective de $\PP{2}$ de la
@@ -956,7 +959,7 @@ forme :
 ZY^2 + a_1XYZ + a_3YZ^2 = X^3 + a_2X^2Z + a_4XZ^2 + a_6Z^3
 \end{equation}
 On appelle courbe de Weierstrass, une courbe projective $W$ définie par 
-l'équation \ref{eqweierfull}, elle possède un point à l'infini $\EO = 
+l'équation \ref{eqweierfull}, elle possède un point à l'infini $O = 
 [0, 1, 0]$.
 \end{defn}
 
@@ -977,6 +980,17 @@ elliptiques toutes les bonnes propriétés des courbes de Weierstrass.
 
 \begin{prop}
 Soit $E$ une courbe elliptique définie sur un corps $K$.
+\begin{enumerate}[(i)]
+\item Il existe des fonctions $x, y\in K(E)$ telles que l'application :
+\begin{align*}
+\phi :&\;E \longrightarrow \PP{2}\\
+&P \longmapsto [x,y,1]
+\end{align*}
+donne un isomorphisme entre $E/K$ et une courbe de Weierstrass donnée par
+l'équation :
+\[W : Y^2 + a_1XY + a_3Y = X^3 + a_2X^2 + a_4X + a_6\]
+avec $a_1,\dots,a_6\in K$ et satisfaisant $\phi(\EO) = [0, 1, 0]$.
+\end{enumerate}
 \end{prop}
 
 
