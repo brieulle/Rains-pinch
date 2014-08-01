@@ -267,7 +267,7 @@ def find_elliptic_curve(k, K, m_t):
     accordingly plus the case 0.
 
     If no curves are found, we return None and the case -1, which will raise an
-    runtimeError in the main code.
+    runtimeError in the main function.
     '''
     p = k.characteristic()
     q = k.cardinality()
