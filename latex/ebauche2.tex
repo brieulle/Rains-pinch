@@ -448,6 +448,9 @@ m_{\alpha\alpha'} = m_{\alpha}m_{\alpha'}\]
 induisent les résultats classiques de la norme et la trace.
 \end{defn}
 
+%TODO: Rajoutez des résultat sur la trace, surjectivité, somme des conjugés 
+%etc., peut-être à foutre dans la section en-dessous ça...
+
 \subsection{Théorie de Galois}
 %TODO :Définitions et résutlats de base (sans forcément tout prouver),
 %Frobenius, action de groupes ? Ça me parait raisonnable...
@@ -917,7 +920,7 @@ loin.Périodes qui interviennent dans l'algorithme de Rains cyclotomique.
 \subsection{Corps de nombres}
 %TODO :Définitions (normes, traces, éléments algébriques, etc.)
 % entiers algébrique, anneaux des entiers, discriminant (?)
-On appelle corps de nombre, toute extensions de corps finies de $\QQ$.
+On appelle corps de nombre, toute extension finie de $\QQ$.
 
 \subsection{Idéaux premiers}
 %TODO: Idéaux premiers sur les anneaux d'entiers de corps de nombres,
@@ -1459,6 +1462,24 @@ l'anneau $\GF{p}[X]/(X^n - 1)$.
 \end{thm}
 \begin{proof}
 %TODO: LiNi2 3.73.. Va y'en avoir des résultats à montrer pour ça.
+\end{proof}
+
+On a alors le corollaire suivant :
+\begin{cor}
+Soit $L/K$ une extension de corps finis de caractéristique $p$, premier. Si
+$x\in L$ est un élément normal de $L$ sur $K$, alors $\textup{Tr}_{L/K}(x)$ est 
+un élément normal de $K$ sur $\GF{p}$. Si $[L:K]$ est une puissance de $p$ alors
+l'inverse est aussi vrai.
+\end{cor}
+\begin{proof}
+Puisque la trace est surjective sur les corps finis, (à prouver malgré tout ou
+alors juste pour toi) alors pour tout $y\in K$ il existe un $y'\in L$ tel que $y
+= \textup{Tr}_{L/K}(y')$. De là, il suffit alors de prendre l'expression de $y'$
+dans la base normale engendrée par $x$ et d'y appliquer la trace; le fait
+qu'elle soit linéaire montre que $\textup{Tr}_{L/K}(x)$ est aussi une base 
+normale de $K$.\par
+%TODO : faire l'inverse.
+
 \end{proof}
 
 
