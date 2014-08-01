@@ -6,16 +6,20 @@
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{amssymb}
-\usepackage[colorlinks=false]{hyperref}
+\usepackage[colorlinks=false]{hyperref} %Apparemment ça sert à rien...
 \usepackage{enumerate}
-\usepackage{tocloft}
+\usepackage{tocloft}             % Pour la table des matières
 \usepackage{algorithmic}
 \usepackage{pgf}
 \usepackage{tikz}
 \usepackage{tikz-cd}
 \usetikzlibrary{matrix,arrows,decorations.pathmorphing}
+
+% Numérotation des sections, sous-sections, équations, etc.
 \numberwithin{section}{part}
 \numberwithin{equation}{section}
+
+% Maccros pour les commandes de math
 \newcommand\nroot[1]{\textit{#1}\up{\textit{ième}}}
 \newcommand\zmodn[1]{\mathbb{Z}/#1\mathbb{Z}}
 \newcommand\zmodninv[1]{(\mathbb{Z}/#1\mathbb{Z})^{\times}}
@@ -31,8 +35,12 @@
 \newcommand\RR{\mathbb{R}}
 \newcommand\EO{\mathcal{O}}
 \newcommand\PP[1]{\mathbb{P}^{#1}}
-\setlength{\cftsecnumwidth}{3em}
-\setlength{\cftsubsecnumwidth}{3em}
+\newcommand\etmath{\textup{\quad et \quad}}
+
+% Éviter l'overlap dans la table des matières pour les sections, sous-sections
+% etc.
+\setlength{\cftsecnumwidth}{3em}    
+\setlength{\cftsubsecnumwidth}{3em} 
 
 
 \begin{document}
@@ -68,7 +76,7 @@ trouver un tel isomorphisme demande alors un travail supplémentaire.\par
 La situation est la suivante, nous avons deux extensions de $\GF{q}$ de même
 degré et définies par deux polynôme irréductible distincts $f$ et $g$. On notera
 :
-\[k_1=\GF{q}[X]/(f)\textup{ et }k_2=\GF{q}[Y]/(g)\]
+\[k_1=\GF{q}[X]/(f)\etmath k_2=\GF{q}[Y]/(g)\]
 le but est donc de trouver un isormophisme reliant ces deux corps. Une méthode
 simple et immédiate est d'envoyer $x = \bar{X}$ sur une racine de $f$ dans
 $k_2$. Le problème est que cela revient à factoriser le polynôme $f$ ce qui est
@@ -86,7 +94,7 @@ Cette partie consistera principalement à rappeler et énoncer les résultats do
 on se servira afin de justifier et mettre en place les deux algorithmes pour
 calculer les isomorphismes de corps finis. Cette partie n'a pas comme vocation
 de faire un exposé complet des notions abordées, pour un traité plus détaillé,
-le lecteur pourra consulter au choix \cite{LiNi}, \cite{MuPa} ou 
+le lecteur pourra consulter au choix \cite{LiNi1}, \cite{MuPa} ou 
 \cite[chap.~III]{Per} pour les corps finis; \cite{Nek}, \cite[chap.~VIII]{Pol},
 \cite[chap. VI]{Sam} ou \cite{Esc} pour la théorie de Galois; \cite{Sam}, 
 \cite{Wash1} ou \cite{Lan} pour la théorie des nombres; \cite{Sil} ou 
@@ -174,7 +182,7 @@ théorème est démontré.\\
 Tout corps fini est commutatif.
 \end{thm}
 On passera la preuve bien qu'elle soit intéressante, se référer par exemple à 
-\cite[p.~70-73]{LiNi} ou \cite[p.~82]{Per}.\par
+\cite[p.~70-73]{LiNi1} ou \cite[p.~82]{Per}.\par
 \vspace{0.3cm}
 Si $K$ est un corps à $q$ éléments, alors pour tout $x\in K$, on a $x^q = x$. En
 effet, pour $x = 0$ c'est immédiat. Pour $x\neq 0$, on sait que le groupe
@@ -187,10 +195,10 @@ puisque étant de degré $q$, il a au maximum $q$ racines qui sont déjà les
 éléments de $K$. On peut dire que $K$ est un corps de décomposition
 \ref{defdec} de $X^q - X$ sur $\GF{p}$.\par
 On notera que dans les corps finis et leurs extensions, l'élévation à une
-puissance égal au cardinal d'un corps fini est un automorphisme particulier. On
-l'appelle l'automorphisme de Frobenius et on le note $\textup{Fr}_q$ pour
-$\textup{Fr}_q(x) = x^q$. Ce n'est pas immédiat qu'il s'agit là d'un 
-homomorphisme, mais un simple calcul permet de s'en assurer.\par
+puissance égal à la caractéristique d'un corps fini est un automorphisme 
+particulier. On l'appelle l'automorphisme de Frobenius et on le note 
+$\textup{Fr}_q$ pour $\textup{Fr}_q(x) = x^q$. Ce n'est pas immédiat qu'il 
+s'agit là d'un homomorphisme, mais un simple calcul permet de s'en assurer.\par
 \vspace{0.3cm}
 Finissons ce point par le théorème suivant qui assure l'existence et l'unicité
 à isomorphisme près des corps finis; c'est à partir de ce théorème que le
@@ -210,7 +218,7 @@ est séparable ou n'a aucune racine multiple puisque sa dérivée est égale à
 $qX^{q-1} - 1 = -1$. Posons $S = \lbrace x\in K : x^q - x = 0\rbrace$, alors $S$
 est un sous-corps de $K$; $0$ et $1$ sont dans $K$ et d'après les propriétés sur
 le Frobenius et les résultats obtenus plus haut on a :
-\[(a - b)^q = a^q - b^q = a - b \textup{ et }(ab^{-1})^q = a^qb^{-q} = ab^{-1}\]
+\[(a - b)^q = a^q - b^q = a - b \etmath(ab^{-1})^q = a^qb^{-q} = ab^{-1}\]
 Ainsi, $S$ contient toutes les racines de $X^q - X$ mais comme $K$ a déjà $q$
 élémens, alors $K = S$ est un corps à $q$ éléments.\par
 \textit{(Unicité)} Soit $K$ le corps à $q = p^n$ éléments, d'après le théorème
@@ -410,7 +418,7 @@ demande un peu plus de travail. On invitera le lecteur a consulté
 \cite[p.~87]{Esc} ou \cite[Chap. VIII]{Pol}.\par
 Si $K$ est un corps fini alors son groupe mulitplicatif $K^{\times}$ est
 cyclique (voir par exemple la preuve de la proposition \ref{proprootcycl} ou
-\cite[p.~50]{LiNi}). Dans ce cas, il suffit de prendre pour générateur d'une
+\cite[p.~50]{LiNi1}). Dans ce cas, il suffit de prendre pour générateur d'une
 extension $L/k$, le générateur du groupe mulitplicatif de $L$ et c'est gagné.\\
 \end{proof}
 
@@ -435,7 +443,7 @@ m_{\alpha} :&L \longrightarrow L\\
 On appellera alors trace et norme de $\alpha$ la trace et le déterminant 
 de la matrice de $m_{\alpha}$. Les formules suivantes, pour $\alpha, \alpha'\in
 L$ :
-\[ m_{\alpha + \alpha'} = m_{\alpha} + m_{\alpha'} \textup{ et }
+\[ m_{\alpha + \alpha'} = m_{\alpha} + m_{\alpha'} \etmath
 m_{\alpha\alpha'} = m_{\alpha}m_{\alpha'}\]
 induisent les résultats classiques de la norme et la trace.
 \end{defn}
@@ -947,9 +955,14 @@ projective lisse de genre $1$ et $\EO$ un point de $E$ qu'on appelle origine.
 \end{defn}
 
 Par abus de langage, on parlera désormais de la courbe elliptique $E$ en
-supposant l'origine $\EO$ fixée. On ne s'attardera pas sur la signification des
-termes écris dans la définition. On dira qu'une courbe E est définie sur 
-$K$ si son équation est à coefficient dans $K$ et on notera $E/K$.
+supposant l'origine $\EO$ fixée. Une courbe projective est une variété de
+dimension $1$ dans $\PP{2}$; le genre est un invariant de la courbe, on ne
+s'attardera pas dessus; et la notion de courbe lisse sera rapidement définie
+plus loin \ref{deflisse}.\par
+On dira qu'une courbe E est définie 
+sur $K$ si son équation est à coefficient dans $K$ et on notera $E/K$. Si on ne
+précise pas le corps de définition, cela veut dire qu'on considère $E$ sur la
+clôture algébrique de $K$.
 
 \begin{defn} 
 On appelle équation de Weierstrass, une équation projective de $\PP{2}$ de la
@@ -963,20 +976,35 @@ l'équation \ref{eqweierfull}, elle possède un point à l'infini $O =
 [0, 1, 0]$.
 \end{defn}
 
-On ne s'intéressera qu'au corps de caractéristique différente de $2$ et $3$. 
-Dans ce cas, il existe deux changements de variables, (voir \cite[Chap. III,
-p.~42]{Sil} qui permettent d'obtenir la forme plus connue qui servira pour les 
-courbes elliptiques, autrement dit une courbe de Weierstrass $W$ peut se mettre 
-sous la forme :
+On ne s'intéressera principalement au corps de caractéristique différente de $2$
+et $3$. Dans ce cas, il existe deux changements de variables, (voir \cite[Chap. 
+III,p.~42]{Sil} qui permettent d'obtenir la forme plus connue qui servira pour 
+les courbes elliptiques, autrement dit une courbe de Weierstrass $W$ peut se 
+mettre sous la forme, en posant $Z = 1$ :
 \begin{equation}
 \label{eqweiersimpl}
 y^2 = x^3 + Ax + B
 \end{equation}
-où $A, B\in\bar{K}$, $\bar{K}$ la clôture algébrique du corps où est défini
-$W$.\par
+où $A, B\in\bar{K}$. Pour la forme complète, on définit aussi les
+quantités suivantes :
+\begin{align*}
+b_2 &= a_1^2 + 4a_2,\\
+b_4 &= 2a_4 + a_1a_3,\\
+b_6 &= a_3^2 + 4a_6,\\
+b_8 &= a_1^2a_6 + 4a_2a_6 - a_1a_3a_4 + a_2a_3^2 - a_4^2,\\
+c_4 &= b_2^2 - 24b_4,\\
+c_6 &= b_2^3 + 36b_2b_4 - 216b_6,\\
+\Delta &= -b_2^2b_8 - 8b_4^3 - 27b_6^2 + 9b_2b_4b_6,\\
+j &= c_4^3/\Delta,\\
+\end{align*}
 
-On va maintenant énoncé le gros résulat permettant de fournir aux courbes
-elliptiques toutes les bonnes propriétés des courbes de Weierstrass.
+\begin{defn}
+On appelle $\Delta$ le discriminant d'une courbe de Weierstrass et $j$ le
+$j$-invariant de cette même courbe.
+\end{defn}
+
+On va maintenant énoncé le résulat permettant de faire le lien entre les courbes
+elliptiques et celles de Weierstrass.
 
 \begin{prop}
 Soit $E$ une courbe elliptique définie sur un corps $K$.
@@ -990,20 +1018,139 @@ donne un isomorphisme entre $E/K$ et une courbe de Weierstrass donnée par
 l'équation :
 \[W : Y^2 + a_1XY + a_3Y = X^3 + a_2X^2 + a_4X + a_6\]
 avec $a_1,\dots,a_6\in K$ et satisfaisant $\phi(\EO) = [0, 1, 0]$.
+
+\item Les seuls changements de variables qui conservent la structure d'équation
+de Weierstrass sont de la forme :
+\[X = u^2X' + r, \quad Y = u^3Y' + su^2X' + t,\]
+avec $u\in K^{\times}$ et $r,s,t\in K$.
+
+\item Réciproquement, toutes courbes projectives lisses données par une équation
+de Weierstrass \ref{eqweierfull} est une courbe elliptique de point d'origine
+$\EO = [0, 1, O]$.
 \end{enumerate}
 \end{prop}
 
+On ne va pas démontrer ce résultat. Le point (i) permet entre autre d'utiliser
+la formule \ref{eqweiersimpl} pour les courbes elliptiques définies sur des
+corps de caractéristique différente de 2 et 3. Le point (ii) permettra, entre
+autre, de calculer les tordues d'une courbe elliptique. Le point (iii) est assez
+parlant de lui-même.\par
+On va s'attarder un peu sur le caractère lisse d'une courbe de Weierstrass (donc
+elliptique) et ses invariants. Commençons par une définition générale :
 
+\begin{defn}
+Soit $V$ une variété, $P\in V$ et $f_1,\dots,f_m \in\bar{K}[\bar{X}]$ des 
+générateurs de $I(V)$. Alors $V$ est non-singulière ou lisse en $P$ si la 
+matrice $m \times n$ suivante :
+\[\left(\frac{\partial f_i}{\partial X_j}(P)\right)_{1\leq i \leq m\atop 1\leq j
+\leq m}\]
+est de rang $n - \textup{dim}(V)$; où $\bar{X} = X_1,\dots,X_n$. La variété $V$
+est dite lisse si elle est lisse en tous ses points.
+\end{defn}
 
+Pour une courbe $E$ d'équation \ref{eqweiersimpl}, on définit le discrimant et
+le $j$-invariant de $E$ comme suit :
+\[\Delta = -16(4A^3 + 27B^2) \etmath j = -1728\frac{(4A)^3}{\Delta}\]
+Les seuls changements de variables conservant la forme simplifiée sont les
+suivants :
+\[x = u^2x' \etmath y = u^3y' \textup{\quad pour un } u\in K^{\times}\]
+ce qui nous donne :
+\[u^4A' = A, \quad u^6B' = B, \quad u^{12}\Delta' = \Delta\]
 
+\begin{prop}
+\label{deflisse}
+Une courbe $E$ donnée par une équation de Weierstrass est lisse si est seulement
+si $\Delta \neq 0$.
+\end{prop}
+\begin{proof}
+On peut commencer par montrer que $\EO$ n'est jamais un point singulier. Pour
+cela, il suffit de voir que si on pose :
+\[F(X,Y,Z) = Y^2Z + a_1XYZ + a_3YZ^2 - X^3 - a_2X^2Z - a_4XZ^2 - a_6Z^3\]
+On a bien :
+\[F(\EO) = F(0, 1, 0) = 0 \etmath \frac{\partial F}{\partial Z}(\EO) = 1 \neq
+0\]
+D'où $\EO$ n'est pas singulier.\par
+Supposons alors que $E$ possède un point singuler $P = (x_0, y_0)$ et posons
+$f(x,y) = F(X/Z,Y/Z,1)$. Comme les changements de variable :
+\[x = x' + x_0, \quad y = y' + y_0\]
+laissent $\Delta$ inchangé (voir \cite[Chap. III,p.~44-45]{Sil}), 
+on peut supposer que $P = (0,0)$. Alors on a :
+\begin{align*}
+a_6 &= f(0,0),\\
+a_4 &= \frac{\partial f}{\partial x}(0,0) = 0,\\
+a_3 &= \frac{\partial f}{\partial y}(0,0) = 0,\\
+\end{align*}
+et en remplaçant ces valeurs dans les formules plus haut,
+on obtient $\Delta = 0$.\par
+Suppsosons alors que $E$ est lisse. Pour simplifier la preuve on se contentera
+de traiter uniquement les cas en caractéristique différente de $2$ et $3$ et
+considérons l'équation de Weierstrass de la forme :
+\[E : y^2 = x^3 + ax + b\]
+La courbe $E$ est singulière si et seulement si il existe un point $P = 
+(x_0,y_0)$ tel que :
+\[2y_0 = 3x^2 + a = 0\]
+Autrement dit, les points singuliers sont de la forme $(x_0, 0)$ où $x_0$ est
+racine double du polynôme $x^3 + ax + b$. Or ce polynôme n'a de racine double si
+et seulement si sont discriminant, égal à $4a^3 - 27b^2 = \Delta/16$, est nul.
+Ainsi, si $E$ n'est pas singulière, $\Delta\neq0$.\\
+\end{proof}
 
+\begin{prop}
+Soit $j_0\in\bar{K}$, alors il existe une courbe elliptique définie au-dessus de
+$K(j_0)$ telle que son $j$-invariant est $j_0$.
+\end{prop}
+\begin{proof}
+Supposons que $j \neq 0, 1728$ et considérons la courbe :
+\[E : y^2 + xy = x^3 - \frac{36}{j_0 - 1728}x - \frac{1}{j_0 - 1728}.\]
+De longs calculs permettent alors d'obtenir :
+\[\Delta = \frac{j_0^3}{(j_0 - 1728)^3} \etmath j = j_0\]
+On a donc les courbes qu'il faut pour toutes caractéristiques si $j \neq 0,
+1728$.\par
+Pour finir, les courbes suivantes complètent la liste :
+\begin{align*}
+E &: y^2 + y = x^3, \quad \Delta = -27, \quad j = 0,\\
+E &: y^2 = x^3 + x, \quad \Delta = -64, \quad j= 1728.
+\end{align*}
+\end{proof}
+
+Une notion, sinon la notion, importante de courbes elliptiques et le fait que
+l'ensemble des points d'une courbe elliptique muni de la loi de composition des
+cordes tangentes forme un groupe commutatif avec pour élément neutre le point 
+$\EO$.\par
+On se contentera d'énoncer les résultats fondamentaux de la loi de groupe sans 
+nécessairement tout prouver; voir \cite[Chap.~III, p~51-53]{Sil}. Il faut garder
+en mémoire que cette loi est définie pour les équations de Weierstrass et ce 
+n'est pas trivial qu'elle soit encore valable pour les courbes elliptiques. 
+
+\begin{prop}
+La loi de composition des cordes tangentes a les propriétés suivantes :
+\begin{enumerate}[(a)]
+\item Si une droite intersecte les points, non nécessairement disctints, $P, Q,
+R$, alors :
+\[(P\oplus Q) \oplus P = \EO.\]
+
+\item $P\oplus\EO=P$ pour tout $P\in E$.
+
+\item $P\oplus Q = Q \oplus P$ pour tout $P, Q\in E$.
+
+\item Soit $P\in E$, il existe un point de $E$ noté $\ominus P$, tel que :
+\[P\oplus(\ominus P) = \EO.\]
+
+\item Soit $P, Q, R \in E$, alors :
+\[(P\oplus Q) \oplus R = P\oplus (Q\oplus R).\]
+
+\item Supposons que $E$ est défini sur $K$, alors :
+\[E(K) = \lbrace{(x,y)\in K^2 : y^2 = x^3 + ax +
+b}\rbrace\cup\lbrace{\EO}\rbrace\]
+est un sous-groupe de $E$.
+\end{enumerate}
+\end{prop}
+%TODO : foutre les formulaire, peut-être parler des formes de Legendre, parler
+%des points de torsions rapidement
 \subsection{Corps finis}
 %TODO: Nombres de points, théorème de Hasse, Frobenius, trace, points de 
 %torsions
 
-\subsection{Périodes elliptiques}
-%TODO: Prouver et définir les périodes elliptiques (peut-être que ce serait à
-%faire directement dans la partie algorithme elliptique de Rains ?)
 
 \subsection{Courbes supersingulières}
 %TODO: Définitions Twists quadratiques, courbes $y^2 = x^3 + x$ et 
@@ -1190,7 +1337,7 @@ deux racines qui sont dans le même facteur irréductible du polynôme
 cyclotomique. Il peut arriver qu'on soit obligé de tester $m-2$ valeurs de $s$
 pour pouvoir enfin tomber sur un isomorphisme.\par
 Il faudrait alors trouver un moyen de pouvoir travailler avec un $m$
-relativement petit même si le cardinal du groupe des inversibles n'a pas de
+relativement petit même si le cardinal  du groupe des inversibles n'a pas de
 facteur petit, et en même temps, pouvoir choisir des éléments uniques sous
 l'action du groupe de Galois afin d'être sûr qu'un isomorphisme existe alors
 entre les deux. C'est ce que fait, entre autre, l'algorithme de Rains 
@@ -1284,6 +1431,36 @@ normaux. C'est ce qui va être étudier dans la sous-section qui suit.
 %TODO: Définitions et résultats utiles pour l'algorithme, justification de
 %l'algorithme (peut-être à mettre dans la partie Galois de la section corps
 %finis), conversion de la base polynomiale à la base normale.
+On a le théorème suivant :
+\begin{thm}
+Soit $L/K$ une extension galoisienne, alors il existe un $x\in L$ dont l'orbite
+par l'action du groupe de Galois forme une base de $L$ en tant que $K$-espace
+vectoriel.
+\end{thm}
+%TODO : Je ne sais pas si ça vaut le coup de faire la preuve. J'aimerais bien
+%mais bon... Tu as Artin et LiNi11 Th 3.72
+À partir de là, on assure l'existence des éléments normaux :
+
+\begin{defn}
+Soit $L/K$ une extension Galoisienne. On dit que $x\in L$ est un élément normal
+si son orbite sous l'action de Galois forme une base de $L$ en tant que
+$K$-espace vectoriel; ou encore si ses conjugués forment une base de $L$ en tant
+que $K$-espace vectoriel.
+\end{defn}
+Dans le cas des corps finis, on a montré que le Frobenius engendre le groupe de
+Galois de $\GF{p^n}$ donc pour un $x\in\GF{p^n}$ ses conjugués sont $x^p,
+x^{p^2},\dots,x^{p^{n-1}}$.\par
+On va commencer par énoncer quelques résultats sur ses éléments sur les corps
+finis.
+
+\begin{thm}
+Le nombre d'élements normaux dans $\GF{p^n}$ est égal au nombre d'unité de
+l'anneau $\GF{p}[X]/(X^n - 1)$.
+\end{thm}
+\begin{proof}
+%TODO: LiNi2 3.73.. Va y'en avoir des résultats à montrer pour ça.
+\end{proof}
+
 
 \subsection{Périodes de Gauss}
 \label{pergauss}
@@ -1305,6 +1482,8 @@ normaux. C'est ce qui va être étudier dans la sous-section qui suit.
 %stable par l'action du groupe de Galois (Énoncer les lemmes etc.)
 
 \subsection{Périodes elliptiques}
+%TODO: Prouver et définir les périodes elliptiques (peut-être que ce serait à
+%faire directement dans la partie algorithme elliptique de Rains ?)
 
 
 \subsection{Choix des paramètres}
@@ -1339,9 +1518,13 @@ normaux. C'est ce qui va être étudier dans la sous-section qui suit.
 \bibitem{Pin} \emph{Recognising Elements of Finite Fields}, \bsc{Richard G.E. 
 Pinch}, Cryptography and coding II, p. 193-197, Oxford University Press, 1992.
 
-\bibitem{LiNi} \emph{Finite Fields}, \bsc{Rudolf Lidl} \& 
+\bibitem{LiNi1} \emph{Finite Fields}, \bsc{Rudolf Lidl} \& 
 \bsc{Harald Niederreiter}, Encyclopedia of mathematics and its applications vol.
 20, Cambridge, 1983.
+
+\bibitem{LiNi2} \emph{Introduction to Finite Fields and their Applications},
+\bsc{Rudolf Lidl} \& \bsc{Harald Niederreiter}, Cambridge University Press,
+1986.
 
 \bibitem{Per} \emph{Cours d'algèbre}, \bsc{Daniel Perrin}, ellipses, 1996.
 
