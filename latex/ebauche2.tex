@@ -144,14 +144,14 @@ corps finis, il s'agit du corps $\GF{p}$ à $p$ éléments, pour $p$ premier. Ce
 qui nous donne le théorème suivant :
 
 \begin{thm}
-\label{corfincarprem}
+\label{th:corfincarprem}
 Soit $K$ un corps fini, alors $K$ a $p^n$ éléments, où $p$ premier est la
 caractéristique du corps premier et $n$ le degré de $K/\GF{p}$.
 \end{thm}
 \begin{proof}
 De façon informelle, on appelle le degré de $L$ sur $K$ la dimension de $L$
 en tant que $K$-espace vectoriel. On discutera plus en détails de cette
-notion dans le point suivant \ref{defdegext}.\par
+notion dans le point suivant \ref{def:degext}.\par
 Montrons le lemme suivant :
 \begin{lem}
 Un corps fini a pour caractéristique un nombre premier.
@@ -193,7 +193,7 @@ résultat voulu.\par
 On en déduit immédiatement que le polynôme $X^q - X$ se scinde dans $K$
 puisque étant de degré $q$, il a au maximum $q$ racines qui sont déjà les
 éléments de $K$. On peut dire que $K$ est un corps de décomposition
-\ref{defdec} de $X^q - X$ sur $\GF{p}$.\par
+\ref{def:dec} de $X^q - X$ sur $\GF{p}$.\par
 On notera que dans les corps finis et leurs extensions, l'élévation à une
 puissance égal à la caractéristique d'un corps fini est un automorphisme 
 particulier. On l'appelle l'automorphisme de Frobenius et on le note 
@@ -205,7 +205,7 @@ Finissons ce point par le théorème suivant qui assure l'existence et l'unicit�
 travail de tout ce rapport va se faire :
 
 \begin{thm}
-\label{thisomGF}
+\label{th:isomGF}
 Pour tout nombre premier $p$ et tout entier strictement positif $n$, il existe 
 un corps fini à $p^n$ éléments. Tout corps fini à $q = p^n$ éléments est 
 isomorphe au corps de décomposition de $X^q - X$ sur $\GF{p}$. On parlera alors 
@@ -222,14 +222,14 @@ le Frobenius et les résultats obtenus plus haut on a :
 Ainsi, $S$ contient toutes les racines de $X^q - X$ mais comme $K$ a déjà $q$
 élémens, alors $K = S$ est un corps à $q$ éléments.\par
 \textit{(Unicité)} Soit $K$ le corps à $q = p^n$ éléments, d'après le théorème
-\ref{corfincarprem}, est de caractéristique $p$ et contient $\GF{p}$. On en
+\ref{th:corfincarprem}, est de caractéristique $p$ et contient $\GF{p}$. On en
 déduit que $K$ est un corps de décomposition de $X^q - X$ sur $\GF{p}$,
 puisqu'il est scindé sur $K$, et l'unicité se déduit de l'unicité des corps de
-décomposition, théorème \ref{cordec}.
+décomposition, théorème \ref{cor:dec}.
 \end{proof}
 
 \subsection{Extension de corps}
-\label{defdegext}
+\label{def:degext}
 On dit que $K$ est une extension de corps de $k$ s'il existe un morphisme de 
 corps $\varphi : k \to K$. Ou de façon équivalente, si $k \subseteq K$ alors $K$
 est une extension (de corps) de $k$; on note aussi $K/k$ une extension de corps.
@@ -337,14 +337,14 @@ Une autre notion importante est celle de corps de décomposition d'un polynôme
 non constant sur un corps $k$.
 
 \begin{defn}
-\label{defdec}
+\label{def:dec}
 Le corps de décomposition d'un polynôme $P\in k[X]$ est le sur-corps $K \supset 
 k$ contenant toutes les racines de $P$, qui est engendré par les racines 
 susnommées.
 \end{defn}
 
 \begin{thm}
-\label{cordec}
+\label{cor:dec}
 Tout $P\in k[X]$ non constant admet un corps de décomposition unique à 
 isomorphisme près.
 \end{thm}
@@ -409,15 +409,15 @@ Pour montrer l'autre sens, il suffit de remarquer que $\GF{p^n}$ correspond aux
 %TODO : Théorème de l'élément primitif et... ?
 
 \begin{thm}
-\label{thelemprim}
-Toute extension séparable (\ref{defsep}) et finie est simple.
+\label{th:elemprim}
+Toute extension séparable (\ref{def:sep}) et finie est simple.
 \end{thm}
 \begin{proof}
 On va se contenter de le prouver dans le cas d'un corps fini; le cas général
 demande un peu plus de travail. On invitera le lecteur a consulté
 \cite[p.~87]{Esc} ou \cite[Chap. VIII]{Pol}.\par
 Si $K$ est un corps fini alors son groupe mulitplicatif $K^{\times}$ est
-cyclique (voir par exemple la preuve de la proposition \ref{proprootcycl} ou
+cyclique (voir par exemple la preuve de la proposition \ref{prop:rootcycl} ou
 \cite[p.~50]{LiNi1}). Dans ce cas, il suffit de prendre pour générateur d'une
 extension $L/k$, le générateur du groupe mulitplicatif de $L$ et c'est gagné.\\
 \end{proof}
@@ -448,8 +448,20 @@ m_{\alpha\alpha'} = m_{\alpha}m_{\alpha'}\]
 induisent les résultats classiques de la norme et la trace.
 \end{defn}
 
-%TODO: Rajoutez des résultat sur la trace, surjectivité, somme des conjugés 
-%etc., peut-être à foutre dans la section en-dessous ça...
+On a la proposition suivante :
+
+\begin{prop}
+Soit un $K$ un corps de caractéristique nulle ou finie, $L/K$ une extension
+algébrique de degré $n$ sur $K$. Soit 
+$x_1,\dots, x_n$ les racines du polynôme minimal de $x$, dans le corps de
+décomposition de celui-ci, chacune répétée $[L:K(x)]$ fois; alors on a :
+\[Tr_{L/K}(x) = x_1 + \dots + x_n \etmath N_{L/K}(x) = x_1\dots x_n\]
+De plus, le polynôme caractéristique de $x$ relativement à $L$ et $K$ est $(X -
+x_1)\dots(X - x_n)$.
+\end{prop}
+%TODO: La preuve, éventuellement.
+
+On en déduit que la trace est surjective
 
 \subsection{Théorie de Galois}
 %TODO :Définitions et résutlats de base (sans forcément tout prouver),
@@ -473,7 +485,7 @@ qu'un élément $\alpha$ est spérable sur $K$ si son polynôme minimal est
 séparable sur $K$.
 
 \begin{defn}
-\label{defsep}
+\label{def:sep}
 On dit qu'une extension algébrique $L/K$ est séparable si tout les $\alpha\in L$
 sont séparables.
 \end{defn}
@@ -485,7 +497,7 @@ irréductibles le sont.
 \end{rem}
 
 \begin{prop}
-\label{sepder}
+\label{prop:sepderiv}
 Soit $P$ irréductible sur un corps $K$, on a l'équivalence suivante :
 \[P\textup{ séparable } \Leftrightarrow P'\neq 0\]
 \end{prop}
@@ -498,7 +510,7 @@ alors $L/k$ et $K/L$ le sont aussi.
 Le corps $L$ étant contenu dans $K$, tous ses éléments sont aussi séparables.
 Démontrons le lemme suivante :
 \begin{lem}
-\label{divsep}
+\label{lem:divsep}
 Soit $P$ un polynôme séparable sur k, $L$ une extension de $k$ et $Q$ un
 diviseur de $P$ dans $L[X]$. Alors $Q$ est spérable sur $L$.
 \end{lem}
@@ -511,7 +523,6 @@ $L[X]$ et on conclut en appliquant le lemme.\\
 \end{proof}
 
 \begin{prop}
-\label{nbautroot}
 Soit $K/k$ une extension algébrique simple, $P = Irr_k(\alpha)$ et $d =
 \textup{deg\;}P = [K:k]$. Alors pour toute extension $L/k$, le nombre de
 $k$-morphismes de $K \to L$ est égal au nombre de racine distinctes de $P$ dans
@@ -552,10 +563,10 @@ décomposition de $P$ sur $k$. Alors $K/k$ est séparable.
 Soit $x_1,\dots,x_r$ les racines de $P$ dans $K$, alors $K = k[x_1,\dots,x_r]$
 par définition. On pose :
 \[P = Q_1\dots Q_n\]
-Par hypothèse, chaque $Q_j$ est séparable, lemme \ref{divsep}, or les $x_i$ sont
-racines d'un des $Q_j$ donc leurs polynômes minimaux divisent ces $Q_j$ et en
-appliquant à nouveau le lemme, on montre que tous les $x_i$ sont séparables. On
-fini en appliquant le point (3) du théorème précédent.\\
+Par hypothèse, chaque $Q_j$ est séparable, lemme \ref{lem:divsep}, or les $x_i$ 
+sont racines d'un des $Q_j$ donc leurs polynômes minimaux divisent ces $Q_j$ et 
+en appliquant à nouveau le lemme, on montre que tous les $x_i$ sont séparables. 
+On fini en appliquant le point (3) du théorème précédent.\\
 \end{proof}
 
 Soit $f$ un polynôme irréductible de degré $n$ sur un corps $K$. Soit $\alpha_1 
@@ -569,7 +580,7 @@ contient tous les conjugués de $a$.
 \end{defn}
 
 \begin{prop}
-\label{decompnorm}
+\label{prop:decompnorm}
 Soit $P\in k[X]$ de degré $n\geq 1$ et $K$ un corps de décomposition de $P$ sur
 $k$. Alors $K/k$ est normale.
 \end{prop}
@@ -604,7 +615,7 @@ démontrera pas la plupart des résultats \textit{(sauf s'il me reste du temps
 pour peaufiner à fond)}. 
 
 \begin{defn}
-\label{defgal}
+\label{def:gal}
 Soit $K/k$ une extension de degré fini. On dit que $K/k$ est galoisienne si
 $\#\textup{Aut}_k(K) = [K:k]$. Dans ce cas, on note $\textup{Gal}(K/k) :=
 \textup{Aut}_k(K)$ et pour tout $\alpha\in K$ et $g\in\textup{Gal}(K/k)$, les
@@ -652,20 +663,23 @@ $\textup{Gal}(\GF{q^n}/\GF{q})$ est cyclique d'ordre $n$, engendré par
 l'automorphisme de Frobenius $\textup{Fr}_q$.
 \end{thm}
 \begin{proof}
-On a déjà montré que $\GF{q^n}$ était le corps de décomposition de $X^{q^n} -
-X$, théorème \ref{thisomGF}, et que l'extension était normale, proposition 
-\ref{decompnorm}. De plus, comme $Q' = -1 \neq 0$, $Q$ est séparable,
-proposition \ref{sepder}.  D'où $\GF{q^n}/\GF{q}$ est galoisienne et donc :
+On a déjà montré que $\GF{q^n}$ était le corps de décomposition de $Q = X^{q^n} 
+- X$, théorème \ref{th:isomGF}, donc que l'extension était normale, proposition 
+\ref{prop:decompnorm}. De plus, comme $Q' = -1 \neq 0$, $Q$ est séparable,
+proposition \ref{prop:sepderiv}.  D'où $\GF{q^n}/\GF{q}$ est galoisienne et donc
+:
 \[|\textup{Gal}(\GF{q^n}/\GF{q})| = [\GF{q^n}:\GF{q}] = n\]
-Comme le Frobenius est $\GF{q}$-automorphisme, c'est une morphisme et un élément
-de $\GF{q}$ élevé à la puissance $q^n$ est toujours égal à lui-même, c'est un
-élément de $\textup{Gal}(\GF{q^n}/\GF{q})$. Notons $d$ son ordre, donc
+Comme le Frobenius est un $\GF{q}$-automorphisme, c'est une morphisme et un 
+élément de $\GF{q}$ élevé à la puissance $q^n$ est toujours égal à lui-même, 
+c'est un élément de $\textup{Gal}(\GF{q^n}/\GF{q})$. Notons $d$ son ordre, donc
 $\textup{Fr}_q^d = Id_{\GF{q^n}}$ ou encore, pour tout $x\in\GF{q^n}$ :
 \[\textup{Fr}_q^d(x) = x^{q^d} = x \Leftrightarrow x^{q^d} - x = 0\]
 Le polynôme $X^{q^d} - X$ ayant au plus $d$ racines, on a $d\geq n$ et donc $d =
 n$ d'où $\textup{Fr}_q$ engendre $\textup{Gal}(\GF{q^n}/\GF{q})$ et donc le
 résultat.\\
 \end{proof}
+
+%TODO : Groupe de décomposition et groupe d'inertie ?
 
 \subsection{Extensions et polynômes cyclotomiques}
 %TODO : Racines de l'unités et quelques mots sur les polynômes 
@@ -679,7 +693,7 @@ algébrique de $K$ et $U_n(K)$ l'ensemble des racines \nroot{n} de l'unité
 appartenant à $K$.
 
 \begin{prop}
-\label{proprootcycl}
+\label{prop:rootcycl}
 Soit $K$ un corps, s'il contient $n$ racines \nroot{n} de l'unité alors elles 
 forment un groupe cyclique $U_n(K)$ d'ordre $n$ isomorphe à $\zmodn{n}$.
 \end{prop}
@@ -741,7 +755,7 @@ $
 isomorphe à $(\zmodn{n})^*$. En particulier, il y en a $\varphi(n)$.
 \end{prop}
 \begin{proof}
-D'après \ref{proprootcycl} les éléments qui engendrent $U_n$ sont exactement 
+D'après \ref{prop:rootcycl} les éléments qui engendrent $U_n$ sont exactement 
 les éléments dont l'image engendre $\zmodn{n}$. D'où l'isomorphisme et l'ordre 
 de $U^{\times}_n$.\\
 \end{proof}
@@ -852,7 +866,7 @@ Le théorème suivant sera cruciale dans la suite du mémoire, il servira notame
 à justifier théoriquement la méthode de Rains.
 
 \begin{thm}
-\label{polycycldecomp}
+\label{th:polycycldecomp}
 Si $K = \GF{q}$ et $(n,q) = 1$, alors $\phi_n$ se factorise en $\varphi(n)/d$ 
 polynômes unitaires irréductibles dans $\GF{q}[X]$ de même degré égal à $d$. 
 $K^{(n)}$ est le corps de décomposition de n'importe lequel de ces polynôme et 
@@ -903,7 +917,7 @@ d'où :
 L'application est donc un morphisme de groupes. Elle est aussi injective puisque
 $\psi(\sigma) = 1$ est équivalent à $\psi = \textup{Id}$. On conclut alors en
 appliquant le (ii), ce qui implique que $\psi$ est un isomorphisme, et en 
-rappelant la définition \ref{defgal}.\\
+rappelant la définition \ref{def:gal}.\\
 \end{proof}
 
 \section{Idéaux et théorie des nombres}
@@ -915,7 +929,7 @@ Dans cette section, on introduira la notions de corps de nombres, de leurs
 anneaux d'entiers et des idéaux sur ses anneaux. Les résultats sur la
 décomposition des idéaux en produits d'idéaux premiers nous permettrons ensuite
 de prouver plusieurs résultats qu'on utilisera pour les périodes de Guass plus
-loin.Périodes qui interviennent dans l'algorithme de Rains cyclotomique.
+loin. Périodes qui interviennent dans l'algorithme de Rains cyclotomique.
 
 \subsection{Corps de nombres}
 %TODO :Définitions (normes, traces, éléments algébriques, etc.)
@@ -926,12 +940,6 @@ On appelle corps de nombre, toute extension finie de $\QQ$.
 %TODO: Idéaux premiers sur les anneaux d'entiers de corps de nombres,
 %décomposition unique, résultat de la théorie de Galois.
 
-\subsection[Peut-être à virer]{Périodes de Gauss ou théorie de Galois ou 
-carrément supprimer la partie ?}
-%TODO: Énoncé et justifier les résultats donnés par Rains (notamment le lemme
-%expliquant la forme de $\GF{q}[X]/I$ pour $I$ sous-groupe du groupe de Galois);
-%peut-être à mettre directement dans la partie cyclotomique de la section
-%algorithme de Rains cyclotomique.
 
 \section{Courbes elliptiques}
 %TODO: Définitions (j-invariant, nombres de points, tordues, module de
@@ -961,7 +969,7 @@ Par abus de langage, on parlera désormais de la courbe elliptique $E$ en
 supposant l'origine $\EO$ fixée. Une courbe projective est une variété de
 dimension $1$ dans $\PP{2}$; le genre est un invariant de la courbe, on ne
 s'attardera pas dessus; et la notion de courbe lisse sera rapidement définie
-plus loin \ref{deflisse}.\par
+plus loin \ref{def:lisse}.\par
 On dira qu'une courbe E est définie 
 sur $K$ si son équation est à coefficient dans $K$ et on notera $E/K$. Si on ne
 précise pas le corps de définition, cela veut dire qu'on considère $E$ sur la
@@ -971,11 +979,11 @@ clôture algébrique de $K$.
 On appelle équation de Weierstrass, une équation projective de $\PP{2}$ de la
 forme :
 \begin{equation}
-\label{eqweierfull}
+\label{eq:weierfull}
 ZY^2 + a_1XYZ + a_3YZ^2 = X^3 + a_2X^2Z + a_4XZ^2 + a_6Z^3
 \end{equation}
 On appelle courbe de Weierstrass, une courbe projective $W$ définie par 
-l'équation \ref{eqweierfull}, elle possède un point à l'infini $O = 
+l'équation \ref{eq:weierfull}, elle possède un point à l'infini $O = 
 [0, 1, 0]$.
 \end{defn}
 
@@ -985,7 +993,7 @@ III,p.~42]{Sil} qui permettent d'obtenir la forme plus connue qui servira pour
 les courbes elliptiques, autrement dit une courbe de Weierstrass $W$ peut se 
 mettre sous la forme, en posant $Z = 1$ :
 \begin{equation}
-\label{eqweiersimpl}
+\label{eq:weiersimpl}
 y^2 = x^3 + Ax + B
 \end{equation}
 où $A, B\in\bar{K}$. Pour la forme complète, on définit aussi les
@@ -1028,13 +1036,13 @@ de Weierstrass sont de la forme :
 avec $u\in K^{\times}$ et $r,s,t\in K$.
 
 \item Réciproquement, toutes courbes projectives lisses données par une équation
-de Weierstrass \ref{eqweierfull} est une courbe elliptique de point d'origine
+de Weierstrass \ref{eq:weierfull} est une courbe elliptique de point d'origine
 $\EO = [0, 1, O]$.
 \end{enumerate}
 \end{prop}
 
 On ne va pas démontrer ce résultat. Le point (i) permet entre autre d'utiliser
-la formule \ref{eqweiersimpl} pour les courbes elliptiques définies sur des
+la formule \ref{eq:weiersimpl} pour les courbes elliptiques définies sur des
 corps de caractéristique différente de 2 et 3. Le point (ii) permettra, entre
 autre, de calculer les tordues d'une courbe elliptique. Le point (iii) est assez
 parlant de lui-même.\par
@@ -1051,7 +1059,7 @@ est de rang $n - \textup{dim}(V)$; où $\bar{X} = X_1,\dots,X_n$. La variété $
 est dite lisse si elle est lisse en tous ses points.
 \end{defn}
 
-Pour une courbe $E$ d'équation \ref{eqweiersimpl}, on définit le discrimant et
+Pour une courbe $E$ d'équation \ref{eq:weiersimpl}, on définit le discrimant et
 le $j$-invariant de $E$ comme suit :
 \[\Delta = -16(4A^3 + 27B^2) \etmath j = -1728\frac{(4A)^3}{\Delta}\]
 Les seuls changements de variables conservant la forme simplifiée sont les
@@ -1061,7 +1069,7 @@ ce qui nous donne :
 \[u^4A' = A, \quad u^6B' = B, \quad u^{12}\Delta' = \Delta\]
 
 \begin{prop}
-\label{deflisse}
+\label{def:lisse}
 Une courbe $E$ donnée par une équation de Weierstrass est lisse si est seulement
 si $\Delta \neq 0$.
 \end{prop}
@@ -1169,11 +1177,11 @@ de complexités des algorithmes étudiées.
 \part{Isomorphismes de corps finis}
 \label{deux}
 %TODO: Présentation du problème, énonciation des difficultés etc.
-On a vu, théorème \ref{thisomGF}, qu'un corps fini était unique à isomorphisme
+On a vu, théorème \ref{th:isomGF}, qu'un corps fini était unique à isomorphisme
 près. De façons équivalente, deux corps finis de même cardinal sont donc 
 isomorphes. Malheureusement, la preuve n'est pas constructive et ne permet donc 
 pas d'expliciter ou de construire un tel isomorphisme.\par
-On a également vu, théorème \ref{thelemprim}, que tout corps fini, excépté le 
+On a également vu, théorème \ref{th:elemprim}, que tout corps fini, excépté le 
 corps premier, s'obtient par adjonction de la racine d'un polynôme irréductible
 du degré de l'extension. Il y a donc autant de corps finis "différents" de même
 cardinal que de polynômes irréductibles de bon degré sur le corps premier (ou 
@@ -1276,7 +1284,7 @@ $\phi_s$ telle que $\phi_s(\zeta_m) = (\zeta'_m)^s$, est un isomorphisme.
 \end{enumerate}
 \vspace{0.3cm}
 Dans le premier point, la deuxième condition est là pour assurer que, théorème
-\ref{polycycldecomp}, une racine \nroot{m} primitive de l'unité 
+\ref{th:polycycldecomp}, une racine \nroot{m} primitive de l'unité 
 n'engendre aucun sous-corps de $\GF{q^n}$. Pour le deuxième point, il suffit de 
 prendre au hasard un $z\in k_1^{\times}$ et de l'élever à la puissance 
 $(q^n - 1)/m$ jusqu'à tomber sur un élément d'ordre $m$, la probabalité 
@@ -1377,17 +1385,17 @@ respectivement et tels que $\phi(\zeta_m) = \phi(\zeta'_m)$. Alors on a :
 \textup{Tr\;}_{k'_2/k_2}(\zeta'_{m})\]
 De plus, les traces sont aussi des générateurs de leurs corps respectifs %TODO :
 %tu dois encore le prouver
-, ce qui fait qu'on aura besoin de ne manipuler que des matrices de taille $o$ 
+, on aura besoin de ne manipuler que des matrices de taille $o$ 
 au lieu de taille $n.o$.\par %TODO : Toute ce truc sert vraiment ?!
-L'ennuie c'est qu'on a toujours une chance de devoir tester plusieurs candidats
-avant de tomber sur un isomorphisme. C'est là qu'interviennent alors les
-périodes de Gauss qu'on va introduire à la sous-section \ref{pergauss}.
+Le problème de devoir tester plusieurs candidats avant de tomber sur un 
+isomorphisme est malheureusement toujours présent. C'est à ce moment qu'on va
+utiliser les périodes de Gauss, introduites à la sous-section \ref{sec:pergauss}.
 
 \vspace{0.3cm}
 
 Notre but est donc de trouver des générateurs uniques. Il se trouve qu'on peut
 encore améliorer le temps asymptotique en exigant que ses générateurs
-satisfassent une condition plus forte; cette condition sera que les générateurs
+satisfassent une condition plus forte; cette condition est que les générateurs
 soient des éléments normaux. Imaginons qu'on est calculé deux éléments normaux
 $v\in k_1$ et $w\in k_2$ tels que $\phi(v) = w$. Pour finir de résoudre
 le problème, il faut déterminer les images $\phi(x^i)$ pour $0\leq i < n$. Or
@@ -1405,7 +1413,7 @@ alors on aura :
 puisque $\phi$ est un morphisme. Il se trouve alors que devoir passer de la base
 normale à la base monomial en $x$ peut se faire, non pas en inversant une
 matrice, mais en inversant l'élément d'un anneau quotient. C'est ce qui va être
-exposé dans la sous-section \ref{secelemnorm}.\par
+exposé dans la sous-section \ref{sec:elemnorm}.\par
 En attendant un algorithme plus détaillé, on peut résumer la recherche d'un
 élément normal unique de la façon suivante :
 \vspace{0.3cm}
@@ -1423,14 +1431,15 @@ $(o, n) = 1$.
 Les points 1) et 2) ne seront nécessaires que lorsqu'on aura besoin d'utiliser
 une extension pour trouver le paramètre $m$ assez petit. Il sera bien possible
 que $o = 1$ comme on le montrera dans la sous-section \textit{(la dernière
-probablement)}. Le point 3) a déjà été évoqué pour la méthode de Pinch. Et le
-point 4) sera traité dans la sous-section \ref{pergauss} comme il a été
-mentionné plus haut. On répète exactement le même processus pour $k_2$, reste
-alors à calculer l'image de $x$ par l'isomorphisme reliant les deux éléments
-normaux. C'est ce qui va être étudier dans la sous-section qui suit.
+probablement)}. Le point 3) a déjà été évoqué pour la méthode de Pinch, à ceci
+pèrs qu'il faudra rajouter $m$ sans facteur carré. Et le point 4) sera traité 
+dans la sous-section \ref{sec:pergauss} comme il a été mentionné plus haut. On 
+répète exactement le même processus pour $k_2$, reste alors à calculer l'image 
+de $x$ par l'isomorphisme reliant les deux éléments normaux. C'est ce qui va 
+être étudier dans la sous-section qui suit.
 
 \subsection{Éléments normaux}
-\label{secelemnorm}
+\label{sec:elemnorm}
 %TODO: Définitions et résultats utiles pour l'algorithme, justification de
 %l'algorithme (peut-être à mettre dans la partie Galois de la section corps
 %finis), conversion de la base polynomiale à la base normale.
@@ -1452,12 +1461,11 @@ que $K$-espace vectoriel.
 \end{defn}
 Dans le cas des corps finis, on a montré que le Frobenius engendre le groupe de
 Galois de $\GF{p^n}$ donc pour un $x\in\GF{p^n}$ ses conjugués sont $x^p,
-x^{p^2},\dots,x^{p^{n-1}}$.\par
-On va commencer par énoncer quelques résultats sur ses éléments sur les corps
-finis.
+x^{p^2},\dots,x^{p^{n-1}}$. On va commencer par énoncer quelques résultats sur 
+ses éléments sur les corps finis.
 
 \begin{thm}
-\label{nbelemnorm}
+\label{th:nbelemnorm}
 Le nombre d'élements normaux dans $\GF{p^n}$ est égal au nombre d'unité de
 l'anneau $\GF{p}[X]/(X^n - 1)$.
 \end{thm}
@@ -1480,12 +1488,121 @@ dans la base normale engendrée par $x$ et d'y appliquer la trace; le fait
 qu'elle soit linéaire montre que $\textup{Tr}_{L/K}(x)$ est aussi une base 
 normale de $K$.\par
 Montrons l'autre sens. Supposons que $K = \GF{q}$ et $L = \GF{q^{p^k}}$ où $q
-= p^n$. D'après le théorème \ref{nbelemnorm},
+= p^n$. D'après le théorème \ref{th:nbelemnorm}, le nombre d'éléments normaux de
+$L$ est égal au nombre d'unité dans $\GF{p}[X]/(X^{p^kn} - 1)$. Comme
+$(X^{p^kn} - 1 ) = (X^n - 1)^{p^k}$, alors un élément de $\GF{p}[X]/(X^{p^kn} - 
+1)$ est une unité si et seulement si sa réduction modulo $(X^n - 1)$ est une
+unité dans $\GF{p}[X]/(X^n - 1)$.
+Comme dans ce cas, $(X^n - 1)^{p^k} \subset (X^n - 1)$, on a $\GF{p}[X]/
+(X^n - 1) \subset \GF{p}[X]/(X^{p^kn} - 1)$, une unité du premier anneau sera 
+donc une unité du second; et comme la réduction de $1$ est toujours $1$ modulo 
+quoique ce soit, une unité de $\GF{p}[X]/(X^n - 1)$ est nécessairement une unité
+de $\GF{p}[X]/(X^{p^kn} - 1)$.\par
+On en déduit que $L$ a $p^k$ fois plus d'éléments normaux que $K$. De façon plus
+générale, un élément de $K$ a exactement $p^k$ antécédents pour la trace, le
+nombre de conjugués, puisque l'extension est galoisienne; donc $L$ a au plus
+$p^k$ fois élément normaux que $L$. La borne est atteinte dans notre cas, ce qui
+conclut la démonstration.\\
 \end{proof}
 
 
+
+
 \subsection{Périodes de Gauss}
-\label{pergauss}
+%TODO: Énoncé et justifier les résultats donnés par Rains (notamment le lemme
+%expliquant la forme de $\GF{q}[X]/I$ pour $I$ sous-groupe du groupe de Galois);
+%peut-être à mettre directement dans la partie cyclotomique de la section
+%algorithme de Rains cyclotomique.
+\label{sec:pergauss}
+Maintenant qu'on connait les éléments qui nous intéresse, il faut trouver
+un moyen de les rendre "uniques". Globalement, cela revient à
+trouver des éléments qui ont la même orbite sous l'action du groupe de Galois de
+l'extension, ou encore, à regrouper les différentes orbites du polynôme
+cyclotomiques (puisqu'il se décompose dans $\GF{q^n}$). Ce sont les périodes
+elliptiques qui vont alors nous permettre de générer ces éléments. Commençons
+par introduire une définition générale :
+
+\begin{defn}
+Soit $n, k, m\in\NN$ tels que $\phi(m) = nk$. On pose $m = m_1m_2$ où $m_1$ est
+le facteur sans carrés de $m$ et on définit, pour $l$ premier :
+\[g(X) = X^{m_2}\prod_{l\mid m_2}{\sum_{1\leq i\leq
+v_l(m_2)}{X^{ml^{-i}}}}\in\ZZ[X].\]
+Soit $q$ une puissance d'un nombre premier avec $(q, m) = 1$,
+$\zeta\in\GF{q^{nk}}$ une racine primitive \nroot{m} de l'unité et $\mathcal{K}$
+un sous-groupe de $\zmodninv{m}$ d'ordre $k$. La période de Gauss de type $(n,
+\mathcal{K})$ sur $\GF{q}$ est définie par :
+\begin{equation}
+\label{eq:gausgen}
+\alpha = \sum_{a\in\mathcal{K}}{g(\zeta^a)}.
+\end{equation}
+\end{defn}
+
+Si $m$ est sans facteur carré, alors $m_2 = 1$ et on a la formule suivante :
+\begin{equation}
+\label{eq:gaussf}
+\alpha = \sum_{a\in\mathcal{K}}{\zeta^a}
+\end{equation}
+Le but va être de savoir à quelles conditions un élément de la forme
+\ref{eq:gaussf} sera un élément normal de $\GF{q^n}$ sur $\GF{q}$. Le reste de
+la sous-section sera donc consacré à prouver le théorème suivant :
+
+\begin{thm}
+\label{th:gaussnormal}
+En conservant les notations précédentes, une période de Gauss de type
+$(n,\mathcal{K})$ est un élément normal de $\GF{q^n}$ si et seulement si
+$\langle q,\mathcal{K}\rangle = \zmodninv{m}$.
+\end{thm}
+On verra sur la fin que ce n'est possible que si $m$ est sans facteurs carrés,
+ce qui permettra alors de revenir à la forme simplifiée. On peut d'ores et déjà
+montrer la nécessité de la condition, regardons le lemme suivant :
+
+\begin{lem}
+Posons $\alpha$ comme dans la formule \ref{eq:gausgen}, alors
+$\alpha\in\GF{q^s}$, où $s$ est l'ordre multiplicatif de $q$ modulo
+$\mathcal{K}$. En particulier, si $\langle
+q,\mathcal{K}\rangle\neq\zmodninv{m}$, alors $\alpha$ n'est pas un élément
+normal.
+\end{lem}
+\begin{proof}
+En particulier, on a $q^s = 1 \bmod m$ dans $\mathcal{K}$, on en déduit  que 
+$\alpha^{q^s} = \alpha$ :
+\[\alpha^{q^s} \left(\sum_{a\in\mathcal{K}}{g(\zeta^a)}\right)^{q^s} =
+\sum_{a\in\mathcal{K}}{g(\zeta^{aq^s})} = \sum_{a\in\mathcal{K}}{g(\zeta^a)} =
+\alpha\]
+puisque le Frobenius est un morphisme, d'où la première assertion. L'ordre $s$ 
+de $q$ modulo $\mathcal{K}$ est égal à $\#\langle q,\mathcal{K}\rangle/k$ 
+puisque $\langle q,\mathcal{K}\rangle$ est l'union disjointe (?!) de 
+$q^i\mathcal{K}$ pour $0\leq i\leq < s$. En particulier, si $\langle 
+q,\mathcal{K}\rangle\neq\zmodninv{m}$, alors $s$ est plus petit que $n$, puisque
+$\varphi(m) = nk$, et $\alpha$ ne peut décemment pas être un élément normal.\\
+\end{proof}
+
+Le prochain lemme nous permettra de supprimer le caractère aléatoire de la
+méthode. En particulier, il assure que, sous certaines conditions, deux périodes
+de Gauss $\alpha$ et $\alpha'$ sont conjugués sur $\GF{q}$. Ce qui implique 
+qu'on pourra très bien prendre deux racines primitive différentes, \textit{i.e.}
+dans le sens où si on les appelle $\zeta$ et $\zeta'$, on ait pas directement
+$\phi(\zeta) = \zeta'$; cela évite, entre autre, la recherche de
+la bonne puissance de $\zeta'$ et tout ce qui en découle :\\
+\textit{(Note : pas très sûr si c'est clair ou si ça implique ce que j'essaie 
+d'exprimer)}
+
+\begin{lem}
+Soit $\zeta, \zeta'\in\GF{q^{nk}}$ deux racines primitive \nroot{m} de l'unité
+et $\alpha, \alpha'\in\GF{q^{n}}$ les périodes de Gauss correspondantes. Si
+$\langle q,\mathcal{K}\rangle=\zmodninv{m}$, alors $\alpha$ et $\alpha'$ sont
+conjuguées sur $\GF{q}$.
+\end{lem}
+\begin{proof}
+Puisque le groupe des racines de l'unité est cyclique, alors il existe un $s$
+compris entre $1$ et $m-1$, tel que $(s, m) = 1$ et $\zeta' = \zeta^s$. Puisque
+$\langle q, \mathcal{K}\rangle = \zmodninv{m}$ alors il existe
+$j\in\lbrace{0,\dots,n-1}\rbrace$ tel que $s\in q^j\mathcal{K}$. Donc :
+\[\alpha' = \sum_{a\in\mathcal{K}}{g(\zeta^{as})} =
+\sum_{a\in\mathcal{K}}{q(\zeta^{aq^j})} =
+\left(\sum_{a\in\mathcal{K}}{g(\zeta^a)}\right) = \alpha^{q^j}\]
+ce qu'il fallait démontrer.\\
+\end{proof}
 
 \subsection{Algorithme \& analyse de complexité}
 %TODO: Détailler l'algorithme de l'article/code de Luca + analyser la complexité
