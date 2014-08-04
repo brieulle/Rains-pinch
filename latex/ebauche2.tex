@@ -60,9 +60,6 @@ de corps finis}
 \maketitle
 \part*{Remerciements}
 
-\tableofcontents
-\newpage
-
 \addcontentsline{toc}{part}{Introduction}
 \part*{Introduction}
 Soit $\GF{q}$ le corps fini à $q = p^r$ éléments, avec $p$ un nombre premier. On
@@ -87,6 +84,10 @@ rapidement de tels isomorphismes. On notera aussi l'existence d'une autre
 méthode dûe à J. Doliskani \cite{Dol} utilisant des résultats de B. Allombert
 \cite{All}.
 
+\newpage
+\addcontentsline{toc}{part}{Table des matières}
+\tableofcontents
+\newpage
 
 \part{Contexte théorique}
 
@@ -926,12 +927,11 @@ rappelant la définition \ref{def:gal}.\\
 %Gauss, les périodes elliptiques (Mihailescu et al.) ou plus précisément ce qui 
 %permet d'y arriver.
 Dans cette section, on introduira la notions de corps de nombres, de leurs
-anneaux d'entiers et des idéaux sur ses anneaux. Les résultats sur la
-décomposition des idéaux en produits d'idéaux premiers nous permettrons ensuite
-de prouver plusieurs résultats qu'on utilisera pour les périodes de Guass plus
-loin. Périodes qui interviennent dans l'algorithme de Rains cyclotomique.
-
-\subsection{Corps de nombres}
+anneaux d'entiers et des idéaux sur ses anneaux. Le but va être de démontrer
+l'identité fondamentale dans le cadre des extensions Galoisienne. Cela sera 
+utile pour la sous-section \ref{sec:pergauss} et plus précisément le théorème
+\ref{th:gaussnormal}.
+\subsection{Entiers sur les corps de nombres}
 %TODO :Définitions (normes, traces, éléments algébriques, etc.)
 % entiers algébrique, anneaux des entiers, discriminant (?)
 On appelle corps de nombre, toute extension finie de $\QQ$.
@@ -1677,6 +1677,9 @@ Pinch}, Cryptography and coding II, p. 193-197, Oxford University Press, 1992.
 
 \bibitem{Sam} \emph{Théorie algébrique des nombres}, \bsc{Pierre Samuel}, 
 Hermann, 1971.
+
+\bibitem{Kim} \emph{Number Theory II}, \bsc{Kimbal Martin}, University of
+Oklahoma, 2011, \bsc{url :} \url{http://www2.math.ou.edu/~kmartin/ntii/ntii.pdf}
 
 \bibitem{Lan} \emph{Algebraic Number Theory}, \bsc{Serge Lang}, Graduate Texts
 in Mathematics, 2nd ed., Springer, 2000.
