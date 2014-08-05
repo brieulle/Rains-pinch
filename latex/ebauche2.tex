@@ -462,8 +462,8 @@ De plus, le polynôme caractéristique de $x$ relativement à $L$ et $K$ est $(X
 x_1)\dots(X - x_n)$.
 \end{prop}
 %TODO: La preuve, éventuellement.
-
-On en déduit que la trace est surjective
+%TODO: Je voulais en déduire que la trace est surjective, mais je sais plus trop
+%comment, si tu t'en souviens un jours...
 
 \subsection{Théorie de Galois}
 %TODO :Définitions et résutlats de base (sans forcément tout prouver),
@@ -922,20 +922,52 @@ appliquant le (ii), ce qui implique que $\psi$ est un isomorphisme, et en
 rappelant la définition \ref{def:gal}.\\
 \end{proof}
 
-\section{Idéaux et théorie des nombres}
+\section{Théorie des nombres}
 %TODO: Tout ce qui concerne la preuve de Rains avec les idéaux 
 %premiers, les normes d'ideaux, la factorisation unique, Galois, les périodes de
 %Gauss, les périodes elliptiques (Mihailescu et al.) ou plus précisément ce qui 
 %permet d'y arriver.
-Dans cette section, on introduira la notions de corps de nombres, de leurs
-anneaux d'entiers et des idéaux sur ses anneaux. Le but va être de démontrer
-l'identité fondamentale dans le cadre des extensions Galoisienne. Cela sera 
-utile pour la sous-section \ref{sec:pergauss} et plus précisément le théorème
-\ref{th:gaussnormal}.
+Dans cette section, on introduira la notion de corps de nombres, de leur
+anneaux d'entier et des idéaux premiers sur ses anneaux. Le but va être de 
+démontrer l'identité fondamentale dans le cadre des extensions Galoisienne. 
+Cela sera utile pour la sous-section \ref{sec:pergauss} et plus précisément le 
+théorème \ref{th:gaussnormal}.
 \subsection{Entiers sur les corps de nombres}
 %TODO :Définitions (normes, traces, éléments algébriques, etc.)
 % entiers algébrique, anneaux des entiers, discriminant (?)
-On appelle corps de nombre, toute extension finie de $\QQ$.
+Commençons par le théorème suivant :
+\begin{thm}
+Soit $K$ un corps, $A\subset K$ un sous-anneau et $x\in K$. Alors les trois
+points suivants sont équivalents :
+\begin{enumerate}[a)]
+\item L'élément $x$ est racine d'un polynôme unitaire à coefficients dans $A$.
+
+\item L'anneau $A[x]$ est un $A$-module de type fini.
+
+\item Il existe un $A$-module de type fini $M$ qui contient $A[x]$.
+
+\end{enumerate}
+\end{thm}
+\begin{proof}
+Supposons a) vraie, alors on a $a_0,\dots,a_{n-1}\in A$ tels que :
+\[x^n + a_{n-1}x^{n-1} + \dots + a_0 = 0\]
+Notons $M$ le $A$-module engendré par $1, x,\dots, x^{n-1}$, on a alors $x^n\in
+M$ et on montre par récurrence sur $j$ que $x^{n+j} = -a_{n-1}x^{n-1 +
+j}-\dots- a_0x^j$ sont dans $M$. Comme l'anneau $A[x]$ est engendré par les
+$x^j$ pour $j\geq0$, donc $A[x] \subseteq M$; l'autre inclusion étant immédiate,
+on a donc $A[x] = M$.\par
+L'implication de b) vers c) est immédiate. Supposons qu'il existe un $M =
+\langle{v_1,\dots,v_n}\rangle$ tel que $A[x]\subset M$ ou encore $xM \subset M$
+puisque $x\in M$, avec $M\neq 0$. Alors :
+\begin{align*}
+xv_1 &= a_{11}v_1 + \dots + a_{1n}v_n\\
+&\vdots\\
+xv_n &= a_{n1}v_1 + \dots + a_{nn}v_n
+\end{align*}
+avec les $a_{ij}\in A$.
+\end{proof}
+
+
 
 \subsection{Idéaux premiers}
 %TODO: Idéaux premiers sur les anneaux d'entiers de corps de nombres,
@@ -1762,6 +1794,12 @@ ce qu'il fallait démontrer.\\
 %TODO: Détailler l'algorithme de l'article/code de Luca + analyser la complexité
 %de ces algos et les "prouver" (montrer que ça marche bien, cela dit c'est 
 %peut-être largement faisable avant).
+Maintenant qu'on a tous les résultats théoriques qu'il nous faut, on va pouvoir
+énoncer les aglorithmes pour déterminer l'isomorphisme.
+
+\subsubsection*{Recherche d'un élément normal unique}
+
+\subsubsection*{Détermination de l'isomorphisme}
 
 \section{Algorithme de Rains : méthode elliptique}
 %TODO: Résumer/Détailler le papier de Luca, rajouter les résultats sur
