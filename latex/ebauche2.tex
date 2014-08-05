@@ -44,8 +44,7 @@
 
 
 \begin{document}
-\title{Implémentation de l'algorithme de Rains elliptique pour les isomorphismes
-de corps finis}
+\title{Calcul d'isomorphisme pour les corps finis}
 \author{Ludovic Brieulle}
 \newtheorem{thm}{Thèorème}[section]
 \newtheorem{lem}[thm]{Lemme}
@@ -64,15 +63,15 @@ de corps finis}
 \part*{Introduction}
 Soit $\GF{q}$ le corps fini à $q = p^r$ éléments, avec $p$ un nombre premier. On
 définit alors $\overline{\GF{q}}$ sa clôture algébrique. Lorsqu'on a besoin de
-faire des calculs dans cette clôture, il est peut être plus aisé de calculer
-directement sur un corps finis en particulier. Il est donc important de pouvoir
+faire des calculs dans cette clôture, il peut être plus aisé de calculer
+directement sur un corps fini en particulier. Il est donc important de pouvoir
 se déplacer rapidement entre les différents sous-corps de cette clôture.\par
 Il est connu et prouvé que de deux corps finis de même cardinal sont reliés par
 un isomorphisme. Cependant la preuve de ce résultat n'est pas constructive,
 trouver un tel isomorphisme demande alors un travail supplémentaire.\par
 La situation est la suivante, nous avons deux extensions de $\GF{q}$ de même
-degré et définies par deux polynôme irréductible distincts $f$ et $g$. On notera
-:
+degré et définies par deux polynômes irréductibles distincts $f$ et $g$. 
+On notera :
 \[k_1=\GF{q}[X]/(f)\etmath k_2=\GF{q}[Y]/(g)\]
 le but est donc de trouver un isormophisme reliant ces deux corps. Une méthode
 simple et immédiate est d'envoyer $x = \bar{X}$ sur une racine de $f$ dans
@@ -92,17 +91,17 @@ méthode dûe à J. Doliskani \cite{Dol} utilisant des résultats de B. Allomber
 \part{Contexte théorique}
 
 Cette partie consistera principalement à rappeler et énoncer les résultats dont
-on se servira afin de justifier et mettre en place les deux algorithmes pour
-calculer les isomorphismes de corps finis. Cette partie n'a pas comme vocation
-de faire un exposé complet des notions abordées, pour un traité plus détaillé,
-le lecteur pourra consulter au choix \cite{LiNi1}, \cite{MuPa} ou 
+nous aurons besoin afin de justifier et mettre en place les deux algorithmes 
+pour calculer les isomorphismes de corps finis. Cette partie n'a pas pour 
+vocation de faire un exposé complet des notions abordées, pour un traité plus 
+détaillé, le lecteur pourra consulter au choix \cite{LiNi1}, \cite{MuPa} ou 
 \cite[chap.~III]{Per} pour les corps finis; \cite{Nek}, \cite[chap.~VIII]{Pol},
 \cite[chap. VI]{Sam} ou \cite{Esc} pour la théorie de Galois; \cite{Sam}, 
-\cite{Wash1} ou \cite{Lan} pour la théorie des nombres; \cite{Sil} ou 
-\cite{Wash2} pour la théorie sur les courbes elliptiques; et pour finir 
+\cite{Was1} ou \cite{Lan} pour la théorie des nombres; \cite{Sil} ou 
+\cite{Was2} pour la théorie sur les courbes elliptiques; et pour finir 
 \cite{GaGe} pour tout ce qui concerne le calcul formel en général. On 
 s'efforcera néamoins de démontrer les résultats les plus importants ou 
-fondamentaux. Le c\oe ur du sujet se trouve dans la partie \ref{deux}.
+fondamentaux. Le c\oe ur du sujet se trouve lui dans la partie \ref{deux}.
 
 \section{Corps finis}
 Dans cette section on va rappeler les définitions et démontrer certains 
@@ -128,13 +127,13 @@ opérations sur $K$.\par
 On appelle la caractéristique d'un corps $K$, le plus petit entier $p$ tel que 
 pour tout $x\in K$ on ait :
 \[p(x) = \underbrace{x + x + \dots + x}_{p fois} = 0\]
-Elle peut être nulle ou positive, en pratique elle sera nulle ou égale à un
+Elle peut être nulle ou positive; en pratique elle sera nulle ou égale à un
 nombre premier. Dans notre cas, on s'intéressera au corps finis, c'est-à-dire 
-tels que $K$ soit un ensemble fini et la caractéristique est non-nulle.\par
+tels que $K$ soit un ensemble fini et de caractéristique non-nulle.\par
 \vspace{0.3cm}
 Un homomorphisme de corps est nécessairement injectif. En effet, soit deux corps
-$K$ et $L$ de caractéristique positive ou nulle. Soit $f : K \to L$, on a alors 
-:
+$K$ et $L$ de caractéristique positive ou nulle. Soit $f : K \to L$, on a 
+alors :
 \[f(x) = 0 \Leftrightarrow x.f(1) = 0 \Leftrightarrow x = 0\]
 puisque un homomorphisme doit conserver la structure et que $K$ n'a pas de
 diviseurs de zéro, $x = 0$ et $f(1) = 1$. S'il existe un
@@ -166,7 +165,7 @@ puisque $K$ n'a pas de diviseurs de $0$, alors $ke = 0$ ou $me = 0$, ce
 qui contredit la minimalité de la caractéristique.\\
 \end{proof}
 Donc $K$ est de caractéristique $p$ premier et son corps premier est (isomorphe
-à) $\GF{p}$. On fini avec le lemme qui suit :
+à) $\GF{p}$.
 \begin{lem}
 Soit $K$ un corps fini contenant un corps fini $L$ à q éléments. Alors $K$ a
 $q^m$ élément où $m$ est le degré de $K$ en tant que $L$-espace vectoriel.
@@ -182,7 +181,7 @@ théorème est démontré.\\
 \begin{thm}[Wedderburn]
 Tout corps fini est commutatif.
 \end{thm}
-On passera la preuve bien qu'elle soit intéressante, se référer par exemple à 
+On passera la preuve bien qu'elle soit intéressante; se référer par exemple à 
 \cite[p.~70-73]{LiNi1} ou \cite[p.~82]{Per}.\par
 \vspace{0.3cm}
 Si $K$ est un corps à $q$ éléments, alors pour tout $x\in K$, on a $x^q = x$. En
@@ -196,10 +195,11 @@ puisque étant de degré $q$, il a au maximum $q$ racines qui sont déjà les
 éléments de $K$. On peut dire que $K$ est un corps de décomposition
 \ref{def:dec} de $X^q - X$ sur $\GF{p}$.\par
 On notera que dans les corps finis et leurs extensions, l'élévation à une
-puissance égal à la caractéristique d'un corps fini est un automorphisme 
-particulier. On l'appelle l'automorphisme de Frobenius et on le note 
-$\textup{Fr}_q$ pour $\textup{Fr}_q(x) = x^q$. Ce n'est pas immédiat qu'il 
-s'agit là d'un homomorphisme, mais un simple calcul permet de s'en assurer.\par
+puissance égal à la caractéristique d'un corps fini ou une puissance de celle-ci
+est un automorphisme particulier. On l'appelle l'automorphisme de Frobenius et 
+on le note $\textup{Fr}_q$ pour $\textup{Fr}_q(x) = x^q$. Ce n'est pas immédiat
+qu'il s'agit là d'un homomorphisme, mais un simple calcul permet de s'en 
+assurer.\par
 \vspace{0.3cm}
 Finissons ce point par le théorème suivant qui assure l'existence et l'unicité
 à isomorphisme près des corps finis; c'est à partir de ce théorème que le
@@ -214,14 +214,15 @@ du corps fini à $q$ éléments et on le notera $\GF{q}$.
 \end{thm}
 \begin{proof}
 \textit{(Existence)} Pour $q = p^n$, on considère le polynôme $X^q - X$ dans 
-$\GF{p}[X]$ et on note $K$ son corps de décomposition sur $\GF{p}$. Le polynôme 
-est séparable ou n'a aucune racine multiple puisque sa dérivée est égale à 
-$qX^{q-1} - 1 = -1$. Posons $S = \lbrace x\in K : x^q - x = 0\rbrace$, alors $S$
-est un sous-corps de $K$; $0$ et $1$ sont dans $K$ et d'après les propriétés sur
-le Frobenius et les résultats obtenus plus haut on a :
+$\GF{p}[X]$ et on note $K$ son corps de décomposition, définition \ref{def:dec},
+sur $\GF{p}$. Le polynôme est séparable ou n'a aucune racine multiple puisque sa
+dérivée est égale à $qX^{q-1} - 1 = -1$, proposition \ref{prop:sepderiv}. Posons
+$S=\lbrace x\in K : x^q - x = 0\rbrace$, alors $S$ est un sous-corps de $K$; $0$
+et $1$ sont dans $K$ et d'après les propriétés sur le Frobenius et les résultats
+obtenus plus haut on a :
 \[(a - b)^q = a^q - b^q = a - b \etmath(ab^{-1})^q = a^qb^{-q} = ab^{-1}\]
 Ainsi, $S$ contient toutes les racines de $X^q - X$ mais comme $K$ a déjà $q$
-élémens, alors $K = S$ est un corps à $q$ éléments.\par
+éléments, alors $K = S$ est un corps à $q$ éléments.\par
 \textit{(Unicité)} Soit $K$ le corps à $q = p^n$ éléments, d'après le théorème
 \ref{th:corfincarprem}, est de caractéristique $p$ et contient $\GF{p}$. On en
 déduit que $K$ est un corps de décomposition de $X^q - X$ sur $\GF{p}$,
@@ -1383,13 +1384,18 @@ petit de $k_1$ et $k_2$ respectivement, tels que $m$ petit divise $q^{n.o} -
 respectivement et tels que $\phi(\zeta_m) = \phi(\zeta'_m)$. Alors on a : 
 \[\phi(\textup{Tr\;}_{k'_1/k_1}(\zeta_{m})) =
 \textup{Tr\;}_{k'_2/k_2}(\zeta'_{m})\]
-De plus, les traces sont aussi des générateurs de leurs corps respectifs %TODO :
-%tu dois encore le prouver
-, on aura besoin de ne manipuler que des matrices de taille $o$ 
-au lieu de taille $n.o$.\par %TODO : Toute ce truc sert vraiment ?!
+De plus, les traces sont aussi des générateurs de leurs corps respectifs, on 
+%TODO: tu dois encore le prouver
+aura besoin de ne manipuler que des matrices de taille $o$ au lieu de taille 
+$n.o$.\par
+%TODO : Tout ce truc sert vraiment ?! Tu peux éventuellement rajouter l'exemple
+%pour illustrer le fait que ce n'est pas si simple de fabriquer des éléments
+%uniques. Réponse : Oui ça sert même grave, faudra le prouve- oh wait, c'est
+%fait avec le lemme sur les éléments normaux :o.
 Le problème de devoir tester plusieurs candidats avant de tomber sur un 
 isomorphisme est malheureusement toujours présent. C'est à ce moment qu'on va
-utiliser les périodes de Gauss, introduites à la sous-section \ref{sec:pergauss}.
+utiliser les périodes de Gauss, introduites à la sous-section 
+\ref{sec:pergauss}.
 
 \vspace{0.3cm}
 
@@ -1449,8 +1455,10 @@ Soit $L/K$ une extension galoisienne, alors il existe un $x\in L$ dont l'orbite
 par l'action du groupe de Galois forme une base de $L$ en tant que $K$-espace
 vectoriel.
 \end{thm}
+\begin{proof}
 %TODO : Je ne sais pas si ça vaut le coup de faire la preuve. J'aimerais bien
 %mais bon... Tu as Artin et LiNi11 Th 3.72
+\end{proof}
 À partir de là, on assure l'existence des éléments normaux :
 
 \begin{defn}
@@ -1460,7 +1468,7 @@ $K$-espace vectoriel; ou encore si ses conjugués forment une base de $L$ en tan
 que $K$-espace vectoriel.
 \end{defn}
 Dans le cas des corps finis, on a montré que le Frobenius engendre le groupe de
-Galois de $\GF{p^n}$ donc pour un $x\in\GF{p^n}$ ses conjugués sont $x^p,
+Galois de $\GF{p^n}$, donc pour un $x\in\GF{p^n}$ ses conjugués sont $x^p,
 x^{p^2},\dots,x^{p^{n-1}}$. On va commencer par énoncer quelques résultats sur 
 ses éléments sur les corps finis.
 
@@ -1495,14 +1503,161 @@ $(X^{p^kn} - 1 ) = (X^n - 1)^{p^k}$, alors un élément de $\GF{p}[X]/(X^{p^kn} 
 unité dans $\GF{p}[X]/(X^n - 1)$.
 Comme dans ce cas, $(X^n - 1)^{p^k} \subset (X^n - 1)$, on a $\GF{p}[X]/
 (X^n - 1) \subset \GF{p}[X]/(X^{p^kn} - 1)$, une unité du premier anneau sera 
-donc une unité du second; et comme la réduction de $1$ est toujours $1$ modulo 
-quoique ce soit, une unité de $\GF{p}[X]/(X^n - 1)$ est nécessairement une unité
-de $\GF{p}[X]/(X^{p^kn} - 1)$.\par
+donc une unité du second; et comme la réduction de $1$ modulo quoique ce soit 
+est toujours $1$, une unité de $\GF{p}[X]/(X^n - 1)$ est nécessairement une 
+unité de $\GF{p}[X]/(X^{p^kn} - 1)$.\par
 On en déduit que $L$ a $p^k$ fois plus d'éléments normaux que $K$. De façon plus
 générale, un élément de $K$ a exactement $p^k$ antécédents pour la trace, le
 nombre de conjugués, puisque l'extension est galoisienne; donc $L$ a au plus
 $p^k$ fois élément normaux que $L$. La borne est atteinte dans notre cas, ce qui
 conclut la démonstration.\\
+\end{proof}
+
+On va maintenant développer plus en détails la partie évaluation de
+l'isomorphisme. Notamment en illustrant l'isomorphisme entre les matrices
+circulantes de taille $n$ sur $\GF{q}$ et l'anneau $\GF{q}[\omega]/(\omega^n -
+1)$.\par
+Le contexte est le suivant, imaginons qu'on soit parvenu à déterminer deux
+éléments normaux $v$ et $w$ tels qu'ils soient reliés par un isomorphisme $\phi
+: k_1\to k_2$. Notre but est de calculer cet isomorphisme, c'est-à-dire de
+déterminer l'image de $x$ par celui-ci. Comme dit plus haut, on veut trouver les
+coefficients de $x$ dans la base normale engendrée par $v$, en déduire son
+image dans la base normale engendrée par $w$ et pour finir son image dans la 
+base monomial engendrée par $y$. On peut résumer la situation de la manière 
+suivante :
+\begin{center}
+\begin{tikzpicture}
+\matrix(m)[matrix of math nodes,
+row sep=3em, column sep=5em,
+text height=2ex, text depth=2ex]
+{\bigoplus\limits_{i\in I}{x^i} & \bigoplus\limits_{i\in I}{y^i}\\
+\bigoplus\limits_{i\in I}{v^{p^i}} & \bigoplus\limits_{i\in I}{w^{p^i}}\\};
+\path[->,font=\scriptsize,>=angle 90]
+(m-1-1) edge node[auto] {$\phi$} (m-1-2)
+(m-2-1) edge node[auto] {$\phi$} (m-2-2)
+(m-1-1) edge node[left] {$\pi$} (m-2-1)
+(m-2-2) edge node[right] {$\pi^{\prime}$} (m-1-2);
+\end{tikzpicture}
+\end{center}
+
+La flêche $\pi^{\prime}$ est plus ou moins gratuite, il suffit d'exprimer $w$ en
+fonction des $y^i$ mais en général les éléments sont déjà exprimés en fonction 
+de la base monomiale. La seule flêche qui pose un problème est celle 
+correspondant à $\pi$ qui permet d'exprimer $x$ en fonction des $v^{p^i}$. C'est
+pour cette flêche là qu'on va effectuer un peu plus de travail.
+Soit $z\in\GF{q^n}$ alors il existe des $c_i\in\GF{q}$ tels que :
+\[z = \sum_{0 \leq i < n}{c_iv^{q^i}}\]
+En utilisant le Frobenius, on obtient pour $0\leq j < n$ :
+\[z^{q^{n-j}} = \sum_{0\leq i < n}{c_iv^{q^{i+n-j}}}\]
+On va alors appliquer une certaine forme linéaire $\lambda$ (il s'agira de la 
+trace) :
+\[\lambda\left(z^{q^{n-j}}\right) = \sum_{0\leq i < n}
+{c_i\lambda\left(v^{q^{i+n-j}}\right)}\]
+Soit maintenant la matrice $B$ définie par :
+\[b_{ij} = \lambda\left(v^{q^{i+n-j}}\right)\]
+Si la matrice est inversible alors on a terminé, puisque si on note $d_{ij}$ les
+coefficients de $B^{-1}$, on a bien :
+\[c_i = \sum_{0\leq j < n}{d_{ij}\lambda\left(z^{q^{n-j}}\right)}\]
+pour $0\leq i < n$. Reste à savoir si la matrice $B$ sera effectivement 
+inversible.
+On peut commencer par rappeler un résultat classique d'algèbre linéaire qui
+assure que toute forme linéaire peut s'exprimer sous la forme :
+\[x \mapsto \Tr{\alpha x}\]
+pour un certain $\alpha\in\GF{q}$. On peut donc écrire les coefficients de $B$ 
+sous la forme suivante :
+\[b_{ij} = \Tr{\alpha v^{q^{i+n-j}}} = \Tr{\alpha^{q^j}v^{q^i}}\]
+On va voir que dans notre cas, il nous suffira de choisir $\alpha = v$.
+
+\begin{lem}
+\label{lem:mattrinv}
+Soit $\alpha,\beta\in\GF{q^n}$ et la matrice $A$ défini par les coefficients 
+$a_{ij} = \Tr{\alpha^{q^i}\beta^{q^j}}$, $A$ est inversible si et seulement si 
+$\alpha$ et $\beta$ sont des éléments normaux.
+\end{lem}
+\begin{proof}
+Supposons que $\alpha$ ne soit pas un élément normal. Dans ce cas, il existe une
+relation de dépendance linéaire entre les conjugués de $\alpha$, alors la 
+combinaison linéaires des lignes de $A$ correspondant à cette dépendance est $0$
+puisque la trace est linéaire; $A$ ne peut donc pas être inversible.\par
+Inversement, supposons que $A$ ne soit pas inversible. Il existe alors une 
+combinaison linéaire de ses lignes qui vaut $0$. Ou encore, il existe une 
+combinaison linéaire $\alpha^{\prime}$ des conjugués $\alpha$ telle que 
+$\Tr{\alpha^{\prime}\beta^{q^j}} = 0$ pour tout $j$ entre $0$ et $n-1$; 
+\textit{i.e.} telle que :
+\[\Tr{\alpha^{\prime}\beta + \alpha^{\prime}\beta^q + \dots + 
+\alpha^{\prime}\beta^{q^{n-1}}}\]
+Or la trace est surjective,
+%TODO : c'est pas très clair dans ta tête alors faudrait que tu l'expliques un 
+%peu
+donc si $\beta$ est normal cela implique que $\alpha^{\prime} = 0$ mais alors 
+$\alpha$ n'est pas un élément normal; ce qui démontre le lemme.\\
+\end{proof}
+Reste maintenant à expliquer d'où vient l'anneau 
+$\mathbb{F}_q[\omega]/(\omega^n - 1)$. Il se trouve que la matrice $B$ a une 
+propriété particulière, elle est ce qu'on appelle une matrice circulante, 
+\textit{i.e.} pour obtenir la ligne suivante, il suffit de décaler tous les 
+éléments vers la droite en faisant passer le dernier coefficient en première 
+position. Ou plus formellement, si :
+\[i_1 - j_1 \equiv i_2 - j_2 \bmod n\]
+alors on a 
+\[b_{i_1j_1} = b_{i_2j_2}\]
+et inversement. Donc, si on considère :
+\[b_{i+1j+1} = \lambda\left(v^{q^{(i+1) + n - (j+1)}}\right) = 
+\lambda\left(v^{q^{i+n-j}}\right)\]
+on a bien que $b_{ij} = b_{i+1j+1}$ avec $(i+1) - (j+1) \equiv i - j \bmod n$ 
+comme annoncé plus haut. On a alors le théorème suivant :
+
+\begin{thm}
+\label{th:matcirciso}
+Les matrices circulantes de $M_n(\GF{q})$ forment un anneau qui est isomorphe à 
+$\mathbb{F}_q[\omega]/(\omega^n - 1)$ \textup{via} l'isomorphisme d'anneaux
+suivant :
+\begin{equation*}
+\label{eq:isomconvert}
+\psi : B \longmapsto \sum_{0\leq j < n}{b_{0j}\omega^j}
+\end{equation*}
+\end{thm}
+\begin{proof}
+La matrice identité étant contenue dans l'ensemble des matrices circulantes, 
+montrons alors qu'il s'agit d'un sous-anneau. On voit facilement que la sommes 
+de deux matrices circulantes est tourjous circulante. Pour le produit, prenons 
+$A$ et $B$ deux matrices circulantes de tailles $n$, on notera $C := AB$. On a :
+\[c_{ij} = \sum_{k=0}^{n-1}{a_{ik}b_{kj}}\]
+Donc si on défini, en tenant compte de la structure des matrices circulantes, 
+$a_{i\,-1} := a_{in-1}$ et $b_{-1j} := b_{n-1j}$, on arrive à :
+\begin{align*}
+c_{i+1j+1} &= \sum_{k=0}^{n-1}{a_{i+1k}b_{kj+1}}\\
+&= \sum_{k=1}^{n-1}{a_{ik-1}b_{k-1j}} + a_{in-1}b_{n-1j}\\
+&= \sum_{k^{\prime}=0}^{n-1}{a_{ik^{\prime}}b_{k^{\prime}j}}\\
+&= c_{ij}
+\end{align*}
+ce qui montre que le produit est encore une matrice circulante; il s'agit donc 
+bien d'un sous-anneau.\par
+Montrons ensuite que l'application $\psi$ est un morphisme d'anneaux. On a bien 
+évidemment $\psi(I_n) = 1$ et de manière relativement immédiate :
+\begin{align*}
+\psi(A + B) &= \sum_{0\leq j < n}{(a_{0j} + b_{0j})\omega^j}\\
+&= \sum_{0\leq j < n}{a_{0j}\omega^j} + \sum_{0\leq j < n}{b_{0j}\omega^j}\\
+&= \psi(A) + \psi(B)\\
+\end{align*}
+Maintenant, d'après la formule du produit de deux polynômes, on a :
+\begin{align*}
+\psi(A)\psi(B) &= \sum_{0\leq k < n}
+{\bigg(\sum_{i+j=k}{a_{0i}b_{0j}}\bigg)\omega^k}\\
+&= \sum_{0\leq k < n}{\bigg(\sum_{i\equiv k-j \bmod n}{a_{0i}b_{0(k-i \bmod n)}}
+\bigg)\omega^k}\\
+\end{align*}
+Mais $b_{0k-i} = b_{ik}$ puisque $0 -(k-i) \equiv i-k \bmod n$; en tenant compte
+du fait que $i$ parcourt tout $\zmodn{n}$, on arrive finalement à :
+\[\sum_{0\leq k < n}{\bigg(\sum_{0\leq i < n}{a_{0i}b_{ik}}\bigg)\omega^k} = 
+\psi(AB)\]\par
+Comme les $\omega^k$ sont linéairement indépendants par définition, pour que 
+l'image d'une matrice circulante soit égale à $0$, il faut que sa première 
+ligne, et donc toutes les autres, soit nulle; d'où $\textup{Ker}\,\psi = 
+\{0_n\}$. La surjectivité est immédiate, il suffit de prendre les coefficients 
+d'un élément quelconque $u$ de $\GF{q}[\omega]/(\omega^n - 1)$ et de définir la 
+matrice $A$ de coefficients $a_{ij} = u_{(i-j \bmod n)}$ pour $i,j\in\zmodn{n}$,
+où les $u_i$ sont les coefficients $u$; on aura alors $\psi(A) = u$.\\
 \end{proof}
 
 
@@ -1514,13 +1669,12 @@ conclut la démonstration.\\
 %peut-être à mettre directement dans la partie cyclotomique de la section
 %algorithme de Rains cyclotomique.
 \label{sec:pergauss}
-Maintenant qu'on connait les éléments qui nous intéresse, il faut trouver
-un moyen de les rendre "uniques". Globalement, cela revient à
+On sait désormais le type d'élément qui nous intéresse, il faut maintenant 
+trouver un moyen d'en trouver qui soient "uniques". Globalement, cela revient à
 trouver des éléments qui ont la même orbite sous l'action du groupe de Galois de
 l'extension, ou encore, à regrouper les différentes orbites du polynôme
-cyclotomiques (puisqu'il se décompose dans $\GF{q^n}$). Ce sont les périodes
-elliptiques qui vont alors nous permettre de générer ces éléments. Commençons
-par introduire une définition générale :
+cyclotomiques (puisqu'il se décompose dans $\GF{q^n}$). Une bonne façon de faire
+est d'utiliser les périodes de Gauss.
 
 \begin{defn}
 Soit $n, k, m\in\NN$ tels que $\phi(m) = nk$. On pose $m = m_1m_2$ où $m_1$ est
@@ -1671,9 +1825,8 @@ Pinch}, Cryptography and coding II, p. 193-197, Oxford University Press, 1992.
 \bsc{Joseph H. Silverman}, Graduate texts in mathematics, Springer, 2nd ed. 
 2009.
 
-\bibitem{Wash2} \emph{Elliptic Curves, Number Theory and Cryptography},
+\bibitem{Was2} \emph{Elliptic Curves, Number Theory and Cryptography},
 \bsc{Lawrence C. Washington}
-
 
 \bibitem{Sam} \emph{Théorie algébrique des nombres}, \bsc{Pierre Samuel}, 
 Hermann, 1971.
@@ -1695,9 +1848,8 @@ Pierre et Marie Curie, 2003, \bsc{url :}
 Université Pierre et Marie Curie, 2007, \bsc{url :} 
 \url{http://www.math.jussieu.fr/~polo/M1/}.
 
-\bibitem{Wash1} \emph{Introduction to Cyclotomic Fields}, \bsc{Lawrence C. 
+\bibitem{Was1} \emph{Introduction to Cyclotomic Fields}, \bsc{Lawrence C. 
 Washington}, Graduate texts in mathematics, Springer-Verlag, 1982.
-
 
 \bibitem{MuPa} \emph{Handbook of Finite Fields}, \bsc{Gary L. Mullen} \& 
 \bsc{Daniel Panario}, Discrete mathematics and its applications, Series Editor 
@@ -1724,6 +1876,8 @@ Fields}, \bsc{Bill Allombert}, Elsevier Science, \bsc{url :}
 \bibitem{Dat} \emph{Théorie algébrique des nombres}, \bsc{Jean-François Dat},
 Université Pierre et Marie Curie, 2013, \bsc{url}
 \url{https://www.imj-prg.fr/~jean-francois.dat/enseignement/TNM2/TNM2.pdf}
+
+\bibitem{DeF} \emph{Rains' Algorithm}, \bsc{Luca De Feo}
 
 \end{thebibliography}
 \end{document}
