@@ -9,10 +9,12 @@
 \usepackage[colorlinks=false]{hyperref} %Apparemment ça sert à rien...
 \usepackage{enumerate}
 \usepackage{tocloft}             % Pour la table des matières
+\usepackage{algorithm}
 \usepackage{algorithmic}
 \usepackage{pgf}
 \usepackage{tikz}
 \usepackage{tikz-cd}
+\usepackage{rotating}
 \usetikzlibrary{matrix,arrows,decorations.pathmorphing}
 
 % Numérotation des sections, sous-sections, équations, etc.
@@ -79,9 +81,7 @@ $k_2$. Le problème est que cela revient à factoriser le polynôme $f$ ce qui e
 beaucoup trop lent.
 On va donc dans ce rapport étudier deux méthodes permettant, \textit{via}
 l'utilisation de racines de l'unité et de courbes elliptiques, de calculer
-rapidement de tels isomorphismes. On notera aussi l'existence d'une autre
-méthode dûe à J. Doliskani \cite{Dol} utilisant des résultats de B. Allombert
-\cite{All}.
+rapidement de tels isomorphismes. 
 
 \newpage
 \addcontentsline{toc}{part}{Table des matières}
@@ -1237,7 +1237,9 @@ $O^{\sim}(n\textup{log\;}q)$. Sachant qu'on cherche une racine sur une
 extension de degré $n$, la complexité devient $O^{\sim}(n^2\textup{log\;}q)$.
 Une méthode pour faire plus rapide est dûe à Pinch, l'une de ses variantes
 utililses les racines de l'unité. C'est celle qu'on va décrire dans la
-sous-section suivante.
+sous-section suivante. On pourra noter aussi une autre méthode établie par
+Allombert \cite{All} qui consiste essentiellement en de l'algèbre linéaire, donc
+une complexité en $O(n^{\omega}$ avec $2<\omega<3$.
 
 \subsection{Principe}
 %TODO: Explication de la méthode et illustration avec l'exempe de l'article, 
@@ -1738,7 +1740,7 @@ En conservant les notations précédentes, une période de Gauss de type
 $(n,\mathcal{K})$ est un élément normal de $\GF{q^n}$ si et seulement si
 $\langle q,\mathcal{K}\rangle = \zmodninv{m}$.
 \end{thm}
-On verra sur la fin que ce n'est possible que si $m$ est sans facteurs carrés,
+On verra à la fin que ce n'est possible que si $m$ est sans facteurs carrés,
 ce qui permettra alors de revenir à la forme simplifiée. On peut d'ores et déjà
 montrer la nécessité de la condition, regardons le lemme suivant :
 
@@ -1752,7 +1754,7 @@ normal.
 \begin{proof}
 En particulier, on a $q^s = 1 \bmod m$ dans $\mathcal{K}$, on en déduit  que 
 $\alpha^{q^s} = \alpha$ :
-\[\alpha^{q^s} \left(\sum_{a\in\mathcal{K}}{g(\zeta^a)}\right)^{q^s} =
+\[\alpha^{q^s} = \left(\sum_{a\in\mathcal{K}}{g(\zeta^a)}\right)^{q^s} =
 \sum_{a\in\mathcal{K}}{g(\zeta^{aq^s})} = \sum_{a\in\mathcal{K}}{g(\zeta^a)} =
 \alpha\]
 puisque le Frobenius est un morphisme, d'où la première assertion. L'ordre $s$ 
@@ -1765,15 +1767,13 @@ $\varphi(m) = nk$, et $\alpha$ ne peut décemment pas être un élément normal.
 
 Le prochain lemme nous permettra de supprimer le caractère aléatoire de la
 méthode. En particulier, il assure que, sous certaines conditions, deux périodes
-de Gauss $\alpha$ et $\alpha'$ sont conjugués sur $\GF{q}$. Ce qui implique 
-qu'on pourra très bien prendre deux racines primitive différentes, \textit{i.e.}
-dans le sens où si on les appelle $\zeta$ et $\zeta'$, on ait pas directement
-$\phi(\zeta) = \zeta'$; cela évite, entre autre, la recherche de
-la bonne puissance de $\zeta'$ et tout ce qui en découle :\\
-\textit{(Note : pas très sûr si c'est clair ou si ça implique ce que j'essaie 
-d'exprimer)}
+de Gauss $\alpha$ et $\alpha'$ sont conjugués sur $\GF{q}$. En particulier, cela
+implique que $\langle{q}\rangle$ agit transitivement sur les périodes de Gauss,
+donc assure qu'elles ont le même polynôme minimal et qu'elles sont toujours
+reliées par un isomorphisme.
 
 \begin{lem}
+\label{lem:gaussconj}
 Soit $\zeta, \zeta'\in\GF{q^{nk}}$ deux racines primitive \nroot{m} de l'unité
 et $\alpha, \alpha'\in\GF{q^{n}}$ les périodes de Gauss correspondantes. Si
 $\langle q,\mathcal{K}\rangle=\zmodninv{m}$, alors $\alpha$ et $\alpha'$ sont
@@ -1785,21 +1785,131 @@ compris entre $1$ et $m-1$, tel que $(s, m) = 1$ et $\zeta' = \zeta^s$. Puisque
 $\langle q, \mathcal{K}\rangle = \zmodninv{m}$ alors il existe
 $j\in\lbrace{0,\dots,n-1}\rbrace$ tel que $s\in q^j\mathcal{K}$. Donc :
 \[\alpha' = \sum_{a\in\mathcal{K}}{g(\zeta^{as})} =
-\sum_{a\in\mathcal{K}}{q(\zeta^{aq^j})} =
-\left(\sum_{a\in\mathcal{K}}{g(\zeta^a)}\right) = \alpha^{q^j}\]
+\sum_{a\in\mathcal{K}}{g(\zeta^{aq^j})} =
+\left(\sum_{a\in\mathcal{K}}{g(\zeta^a)}\right)^{q^j} = \alpha^{q^j}\]
 ce qu'il fallait démontrer.\\
 \end{proof}
+
+%TODO: Foutre le schéma qui passe de la carac 0 à la carac finie.
 
 \subsection{Algorithme \& analyse de complexité}
 %TODO: Détailler l'algorithme de l'article/code de Luca + analyser la complexité
 %de ces algos et les "prouver" (montrer que ça marche bien, cela dit c'est 
 %peut-être largement faisable avant).
 Maintenant qu'on a tous les résultats théoriques qu'il nous faut, on va pouvoir
-énoncer les aglorithmes pour déterminer l'isomorphisme.
+énoncer et justifier les aglorithmes pour déterminer l'isomorphisme. Rappelons
+le contexte et les paramètres.\par
+On a $f$ et $g$ deux polynômes irréductibles de degré $n$ distincts sur
+$\GF{q}$, on note :
+\[k_1 := \GF{q}[X]/(f)\etmath k_2 := \GF{q}[Y]/(g)\]
+avec $q = p^r$ pour $r$ un entier naturel non nul et $p$ un nombre premier
+impair. On va construire, en utilisant des racines primitive \nroot{m} de 
+l'unité, me sans facteurs carrés, des éléments uniques de $k_1$ et $k_2$ sous 
+l'action du groupe de Galois de $\GF{q^n}$ de telle sorte qu'ils soient reliés 
+par un isomorphisme. On en déduira l'image de $x$ et on aura déterminé
+l'isomorphisme.
 
 \subsubsection*{Recherche d'un élément normal unique}
+Avant toute chose, il faut pouvoir trouver un entier $m$, sans facteurs
+carrés, petit, premier avec $q$ et tel que $o=o_m(q)$, l'ordre multiplicatif de 
+$q$ modulo $m$, soit un multiple de $n$. Une fois un tel $m$ trouvé, on veut 
+qu'il satisfasse aussi :
+\vspace{0.3cm}
+\begin{enumerate}[(1)]
+\item $(n, o/n) = 1$,
+
+\item $(n, \varphi(m)/(n.o)) = 1$.
+\end{enumerate}
+\vspace{0.3cm}
+La condition (1) est nécessaire car on va travailler sur des extensions de degré
+$o/n$ de $\GF{q^n}$, elle permet alors d'utiliser des polynôme à coefficients 
+dans le corps premier. La condition (2) est là pour nous assurer de pouvoir 
+appliquer les résultats du point précédent, \textit{i.e.} pour pouvoir trouver
+un $\mathcal{K}$ tel que $\langle{q,\mathcal{K}}\rangle = 
+\zmodninv{m}$ et donc que $\#\langle{q}\rangle = n.o$.\par
+On peut résumer le point \ref{sec:pergauss}, avec les bonnes hypothèses, par le 
+diagramme suivant :
+
+\begin{center}
+\begin{tikzpicture}
+\matrix(m)[matrix of math nodes,
+row sep=1.5em, column sep=3em,
+text height=1.5ex, text depth=0.25ex]
+{ &K[\zeta_m] & \GF{q}[\zeta_m] & \\
+\QQ[\zeta_m]& & &\GF{p}[\zeta_m]\\
+& K & \GF{q}& \\
+\QQ& & &\GF{p}\\};
+\path[-,font=\scriptsize,>=angle 90]
+(m-2-1) edge node[left] {$\zmodninv{m}$} (m-4-1)
+(m-3-2) edge node[left] {$G$} (m-1-2)
+(m-1-3) edge node[right] {$\langle{q}\rangle$} (m-3-3)
+(m-4-4) edge node[right] {$\langle{p}\rangle$} (m-2-4)
+(m-2-1) edge node[auto] {} (m-1-2)
+(m-4-1) edge node[auto] {} (m-3-2)
+(m-1-3) edge node[auto] {} (m-2-4)
+(m-3-3) edge node[auto] {} (m-4-4);
+\path[->>,font=\scriptsize,>=angle 90]
+(m-4-1) edge node[auto] {$\bmod p$} (m-4-4)
+(m-3-2) edge node[auto] {$\bmod\mathfrak{p}$} (m-3-3)
+(m-1-2) edge node[auto] {$\bmod\mathfrak{B}$} (m-1-3);
+\end{tikzpicture}
+\end{center}
+où $K$ est un corps de nombres, $\mathfrak{p}$ un idéal premier de
+$\mathcal{O}_K$ au-dessus de $p$ et $\mathfrak{B}$ un idéal premier de
+$\mathcal{O}_{K[\zeta_m]}$ au-dessus de $\mathfrak{p}$. Les bonnes hypothèses
+étant que $\mathfrak{p}$ soit tel que $\mathcal{O}_K/\mathfrak{p} = \GF{q}$ et
+que $\mathfrak{p}$ ne soit pas ramifié dans $K[\zeta_m]/K$ ce qui équivaut à 
+$p$ ne divise pas $m$ d'après \textit{(le résultat que je mettrais probablement 
+un jour dans le rapport)}, ce qui est le cas puisque $(m, q) = 1$.
+
+\begin{rem}
+Il se trouve que l'algorithme ne peut pas fonctionner si $q$ est une puissance
+$r$ de $p$, qui ne soit pas premier avec $n$. On a 
+$\langle{q,\mathcal{K}}\rangle = \zmodninv{m}$, donc par définition $p = 
+sq^a\bmod m$ pour un $s\in\mathcal{K}$ et $0 \leq a < 0$, alors $q = 
+s^rq^{ar}\bmod m$. Or, $q$ ne peut être écrit que d'une seule façon comme 
+produit d'un élément de $\mathcal{K}$ et d'une puissance
+de $q$, d'où $s^r = 1$ et $q^{ar - 1} = 1 \bmod m$. Ce qui implique que $n$
+divise $ar - 1$ et donc que $(n, r) = 1$.\par
+Une solution possible serait de calculer un générateur
+$\alpha$ de $k/\GF{p^{d/c}}$, son polynôme minimal serait alors uniquement
+défini sur $\GF{p^{d/c}}$ mais se scinderait en $c$ facteurs sur $\GF{q}$, ce
+qui nous obligerait à réutiliser la méthode trial-and-error de Pinch.
+\end{rem}
+
+\paragraph{$\bullet\; o = 1$}
+
+\paragraph{$\bullet\; o > 1$}
 
 \subsubsection*{Détermination de l'isomorphisme}
+
+\begin{algorithm}
+\caption{Conversion de la base polynomiale vers la base normale}
+\label{alg1}
+\begin{algorithmic}[1]
+\REQUIRE $z$, $v$, $n$, $p$, $\omega$ \COMMENT{$z\in\GF{q^n}$, $v$ élément 
+normal, $n$ degré de l'extension, $p$ caractéristique, $\omega$ défini 
+ci-dessus}
+\ENSURE $c$ \COMMENT{Tuple contenant les coefficients de $z$ dans la base 
+normale engendrée par $v$}
+\bigskip
+\FOR{$i = 0$ \TO $n-1$}
+    \STATE $B_i = \Tr{v\times v^{q^{n-(i+1)}}}$
+\ENDFOR
+\medskip
+\STATE $I = (\sum_{i = 0}^{n-1}{B_i\cdot \omega^i})^{-1}$
+\medskip
+\FOR{$i = 0$ \TO $n-1$}
+    \STATE $T_i = \Tr{v\times z^{q^{n-i}}}$
+\ENDFOR
+\medskip
+\FOR{$i = 0$ \TO $n-1$}
+    \STATE $c_i = \sum_{j=0}^{n-1}{I_{(j-i)\bmod n}T_j}$
+\ENDFOR
+\RETURN $c$
+
+\end{algorithmic}
+\end{algorithm}
 
 \section{Algorithme de Rains : méthode elliptique}
 %TODO: Résumer/Détailler le papier de Luca, rajouter les résultats sur
@@ -1905,8 +2015,6 @@ Algorithm using Abelian Lifts}, \bsc{P. Mih\u{a}ilescu}, \bsc{F. Morain} \&
 \bsc{É. Schost}, 2007, \bsc{url :}
 \url{http://hal.inria.fr/LIX/inria-00130142/en/}
 
-\bibitem{Dol} \emph{Computing Finite Fields Isomorphisms}, \bsc{Javad Doliskani}
-
 \bibitem{All} \emph{Explicit Computation of Isomorphisms between Finite
 Fields}, \bsc{Bill Allombert}, Elsevier Science, \bsc{url :}
 \url{http://www.sciencedirect.com/science/article/pii/S1071579701903442}
@@ -1914,8 +2022,6 @@ Fields}, \bsc{Bill Allombert}, Elsevier Science, \bsc{url :}
 \bibitem{Dat} \emph{Théorie algébrique des nombres}, \bsc{Jean-François Dat},
 Université Pierre et Marie Curie, 2013, \bsc{url}
 \url{https://www.imj-prg.fr/~jean-francois.dat/enseignement/TNM2/TNM2.pdf}
-
-\bibitem{DeF} \emph{Rains' Algorithm}, \bsc{Luca De Feo}
 
 \end{thebibliography}
 \end{document}
