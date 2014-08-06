@@ -1790,7 +1790,8 @@ $j\in\lbrace{0,\dots,n-1}\rbrace$ tel que $s\in q^j\mathcal{K}$. Donc :
 ce qu'il fallait démontrer.\\
 \end{proof}
 
-%TODO: Foutre le schéma qui passe de la carac 0 à la carac finie.
+%TODO: Foutre le schéma qui passe de la carac 0 à la carac finie, peut-être ?
+%Dépend de comment je veux aborder le problème..
 
 \subsection{Algorithme \& analyse de complexité}
 %TODO: Détailler l'algorithme de l'article/code de Luca + analyser la complexité
@@ -1810,63 +1811,26 @@ par un isomorphisme. On en déduira l'image de $x$ et on aura déterminé
 l'isomorphisme.
 
 \subsubsection*{Recherche d'un élément normal unique}
-Avant toute chose, il faut pouvoir trouver un entier $m$, sans facteurs
-carrés, petit, premier avec $q$ et tel que $o=o_m(q)$, l'ordre multiplicatif de 
-$q$ modulo $m$, soit un multiple de $n$. Une fois un tel $m$ trouvé, on veut 
-qu'il satisfasse aussi :
+On commence par chercher un entier $m$ divisant $q^n - 1$ tel que :
 \vspace{0.3cm}
 \begin{enumerate}[(1)]
-\item $(n, o/n) = 1$,
-
-\item $(n, \varphi(m)/(n.o)) = 1$.
+\item $\langle{q}\rangle \times \mathcal{K} = \zmodninv{m}$ pour $\mathcal{K}$ 
+un sous-groupe de $\zmodninv{m}$ d'ordre $\varphi(m)/n$,
+\item $(m, q) = 1$,
+\item $m$ soit sans facteurs carrés.
 \end{enumerate}
 \vspace{0.3cm}
-La condition (1) est nécessaire car on va travailler sur des extensions de degré
-$o/n$ de $\GF{q^n}$, elle permet alors d'utiliser des polynôme à coefficients 
-dans le corps premier. La condition (2) est là pour nous assurer de pouvoir 
-appliquer les résultats du point précédent, \textit{i.e.} pour pouvoir trouver
-un $\mathcal{K}$ tel que $\langle{q,\mathcal{K}}\rangle = 
-\zmodninv{m}$ et donc que $\#\langle{q}\rangle = n.o$.\par
-On peut résumer le point \ref{sec:pergauss}, avec les bonnes hypothèses, par le 
-diagramme suivant :
-
-\begin{center}
-\begin{tikzpicture}
-\matrix(m)[matrix of math nodes,
-row sep=1.5em, column sep=3em,
-text height=1.5ex, text depth=0.25ex]
-{ &K[\zeta_m] & \GF{q}[\zeta_m] & \\
-\QQ[\zeta_m]& & &\GF{p}[\zeta_m]\\
-& K & \GF{q}& \\
-\QQ& & &\GF{p}\\};
-\path[-,font=\scriptsize,>=angle 90]
-(m-2-1) edge node[left] {$\zmodninv{m}$} (m-4-1)
-(m-3-2) edge node[left] {$G$} (m-1-2)
-(m-1-3) edge node[right] {$\langle{q}\rangle$} (m-3-3)
-(m-4-4) edge node[right] {$\langle{p}\rangle$} (m-2-4)
-(m-2-1) edge node[auto] {} (m-1-2)
-(m-4-1) edge node[auto] {} (m-3-2)
-(m-1-3) edge node[auto] {} (m-2-4)
-(m-3-3) edge node[auto] {} (m-4-4);
-\path[->>,font=\scriptsize,>=angle 90]
-(m-4-1) edge node[auto] {$\bmod p$} (m-4-4)
-(m-3-2) edge node[auto] {$\bmod\mathfrak{p}$} (m-3-3)
-(m-1-2) edge node[auto] {$\bmod\mathfrak{B}$} (m-1-3);
-\end{tikzpicture}
-\end{center}
-où $K$ est un corps de nombres, $\mathfrak{p}$ un idéal premier de
-$\mathcal{O}_K$ au-dessus de $p$ et $\mathfrak{B}$ un idéal premier de
-$\mathcal{O}_{K[\zeta_m]}$ au-dessus de $\mathfrak{p}$. Les bonnes hypothèses
-étant que $\mathfrak{p}$ soit tel que $\mathcal{O}_K/\mathfrak{p} = \GF{q}$ et
-que $\mathfrak{p}$ ne soit pas ramifié dans $K[\zeta_m]/K$ ce qui équivaut à 
-$p$ ne divise pas $m$ d'après \textit{(le résultat que je mettrais probablement 
-un jour dans le rapport)}, ce qui est le cas puisque $(m, q) = 1$.
+La condition (1) est équivalente à demander que $\langle{q}\rangle$ soit d'ordre
+$n$ dans $\zmodninv{m}$. Sous ces conditions, on peut appliquer le théorème 
+\ref{th:gaussnormal} pour calculer une période de Gauss $\eta(\zeta_m) = 
+\sum_{a\in\mathcal{K}}{\zeta_m^a}$ afin d'obtenir un élément unique dans chaque
+extension de corps.
 
 \begin{rem}
 Il se trouve que l'algorithme ne peut pas fonctionner si $q$ est une puissance
 $r$ de $p$, qui ne soit pas premier avec $n$. On a 
 $\langle{q,\mathcal{K}}\rangle = \zmodninv{m}$, donc par définition $p = 
-sq^a\bmod m$ pour un $s\in\mathcal{K}$ et $0 \leq a < 0$, alors $q = 
+sq^a\bmod m$ pour un $s\in\mathcal{K}$ et $0 \leq a < n$, alors $q = 
 s^rq^{ar}\bmod m$. Or, $q$ ne peut être écrit que d'une seule façon comme 
 produit d'un élément de $\mathcal{K}$ et d'une puissance
 de $q$, d'où $s^r = 1$ et $q^{ar - 1} = 1 \bmod m$. Ce qui implique que $n$
@@ -1876,10 +1840,17 @@ $\alpha$ de $k/\GF{p^{d/c}}$, son polynôme minimal serait alors uniquement
 défini sur $\GF{p^{d/c}}$ mais se scinderait en $c$ facteurs sur $\GF{q}$, ce
 qui nous obligerait à réutiliser la méthode trial-and-error de Pinch.
 \end{rem}
+Un autre problème est la taille du paramètre $m$, il se peut qu'il soit de
+taille proche de $q^n - 1$ ce qui est beaucoup trop important. Une solution
+possible est 
 
-\paragraph{$\bullet\; o = 1$}
+$\bullet\; o = 1$\par
+\vspace{0.2cm}
+Si on trouve un entier $m$ relativement peit satisfaisant les conditions (1), 
+(2) et (3), on peut travailler directement dans l'extension $\GF{q^n}$.
 
-\paragraph{$\bullet\; o > 1$}
+
+$\bullet\; o > 1$
 
 \subsubsection*{Détermination de l'isomorphisme}
 
