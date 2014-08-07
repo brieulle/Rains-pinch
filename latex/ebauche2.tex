@@ -89,6 +89,7 @@ rapidement de tels isomorphismes.
 \newpage
 
 \part{Contexte théorique}
+\label{un}
 
 Cette partie consistera principalement à rappeler et énoncer les résultats dont
 nous aurons besoin afin de justifier et mettre en place les deux algorithmes 
@@ -1189,7 +1190,7 @@ b}\rbrace\cup\lbrace{\EO}\rbrace\]
 est un sous-groupe de $E$.
 \end{enumerate}
 \end{prop}
-%TODO : foutre les formulaire, peut-être parler des formes de Legendre, parler
+%TODO : foutre les formulaire, peut-être parler des formes de Montgomery, parler
 %des points de torsions rapidement
 \subsection{Corps finis}
 %TODO: Nombres de points, théorème de Hasse, Frobenius, trace, points de 
@@ -1202,7 +1203,8 @@ est un sous-groupe de $E$.
 %elliptique de Rains
 
 \section{Complexité \& notations}
-%TODO: Définir le $O$ et $O^{\sim}$; définir les notations etc.
+%TODO: Définir le $O$ et $O^{\sim}$; définir les notations etc. !!p. 720 de
+%Modern Computer Algebra!!
 Cette courte section va nous permettre de définir quelques notions de complexité
 et surtout d'introduire les notations qu'on utilisera pour les futurs analyses
 de complexités des algorithmes étudiées.
@@ -1231,15 +1233,17 @@ naïve est de chercher une racine de $f$ dans $k_2$ et d'envoyer $x = \bar{X}$
 sur cette même racine. Cependant, cela implique de factoriser $f$ ce qui prend
 beaucoup trop de temps. Pour être plus précis, d'après le théorème 14.14 de
 \cite[p.~390]{GaGe}, factoriser complètement un polynôme de degré $n$ sur 
-$\GF{q}$ prend un $O^{\sim}(n^2\textup{log\;}q)$. Et d'après le corollaire 14.16
+$\GF{q}$ prend un $O(nM(n)\textup{log}(qn))$. Et d'après le corollaire 14.16
 du même ouvrage \cite[p.~392]{GaGe}, trouver une racine se fait en
-$O^{\sim}(n\textup{log\;}q)$. Sachant qu'on cherche une racine sur une 
-extension de degré $n$, la complexité devient $O^{\sim}(n^2\textup{log\;}q)$.
-Une méthode pour faire plus rapide est dûe à Pinch, l'une de ses variantes
-utililses les racines de l'unité. C'est celle qu'on va décrire dans la
-sous-section suivante. On pourra noter aussi une autre méthode établie par
-Allombert \cite{All} qui consiste essentiellement en de l'algèbre linéaire, donc
-une complexité en $O(n^{\omega}$ avec $2<\omega<3$.
+$O(M(n)\textup{log\;}n\textup{log}(qn))$. Sachant qu'on cherche une racine sur 
+une extension de degré $n$, la complexité devient 
+$O(E(n)\textup{log\;}n\textup{log}(nq^n))$.\par
+ Une méthode pour faire plus rapide est dûe à Pinch, l'une de ses variantes 
+ utililses les racines de l'unité. C'est 
+celle qu'on va décrire dans la sous-section suivante. On pourra noter aussi une 
+autre  méthode établie par Allombert \cite{All} qui consiste essentiellement en 
+de  l'algèbre linéaire, donc une complexité en $O(n^{\omega})$ avec 
+$2<\omega<3$.
 
 \subsection{Principe}
 %TODO: Explication de la méthode et illustration avec l'exempe de l'article, 
@@ -1419,7 +1423,8 @@ respectivement et tels que $\phi(\zeta_m) = \phi(\zeta'_m)$. Alors on a :
 \[\phi(\textup{Tr\;}_{k'_1/k_1}(\zeta_{m})) =
 \textup{Tr\;}_{k'_2/k_2}(\zeta'_{m})\]
 De plus, les traces sont aussi des générateurs de leurs corps respectifs, on 
-%TODO: tu dois encore le prouver
+%TODO: tu dois encore le prouver, on peut sûrement s'inspirer le preuve pour le
+%même résultats mais dans le cas d'éléments normaux.
 aura besoin de ne manipuler que des matrices de taille $o$ au lieu de taille 
 $n.o$.\par
 %TODO : Tout ce truc sert vraiment ?! Tu peux éventuellement rajouter l'exemple
@@ -1828,10 +1833,10 @@ extension de corps.
 
 \begin{rem}
 Il se trouve que l'algorithme ne peut pas fonctionner si $q$ est une puissance
-$r$ de $p$, qui ne soit pas premier avec $n$. On a 
+$r$ de $p$, qui ne soit pas premier avec $n$. En effet, on a 
 $\langle{q,\mathcal{K}}\rangle = \zmodninv{m}$, donc par définition $p = 
-sq^a\bmod m$ pour un $s\in\mathcal{K}$ et $0 \leq a < n$, alors $q = 
-s^rq^{ar}\bmod m$. Or, $q$ ne peut être écrit que d'une seule façon comme 
+sq^a\bmod m$ pour un $s\in\mathcal{K}$ et $0 \leq a < n$, alors
+$q=s^rq^{ar} \bmod m$. Or, $q$ ne peut être écrit que d'une seule façon comme 
 produit d'un élément de $\mathcal{K}$ et d'une puissance
 de $q$, d'où $s^r = 1$ et $q^{ar - 1} = 1 \bmod m$. Ce qui implique que $n$
 divise $ar - 1$ et donc que $(n, r) = 1$.\par
@@ -1842,21 +1847,112 @@ qui nous obligerait à réutiliser la méthode trial-and-error de Pinch.
 \end{rem}
 Un autre problème est la taille du paramètre $m$, il se peut qu'il soit de
 taille proche de $q^n - 1$ ce qui est beaucoup trop important. Une solution
-possible est 
+possible proposée par Rains (\cite{Rai}) est d'utiliser une petite extension de
+$\GF{q^n}$ de degré $o$. Le choix d'utiliser une extension ou non sera détaillé 
+dans la partie implémentation \ref{trois}; globablement, il s'agira d'une borne
+sur $m$. Commençons par décrire plus précisément l'algorithme dans le cas où 
+aucune extension supplémentaire n'est utilisée.
 
+\vspace{0.3cm}
 $\bullet\; o = 1$\par
 \vspace{0.2cm}
-Si on trouve un entier $m$ relativement peit satisfaisant les conditions (1), 
-(2) et (3), on peut travailler directement dans l'extension $\GF{q^n}$.
+Imaginons qu'on ait trouvé un $m$ relativement petit, satisfaisant les points
+(1), (2) et (3) et divisant $q^n - 1$. Dans ce cas, on peut travailler
+directement dans les corps $k_1$ et $k_2$. L'algorithme est donc lui suivant :
 
+\begin{algorithm}
+\caption{Détermination d'un élément normal unique dans un corps fini}
+\label{alg:gausspersansext}
+\begin{algorithmic}[1]
+\REQUIRE $k$, $m$ \COMMENT{$k$ un corps fini, $m$ un entier divisant $q^n - 1$
+satisfaisant les conditions (1), (2) et (3)}
+\ENSURE $\eta$ \COMMENT{Un élément normal unique de $k$
+sous l'action de son groupe de Galois}
+\bigskip
+\REPEAT
+    \STATE $\zeta_m = \textup{rand}(k)^{(q^n - 1)/m}$
+\UNTIL{$\zeta_m^m = 1$\quad\&\quad$\forall d\mid m,\;d\neq m,\;\zeta_m^d\neq1$}
+\STATE $\eta = \sum_{a\in\mathcal{K}}{\zeta_m^a}$
+\RETURN $\eta$
+\end{algorithmic}
+\end{algorithm}
+Pour trouver une racine primitive \nroot{m} de l'unité, on prend un élément au
+hasard dans $\GF{q^n}$, on l'élève à la puissance $(q^n - 1)/m$ et on teste si
+le résultat élevé à la puissance $m/l$ vaut $1$ ou non pour $l$ un diviseur 
+premier strict de $m$. On s'attend à ce que cela réussisse après $O(1)$ essaies;
+chaque essaie prenant $O(E(n)n\,\textup{log\;}q)$ opérations.\par
+Maintenant, on doit calculer la période elliptiques $\eta := \eta(\zeta_m)$,
+d'après ce qui précéde cela revient à faire $\varphi(m)/n$ exponentiation dans
+$\GF{q^n}$ d'exposant au plus $m$, donc un $O((m\textup{log\;}m)E(n)/n)$.\par
+Ainsi, le coût total de l'algorithme est un $O(E(n)(n\,\textup{log\;}q +
+m\,\textup{log\;}m/n))$. Tant que $m\in o(n^2)$, on peut négliger les termes en
+$m$ et se contenter d'une complexite en $O(E(n)n\,\textup{log\;}q)$.
 
+\begin{prop}
+L'algorithme \ref{alg:gausspersansext} est correct dans le sens où l'élément
+produit :
+\[\eta(\zeta_m) = \sum_{a\in\mathcal{K}}{\zeta_m^a}\]
+est un élément normal de $\GF{q^n}$ unique sous l'action du groupe de
+$\textup{Gal}(\GF{q^n}/\GF{q}) = \langle{q}\rangle$.
+\end{prop}
+\begin{proof}
+Les conditions (1), (2) et (3) permettent d'appliquer le théorème
+\ref{th:gaussnormal} qui assure que $\eta(\zeta_m)$ est un élément normal. Le
+fait qu'il soit unique sous l'action du groupe de Galois est justifié par le
+lemme \ref{lem:gaussconj}.
+\end{proof}
+
+\vspace{0.3cm}
 $\bullet\; o > 1$
+Dans le cas où on ait besoin d'utiliser une extension, il faut modifier
+légèrement les conditions sur $m$ :
+
+\vspace{0.3cm}
+\begin{enumerate}[(1')]
+\item $\langle{q}\rangle\times\mathcal{K} = \zmodninv{m}$ pour $\mathcal{K}$ 
+un sous-groupe d'ordre $\varphi(m)/(n.o)$,
+
+\item 
+\end{enumerate}
+\vspace{0.3cm}
+
+
+
+
+\begin{algorithm}
+\caption{Détermination d'un élément normal unique dans un corps finis
+\textit{via} une extension}
+\label{alg:gaussperavecext}
+\begin{algorithmic}[1]
+\REQUIRE $k$, $m$, $h$ \COMMENT{$k$ un corps fini, $m$ un entier divisant $q^n -
+1$satisfaisant les conditions \textit{TODO}, $h$ \textit{TODO}}
+\ENSURE $\eta$ \COMMENT{Un élément normal unique de $k$ sous l'action de son
+groupe de Galois}
+\STATE $k' := k/(h)$
+\REPEAT
+    \STATE $\zeta_m = \textup{rand}(k')^{(q^{n.o} - 1)/m}$
+\UNTIL{$\zeta_m^m = 1$\quad\&\quad$\forall d\mid m,\;d\neq m,\;\zeta_m^d\neq1$}
+\STATE $\alpha = \sum_{a\in\mathcal{K}}{\zeta_m^a}$
+\STATE $\eta = \textup{Tr}_{k'/k}(\alpha)$
+\RETURN $\eta$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{prop} 
+Les algorithmes \ref{alg:gaussperavecext} sont
+corrects.
+\end{prop}
 
 \subsubsection*{Détermination de l'isomorphisme}
+Reste alors à déterminer exactement l'isomorphisme, c'est-à-dire calculer son
+image en $x$. Comme on l'a expliqué au début de la sous-section, il suffit juste
+de récupérer les coefficients de $x$ par rapport à la base normale engendrée par
+$\eta(\zeta_m)$; alors il nous restera plus qu'à reporter les coefficients 
+trouvés dans la base normale engendrée par $\eta(\zeta'_m)$.
 
 \begin{algorithm}
 \caption{Conversion de la base polynomiale vers la base normale}
-\label{alg1}
+\label{alg:convert}
 \begin{algorithmic}[1]
 \REQUIRE $z$, $v$, $n$, $p$, $\omega$ \COMMENT{$z\in\GF{q^n}$, $v$ élément 
 normal, $n$ degré de l'extension, $p$ caractéristique, $\omega$ défini 
@@ -1881,6 +1977,41 @@ normale engendrée par $v$}
 
 \end{algorithmic}
 \end{algorithm}
+On commence par élever à la puissance $q$ plusieurs polynômes sur $\GF{q}$, 
+on les multiplie par un autre polynôme et enfin on calcule la trace de chacun 
+de ces produits; on effectue alors $n$ fois cette opération. D'où un 
+$O(nE(n)\textup{log}\;q + nE(n)) + n\textup{T}(n) = O(nE(n)\textup{log}\;q + 
+nE(n))$ opérations, 
+où $\textup{T}(n)$ est la complexité du calcul de la trace d'un élément
+de $\GF{q^n}$ et $\textup{T}(n) \in O(E(n))$.
+Par la suite, il s'agit dans un premier temps de la muliplication par un 
+scalaire d'éléments de $\mathbb{F}_p[\omega]/(\omega^n - 1)$ puis de $n$ sommes 
+de polynômes. Ensuite, on inverse le polynôme et on prend la trace de l'élément 
+qu'il représente; ce qui nous donne $O(n + E(n).\textup{log }n)$.\par
+Des lignes $5$ à $7$, il s'agit de la même opération que des lignes 1 à 3, d'où 
+encore une complexité de $O(nE(n)\textup{log}\;q + nE(n))$.
+Les lignes 8 à 10 consistent en $n$ sommes de $n$ multiplications dans le corps 
+de base $\GF{q}$, \textit{i.e.} un grand $O(n)$.
+Au final, la complexité de l'algorithme est égale à:
+\[O(nE(n) + nE(n)\textup{log }q +  E(n)\textup{log }n + n\textup{T}(n) + n)\] 
+ou de manière plus simple, elle est en $O(nE(n)\textup{log}\;q)$ qui domine le 
+reste.
+
+\begin{prop}
+L'algorithme \ref{alg:convert} est correct.
+\end{prop}
+\begin{proof}
+D'après le point précédent, on a :
+\[\textup{Tr}\left(z^{p^{n-j}}\right) = \sum_{0\leq i < n}{c_i\textup{Tr}
+\left(v^{p^{i+n-j}}\right)}\]
+et la matrice $B$ définie par :
+\[b_{ij} = \Tr{\alpha v^{p^{i+n-j}}} = \Tr{\alpha^{p^j}v^{p^i}}\]
+On sait qu'elle est inversible grâce au lemme \ref{lem:mattrinv}, donc si on
+note $d_{ij}$ les coefficients de la matrice $B^{-1}$, on a bien :
+\[c_i = \sum_{0\leq j < n}{d_{ij}\textup{Tr}\left(z^{p^{n-j}}\right)}\]
+Le théorème \ref{th:matcirciso} permet de conclure.\\
+\end{proof}
+
 
 \section{Algorithme de Rains : méthode elliptique}
 %TODO: Résumer/Détailler le papier de Luca, rajouter les résultats sur
@@ -1908,14 +2039,29 @@ normale engendrée par $v$}
 %TODO: Décrire l'algorithme et donner sa complexité.
 
 \part{Implémentation}
+\label{trois}
 %TODO: Comparer les deux méthodes ou même avec l'implémentation de base de SAGE 
 %(retrouver une simple racine). Détailler les limitations dû à SAGE, peut-être
 %prendre une partie de la conclusion en expliquant ce qui pourrait être changer.
+
+\section{Trouver $m$}
+%TODO: Des détails sur m et comment on le trouve (forme an + 1, premier ou
+%puissance d'un nombre premier; pour la méthode cyclotomique et elliptique
+
 \section{Résultats numériques}
+%TODO: Je ne sais pas vraiment quoi mettre, je pourrais juste montrer
+%l'évolution de certains paramètres, comparer la progression de certaines
+%valeurs comme le nombre de trace et le nombre de courbe ou je sais plus
+%vraiment quoi... Ah et faire une comparaison avec la méthode elliptique aussi,
+%éventuellement montrer que lorsqu'on a besoin d'une extension la méthode
+%elliptique est bien chouette; à l'inverse, la méthode cyclotomique gère bien
+%sans extension
 
 \section{Comparaison avec d'autres méthodes}
+%TODO: Comparaison avec la méthode naïve, Allombert, autre ?
 
 \part{Conclusion}
+\label{quatre}
 %TODO: Expliquer ce qu'il peut rester à faire (cas général, car(K) = 2 et n 
 %composé, couper et appliquer l'une des deux méthodes selon la nature du m ou 
 %s'il y a besoin de calculer une extension, etc.), où est-ce qu'on peut 
