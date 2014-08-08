@@ -88,7 +88,7 @@ rapidement de tels isomorphismes.
 \tableofcontents
 \newpage
 
-\part{Contexte théorique}
+\part{Rappels théoriques}
 \label{un}
 
 Cette partie consistera principalement à rappeler et énoncer les résultats dont
@@ -96,13 +96,13 @@ nous aurons besoin afin de justifier et mettre en place les deux algorithmes
 pour calculer les isomorphismes de corps finis. Cette partie n'a pas pour 
 vocation de faire un exposé complet des notions abordées, pour un traité plus 
 détaillé, le lecteur pourra consulter au choix \cite{LiNi1}, \cite{MuPa} ou 
-\cite[chap.~III]{Per} pour les corps finis; \cite[chap. VI]{Sam} ou \cite{Esc} 
-pour la théorie de Galois; \cite{Sam}, \cite{Was1} ou \cite{Lan} pour la théorie
-des nombres; \cite{Sil} ou \cite{Was2} pour la théorie sur les courbes 
-elliptiques; et pour finir \cite{GaGe} pour tout ce qui concerne le calcul 
-formel en général. On s'efforcera néamoins de démontrer les résultats les plus 
-importants ou fondamentaux. Le c\oe ur du sujet se trouve lui dans la partie 
-\ref{deux}.
+\cite[chap.~III]{Per} pour les corps finis; \cite{Nek}, \cite[chap.~VIII]{Pol},
+\cite[chap. VI]{Sam} ou \cite{Esc} pour la théorie de Galois; \cite{Sam}, 
+\cite{Was1} ou \cite{Lan} pour la théorie des nombres; \cite{Sil} ou 
+\cite{Was2} pour la théorie sur les courbes elliptiques; et pour finir 
+\cite{GaGe} pour tout ce qui concerne le calcul formel en général. On 
+s'efforcera néamoins de démontrer les résultats les plus importants ou 
+fondamentaux. Le c\oe ur du sujet se trouve lui dans la partie \ref{deux}.
 
 \section{Corps finis}
 Dans cette section on va rappeler les définitions et démontrer certains 
@@ -111,100 +111,6 @@ de corps et la théorie de Galois sur les corps finis. On ne considérera
 que des corps commutatifs.
 
 \subsection{Définitions}
-
-Soit $\Omega = (K, +, .)$ un triplet où $K$ est un ensemble, $+$ et $.$ deux
-lois de composition interne sur $K$. On dit que $\Omega$ est un corps si : 
-\begin{enumerate}[(i)]
-\item $(K, +)$ est un groupe abélien,
-\item $(K\setminus\lbrace0\rbrace,.)$ est un groupe (abélien ou non, dans la 
-littérature francophone),
-\item la première loi est distributive par rapport à la seconde,
-\item $K$ n'a pas de diviseurs de $0$.
-\end{enumerate}
-Par abus de notation, on désignera désormais le corps $\Omega$ par son ensemble
-$K$. On notera $0$ et $1$ les éléments neutres de la première et seconde loi 
-respectivement; on omettra régulièrement de noter la seconde loi dans les 
-opérations sur $K$.\par
-On appelle la caractéristique d'un corps $K$, le plus petit entier $p$ tel que 
-pour tout $x\in K$ on ait :
-\[p(x) = \underbrace{x + x + \dots + x}_{p fois} = 0\]
-Elle peut être nulle ou positive; en pratique elle sera nulle ou égale à un
-nombre premier. Dans notre cas, on s'intéressera au corps finis, c'est-à-dire 
-tels que $K$ soit un ensemble fini et de caractéristique non-nulle.\par
-\vspace{0.3cm}
-Un homomorphisme de corps est nécessairement injectif. En effet, soit deux corps
-$K$ et $L$ de caractéristique positive ou nulle. Soit $f : K \to L$, on a 
-alors :
-\[f(x) = 0 \Leftrightarrow x.f(1) = 0 \Leftrightarrow x = 0\]
-puisque un homomorphisme doit conserver la structure et que $K$ n'a pas de
-diviseurs de zéro, $x = 0$ et $f(1) = 1$. S'il existe un
-tel homomorphisme entre deux corps, on a $K\subseteq L$ et on dit que $L$ est un
-surcorps de $L$ ou $K$ est un sous-corps de $L$.\par
-On appelle corps premier un corps qui n'a aucun sous-corps. Dans le cas des
-corps finis, il s'agit du corps $\GF{p}$ à $p$ éléments, pour $p$ premier. Ce
-qui nous donne le théorème suivant :
-
-\begin{thm}
-\label{th:corfincarprem}
-Soit $K$ un corps fini, alors $K$ a $p^n$ éléments, où $p$ premier est la
-caractéristique du corps premier et $n$ le degré de $K/\GF{p}$.
-\end{thm}
-\begin{proof}
-De façon informelle, on appelle le degré de $L$ sur $K$ la dimension de $L$
-en tant que $K$-espace vectoriel. On discutera plus en détails de cette
-notion dans le point suivant \ref{def:degext}.\par
-Montrons le lemme suivant :
-\begin{lem}
-Un corps fini a pour caractéristique un nombre premier.
-\end{lem}
-\begin{proof}
-Comme $K$ est intègre en tant qu'anneau, sa caractéristique est plus grande ou
-égale à $2$. Supposons que la caractéristique de $K$ soit $p = km$ pour $k,
-m\in\ZZ$. Alors pour $e\in K$ on a e :
-\[0 = ne = (km)e = (ke)(me)\]
-puisque $K$ n'a pas de diviseurs de $0$, alors $ke = 0$ ou $me = 0$, ce
-qui contredit la minimalité de la caractéristique.\\
-\end{proof}
-Donc $K$ est de caractéristique $p$ premier et son corps premier est (isomorphe
-à) $\GF{p}$.
-\begin{lem}
-Soit $K$ un corps fini contenant un corps fini $L$ à q éléments. Alors $K$ a
-$q^m$ élément où $m$ est le degré de $K$ en tant que $L$-espace vectoriel.
-\end{lem}
-Si $K$ est un $L$-espace vectoriel de dimension fini, il admet alors une base
-d'éléments de $L$. Si on écrit chaque éléments de $K$ comme une combinaison
-linéaire des éléments de cette base, chaque coeffecient de cette combinaison a
-$q$ valeurs possibles, d'où $K$ à $q^m$ éléments; ce qui achève la démonstration
-du lemme. Il suffit alors de remplacer $L$ par $\GF{p}$ et $q$ par $p$ et le
-théorème est démontré.\\
-\end{proof}
-
-\begin{thm}[Wedderburn]
-Tout corps fini est commutatif.
-\end{thm}
-On passera la preuve bien qu'elle soit intéressante; se référer par exemple à 
-\cite[p.~70-73]{LiNi1} ou \cite[p.~82]{Per}.\par
-\vspace{0.3cm}
-Si $K$ est un corps à $q$ éléments, alors pour tout $x\in K$, on a $x^q = x$. En
-effet, pour $x = 0$ c'est immédiat. Pour $x\neq 0$, on sait que le groupe
-multiplicatif de $K$, noté $K^{\times} = K\setminus\lbrace0\rbrace$, est un
-groupe fini à $q-1$ éléments par définition; donc $x^{q-1} = 1$ pour tout $x\in
-K^{\times}$ et il suffit de multiplier encore une fois par $x$ pour obtenir le
-résultat voulu.\par
-On en déduit immédiatement que le polynôme $X^q - X$ se scinde dans $K$
-puisque étant de degré $q$, il a au maximum $q$ racines qui sont déjà les
-éléments de $K$. On peut dire que $K$ est un corps de décomposition
-\ref{def:dec} de $X^q - X$ sur $\GF{p}$.\par
-On notera que dans les corps finis et leurs extensions, l'élévation à une
-puissance égal à la caractéristique d'un corps fini ou une puissance de celle-ci
-est un automorphisme particulier. On l'appelle l'automorphisme de Frobenius et 
-on le note $\textup{Fr}_q$ pour $\textup{Fr}_q(x) = x^q$. Ce n'est pas immédiat
-qu'il s'agit là d'un homomorphisme, mais un simple calcul permet de s'en 
-assurer.\par
-\vspace{0.3cm}
-Finissons ce point par le théorème suivant qui assure l'existence et l'unicité
-à isomorphisme près des corps finis; c'est à partir de ce théorème que le
-travail de tout ce rapport va se faire :
 
 \begin{thm}
 \label{th:isomGF}
@@ -418,7 +324,7 @@ Toute extension séparable (\ref{def:sep}) et finie est simple.
 \begin{proof}
 On va se contenter de le prouver dans le cas d'un corps fini; le cas général
 demande un peu plus de travail. On invitera le lecteur a consulté
-\cite[p.~87]{Esc}.\par
+\cite[p.~87]{Esc} ou \cite[Chap. VIII]{Pol}.\par
 Si $K$ est un corps fini alors son groupe mulitplicatif $K^{\times}$ est
 cyclique (voir par exemple la preuve de la proposition \ref{prop:rootcycl} ou
 \cite[p.~50]{LiNi1}). Dans ce cas, il suffit de prendre pour générateur d'une
@@ -540,7 +446,9 @@ $k$-morphisme, il suffit d'envoyer $\alpha$ sur $\beta$ et ces morphismes sont
 disctints pour chaque racine distincte.\\
 \end{proof}
 
-On admettra le théorème suivant :
+On admettra le théorème suivant, il fait usage de la proposition ci-dessus et
+des théorèmes 15.54 et 16.16 de \cite[Chap. VIII]{Pol}. Il nous permettra de
+prouver le corollaire suivant.
 
 \begin{thm}
 Soit $K/k$ une extension de degré finie. 
@@ -586,7 +494,7 @@ Soit $P\in k[X]$ de degré $n\geq 1$ et $K$ un corps de décomposition de $P$ su
 $k$. Alors $K/k$ est normale.
 \end{prop}
 \begin{proof}
-%TODO Trouver une autre réf... \cite[Chap. VIII, p.~167]{Pol}\\
+\cite[Chap. VIII, p.~167]{Pol}\\
 \end{proof}
 
 Revenons alors au groupe des $k$-automorphismes d'une extension. On a la
@@ -637,7 +545,7 @@ Sous ces conditions, pour tout $\alpha\in K$ on a :
 \[\Irr{k}{\alpha} = \prod_{\beta\in G\alpha}{(X - \beta)}\]
 \end{thm}
 \begin{proof}
-%TODO Pareil.. \cite[Chap. VIII, p.~169]{Pol}\\
+\cite[Chap. VIII, p.~169]{Pol}\\
 \end{proof}
 
 
@@ -651,7 +559,7 @@ transitivement sur ses racines; son ordre est divisible par $n$.
 \end{enumerate}
 \end{thm}
 \begin{proof}
-%TODO Pareil.. \cite[Chap. IX, p.~206]{Pol}\\
+\cite[Chap. IX, p.~206]{Pol}\\
 \end{proof}
 
 Pour les corps finis, déterminer le groupe de Galois est beaucoup plus facile
@@ -2074,22 +1982,11 @@ Le théorème \ref{th:matcirciso} permet de conclure.\\
 \addcontentsline{toc}{part}{Références}
 \begin{thebibliography}{LC}
 
-\bibitem{All} \emph{Explicit Computation of Isomorphisms between Finite
-Fields}, \bsc{Bill Allombert}, Elsevier Science, \bsc{url :}
-\url{http://www.sciencedirect.com/science/article/pii/S1071579701903442}
+\bibitem{Rai} \emph{Efficient Computation of Isomorphism Between Finite Fields},
+\bsc{Eric M. Rains}, 1996.
 
-\bibitem{Esc} \emph{Théorie de Galois}, \bsc{Jean-Pierre Escofier}, Dunod, 2nde
-éd., 2000.
-
-\bibitem{FeGaSho} \emph{Normal Basis \textup{via} General Gauss Periods},
-\bsc{Sandra Feisel}, \bsc{Joachim von zur Gathen} \& \bsc{M. Amin Shokrollahi}, 
-Mathematics of computation, Volume 68, Number 225, January 1999, p. 271-290
-
-\bibitem{GaGe} \emph{Modern Computer Algebra}, \bsc{Joachim von zur Gathen} \&
-\bsc{Jürgen Gerhard}, 3rd edition, Cambridge
-
-\bibitem{Lan} \emph{Algebraic Number Theory}, \bsc{Serge Lang}, Graduate Texts
-in Mathematics, 2nd ed., Springer, 2000.
+\bibitem{Pin} \emph{Recognising Elements of Finite Fields}, \bsc{Richard G.E. 
+Pinch}, Cryptography and coding II, p. 193-197, Oxford University Press, 1992.
 
 \bibitem{LiNi1} \emph{Finite Fields}, \bsc{Rudolf Lidl} \& 
 \bsc{Harald Niederreiter}, Encyclopedia of mathematics and its applications vol.
@@ -2099,35 +1996,61 @@ in Mathematics, 2nd ed., Springer, 2000.
 \bsc{Rudolf Lidl} \& \bsc{Harald Niederreiter}, Cambridge University Press,
 1986.
 
+\bibitem{Per} \emph{Cours d'algèbre}, \bsc{Daniel Perrin}, ellipses, 1996.
+
+\bibitem{Sil} \emph{The Arithmetic of Elliptic Curves}, 
+\bsc{Joseph H. Silverman}, Graduate texts in mathematics, Springer, 2nd ed. 
+2009.
+
+\bibitem{Was2} \emph{Elliptic Curves, Number Theory and Cryptography},
+\bsc{Lawrence C. Washington}
+
+\bibitem{Sam} \emph{Théorie algébrique des nombres}, \bsc{Pierre Samuel}, 
+Hermann, 1971.
+
+\bibitem{Kim} \emph{Number Theory II}, \bsc{Kimbal Martin}, University of
+Oklahoma, 2011, \bsc{url :} \url{http://www2.math.ou.edu/~kmartin/ntii/ntii.pdf}
+
+\bibitem{Lan} \emph{Algebraic Number Theory}, \bsc{Serge Lang}, Graduate Texts
+in Mathematics, 2nd ed., Springer, 2000.
+
+\bibitem{Nek} \emph{Théorie de Galois}, \bsc{Jan Nekov\'a\v{r}}, Université 
+Pierre et Marie Curie, 2003, \bsc{url :} 
+\url{http://www.math.jussieu.fr/~nekovar/co/ln/gal/g.pdf}.
+
+\bibitem{Esc} \emph{Théorie de Galois}, \bsc{Jean-Pierre Escofier}, Dunod, 2nde
+éd., 2000.
+
+\bibitem{Pol} \emph{Algèbre et théorie de Galois}, \bsc{Patrick Polo}, 
+Université Pierre et Marie Curie, 2007, \bsc{url :} 
+\url{http://www.math.jussieu.fr/~polo/M1/}.
+
+\bibitem{Was1} \emph{Introduction to Cyclotomic Fields}, \bsc{Lawrence C. 
+Washington}, Graduate texts in mathematics, Springer-Verlag, 1982.
+
 \bibitem{MuPa} \emph{Handbook of Finite Fields}, \bsc{Gary L. Mullen} \& 
 \bsc{Daniel Panario}, Discrete mathematics and its applications, Series Editor 
 Kenneth H. Rosen, CRC Press.
+
+\bibitem{GaGe} \emph{Modern Computer Algebra}, \bsc{Joachim von zur Gathen} \&
+\bsc{Jürgen Gerhard}, 3rd edition, Cambridge
+
+\bibitem{FeGaSho} \emph{Normal Basis \textup{via} General Gauss Periods},
+\bsc{Sandra Feisel}, \bsc{Joachim von zur Gathen} \& \bsc{M. Amin Shokrollahi}, 
+Mathematics of computation, Volume 68, Number 225, January 1999, p. 271-290
 
 \bibitem{MiMoScho} \emph{Computing the Eigenvalue in the Schoof-Elkies-Atkin
 Algorithm using Abelian Lifts}, \bsc{P. Mih\u{a}ilescu}, \bsc{F. Morain} \&
 \bsc{É. Schost}, 2007, \bsc{url :}
 \url{http://hal.inria.fr/LIX/inria-00130142/en/}
 
-\bibitem{Per} \emph{Cours d'algèbre}, \bsc{Daniel Perrin}, ellipses, 1996.
+\bibitem{All} \emph{Explicit Computation of Isomorphisms between Finite
+Fields}, \bsc{Bill Allombert}, Elsevier Science, \bsc{url :}
+\url{http://www.sciencedirect.com/science/article/pii/S1071579701903442}
 
-\bibitem{Pin} \emph{Recognising Elements of Finite Fields}, \bsc{Richard G.E. 
-Pinch}, Cryptography and coding II, p. 193-197, Oxford University Press, 1992.
-
-\bibitem{Rai} \emph{Efficient Computation of Isomorphism Between Finite Fields},
-\bsc{Eric M. Rains}, 1996.
-
-\bibitem{Sam} \emph{Théorie algébrique des nombres}, \bsc{Pierre Samuel}, 
-Hermann, 1971.
-
-\bibitem{Sil} \emph{The Arithmetic of Elliptic Curves}, 
-\bsc{Joseph H. Silverman}, Graduate texts in mathematics, Springer, 2nd ed. 
-2009.
-
-\bibitem{Was1} \emph{Introduction to Cyclotomic Fields}, \bsc{Lawrence C. 
-Washington}, Graduate texts in mathematics, Springer-Verlag, 1982.
-
-\bibitem{Was2} \emph{Elliptic Curves, Number Theory and Cryptography},
-\bsc{Lawrence C. Washington}
+\bibitem{Dat} \emph{Théorie algébrique des nombres}, \bsc{Jean-François Dat},
+Université Pierre et Marie Curie, 2013, \bsc{url}
+\url{https://www.imj-prg.fr/~jean-francois.dat/enseignement/TNM2/TNM2.pdf}
 
 \end{thebibliography}
 \end{document}
