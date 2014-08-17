@@ -8,7 +8,7 @@
 \usepackage{amssymb}
 \usepackage[colorlinks=false]{hyperref} %Apparemment ça sert à rien...
 \usepackage{enumerate}
-\usepackage{tocloft}             % Pour la table des matières
+%\usepackage{tocloft}             % Pour la table des matières
 \usepackage{algorithm}
 \usepackage{algorithmic}
 \usepackage{pgf}
@@ -22,7 +22,7 @@
 \numberwithin{equation}{section}
 
 % Maccros pour les commandes de math
-\newcommand\nroot[1]{\textit{#1}\up{\textit{ième}}}
+\newcommand\nroot[1]{\textit{#1}-ième}
 \newcommand\zmodn[1]{\mathbb{Z}/#1\mathbb{Z}}
 \newcommand\zmodninv[1]{(\mathbb{Z}/#1\mathbb{Z})^{\times}}
 \newcommand\GF[1]{\mathbb{F}_{#1}}
@@ -38,17 +38,21 @@
 \newcommand\EO{\mathcal{O}}
 \newcommand\PP[1]{\mathbb{P}^{#1}}
 \newcommand\etmath{\textup{\quad et \quad}}
+\newcommand\M[1]{\textup{M}(#1)}
+\newcommand\E[1]{\textup{E}(#1)}
+\newcommand\I[1]{\textup{I}(#1)}
 
 % Éviter l'overlap dans la table des matières pour les sections, sous-sections
 % etc.
-\setlength{\cftsecnumwidth}{3em}    
-\setlength{\cftsubsecnumwidth}{3em} 
+%\setlength{\cftsecnumwidth}{3em}    
+%\setlength{\cftsubsecnumwidth}{3em} 
 
 
+\sloppy
 \begin{document}
-\title{Calcul d'isomorphisme pour les corps finis}
+\title{Calcul d'isomorphisme de corps finis}
 \author{Ludovic Brieulle}
-\newtheorem{thm}{Thèorème}[section]
+\newtheorem{thm}{Théorème}[section]
 \newtheorem{lem}[thm]{Lemme}
 \newtheorem{cor}{Corollaire}[thm]
 \newtheorem{prop}[thm]{Proposition}
@@ -66,22 +70,54 @@
 Soit $\GF{q}$ le corps fini à $q = p^r$ éléments, avec $p$ un nombre premier. On
 définit alors $\overline{\GF{q}}$ sa clôture algébrique. Lorsqu'on a besoin de
 faire des calculs dans cette clôture, il peut être plus aisé de calculer
-directement sur un corps fini en particulier. Il est donc important de pouvoir
-se déplacer rapidement entre les différents sous-corps de cette clôture.\par
+directement sur un corps fini en particulier. Il n'y a pas d'unique façon de
+partir d'un corps premier pour \og atteindre\fg\, la clôture algébrique. Les
+différentes façons d'y parvenir peuvent être représenter par ce qu'on appelle 
+un réseau de corps finis. On le représente, par exemple, de la façon 
+suivante :
+
+\begin{equation}
+\begin{tikzpicture}
+\matrix(m)[matrix of math nodes,
+row sep=1em, column sep=3em,
+text height=2ex, text depth=0.5ex]
+{ & &\overline{\GF{q}} &  &\\
+\GF{5^4} & & \GF{5^6} & &\\
+& \GF{5^2} & & \GF{5^3} & \GF{5^5}\\
+& & \GF{p} & & \\};
+\path[dashed,-,font=\scriptsize,>=angle 90]
+(m-1-3) edge (m-2-1)
+(m-1-3) edge (m-2-3)
+(m-1-3) edge (m-3-5);
+\path[-,font=\scriptsize,>=angle 90]
+(m-2-1) edge (m-3-2)
+(m-2-3) edge (m-3-2)
+(m-2-3) edge (m-3-4)
+(m-2-1) edge (m-3-2)
+(m-4-3) edge (m-3-2)
+(m-4-3) edge (m-3-4)
+(m-4-3) edge (m-3-5);
+\end{tikzpicture}
+\end{equation}
+
+Pour passer d'une branche à l'autre, il faut plonger un corps de l'ancienne
+branche dans un corps de la nouvelle. Seulement, on a pas nécessairement
+utiliser la même représentation pour les deux branches. Une façon de
+procéder est de construire un isomorphisme entre le corps d'une branche et le
+sous-corps isomorphe de l'autre branche.\par
 Il est connu et prouvé que de deux corps finis de même cardinal sont reliés par
 un isomorphisme. Cependant la preuve de ce résultat n'est pas constructive,
-trouver un tel isomorphisme demande alors un travail supplémentaire.\par
+trouver un tel isomorphisme demande alors un travail supplémentaire.
 La situation est la suivante, nous avons deux extensions de $\GF{q}$ de même
 degré et définies par deux polynômes irréductibles distincts $f$ et $g$. 
 On notera :
 \[k_1=\GF{q}[X]/(f)\etmath k_2=\GF{q}[Y]/(g)\]
-le but est donc de trouver un isormophisme reliant ces deux corps. Une méthode
-simple et immédiate est d'envoyer $x = \bar{X}$ sur une racine de $f$ dans
-$k_2$. Le problème est que cela revient à factoriser le polynôme $f$ ce qui est
-beaucoup trop lent.
-On va donc dans ce rapport étudier deux méthodes permettant, \textit{via}
-l'utilisation de racines de l'unité et de courbes elliptiques, de calculer
-rapidement de tels isomorphismes. 
+le but est donc de trouver un isormophisme reliant ces deux corps. 
+Une méthode simple et immédiate est d'envoyer $x = \bar{X}$ sur une racine de 
+$f$ dans $k_2$. Le problème est que cela revient à factoriser le polynôme $f$ 
+ce qui est beaucoup trop lent. On étudiera dans ce rapport étudier deux méthodes 
+permettant de calculer, \textit{via} l'utilisation de racines de l'unité et de 
+courbes elliptiques, rapidement de tels isomorphismes. 
 
 \newpage
 \addcontentsline{toc}{part}{Table des matières}
@@ -91,13 +127,13 @@ rapidement de tels isomorphismes.
 \part{Rappels théoriques}
 \label{un}
 
-Cette partie consistera principalement à rappeler et énoncer les résultats dont
+Cette partie consiste principalement à rappeler et énoncer les résultats dont
 nous aurons besoin afin de justifier et mettre en place les deux algorithmes 
 pour calculer les isomorphismes de corps finis. Cette partie n'a pas pour 
 vocation de faire un exposé complet des notions abordées, pour un traité plus 
 détaillé, le lecteur pourra consulter au choix \cite{LiNi1}, \cite{MuPa} ou 
-\cite[chap.~III]{Per} pour les corps finis; \cite{Nek}, \cite[chap.~VIII]{Pol},
-\cite[chap. VI]{Sam} ou \cite{Esc} pour la théorie de Galois; \cite{Sam}, 
+\cite[chap.~III]{Per} pour les corps finis;
+\cite[chap.~VI]{Sam} ou \cite{Esc} pour la théorie de Galois; \cite{Sam}, 
 \cite{Was1} ou \cite{Lan} pour la théorie des nombres; \cite{Sil} ou 
 \cite{Was2} pour la théorie sur les courbes elliptiques; et pour finir 
 \cite{GaGe} pour tout ce qui concerne le calcul formel en général. On 
@@ -105,75 +141,111 @@ s'efforcera néamoins de démontrer les résultats les plus importants ou
 fondamentaux. Le c\oe ur du sujet se trouve lui dans la partie \ref{deux}.
 
 \section{Corps finis}
-Dans cette section on va rappeler les définitions et démontrer certains 
+Dans cette section on rappelle les définitions et démontrer certains 
 résultats liés aux corps finis. Principalement, on étudiera les extensions 
-de corps et la théorie de Galois sur les corps finis. On ne considérera
-que des corps commutatifs.
+de corps et la théorie de Galois sur les corps finis. Tous les corps seront
+considérés commutatifs. 
 
 \subsection{Définitions}
+Un corps fini $K$ est un corps à $q = p^r$ éléments, où $p$ un nombre premier
+s'appelle la \emph{caractéristique} de $K$ telle que pour tout $x\in K$ :
+
+\begin{equation}
+p\cdot x = \underbrace{x+\dots+x}_{p\textup{ fois}} = 0
+\end{equation}
+
+Un corps fini est muni de l'automorphisme de Frobenius définie par :
+\begin{equation}
+\textup{Fr} : x \mapsto x^p
+\end{equation}
+On a aussi :
+\begin{equation}
+\textup{Fr}_q = \underbrace{\textup{Fr}\circ\cdots\circ\textup{Fr}}_{r\textup{
+fois}}
+\end{equation}
+qui à tout $x\in \bar{K}$ associe $x^q$.\par
+
+On caractérise les éléments de $q$ par l'identité $x^q - x = 0$. En effet, le
+groupe des inversibles de $K$ est d'ordre $q-1$, donc pour tout $x\in K$ on a
+$x^{q-1} = 1$ et il suffit de multiplier par $x$ pour obtenir l'identité.
+On peut complètement caractériser les corps finis par le théorème suivant. Il
+assure entre autre que deux corps finis de même cardinal sont isomorphes, ce qui
+sera le point de départ de notre travail.
 
 \begin{thm}
 \label{th:isomGF}
 Pour tout nombre premier $p$ et tout entier strictement positif $n$, il existe 
 un corps fini à $p^n$ éléments. Tout corps fini à $q = p^n$ éléments est 
-isomorphe au corps de décomposition de $X^q - X$ sur $\GF{p}$. On parlera alors 
-du corps fini à $q$ éléments et on le notera $\GF{q}$.
+isomorphe au corps de décomposition de $X^q - X$ sur $\GF{p}$. On parlera 
+alors du corps fini à $q$ éléments et on le notera $\GF{q}$.
 \end{thm}
 \begin{proof}
 \textit{(Existence)} Pour $q = p^n$, on considère le polynôme $X^q - X$ dans 
-$\GF{p}[X]$ et on note $K$ son corps de décomposition, définition \ref{def:dec},
-sur $\GF{p}$. Le polynôme est séparable ou n'a aucune racine multiple puisque sa
-dérivée est égale à $qX^{q-1} - 1 = -1$, proposition \ref{prop:sepderiv}. Posons
-$S=\lbrace x\in K : x^q - x = 0\rbrace$, alors $S$ est un sous-corps de $K$; $0$
-et $1$ sont dans $K$ et d'après les propriétés sur le Frobenius et les résultats
-obtenus plus haut on a :
-\[(a - b)^q = a^q - b^q = a - b \etmath(ab^{-1})^q = a^qb^{-q} = ab^{-1}\]
+$\GF{p}[X]$ et on note $K$ son \emph{corps de décomposition}, définition 
+\ref{def:dec}, sur $\GF{p}$. Le polynôme est \emph{séparable}, définition 
+\ref{def:sep}, ou n'a aucune racine multiple puisque sa dérivée est égale à 
+$qX^{q-1} - 1 = -1$, proposition \ref{prop:sepderiv}. Posons $S=\lbrace x\in K 
+: x^q - x = 0\rbrace$, alors $S$ est un sous-corps de $K$; $0$ et $1$ sont 
+dans $K$ et d'après les propriétés sur le Frobenius et les résultats obtenus 
+plus haut on a :
+\begin{equation}
+(a - b)^q = a^q - b^q = a - b \etmath(ab^{-1})^q = a^qb^{-q} = ab^{-1}
+\end{equation}
 Ainsi, $S$ contient toutes les racines de $X^q - X$ mais comme $K$ a déjà $q$
 éléments, alors $K = S$ est un corps à $q$ éléments.\par
-\textit{(Unicité)} Soit $K$ le corps à $q = p^n$ éléments, d'après le théorème
-\ref{th:corfincarprem}, est de caractéristique $p$ et contient $\GF{p}$. On en
-déduit que $K$ est un corps de décomposition de $X^q - X$ sur $\GF{p}$,
-puisqu'il est scindé sur $K$, et l'unicité se déduit de l'unicité des corps de
-décomposition, théorème \ref{cor:dec}.
+\textit{(Unicité)} Soit $K$ le corps à $q = p^n$ éléments, il est de 
+caractéristique $p$ et contient $\GF{p}$. On en déduit que $K$ est un corps de 
+décomposition de $X^q - X$ sur $\GF{p}$, puisqu'il est scindé sur $K$, et 
+l'unicité se déduit de l'unicité des corps de décomposition, corollaire 
+\ref{cor:dec}.\\
 \end{proof}
 
 \subsection{Extension de corps}
 \label{def:degext}
+Soit $k$ et $K$ deux corps, s'il existe un homomorphisme de $k$ vers $K$ alors
+celui-ci est nécessairement injectif. Supposons qu'on ait $f(x) = 0$, cela
+s'écrit aussi $x.f(1) = 0$ donc $x = 0$ puisque un corps n'a pas de diviseur de
+$0$ et $f(1) = 1$. 
 On dit que $K$ est une extension de corps de $k$ s'il existe un morphisme de 
-corps $\varphi : k \to K$. Ou de façon équivalente, si $k \subseteq K$ alors $K$
-est une extension (de corps) de $k$; on note aussi $K/k$ une extension de corps.
+corps $\varphi : k \to K$ ou de façon équivalente, si $k \subseteq K$ alors $K$
+est une extension (de corps) de $k$. On notera $K/k$ une extension de corps.
 Si on a $k\subseteq L \subseteq K$, alors $L/k$ est une sous-extension de
-$K/k$.\par
+$K/k$. On appelle corps premier un corps qui n'a pas de sous-corps ou de
+sous-extensions.\par
 Soit $K/k$ une extension de corps et $S$ une partie de $K$. Le sous-corps $L := 
 k(S)$ de $K$ engendré par $S$ sur $k$ est le plus petit sous-corps de $K$ 
 contenant $S$ et $k$. Si $S = \lbrace x_1,\dots,x_n \rbrace$ est fini, alors on 
-note $L = K(x_1,\dots,x_n)$, on dit alors que l'extension est de type fini. 
-L'extension $L/k$ est dite monogène ou simple si elle est engendré par un seul 
-élément.\par
-Si $K/k$ est une extension on peut voir $K$ comme un $k$-espace vectoriel ou une
-$k$-algèbre. On appelle $[K:k] := dim_k(K)$ le degré de l'extension. On dit 
-qu'une extension $K/k$ est de degré fini si $[K:k] < \infty$.\par
+note $L = K(x_1,\dots,x_n)$, on dit alors que l'extension est de \emph{type
+fini}. L'extension $L/k$ est dite \emph{monogène} ou \emph{simple} si elle est
+engendrée par un seul élément. Si $K/k$ est une extension de corps, alors on peut 
+voir $K$ comme un $k$-espace vectoriel ou une $k$-algèbre. On appelle $[K:k] := 
+dim_k(K)$ le \emph{degré} de l'extension. On dit qu'une extension $K/k$ est de 
+degré fini si $[K:k] < \infty$.\par
 
 \begin{thm}
 Soit $k \subseteq L \subseteq L$ des extensions de corps de degré fini. Alors on
 a :
-\[[K:k] = [K:L][L:k]\]
+\begin{equation}
+[K:k] = [K:L][L:k]
+\end{equation}
 \end{thm}
 \begin{proof}
 Soit $[K:L] = m$ et $[L:k] = n$. On a donc que $K$ est un $L$-espace vectoriel 
 de dimension $m$ et $L$ est un $k$-espace vectoriel de dimension $n$, le 
 théorème revient à montrer que $K$ est un $k$-espace vectoriel de dimension 
 $mn$. Or, d'après ce qui précède, on a $L \simeq k^n$ et $K \simeq L^m$, d'où
-\[K \simeq \underbrace{L \oplus\dots\oplus L}_{m fois}\simeq\underbrace
-{k^n\oplus\dots\oplus k^n}_{m fois} \simeq k^{nm}\]
+\begin{equation}
+K \simeq \underbrace{L \oplus\dots\oplus L}_{m fois}\simeq\underbrace
+{k^n\oplus\dots\oplus k^n}_{m fois} \simeq k^{nm}
+\end{equation}
 ce qui prouve le théorème.\\
 \end{proof}
 
-On dit qu'un élément $x\in K$ est algèbrique sur $k$ s'il existe un polynôme 
-unitaire à coefficient dans $k$ qui annule $x$. L'ensemble des éléments 
-algébrique d'un corps (sur un sous-corps) forme un corps \cite[p.~64, théorème
-1.14]{Per}. On dit qu'une extension $K/k$ est algébrique si tous les éléments 
-de $K$ sont algébriques sur $k$.
+On dit qu'un élément $x\in K$ est \emph{algèbrique} sur $k$ s'il existe un 
+polynôme unitaire à coefficients dans $k$ qui annule $x$. L'ensemble des 
+éléments algébriques d'un corps (sur un sous-corps) forme un corps \cite[p.~64, 
+théorème 1.14]{Per}. On dit qu'une extension $K/k$ est algébrique si tous les 
+éléments de $K$ sont algébriques sur $k$.
 
 \begin{prop}
 Toute extension de degré fini est algébrique et de type fini.
@@ -184,72 +256,45 @@ $(\alpha_1,\dots,\alpha_n)$ en tant que $k$-espace vectoriel, on a alors $K
 = k(\alpha_1,\dots,\alpha_n)$. Comme $[K:k] = n < \infty$, si $\alpha\in K$ 
 alors $1, \alpha, \dots, \alpha^n$ satisfont une relation de dépendance 
 linéaire, \textit{i.e.} il existe $a_0, \dots, a_n$ dans $k$ tels que :
-\[a_0 + a_1.\alpha + \dots + a_n.\alpha^n = 0\]
+\begin{equation}
+a_0 + a_1.\alpha + \dots + a_n.\alpha^n = 0
+\end{equation}
 puisque $K$ est un $k$-espace vectoriel. D'où tout $\alpha$ est algébrique 
 sur $k$.\\
 \end{proof}
 
-\begin{prop}
-Soit $\alpha\in L$ un élément algébrique sur $k$ et $f = X^d + a_1X^{d-1} + 
-\dots + a_d$ son polynôme minimal sur $k$. Si on pose $d := \textup{deg }f$ 
-alors on a :
-\begin{enumerate}[(i)]
-\item Les éléments $1, \alpha,\dots,\alpha^{d-1}$ forment une base de 
-$k[\alpha]$ en tant qu'espace vectoriel.
-\item $k[\alpha]$ est un corps, on a alors $k[\alpha] = k(\alpha)$.
-\item On a $[k(\alpha):k] = d$.
-\end{enumerate}
-\end{prop}
+Soit $L/K$ une extension de corps et $\alpha\in L$ un élément algébrique sur
+$K$. Si on note $\Irr{K}{\alpha}$ le \emph{polynôme minimal} de $\alpha$ sur $K$
+et on pose $n := \textup{deg\,}\Irr{K}{\alpha}$ alors l'anneau des polynômes
+sur $K$ en $\alpha$ noté $K[\alpha]$ est égal au corps des fractions rationnels
+en $\alpha$ $K(\alpha)$ et c'est un $K$-espace vectoriel de dimension de $n$ qui 
+admet pour base la base $1,\alpha,\dots,\alpha^{n-1}$ qu'on appellera la 
+\emph{base monomiale}. En résumé, $K(\alpha)/K$ est une extension de corps de
+degré $n$, on l'appelle le \emph{corps de rupture} de $\Irr{K}{\alpha}$ et
+s'obtient en quotientant l'anneau des polynômes sur $K$ par l'idéal engendré par le
+polynôme minimal de $\alpha$. De façon plus générale, le corps de rupture d'un
+polynôme $P\in K[X]$ est l'extension de $K$ obtenue en adjoignant une racine
+$\alpha$ de $P$ à $K$ :
+\begin{equation}
+K(\alpha)\simeq K[X]/(P)
+\end{equation}
 
-\begin{proof}
-(i) Il suffit de multiplier l'identité $\alpha^d = -a_1\alpha^{d-1} - \dots 
-- a_d$ par $\alpha^i$ pour $i\geq0$ et on montre par récurrence que :
-\[\alpha^{d+i} \in k\cdot1 + \dots + k\cdot\alpha^{d-1}\]
-d'où $k[\alpha] = k\cdot1 + \dots + k\cdot\alpha^{d-1}$. De plus, les éléments 
-$1,\alpha,\dots,\alpha^{d-1}$ sont linéairement indépendants puisque si :
-\[u_0\cdot1 + u_1\cdot\alpha + \dots + u_{d-1}\cdot\alpha^{d-1} = 0\]
-avec les $u_i\neq0$ cela contredirait la minimalité du degré de $f$.\par
-(ii) $k[\alpha] \subset L$ est le sous-anneau d'un corps, il est donc intègre. 
-De plus, pour tout $\beta\in k[\alpha]$ l'application $m_{\beta}$ de la 
-multiplication par $\beta$ dans $k[\alpha]$ est $k$-linéaire et injective, 
-puisque l'anneau est intègre. Pour finir, elle est aussi surjective puisque 
-nous sommes en dimension finie, donc il existe $x\in k[\alpha]$ tel que 
-$m_{\beta}(x) = \beta x = 1$.\par
-(iii) Il résulte directement des deux points précédents.\\
-\end{proof}
-
-On vient de décrire plus ou moins la construction d'extension de corps 
-\textit{via} des polynômes irréductibles ou par "adjonction de racines". 
-Concrètement, soit $k$ un corps et $P$ un polynôme irréductible unitaire 
-dans $k[X]$. Comme $k[X]$ est principal (il est même euclidien) alors $(P)$ est 
-un idéal maximal, on peut alors faire le quotient $k[X]$ par $(P)$ est on 
-obtient un corps $K \simeq k[X]/(P)$. Dans ce cas, la classe de $X$ qu'on notera
-$x := \overline{X}$, est une racine du polynôme $P$ et engendre $K$ sur $k$.\par
-Pour encore aller plus loin, considérons une extension $L/k$ telle que $P$ 
-admette une racine $\alpha\in L$. Si on note $\Irr{k}{\alpha}$ le polynôme 
-minimal de $\alpha$, alors $\Irr{k}{\alpha}$ divise $P$, donc est égal à 
-$\lambda P$ pour $\lambda\in k^{\times}$, puisque $P$ est irréductible. Alors 
-le morphisme $k$-algèbre $\phi : k[X] \to L$ défini par $\phi(X) = \alpha$ 
-induit un morphisme de $k$-algèbre $\varphi : K \to L$ tel que $\varphi(x) 
-= \alpha$. Ce morphisme est unique puisque $x$ engendre $K = k(x)$.\par
+Considérons une extension $L/K$ telle que $P\in K[X]$ irréductible admette une 
+racine $\alpha\in L$. Alors $\Irr{K}{\alpha}$ divise $P$, donc est égal à 
+$\lambda P$ pour $\lambda\in K^{\times}$, puisque $P$ est irréductible. Alors 
+le morphisme $K$-algèbre $\phi : K[X] \to L$ défini par $\phi(X) = \alpha$ 
+induit un morphisme de $K$-algèbre $\varphi : K[X]/(P) \to L$ tel que 
+$\varphi(x) = \alpha$. Ce morphisme est unique puisque $x$ engendre $K[X]/(P)$. 
+Ce qui montre en particulier l'existence et l'unicité à isomorphisme près des 
+corps de rupture.\par
 \vspace{0.3cm}
-On a montré en particulier le théorème suivant :
-
-\begin{thm}
-Soit $k$ un corps et $P$ un polynôme irréductible dans $k[X]$. Alors $K := 
-k[X]/(P)$ est un sur-corps de $k$ dans lequel $P$ a au moins une racine, la 
-classe de $\overline{X} = x$. On l'appelle le corps de rupture de $P$ sur 
-$k$.\par
-\end{thm}
-
 Une autre notion importante est celle de corps de décomposition d'un polynôme 
 non constant sur un corps $k$.
 
 \begin{defn}
 \label{def:dec}
 Le corps de décomposition d'un polynôme $P\in k[X]$ est le sur-corps $K \supset 
-k$ contenant toutes les racines de $P$, qui est engendré par les racines 
-susnommées.
+k$ contenant toutes les racines de $P$ et engendré par celles-ci.
 \end{defn}
 
 \begin{thm}
@@ -260,13 +305,13 @@ isomorphisme près.
 \begin{proof}
 \textit{(Existence)}
 Pour prouver l'existence du corps de décomposition, il suffit de se placer 
-dans la clôture algèbrique de $k$, alors si on note $K_0$ le corps engendré 
+dans la clôture algébrique de $k$, alors si on note $K_0$ le corps engendré 
 par $\alpha_1,\dots,\alpha_n$ les racines de $P$, il est clair que $K_0$ est 
 le corps de décomposition de $P$.\par
 \textit{(Unicité)}
-On veut réalité montrer que si on a deux corps de décompositions, alors ils ont
+On veut réalité montrer que si on a deux corps de décomposition, alors ils sont
 isomorphes. Soit deux corps $k$ et $k^{\prime}$ isomorphes, on note $\phi$
-l'isomorphisme, qu'on étend alors de façon évidente à un isomorphisme de $k[X]$ 
+l'isomorphisme, qu'on étend alors de façon évidente en un isomorphisme de $k[X]$
 dans $k^{\prime}[X]$; \textit{i.e.} on applique $\phi$ au coefficients des 
 polynômes. On pose  $L$ et $L'$ les corps de décomposition de $P\in k[X]$ et $P'
 = \phi(P) \in k^{\prime}[X]$ respectivement.\par
@@ -293,10 +338,13 @@ démontré ce qu'il fallait.\\
 Penchons-nous alors plus en détails sur les corps finis. On peut se demander
 étant donné un corps finis $\GF{p^n}$ quels peuvent être les corps qui le
 contiennent. Dans un premier temps, il faut que les deux corps aient la même
-caractéristique. Supposons qu'il existe un isomorphisme $f : \GF{p^n} \to 
-\GF{l^m}$ pour $p$ et $l$ premiers. En particulier, on a pour $x\in\GF{p^n}$ :
-\[f(p.x) = 0 = p.f(x)\]
-pour $f(x)\in\GF{l^m}$, donc nécessairement $l = p$.\par
+caractéristique. Supposons qu'il existe un morphisme $f : \GF{p^n} \to 
+\GF{\ell^m}$ pour $p$ et $\ell$ premiers. En particulier, on a pour 
+$x\in\GF{p^n}$ :
+\begin{equation}
+f(p.x) = 0 = p.f(x)
+\end{equation}
+pour $f(x)\in\GF{\ell^m}$, donc nécessairement $\ell = p$.\par
 Ainsi, si le morphisme existe alors $\GF{p^n}^{\times}$ est un sous-groupe
 d'ordre $p^n - 1$ de $\GF{p^m}^{\times}$ d'ordre $p^m - 1$. Donc, on a $p^n - 1$
 qui divise $p^m - 1$. Si on écrit $m = q.n + r$ avec $r < n$ alors on obtient :
@@ -306,7 +354,7 @@ seule possibilité pour $r$ est $0$ et donc $n|m$. On vient de prouver la
 nécessité du critère suivant :
 
 \begin{prop}
-Soit $\GF{q}$ un corps fini à $q = p^m$ éléments, alors tout ces sous-corps sont
+Soit $\GF{q}$ un corps fini à $q = p^m$ éléments, alors tout ses sous-corps sont
 de la forme $\GF{p^n}$ avec $n|m$. Réciproquement, soit $n|m$ alors il existe un
 (et un seul) sous-corps de $\GF{q}$ de cardinal $p^n$.
 \end{prop}
@@ -319,23 +367,18 @@ Pour montrer l'autre sens, il suffit de remarquer que $\GF{p^n}$ correspond aux
 
 \begin{thm}
 \label{th:elemprim}
-Toute extension séparable (\ref{def:sep}) et finie est simple.
+Toute extension séparable (\ref{def:sep}) et de degré fini est simple.
 \end{thm}
 \begin{proof}
 On va se contenter de le prouver dans le cas d'un corps fini; le cas général
 demande un peu plus de travail. On invitera le lecteur a consulté
-\cite[p.~87]{Esc} ou \cite[Chap. VIII]{Pol}.\par
+\cite[p.~87]{Esc}.\par
 Si $K$ est un corps fini alors son groupe mulitplicatif $K^{\times}$ est
 cyclique (voir par exemple la preuve de la proposition \ref{prop:rootcycl} ou
 \cite[p.~50]{LiNi1}). Dans ce cas, il suffit de prendre pour générateur d'une
 extension $L/k$, le générateur du groupe mulitplicatif de $L$ et c'est gagné.\\
 \end{proof}
 
-Cela implique en particulier que toutes extensions de corps finis peut s'écrire
-comme combinaison linéaire de puissances d'un unique élément, en pratique cet
-élément sera la racine du polynôme par lequel on quotiente le corps premier afin
-d'obtenir l'extension.
-\vspace{0.3cm}
 %TODO : Trace, norme, multiplication par un élément ?
 
 Deux notions importantes pour les extensions de corps sont la trace et la norme
@@ -343,28 +386,35 @@ d'un élément d'une extension par rapport à un sous-corps. On les définit com
 suit:
 
 \begin{defn}
-Soit $L/K$ une extension de dimension finie et $\alpha\in L$. On appelle matrice
-de multiplication par $\alpha$ la matrice de l'application :
+Soit $L/K$ une extension de dimension finie et $\alpha\in L$. On appelle
+endormorphisme de multiplication par $\alpha$ l'application :
 \begin{align*}
 m_{\alpha} :&L \longrightarrow L\\
 &x\longmapsto\alpha.x
 \end{align*}
 On appellera alors trace et norme de $\alpha$ la trace et le déterminant 
-de la matrice de $m_{\alpha}$. Les formules suivantes, pour $\alpha, \alpha'\in
+de l'endormorphisme de $m_{\alpha}$. Les formules suivantes, pour $\alpha, \alpha'\in
 L$ :
-\[ m_{\alpha + \alpha'} = m_{\alpha} + m_{\alpha'} \etmath
-m_{\alpha\alpha'} = m_{\alpha}m_{\alpha'}\]
-induisent les résultats classiques de la norme et la trace.
+\begin{equation}
+m_{\alpha + \alpha'} = m_{\alpha} + m_{\alpha'} \etmath
+m_{\alpha\alpha'} = m_{\alpha}\circ m_{\alpha'} 
+\end{equation}
+induisent les résultats classiques de la norme et la trace, \textit{i.e.} :
+\begin{align}
+\textup{Tr}_{L/K}(\alpha + \alpha') &= \textup{Tr}_{L/K}(\alpha) +
+\textup{Tr}_{L/K}(\alpha')\\
+N_{L/K}(\alpha\alpha') &= N_{L/K}(\alpha)N_{L/K}(\alpha')
+\end{align}
 \end{defn}
 
-On a la proposition suivante :
-
 \begin{prop}
-Soit un $K$ un corps de caractéristique nulle ou finie, $L/K$ une extension
+Soit un $K$ un corps de caractéristique 0 ou fini, $L/K$ une extension
 algébrique de degré $n$ sur $K$. Soit 
 $x_1,\dots, x_n$ les racines du polynôme minimal de $x$, dans le corps de
 décomposition de celui-ci, chacune répétée $[L:K(x)]$ fois; alors on a :
-\[Tr_{L/K}(x) = x_1 + \dots + x_n \etmath N_{L/K}(x) = x_1\dots x_n\]
+\begin{equation}
+Tr_{L/K}(x) = x_1 + \dots + x_n \etmath N_{L/K}(x) = x_1\dots x_n
+\end{equation}
 De plus, le polynôme caractéristique de $x$ relativement à $L$ et $K$ est $(X -
 x_1)\dots(X - x_n)$.
 \end{prop}
@@ -372,30 +422,48 @@ x_1)\dots(X - x_n)$.
 %TODO: Je voulais en déduire que la trace est surjective, mais je sais plus trop
 %comment, si tu t'en souviens un jours...
 
-\subsection{Théorie de Galois}
+\subsection{Groupe de Galois d'une extension de corps finis}
 %TODO :Définitions et résutlats de base (sans forcément tout prouver),
 %Frobenius, action de groupes ? Ça me parait raisonnable...
 %Groupe de Galois, élément primitif, extensions galoisiennes, etc.
-Soit $L/k$ et $K/k$ deux extensions finies de corps avec $L\subseteq K$, alors 
-il existe des morphismes qui laisse $k$ inchangé. On les appelles des 
-$k$-morphismes et on note :
-\[\textup{Hom}_k(L, K)\]
-L'ensemble de tels morphismes. Si $L = K$, on parle alors de $k$-endomorphisme
-et si ceux parmis ces endomorphismes qui sont inversibles forment un groupe,
-qu'on appelle le groupe des automorphismes de $L$ et on le note :
+Soit un corps $L$ et l'ensemble $G$ des automorphismes de $L$, l'ensemble des
+éléments de $x\in L$ tels que $\sigma(x) = x$ pour tout $\sigma\in G$ est un
+sous-corps $K$ de $L$, c'est le corps des invariants de $G$. Soit $L/K$ et
+$L'/K$ deux extensions de corps, on appelle $K$-homomorphisme de $L$ dans $L'$ 
+les morphismes de $K$-algèbre de $L$ dans $L'$. Si $L = L'$ alors on parle de
+$K$-automorphisme et ceux-ci forment un groupe pour la loi de composition.
 
-\vspace{0.3cm}
+\begin{thm}
+Soit $L/K$ une extension de corps de type fini de degré $n$, avec $K$ un corps
+fini ou de caractéristique nulle. Les conditions suivantes sont équivalentes :
+\begin{enumerate}[(i)]
+	\item $K$ est le corps des invariants du groupe $G$ des $K$-automorphismes
+de $L$.
+	\item Pour tout $x\in L$, le polynôme minimal de $x$ sur $K$ a toutes ses
+racines dans $L$.
+	\item $L$ est engendré par les racines d'un polynôme sur $K$.
+\end{enumerate}
+Dans ces conditions, le groupe $G$ est d'ordre égal à $n$.
+\end{thm}
 
-On dit qu'un polynôme irréductible $f$ est séparable sur un corps $K$ si toutes
+\begin{defn}
+\label{def:gal}
+Une extension de corps est galoisienne si elle satisfait les
+conditions du théorème. Dans ce cas, $G$ s'appelle le groupe de Galois de $L/K$, 
+on le note $G := Gal(L/K)$. Si $G$ est abélien (resp. cyclique) alors l'extension 
+est dite abélienne (resp. cyclique).
+\end{defn}
+
+Un polynôme irréductible $f$ est séparable sur un corps $K$ si toutes
 ses racines dans un corps de décompositions sont distinctes; la notion est
 indépendante du corps de décomposition choisi, puisqu'il existe un $K$-morphisme
-reliant les racines et dans ce cas leurs images sont aussi distinctes. On dit
-qu'un élément $\alpha$ est spérable sur $K$ si son polynôme minimal est 
+reliant les racines et dans ce cas leurs images sont aussi distinctes. 
+Un élément $\alpha$ est spérable sur $K$ si son polynôme minimal est 
 séparable sur $K$.
 
 \begin{defn}
 \label{def:sep}
-On dit qu'une extension algébrique $L/K$ est séparable si tout les $\alpha\in L$
+Une extension algébrique $L/K$ est séparable si tout les $\alpha\in L$
 sont séparables.
 \end{defn}
 
@@ -408,7 +476,9 @@ irréductibles le sont.
 \begin{prop}
 \label{prop:sepderiv}
 Soit $P$ irréductible sur un corps $K$, on a l'équivalence suivante :
-\[P\textup{ séparable } \Leftrightarrow P'\neq 0\]
+\begin{equation}
+P\textup{ séparable } \Leftrightarrow P'\neq 0
+\end{equation}
 \end{prop}
 
 \begin{prop}
@@ -427,16 +497,18 @@ diviseur de $P$ dans $L[X]$. Alors $Q$ est spérable sur $L$.
 Soit $K$ un corps de décomposition de $P$ sur $L$, alors $Q$ est scindé dans $L$
 et ses racines sont parmi celles de $P$ qui sont déjà deux à deux distinctes.\\
 \end{proof}
-Pour finir, soit $x\in K$ alors $Irr_L(x)$ est un diviseur de $Irr_k(x)$ dans
+Pour finir, soit $x\in K$ alors $\Irr{L}{x}$ est un diviseur de $\Irr{k}{x}$ dans
 $L[X]$ et on conclut en appliquant le lemme.\\
 \end{proof}
 
 \begin{prop}
-Soit $K/k$ une extension algébrique simple, $P = Irr_k(\alpha)$ et $d =
+Soit $K/k$ une extension algébrique simple, $P = \Irr{k}{\alpha}$ et $d =
 \textup{deg\;}P = [K:k]$. Alors pour toute extension $L/k$, le nombre de
 $k$-morphismes de $K \to L$ est égal au nombre de racine distinctes de $P$ dans
 $L$. On a alors :
-\[\#\textup{Hom}_k(K,L)\leq[K:k]\]
+\begin{equation}
+\#\textup{Hom}_k(K,L)\leq[K:k]
+\end{equation}
 avec égalité si et seulement si $P$ a $d$ racines distinctes dans $L$.
 \end{prop}
 \begin{proof}
@@ -446,46 +518,14 @@ $k$-morphisme, il suffit d'envoyer $\alpha$ sur $\beta$ et ces morphismes sont
 disctints pour chaque racine distincte.\\
 \end{proof}
 
-On admettra le théorème suivant, il fait usage de la proposition ci-dessus et
-des théorèmes 15.54 et 16.16 de \cite[Chap. VIII]{Pol}. Il nous permettra de
-prouver le corollaire suivant.
-
-\begin{thm}
-Soit $K/k$ une extension de degré finie. 
-
-\begin{enumerate}[(1)]
-\item Si $x\in K$ est séparable sur $k$, alors $k(x)/k$ est séparable.
-
-\item Soit $k \subset E \subset K$. Si $K/E$ et $E/k$ sont séparables alors
-$K/k$ l'est aussi.
-
-\item Si $K = k[x_1,\dots,x_r]$ avec chaque $x_i$ séparable sur $k$, alors $K/k$
-est séparable.
-\end{enumerate}
-\end{thm}
-
-\begin{cor}
-Soit $P\in k[X]$ un polynôme séparable et $K$ un corps de
-décomposition de $P$ sur $k$. Alors $K/k$ est séparable.
-\end{cor}
-\begin{proof}
-Soit $x_1,\dots,x_r$ les racines de $P$ dans $K$, alors $K = k[x_1,\dots,x_r]$
-par définition. On pose :
-\[P = Q_1\dots Q_n\]
-Par hypothèse, chaque $Q_j$ est séparable, lemme \ref{lem:divsep}, or les $x_i$ 
-sont racines d'un des $Q_j$ donc leurs polynômes minimaux divisent ces $Q_j$ et 
-en appliquant à nouveau le lemme, on montre que tous les $x_i$ sont séparables. 
-On fini en appliquant le point (3) du théorème précédent.\\
-\end{proof}
-
 Soit $f$ un polynôme irréductible de degré $n$ sur un corps $K$. Soit $\alpha_1 
 = a$ une racine de $f$ et $\alpha_2,\dots,\alpha_n$ les autres racines de $f$ 
 dans une corps de décomposition. Alors on dit que les $\alpha_i$ sont les 
 conjugués de $\alpha$ sur $K$.
 \begin{defn}
-On dit qu'une extension $L/K$ est normale ou quasi-galoisienne, si pour tout
-$a\in L$, $Irr_k(a)$ a toutes ses racines dans $L$. Ou de façon équivalente, $L$
-contient tous les conjugués de $a$.
+Une extension $L/K$ est \emph{normale} ou \emph{quasi-galoisienne}, si pour tout
+$a\in L$, $\Irr{k}{a}$ a toutes ses racines dans $L$ ou, de façon équivalente,
+si $L$ contient tous les conjugués de $a$.
 \end{defn}
 
 \begin{prop}
@@ -493,9 +533,6 @@ contient tous les conjugués de $a$.
 Soit $P\in k[X]$ de degré $n\geq 1$ et $K$ un corps de décomposition de $P$ sur
 $k$. Alors $K/k$ est normale.
 \end{prop}
-\begin{proof}
-\cite[Chap. VIII, p.~167]{Pol}\\
-\end{proof}
 
 Revenons alors au groupe des $k$-automorphismes d'une extension. On a la
 proposition suivante :
@@ -506,7 +543,9 @@ $g\in\textup{Aut}_k(K)$, $g(\alpha)$ est racine de $\Irr{k}{\alpha}$. Si on
 pose $G = \textup{Aut}_k(K)$ alors l'orbite de $\alpha$ sous l'action de $G$,
 qu'on notera $G\alpha$ est un ensemble fini de cardinal inférieur ou égal à
 $\textup{deg}_k(x)$ et $\Irr{k}{\alpha}$ est divisible par :
-\[\prod_{\beta\in G\alpha}{(X - \beta)}\]
+\begin{equation}
+\prod_{\beta\in G\alpha}{(X - \beta)}
+\end{equation}
 \end{prop}
 \begin{proof}
 Comme $g$ est un morphisme on a $0 = g(P(\alpha)) = P(g(\alpha))$ d'où
@@ -517,21 +556,8 @@ forcément fini et de cardinal inférieur ou égal à $d$. Le produit des $X -
 \beta$ pour $\beta\in G\alpha$ divise alors $P$.\\
 \end{proof}
 
-On va pouvoir alors introduire la notion du groupe de Galois d'une extension
-galoisienne. On énoncera la définition et quelques propriétés de base sur ce
-groupe qui nous servirons implicitement tout le long du rapport. On ne
-démontrera pas la plupart des résultats \textit{(sauf s'il me reste du temps
-pour peaufiner à fond)}. 
-
-\begin{defn}
-\label{def:gal}
-Soit $K/k$ une extension de degré fini. On dit que $K/k$ est galoisienne si
-$\#\textup{Aut}_k(K) = [K:k]$. Dans ce cas, on note $\textup{Gal}(K/k) :=
-\textup{Aut}_k(K)$ et pour tout $\alpha\in K$ et $g\in\textup{Gal}(K/k)$, les
-$g(\alpha)$ seront appelés les conjugués de $\alpha$.
-On appellera le groupe de Galois d'un polynôme $P$, le groupe de Galois d'un
-corps de décomposition de $P$; on pourra le noter $\textup{Gal}(P/k)$.
-\end{defn}
+On peut désormais énoncer un résultat qui permet de déterminer de façon plus
+pratique si une extension est galoisienne ou non.
 
 \begin{thm}
 Soit $K/k$ une extension de degré fini. Les conditions suivantes sont
@@ -542,12 +568,10 @@ Soit $K/k$ une extension de degré fini. Les conditions suivantes sont
 \item Le corps $K$ est le corps de décomposition d'un polynôme séparable.
 \end{enumerate}
 Sous ces conditions, pour tout $\alpha\in K$ on a :
-\[\Irr{k}{\alpha} = \prod_{\beta\in G\alpha}{(X - \beta)}\]
+\begin{equation}
+\Irr{k}{\alpha} = \prod_{\beta\in G\alpha}{(X - \beta)}
+\end{equation}
 \end{thm}
-\begin{proof}
-\cite[Chap. VIII, p.~169]{Pol}\\
-\end{proof}
-
 
 \begin{thm} Soit $k$ un corps, $P$ un polynôme de degré $n$ dans $k[X]$ et $K$ 
 un corps de décomposition de $P$. On a :
@@ -558,9 +582,6 @@ symétrique $\textup{S}_n$; donc son ordre divise $n!$.
 transitivement sur ses racines; son ordre est divisible par $n$.
 \end{enumerate}
 \end{thm}
-\begin{proof}
-\cite[Chap. IX, p.~206]{Pol}\\
-\end{proof}
 
 Pour les corps finis, déterminer le groupe de Galois est beaucoup plus facile
 comme le montre le théorème suivant :
@@ -578,9 +599,9 @@ On a déjà montré que $\GF{q^n}$ était le corps de décomposition de $Q = X^{
 proposition \ref{prop:sepderiv}.  D'où $\GF{q^n}/\GF{q}$ est galoisienne et donc
 :
 \[|\textup{Gal}(\GF{q^n}/\GF{q})| = [\GF{q^n}:\GF{q}] = n\]
-Comme le Frobenius est un $\GF{q}$-automorphisme, c'est une morphisme et un 
+Comme le Frobenius est un $\GF{q}$-automorphisme, c'est un morphisme et un 
 élément de $\GF{q}$ élevé à la puissance $q^n$ est toujours égal à lui-même, 
-c'est un élément de $\textup{Gal}(\GF{q^n}/\GF{q})$. Notons $d$ son ordre, donc
+c'est un élément de $\textup{Gal}(\GF{q^n}/\GF{q})$. Notons $d$ son ordre, alors
 $\textup{Fr}_q^d = Id_{\GF{q^n}}$ ou encore, pour tout $x\in\GF{q^n}$ :
 \[\textup{Fr}_q^d(x) = x^{q^d} = x \Leftrightarrow x^{q^d} - x = 0\]
 Le polynôme $X^{q^d} - X$ ayant au plus $d$ racines, on a $d\geq n$ et donc $d =
@@ -594,58 +615,35 @@ résultat.\\
 %TODO : Racines de l'unités et quelques mots sur les polynômes 
 %cyclotomiques et leurs extensions. Peut-être rajouter un ou deux mots sur le 
 %cas des corps finis.
-On définit une racine \nroot{n} de l'unité dans un corps $K$ 
-comme un élément $u\in K$ tel que pour $n\in\NN$ on ait $u^n = 1$. Ce 
-sont exactement les racines du polynômes $X^n - 1$.
-On note $U_n$ l'ensemble des racines \nroot{n} de l'unité dans une clôture 
-algébrique de $K$ et $U_n(K)$ l'ensemble des racines \nroot{n} de l'unité 
-appartenant à $K$.
+Soit $A$ un anneau et $n\in\NN$, une racine \nroot{n} de l'unité dans $A$ est un
+$u\in A$ tel que $u^n = 1$. On note $U_{n,A}$ l'ensemble des racines \nroot{n} de
+l'unité dans $A$ et pour tout corps $K$, on note $U_{n,\bar{K}}$ l'ensemble
+des racines de l'unité dans une clôture algébrique de $K$. Comme il ne 
+dépend pas du choix de la clôture algébrique, on le note $U_{n,K}$.\par
 
 \begin{prop}
 \label{prop:rootcycl}
-Soit $K$ un corps, s'il contient $n$ racines \nroot{n} de l'unité alors elles 
-forment un groupe cyclique $U_n(K)$ d'ordre $n$ isomorphe à $\zmodn{n}$.
+L'ensemble $U_{n,K}$ forme un groupe pour la multiplication dans $K$ et si 
+$|U_{n,K}| = n$ alors il est non canoniquement isomorphe à $\zmodninv{n}$.
 \end{prop}
 \begin{proof}
-La proposition découle d'un théorème plus général disant que tout sous-groupe 
+La proposition découle d'un résultat plus général disant que tout sous-groupe 
 fini $G$ du groupe multiplicatif $K^*$ est formé de racine de l'unité et est 
-cyclique. Lui-même est tiré de deux corollaires du théorème suivant (voir 
-\cite[p.~26-27]{Sam} pour une démonstration détaillée) :
-
-\begin{thm}
-Soit $A$ un anneau principal, $M$ un $A$-module libre de type fini et $M'$ un 
-sous-module de $M$. Alors :
-\begin{enumerate}[1)]
-\item $M'$ est un module libre de rang $\leq n$.
-\item Il existe une base $(e_1,\dots,e_n)$ de $M$, un entier $q\leq n$ et des 
-éléments $a_1,\dots,a_q$ non nuls de $A$ tels que $(a_1e_1,\dots,a_qe_q)$ soit 
-une base $M'$ avec $a_i|a_{i+1}$ pour tout $1\leq i\leq q-1$.
-\end{enumerate}
-\end{thm}
-
-\begin{cor}
-Soit $E$ un $A$-module de type fini. Alors $E$ est isomorphe à un produit 
-$(A/\mathfrak{a}_1)\times\dots\times(A/\mathfrak{a}_n)$, où les $\mathfrak{a}_i$
-sont des idéaux de $A$ tels que $\mathfrak{a}_1\supset\mathfrak{a}_2\supset
-\dots\supset\mathfrak{a}_n$.
-\end{cor}
-
-\begin{cor}
+cyclique. 
+\begin{lem}
 Soit $G$ un groupe commutatif fini. Il existe $x\in G$ dont l'ordre est le 
 $ppcm$ des ordres des éléments de $G$.
-\end{cor}
-\begin{proof}
-On sait qu'un groupe commutatif est un $\ZZ$-module (si on le note 
-additivement). D'après le corollaire ci-dessus, $G$ est donc isomorphique à 
-un produit $\zmodn{a_1}\times\dots\times\zmodn{a_n}$ où $a_1|a_2|\dots|a_n$. 
-Aucun des $a_i$ n'est nul, sinon $G$ serait infini; ce serait le produit de 
-$\ZZ^r$ avec des groupes finis. On note $y$ la classe de $1$ dans 
-$\zmodn{a_n}$ et on pose $x = (0,\dots,0,y)$. Alors $x$ est d'ordre $a_n$ et si 
-on prend un élément $z\in G$, avec $z = (z_1,\dots,z_n)$, on a aussi $a_nz = 0$ 
-car $a_i|a_n$ pour tout $1\leq i \leq n$. $x$ est donc l'élément recherché.\\
-\end{proof}
-
-De là, on en déduit qu'il existe un $z\in G$ d'ordre $n$ tel que $y^n = 1$ pour 
+\end{lem}
+En effet, on sait qu'un groupe commutatif est un $\ZZ$-module (si on le note 
+additivement). D'après la classification des modules de type fini, $G$ est 
+isomorphe à un produit $\zmodn{a_1}\times\dots\times\zmodn{a_n}$ où 
+$a_1|a_2|\dots|a_n$. Aucun des $a_i$ n'est nul, sinon $G$ serait infini; 
+ce serait le produit de $\ZZ^r$ avec des groupes finis. On note $y$ la classe 
+de $1$ dans $\zmodn{a_n}$ et on pose $x = (0,\dots,0,y)$. Alors $x$ est d'ordre 
+$a_n$ et si on prend un élément $z\in G$, avec $z = (z_1,\dots,z_n)$, on a aussi 
+$a_nz = 0$ car $a_i|a_n$ pour tout $1\leq i \leq n$. L'élément $x$ est donc
+l'élément recherché.\par
+On en déduit qu'il existe un $z\in G$ d'ordre $n$ tel que $y^n = 1$ pour 
 tout $y\in G$. Comme le nombre de racines de $X^n - 1$ sur un corps est au plus 
 $n$ alors $G$ a au plus $n$ éléments. Or $z$ est d'ordre $n$ donc $G$ contient 
 les éléments $z, z^2,\dots,z^n = 1$ qui sont distincts. Donc $G$ est formé par 
@@ -654,125 +652,36 @@ naturellement.\\
 \end{proof}
 
 \begin{defn}
-On appelle racine primitive \nroot{n} de l'unité les racines qui engendrent 
-$U_n$.
+On appelle racine \emph{primitive} \nroot{n} un générateur de $U_{n,K}$. On note
+$U_{n,K}^{\times}$ l'ensemble de ces racines.
 \end{defn}
 
-\begin{prop}
-Les racines primitives \nroot{n} de l'unité forment un sous-groupe $U^{\times}_n
-$ 
-isomorphe à $(\zmodn{n})^*$. En particulier, il y en a $\varphi(n)$.
-\end{prop}
-\begin{proof}
-D'après \ref{prop:rootcycl} les éléments qui engendrent $U_n$ sont exactement 
-les éléments dont l'image engendre $\zmodn{n}$. D'où l'isomorphisme et l'ordre 
-de $U^{\times}_n$.\\
-\end{proof}
+Lorsqu'on les considère sur $\CC$, on définit à partir des racines primitives de
+l'unité le polynôme suivant :
+\begin{equation}
+\Phi_n(X) = \prod_{\zeta\in U_n^{\times}}{(X - \zeta)}
+\end{equation}
 
-Lorsqu'on les considère sur $\CC$, les racines \nroot{n} de l'unité sont 
-de la forme $e^{2ik\pi/n}$ et les racines primitives définissent un polynôme 
-qu'on appelle polynôme cyclotomique défini comme suit : 
-\[\phi_n(X) = \prod_{\zeta\in U_n^{\times}}{(X - \zeta)}\]
-On va montrer qu'il s'agit du polynôme minimal de ces racines sur $\QQ$, 
-commençons par la proposition suivante :
-
-\begin{prop}
-Le polynôme $\phi_n$ appartient à $\ZZ[X]$ et est de degré égal à 
-$\varphi(n)$.
-\end{prop}
-\begin{proof}
-Nous allons utiliser les deux résultats suivants; on ira voir 
-\cite[p.~72, 80]{Per} pour des démonstrations détaillées.
-
-\begin{lem}
-Soit $n\in\NN^*$ alors on a $n = \sum_{d|n}{\varphi(d)}$.
-\end{lem}
-
-\begin{prop}
-On a $X^n - 1 = \prod_{d|n}{\phi_d(X)}$.
-\end{prop}
-
-On va alors raisonner par récurrence sur $n$. On a $\phi_1(X) = X-1 
-\in\ZZ[X]$. Supposons alors que le résultat soit vrai pour $d<n$. Posons 
-$F(X) = \prod_{d|n\atop{d\neq n}}{\phi_d(X)}$, alors $F\in\ZZ[X]$ et est 
-unitaire. Si on fait la division euclidienne de $X^n - 1$ par $F$ dans 
-$\ZZ[X]$, alors on obtient :
-\[X^n - 1 = F(X)P(X) + R(X)\]
-avec $P, R \in\ZZ[X]$ et $\textup{deg~}R < \textup{deg~}F$. Or, on a déjà
-$X^n - 1 = \phi_n(X).F(X)$ dans $\QQ[X]$, \textit{i.e.} $F(X)(\phi_n(X) -
-P(X)) = R(X)$, mais le degré de $R$ étant plus petit que celui de $F$, on a 
-nécessairement $\phi_n = P \in\ZZ[X]$. Le résultat sur le degré résulte 
-de la proposition et du lemme ci-dessus.\\
-\end{proof}
-\begin{thm}
-Le polynôme $\phi_n$ est irréductible sur $\QQ$.
-\end{thm}
-\begin{proof}
-Soit $K$ un corps de décomposition de $\phi_n$ sur $\QQ$, $\zeta$ une 
-racine primitive \nroot{n} de l'unité et $p$ un nombre premier ne divisant pas 
-$n$. Les racines primitives de l'unité sont toutes de la forme $\zeta^m$ avec 
-$(m, n) = 1$ puisqu'elles doivent être d'ordre exactement égal à $n$; cela ce 
-soit sur leur expression exponentielle. On veut alors montrer que $\zeta$ et 
-$\zeta^p$ ont exactement le même polynôme minimal.\par
-Posons alors $f$ et $g$ les polynômes minimaux sur $\QQ$ de $\zeta$ et 
-$\zeta^p$ respectivement. Ils sont dans $\ZZ[X]$ puisqu'ils divisent tous
-les deux $\phi_n(X)$. En effet, comme $\ZZ[X]$ est factoriel, on a :
-\[\phi_n = f_1^{a_1}\dots f_r^{a_r}\]
-avec $f_i$ unitaire, irreductible et dans $\ZZ[X]$; puisque $\phi_n$ est
-unitaire et dans $\ZZ[X]$. Alors un $f_i$ annule $\zeta$ et un $f_j$ 
-annule $\zeta^p$; or ils sont, d'après Gauss, irréductibles et unitaires dans 
-$\QQ[X]$, il s'agit donc de $f$ et $g$. En particulier, $f$ et $g$ 
-divisent $\phi_n$ dans $\ZZ[X]$.\par
-Supposons alors que $f \neq g$. Comme ils sont irréductibles et disctincts, leur
-produit $f.g$ divise $\phi_n$. Comme $g(\zeta^p) = 0$, alors $\zeta$ est racine 
-de $g(X^p)$, ainsi $f$ divise $g(X^p)$ dans $\QQ[X]$ mais aussi dans 
-$\ZZ[X]$ d'après le lemme de Gauss sur les contenus de polynômes. On va 
-alors considérer les polynômes dans $\GF{p}[X]$, on note $\bar{f}$ et $\bar{g}$ 
-leurs réductions modulo $p$. Par Frobenius, on obtient que $\bar{g}(X^p) = 
-\bar{g}(X)^p$, ainsi si on prend $r$ un facteur irréductible de $\bar{f}$ et on 
-écrit :
-\[\bar{g}(X)^p = \bar{f}(X)\bar{h}(X)\]
-alors $r$ divise aussi $\bar{g}$ par le lemme d'Euclide. Puique $f.g$ divise 
-$\phi_n$ alors $\bar{f}.\bar{g}$ divise $\bar{\phi_n}$, on a $r^2$ qui divise 
-$\bar{\phi_n}$. Ceci implique en particulier que $\bar{\phi_n}$ aurait une 
-racine double, donc $\bar{X}^n - 1$ aussi. Or, $\bar{X}^n - 1$ est séparable sur
-$\GF{p}$ puisque $(X^n - 1)' = nX^{n-1}$ et $p$ ne divise pas $n$, il ne peut 
-donc pas avoir de racines multiples, d'où une contradiction.\par
-Reste alors à montrer que tous les conjugués de $\zeta$ sont exactement les 
-autres racines primitives \nroot{n} de l'unité. Si on prend une racine primitive
-\nroot{n} $\zeta'$ quelconque, alors on a $\zeta' = \zeta^m$ où $m = p_1^{a_1}
-\dots p_l^{a_l}$ avec $p_i \nmid n$. Il suffit alors de faire de procéder par 
-récurrence en utilisant le raisonnement ci-dessus pour s'appercevoir que $\zeta$
-et $\zeta'$ ont effectivement le même polynôme minimal. De sorte que $f$ admet 
-toutes les racines primitives comme zéros, \textit{i.e.} $\textup{deg~}f \geq 
-\textup{deg~}\phi_n$, et $f\mid\phi_n$ alors on a bien $f = \phi_n$ irréductible
-sur $\QQ$ comme on voulait.\\
-\end{proof}
+%TODO : Expliquer que Phi_n est à coefficient dans ZZ, de degré phi(n) et qu'il
+%est irréductible, qu'en gros c'est le polynôme minimal des racines primitives
+%de l'unité; peut-être faire le lien entre les degrés et le nombre de
+%générateur du groupe des racines de l'unité.
+C'est un polynôme irréductible à coefficients dans $\ZZ$ et de degré
+$\varphi(n)$ où est $\varphi$ est l'indicatrice d'Euler. On l'appelle le
+\emph{polynôme cyclotomique}, il s'agit du polynôme minimal des racines
+\nroot{n} de l'unité. On appelle \emph{corps cyclotomique} le corps
+de décomposition de $\Phi_n$.
 
 \begin{rem}
-Comme $\phi_n$ est unitaire alors son contenu est égal à $1$ ce qui implique, 
-avec ce qui précède, qu'il est alors aussi irréductible dans $\ZZ[X]$.
-\end{rem}
-\vspace{0.3cm}
-Grâce à ce résultat on peut alors introduire une notion qui nous sera utile dans
-la suite, celle de corps cyclotomique.
-
-\begin{defn}
-Soit $K$ un corps commutatif, on appelle corps cyclotomique $K^{(n)}$ sur $K$ le
-corps de décomposition de $X^n - 1$ sur $K$.
-\end{defn}
-
-\begin{rem}
-D'après les résultats ci-dessus, on voit que dans le cas $K = \QQ$, le 
-corps de décomposition de $X^n - 1$ est exactement $\QQ(\zeta_n) \simeq 
-\QQ[X]/\phi_n(X)$, où $\zeta_n$ est une racine primitive. C'est en 
-particulier une extension algébrique simple.
+Dans le cas $K = \QQ$, le corps de décomposition de $X^n - 1$ est exactement 
+$\QQ(\zeta_n) \simeq \QQ[X]/\phi_n(X)$, où $\zeta_n$ est une racine primitive. 
+C'est en particulier une extension algébrique simple.
 \end{rem}
 
 %TODO: Parler des racines de l'unité dans les corps finis avant de foutre le
 %résultat.
-Le théorème suivant sera cruciale dans la suite du mémoire, il servira notament 
-à justifier théoriquement la méthode de Rains.
+Le théorème crucial pour la suite du mémoire, il sert notamment à justifier une
+partie de l'algorithme de Rains cyclotomique.
 
 \begin{thm}
 \label{th:polycycldecomp}
@@ -793,9 +702,6 @@ de celui-ci. Ainsi, le polynôme minimal de $\zeta$ est de degré $d$ et comme o
 a choisi $\zeta$ arbitrairement, on obtient le résultat voulu.\\
 \end{proof}
 
-Dans la suite de la sous-section précédente, on peut énoncer un résultat sur les
-extensions cyclotomiques sur $\QQ$.
-
 \begin{prop}
 Soit $n \geq 2$ et $\zeta$ une racine primitive \nroot{n} de l'unité sur $\QQ$
 , alors l'extension $\QQ(\zeta_m)/\QQ$ est galoisienne. En particulier, on a 
@@ -806,12 +712,12 @@ les points suivant :
 
 \item On a $[\QQ(\zeta_m):\QQ] = \varphi(n)$.
 
-\item Et $\textup{Gal}(L/K) = \zmodninv{n} \simeq U^{\times}(n)$.
+\item Et $\textup{Gal}(L/K) = \zmodn{n} \simeq U_{n,\QQ}$.
 \end{enumerate}
 \end{prop}
 \begin{proof}
 (i) On a vu que $\phi_n$ était le polynôme minimal de toutes les racines 
-primitives \nroot{m} de l'unité et comme ces mêmes racines forment un groupe 
+\nroot{m} de l'unité et comme ces mêmes racines forment un groupe 
 cyclique, elles sont toutes dans $\QQ(\zeta_m)/\QQ$; d'où l'extension est
 normale.\par
 (ii) $\phi_n$ est irréductible de degré $\varphi(n)$, donc on a bien
@@ -829,17 +735,17 @@ appliquant le (ii), ce qui implique que $\psi$ est un isomorphisme, et en
 rappelant la définition \ref{def:gal}.\\
 \end{proof}
 
-\section{Théorie des nombres}
+\section{Idéaux d'anneau d'entiers d'un corps de nombre}
 %TODO: Tout ce qui concerne la preuve de Rains avec les idéaux 
 %premiers, les normes d'ideaux, la factorisation unique, Galois, les périodes de
 %Gauss, les périodes elliptiques (Mihailescu et al.) ou plus précisément ce qui 
 %permet d'y arriver.
 Dans cette section, on introduira la notion de corps de nombres, de leur
-anneaux d'entier et des idéaux premiers sur ses anneaux. Le but va être de 
+anneaux d'entier et des idéaux premiers sur ses anneaux. Le but est de 
 démontrer l'identité fondamentale dans le cadre des extensions Galoisienne. 
 Cela sera utile pour la sous-section \ref{sec:pergauss} et plus précisément le 
 théorème \ref{th:gaussnormal}.
-\subsection{Entiers sur les corps de nombres}
+\subsection{Définitions}
 %TODO :Définitions (normes, traces, éléments algébriques, etc.)
 % entiers algébrique, anneaux des entiers, discriminant (?)
 Commençons par le théorème suivant :
@@ -876,7 +782,7 @@ avec les $a_{ij}\in A$.
 
 
 
-\subsection{Idéaux premiers}
+\subsection{Identité fondamentale}
 %TODO: Idéaux premiers sur les anneaux d'entiers de corps de nombres,
 %décomposition unique, résultat de la théorie de Galois.
 
@@ -884,7 +790,7 @@ avec les $a_{ij}\in A$.
 \section{Courbes elliptiques}
 %TODO: Définitions (j-invariant, nombres de points, tordues, module de
 %Tate (?) etc.), résultats généraux, sur les corps finis
-On va maintenant introduire les courbes elliptiques et plus en particulier les
+On introduit maintenant les courbes elliptiques et plus en particulier les
 courbes elliptiques sur les corps finis. Parmi les notions importantes qui nous
 serons utiles, on parlera des points de torsion, des périodes elliptiques et des
 tordues d'une courbe elliptique. Dûe à la nature un peu extérieur des courbes
@@ -898,206 +804,6 @@ précision.
 %"simple"; liste des différents paramètres/invariants qui nous intéressent.
 %j-invariant, groupe d'automorphisme ?> c'est peut-être là que je peux utiliser
 %le module de Tate...
-Commençons par une définition plutôt générale d'une courbe elliptique.
-
-\begin{defn}
-Une courbe elliptique est un couple $(E, \EO)$, où $E$ est une courbe 
-projective lisse de genre $1$ et $\EO$ un point de $E$ qu'on appelle origine.
-\end{defn}
-
-Par abus de langage, on parlera désormais de la courbe elliptique $E$ en
-supposant l'origine $\EO$ fixée. Une courbe projective est une variété de
-dimension $1$ dans $\PP{2}$; le genre est un invariant de la courbe, on ne
-s'attardera pas dessus; et la notion de courbe lisse sera rapidement définie
-plus loin \ref{def:lisse}.\par
-On dira qu'une courbe E est définie 
-sur $K$ si son équation est à coefficient dans $K$ et on notera $E/K$. Si on ne
-précise pas le corps de définition, cela veut dire qu'on considère $E$ sur la
-clôture algébrique de $K$.
-
-\begin{defn} 
-On appelle équation de Weierstrass, une équation projective de $\PP{2}$ de la
-forme :
-\begin{equation}
-\label{eq:weierfull}
-ZY^2 + a_1XYZ + a_3YZ^2 = X^3 + a_2X^2Z + a_4XZ^2 + a_6Z^3
-\end{equation}
-On appelle courbe de Weierstrass, une courbe projective $W$ définie par 
-l'équation \ref{eq:weierfull}, elle possède un point à l'infini $O = 
-[0, 1, 0]$.
-\end{defn}
-
-On ne s'intéressera principalement au corps de caractéristique différente de $2$
-et $3$. Dans ce cas, il existe deux changements de variables, (voir \cite[Chap. 
-III,p.~42]{Sil} qui permettent d'obtenir la forme plus connue qui servira pour 
-les courbes elliptiques, autrement dit une courbe de Weierstrass $W$ peut se 
-mettre sous la forme, en posant $Z = 1$ :
-\begin{equation}
-\label{eq:weiersimpl}
-y^2 = x^3 + Ax + B
-\end{equation}
-où $A, B\in\bar{K}$. Pour la forme complète, on définit aussi les
-quantités suivantes :
-\begin{align*}
-b_2 &= a_1^2 + 4a_2,\\
-b_4 &= 2a_4 + a_1a_3,\\
-b_6 &= a_3^2 + 4a_6,\\
-b_8 &= a_1^2a_6 + 4a_2a_6 - a_1a_3a_4 + a_2a_3^2 - a_4^2,\\
-c_4 &= b_2^2 - 24b_4,\\
-c_6 &= b_2^3 + 36b_2b_4 - 216b_6,\\
-\Delta &= -b_2^2b_8 - 8b_4^3 - 27b_6^2 + 9b_2b_4b_6,\\
-j &= c_4^3/\Delta,\\
-\end{align*}
-
-\begin{defn}
-On appelle $\Delta$ le discriminant d'une courbe de Weierstrass et $j$ le
-$j$-invariant de cette même courbe.
-\end{defn}
-
-On va maintenant énoncé le résulat permettant de faire le lien entre les courbes
-elliptiques et celles de Weierstrass.
-
-\begin{prop}
-Soit $E$ une courbe elliptique définie sur un corps $K$.
-\begin{enumerate}[(i)]
-\item Il existe des fonctions $x, y\in K(E)$ telles que l'application :
-\begin{align*}
-\phi :&\;E \longrightarrow \PP{2}\\
-&P \longmapsto [x,y,1]
-\end{align*}
-donne un isomorphisme entre $E/K$ et une courbe de Weierstrass donnée par
-l'équation :
-\[W : Y^2 + a_1XY + a_3Y = X^3 + a_2X^2 + a_4X + a_6\]
-avec $a_1,\dots,a_6\in K$ et satisfaisant $\phi(\EO) = [0, 1, 0]$.
-
-\item Les seuls changements de variables qui conservent la structure d'équation
-de Weierstrass sont de la forme :
-\[X = u^2X' + r, \quad Y = u^3Y' + su^2X' + t,\]
-avec $u\in K^{\times}$ et $r,s,t\in K$.
-
-\item Réciproquement, toutes courbes projectives lisses données par une équation
-de Weierstrass \ref{eq:weierfull} est une courbe elliptique de point d'origine
-$\EO = [0, 1, O]$.
-\end{enumerate}
-\end{prop}
-
-On ne va pas démontrer ce résultat. Le point (i) permet entre autre d'utiliser
-la formule \ref{eq:weiersimpl} pour les courbes elliptiques définies sur des
-corps de caractéristique différente de 2 et 3. Le point (ii) permettra, entre
-autre, de calculer les tordues d'une courbe elliptique. Le point (iii) est assez
-parlant de lui-même.\par
-On va s'attarder un peu sur le caractère lisse d'une courbe de Weierstrass (donc
-elliptique) et ses invariants. Commençons par une définition générale :
-
-\begin{defn}
-Soit $V$ une variété, $P\in V$ et $f_1,\dots,f_m \in\bar{K}[\bar{X}]$ des 
-générateurs de $I(V)$. Alors $V$ est non-singulière ou lisse en $P$ si la 
-matrice $m \times n$ suivante :
-\[\left(\frac{\partial f_i}{\partial X_j}(P)\right)_{1\leq i \leq m\atop 1\leq j
-\leq m}\]
-est de rang $n - \textup{dim}(V)$; où $\bar{X} = X_1,\dots,X_n$. La variété $V$
-est dite lisse si elle est lisse en tous ses points.
-\end{defn}
-
-Pour une courbe $E$ d'équation \ref{eq:weiersimpl}, on définit le discrimant et
-le $j$-invariant de $E$ comme suit :
-\[\Delta = -16(4A^3 + 27B^2) \etmath j = -1728\frac{(4A)^3}{\Delta}\]
-Les seuls changements de variables conservant la forme simplifiée sont les
-suivants :
-\[x = u^2x' \etmath y = u^3y' \textup{\quad pour un } u\in K^{\times}\]
-ce qui nous donne :
-\[u^4A' = A, \quad u^6B' = B, \quad u^{12}\Delta' = \Delta\]
-
-\begin{prop}
-\label{def:lisse}
-Une courbe $E$ donnée par une équation de Weierstrass est lisse si est seulement
-si $\Delta \neq 0$.
-\end{prop}
-\begin{proof}
-On peut commencer par montrer que $\EO$ n'est jamais un point singulier. Pour
-cela, il suffit de voir que si on pose :
-\[F(X,Y,Z) = Y^2Z + a_1XYZ + a_3YZ^2 - X^3 - a_2X^2Z - a_4XZ^2 - a_6Z^3\]
-On a bien :
-\[F(\EO) = F(0, 1, 0) = 0 \etmath \frac{\partial F}{\partial Z}(\EO) = 1 \neq
-0\]
-D'où $\EO$ n'est pas singulier.\par
-Supposons alors que $E$ possède un point singuler $P = (x_0, y_0)$ et posons
-$f(x,y) = F(X/Z,Y/Z,1)$. Comme les changements de variable :
-\[x = x' + x_0, \quad y = y' + y_0\]
-laissent $\Delta$ inchangé (voir \cite[Chap. III,p.~44-45]{Sil}), 
-on peut supposer que $P = (0,0)$. Alors on a :
-\begin{align*}
-a_6 &= f(0,0),\\
-a_4 &= \frac{\partial f}{\partial x}(0,0) = 0,\\
-a_3 &= \frac{\partial f}{\partial y}(0,0) = 0,\\
-\end{align*}
-et en remplaçant ces valeurs dans les formules plus haut,
-on obtient $\Delta = 0$.\par
-Suppsosons alors que $E$ est lisse. Pour simplifier la preuve on se contentera
-de traiter uniquement les cas en caractéristique différente de $2$ et $3$ et
-considérons l'équation de Weierstrass de la forme :
-\[E : y^2 = x^3 + ax + b\]
-La courbe $E$ est singulière si et seulement si il existe un point $P = 
-(x_0,y_0)$ tel que :
-\[2y_0 = 3x^2 + a = 0\]
-Autrement dit, les points singuliers sont de la forme $(x_0, 0)$ où $x_0$ est
-racine double du polynôme $x^3 + ax + b$. Or ce polynôme n'a de racine double si
-et seulement si sont discriminant, égal à $4a^3 - 27b^2 = \Delta/16$, est nul.
-Ainsi, si $E$ n'est pas singulière, $\Delta\neq0$.\\
-\end{proof}
-
-\begin{prop}
-Soit $j_0\in\bar{K}$, alors il existe une courbe elliptique définie au-dessus de
-$K(j_0)$ telle que son $j$-invariant est $j_0$.
-\end{prop}
-\begin{proof}
-Supposons que $j \neq 0, 1728$ et considérons la courbe :
-\[E : y^2 + xy = x^3 - \frac{36}{j_0 - 1728}x - \frac{1}{j_0 - 1728}.\]
-De longs calculs permettent alors d'obtenir :
-\[\Delta = \frac{j_0^3}{(j_0 - 1728)^3} \etmath j = j_0\]
-On a donc les courbes qu'il faut pour toutes caractéristiques si $j \neq 0,
-1728$.\par
-Pour finir, les courbes suivantes complètent la liste :
-\begin{align*}
-E &: y^2 + y = x^3, \quad \Delta = -27, \quad j = 0,\\
-E &: y^2 = x^3 + x, \quad \Delta = -64, \quad j= 1728.
-\end{align*}
-\end{proof}
-
-Une notion, sinon la notion, importante de courbes elliptiques et le fait que
-l'ensemble des points d'une courbe elliptique muni de la loi de composition des
-cordes tangentes forme un groupe commutatif avec pour élément neutre le point 
-$\EO$.\par
-On se contentera d'énoncer les résultats fondamentaux de la loi de groupe sans 
-nécessairement tout prouver; voir \cite[Chap.~III, p~51-53]{Sil}. Il faut garder
-en mémoire que cette loi est définie pour les équations de Weierstrass et ce 
-n'est pas trivial qu'elle soit encore valable pour les courbes elliptiques. 
-
-\begin{prop}
-La loi de composition des cordes tangentes a les propriétés suivantes :
-\begin{enumerate}[(a)]
-\item Si une droite intersecte les points, non nécessairement disctints, $P, Q,
-R$, alors :
-\[(P\oplus Q) \oplus P = \EO.\]
-
-\item $P\oplus\EO=P$ pour tout $P\in E$.
-
-\item $P\oplus Q = Q \oplus P$ pour tout $P, Q\in E$.
-
-\item Soit $P\in E$, il existe un point de $E$ noté $\ominus P$, tel que :
-\[P\oplus(\ominus P) = \EO.\]
-
-\item Soit $P, Q, R \in E$, alors :
-\[(P\oplus Q) \oplus R = P\oplus (Q\oplus R).\]
-
-\item Supposons que $E$ est défini sur $K$, alors :
-\[E(K) = \lbrace{(x,y)\in K^2 : y^2 = x^3 + ax +
-b}\rbrace\cup\lbrace{\EO}\rbrace\]
-est un sous-groupe de $E$.
-\end{enumerate}
-\end{prop}
-%TODO : foutre les formulaire, peut-être parler des formes de Montgomery, parler
-%des points de torsions rapidement
 \subsection{Corps finis}
 %TODO: Nombres de points, théorème de Hasse, Frobenius, trace, points de 
 %torsions
@@ -1108,85 +814,100 @@ est un sous-groupe de $E$.
 %$y^2 = x^3 + 1$ et leurs tordues, pour préparer le terrain pour la partie 
 %elliptique de Rains
 
-\section{Complexité \& notations}
+\section{Complexité et notations}
 %TODO: Définir le $O$ et $O^{\sim}$; définir les notations etc. !!p. 720 de
 %Modern Computer Algebra!!
-Cette courte section va nous permettre de définir quelques notions de complexité
+Cette courte section nous permettra de définir quelques notions de complexité
 et surtout d'introduire les notations qu'on utilisera pour les futurs analyses
 de complexités des algorithmes étudiées.
+\vspace{0.3cm}
+On exprimera les opérations en nombre d'opération sur $\GF{q}$, on note
+$\M{n}$ le nombre de multiplications qu'il faut pour multiplier deux polynômes
+de degré au plus $n$ sur $\GF{q}$. Elle a les propriétés suivantes :
+\begin{equation}
+\label{eq:M1}
+\M{n}/n\geq\M{m}/M\textup{ si }n\geq m,\quad \M{mn} \leq m^2\M{n},
+\end{equation}
+pour tout $n, m\in\NN$. En particulier, elle est \emph{superlinéaire} :
+\begin{equation}
+\M{mn}\geq m.\M{n},\quad \M{n + m}\geq\M{n} + \M{m}, \quad \M{n}\geq n
+\end{equation}
+La seconde propriété de \ref{eq:M1} implique que M est au plus quadratique et donc
+pour toute constante positive $c$ on a $\M{cn}\in O(\M{n})$.\par
+Le nombre d'opérations nécessaires pour effectuer une mulitplication dans
+$\GF{q^n}$ sera noté $\E{n}\in O(\M{n})$, elle est aussi superlinéaire. De même,
+on note $\I{n}$ le nombre d'opérations pour inverser un élément dans $\GF{q^n}$,
+c'est habituellement supposé être en $O(\M{n}\,\textup{log\,}n)$.
 
 \part{Isomorphismes de corps finis}
 \label{deux}
 %TODO: Présentation du problème, énonciation des difficultés etc.
-On a vu, théorème \ref{th:isomGF}, qu'un corps fini était unique à isomorphisme
-près. De façons équivalente, deux corps finis de même cardinal sont donc 
+D'après le théorème \ref{th:isomGF}, deux corps finis de même cardinal sont
 isomorphes. Malheureusement, la preuve n'est pas constructive et ne permet donc 
 pas d'expliciter ou de construire un tel isomorphisme.\par
-On a également vu, théorème \ref{th:elemprim}, que tout corps fini, excépté le 
-corps premier, s'obtient par adjonction de la racine d'un polynôme irréductible
-du degré de l'extension. Il y a donc autant de corps finis "différents" de même
-cardinal que de polynômes irréductibles de bon degré sur le corps premier (ou 
-$\GF{q}$ si on ne part pas du corps premier). Le problème est donc comment 
-passer de l'un à l'autre.\par
+Le théorème \ref{th:elemprim} toute extension de corps fini s'obtient par 
+adjonction de racine. Il y a donc autant de représentation différente de corps
+finis de même cardinal que de polynômes irréductibles de bon degré. Le problème 
+est comment passer de l'une à l'autre.\par
+%TODO Retravailler peut-être cette partie pour la rendre plus compréhensible
+Soit $f$ et $g$ deux polynômes irréductibles de degré $n$ sur $\GF{q}$, on a :
+\begin{equation}
+k_1 := \GF{q}[X]/(f) \etmath k_2 := \GF{q}[Y]/(g). 
+\end{equation}
+On veut trouver un isomorphisme qui relie ces deux corps. Une première approche 
+naïve est de chercher une racine de $f$ dans $k_2$ et d'envoyer $x = \bar{X}$ 
+sur cette même racine. Cependant, cela implique de factoriser $f$, d'après 
+\cite[th. 14.14]{GaGe}, factoriser complètement un polynôme de degré $n$ sur 
+$\GF{q}$ prend un $O(nM(n)\textup{log}(qn))$. Et d'après \cite[cor 14.16]{GaGe}, 
+trouver une racine se fait en $O(M(n)\textup{log\;}n\textup{log}(qn))$. Sachant 
+qu'on cherche une racine sur une extension de degré $n$, la complexité devient 
+$O(E(n)\textup{log\;}n\textup{log}(nq^n))$.% = O~(n^3) ?
+On note aussi une méthode établie par Allombert \cite{All} qui 
+consiste essentiellement en de  l'algèbre linéaire, donc une complexité en 
+$O(n^{\omega})$ avec $2<\omega<3$.\par
+Un premier pas vers une méthode plus performante est la méthode de Pinch, 
+nous allons exposé une de ses variantes dans la section suivante.
 
 \section{Algorithme de Pinch}
 %TODO: Énonciation et descriptions de la méthode de Pinch, justification des 
 %résultats, explication des inconvénients et autre.
-Soit $f$ et $g$ deux polynômes irréductibles de degré $n$ sur $\GF{q}$, 
-$k_1 := \GF{q}[X]/(f)$ et $k_2 := \GF{q}[Y]/(g)$. On veut trouver un 
-isomorphisme qui relie ces deux corps de cardinal $q^n$. Une première approche 
-naïve est de chercher une racine de $f$ dans $k_2$ et d'envoyer $x = \bar{X}$
-sur cette même racine. Cependant, cela implique de factoriser $f$ ce qui prend
-beaucoup trop de temps. Pour être plus précis, d'après le théorème 14.14 de
-\cite[p.~390]{GaGe}, factoriser complètement un polynôme de degré $n$ sur 
-$\GF{q}$ prend un $O(nM(n)\textup{log}(qn))$. Et d'après le corollaire 14.16
-du même ouvrage \cite[p.~392]{GaGe}, trouver une racine se fait en
-$O(M(n)\textup{log\;}n\textup{log}(qn))$. Sachant qu'on cherche une racine sur 
-une extension de degré $n$, la complexité devient 
-$O(E(n)\textup{log\;}n\textup{log}(nq^n))$.\par
- Une méthode pour faire plus rapide est dûe à Pinch, l'une de ses variantes 
- utililses les racines de l'unité. C'est 
-celle qu'on va décrire dans la sous-section suivante. On pourra noter aussi une 
-autre  méthode établie par Allombert \cite{All} qui consiste essentiellement en 
-de  l'algèbre linéaire, donc une complexité en $O(n^{\omega})$ avec 
-$2<\omega<3$.
-
-\subsection{Principe}
-%TODO: Explication de la méthode et illustration avec l'exempe de l'article, 
-%peut-être ?
-Globalement, la méthode de Pinch consiste au départ à choisir un groupe $\Gamma$
-défini par des relations algébriques sur $\GF{q}$. Puis, on choisit un élément 
-$\gamma\in\Gamma$ tel que :
+La méthode de Pinch consiste à choisir un groupe $\Gamma$ défini par des 
+relations algébriques sur $\GF{q}$. Puis, on choisit un élément 
+$\gamma\in\Gamma$ tel que:
 \vspace{0.3cm}
 \begin{itemize}
-\item il soit d'ordre $m$ "petit" et défini sur $\GF{q^n}$,
+\item il soit d'ordre $m$ petit et défini sur $\GF{q^n}$,
 \item il engendre exactement $\GF{q^n}$; et non un de ses sous-corps.
 \end{itemize}
 \vspace{0.3cm}
-Par suite, on exprime alors $\gamma$ en tant que polynôme en $x$ et en
-polynôme en $y$ et, pour finir, on utilise ces deux expressions pour exprimer 
-$x$ en fonction de $y$, afin d'obtenir l'isomorphisme voulu.\par
-Dans la méthode qu'on va décrire, dite cyclotomique, on utilisera $\Gamma =
-k_1^{\times}$ et $\gamma$ sera une racine primitive \nroot{m} de l'unité.
+On exprime alors $\gamma$ en tant que polynôme en $x$ et en polynôme en $y$ 
+et on utilise ces deux expressions pour exprimer $x$ en fonction de $y$, 
+afin d'obtenir l'isomorphisme voulu.\par
 
-\vspace{0.3cm}
+\subsection{Méthode cyclotomique}
+%TODO: Explication de la méthode et illustration avec l'exempe de l'article, 
+%peut-être ?
 
-Pour qu'une racine \nroot{m} de l'unité soit dans un corps fini, il faut et il 
-suffit que $m$ divise l'ordre du groupe multiplicatif. Si c'est le cas, il y a
-parmis ces racines, des racines primitives \nroot{m}. Imaginons qu'on ait un 
-élément $\zeta_m$ dans $k_1^{\times}$ qui soit une racine primivite \nroot{m} de
-l'unité. Un morphisme $\phi$ entre $k_1$ et $k_2$ envoie alors 
-$\zeta_m$ sur racine primitive \nroot{m} de l'unité dans $k_2$; le problème est
-de trouver laquelle. On choisit $\zeta'_m$ une racine primitive \nroot{m} de 
-l'unité dans $k_2$ alors $\zeta_m$ s'enverra sur une puissance $\zeta'_m$
-puisque le groupe mulitplicatif d'un corps est cyclique. On définit alors les 
-applications $\phi_s : k_1 \to k_2$ pour $0 < s < m$, telles que :
-\[\phi(\zeta_m) = (\zeta'_m)^s\]
-Le but va être de déterminer quel $\phi_s$ définit un isomorphisme.\par
-Pour cela, on va utiliser un peu d'algèbre linéaire. De façon générale, si on a
-deux bases $(x_i)_{i\in I}$, $(y_i)_{i\in I}$ de $k_1$, $k_2$ respectivement,
-telles qu'il existe un isomorphisme $\phi$ qui envoie $x_i$ sur $y_i$ pour tout
-$i\in I = \lbrace{1,\dots,n}\rbrace$, on a alors :
+Pour la méthode cyclotomique on utilisera $\Gamma = k_1^{\times}$ et $\gamma$ 
+sera une racine primitive \nroot{m} de l'unité.
+Un corps fini contient toutes les racines \nroot{m} de l'unité si et seulement si 
+l'ordre de son groupe multiplicatif est divisible par $m$. En particulier, il
+contient alors des racines \nroot{m} primitives de l'unité. Soit $\zeta_m$ une
+racine \nroot{m} primitive de l'unité dans $k_1$, alors l'image de $\zeta_m$ par
+n'importe quel morphisme $\phi : k_1 \to k_2$ est une racine \nroot{m} primitive
+de l'unité.\par
+On choisit $\zeta'_m$ une racine primitive \nroot{m} de l'unité dans $k_2$
+alors $\zeta_m$ s'enverra sur une puissance $\zeta'_m$ puisque le groupe 
+mulitplicatif d'un corps est cyclique. On définit pour $0 < s < m$ les
+applications $\phi_s : k_1 \to k_2$ , telles que :
+\begin{equation}
+\phi_s(\zeta_m) = (\zeta'_m)^s
+\end{equation}
+Le but est de déterminer quel $\phi_s$ définit un isomorphisme.\par
+Pour cela, on utilise de l'algèbre linéaire. Si on a deux bases 
+$(x_i)_{i\in I}$, $(y_i)_{i\in I}$ de $k_1$, $k_2$ respectivement, telles 
+qu'il existe un isomorphisme $\phi$ qui envoie $x_i$ sur $y_i$ pour tout 
+$i\in I = \lbrace{1,\dots,n}\rbrace$, alors on a :
 \begin{align*}
 x_i &= \sum_{0\leq j < n}{a_{ij}x^j}\\
 y_i &= \sum_{0\leq k < n}{b_{ik}y^k}\\
@@ -1198,28 +919,26 @@ on a :
 \sum_{0\leq j < n}{a_{ij}\phi{(x^j)}}&= \sum_{0\leq j < n}{a_{ij}c_{jk}y^k}\\
 &= \sum_{0\leq k < n}{b_{ik}y^k}\\
 \end{align*}
-Ou de façon équivalente, si on pose $A$, $B$ et $C$ les matrices avec comme 
-coefficients respectifs $a_{ij}$, $b_{ik}$ et $c_{kj}$, on a :
-\[AC = B\]\par
-
+Si on pose $A$, $B$ et $C$ les matrices avec comme coefficients respectifs 
+$a_{ij}$, $b_{ik}$ et $c_{kj}$, on a $AC = B$.\par
 Reste alors à déterminer les bases $(x_i)$ et $(y_i)$. Par exemple, si on trouve
 deux racines $\nu_1$ et $\nu_2$ de $f$ et $g$ respectivement, telles que 
 $\phi(\nu_1) = \nu_2$, on pourra prendre comme bases $x_i = \nu_1^i$ et 
 $y_i = \nu_2^i$.\par
-Mais comme les racines $\zeta_m$ et $\zeta'_m$ sont censées être choisies de 
-telle sorte qu'elles n'engendrent aucun des sous-corps de $\GF{q^n}$ cela veut 
-dire, en particulier, qu'elles sont racines de $f$ et $g$. On peut donc poser 
+Mais comme les racines $\zeta_m$ et $\zeta'_m$ sont choisies de telle sorte 
+qu'elles n'engendrent aucuns des sous-corps de $\GF{q^n}$ cela veut 
+dire, en particulier, qu'elles sont racines de $f$ et $g$. On pose donc 
 $x_i = \zeta_m^i$ et $y_i = (\zeta'_m)^{si}$ selon l'application $\phi_s$ qu'on 
 souhaite tester. De $C$ définie comme ci-dessus avec les nouvelles bases,
-on déduit l'image de $x$, dont les coefficients dans la base monomial $y$ sont 
-sur la deuxième ligne. Alors, si $\phi_s(x)$ est racine de $f$ sur $k_2$,
+on déduit l'image de $x$, dont les coefficients dans la base monomiale engendrée
+par $y$ sont sur la deuxième ligne. Alors, si $\phi_s(x)$ est racine de $f$ sur $k_2$,
 l'application $\phi_s$ est effectivement un isomorphisme.\par
 \vspace{0.3cm}
 La méthode peut se résumer ainsi :
 \vspace{0.3cm}
 \begin{enumerate}[1.]
-\item Trouver un entier $m$ "petit" divisant $q^n - 1$ et tel que 
-$(q,m) = 1$. 
+\item Trouver un entier $m$ "petit" divisant $q^n - 1$ tel que 
+$q$ soit premier $m$. 
 
 \item Déterminer une racine \nroot{m} primitive $\zeta_m$ dans $k_1$ et
 $\zeta'_m$ dans $k_2$.
@@ -1228,40 +947,40 @@ $\zeta'_m$ dans $k_2$.
 $\phi_s$ telle que $\phi_s(\zeta_m) = (\zeta'_m)^s$, est un isomorphisme.
 \end{enumerate}
 \vspace{0.3cm}
-Dans le premier point, la deuxième condition est là pour assurer que, théorème
-\ref{th:polycycldecomp}, une racine \nroot{m} primitive de l'unité 
-n'engendre aucun sous-corps de $\GF{q^n}$. Pour le deuxième point, il suffit de 
-prendre au hasard un $z\in k_1^{\times}$ et de l'élever à la puissance 
-$(q^n - 1)/m$ jusqu'à tomber sur un élément d'ordre $m$, la probabalité 
-que cela arrive est de $\varphi(m)/m$; il y a au plus $m$ éléments solutions de
-$X^m - 1$ dans $\GF{q^n}$ et seulement $\varphi(m)$ éléments d'ordre exactement
-$m$. Si $m$ est premier, ce qui sera bien souvent le cas, la chance de tomber
-sur un élément d'ordre exactement $m$ est quasiment assurée par cette méthode.
+La condition $q$ premier avec $n$ est là pour assurer qu'une racine primitive
+\nroot{m} de l'unité engendre exactement $\GF{q^n}$, théorème
+\ref{th:polycycldecomp}. Pour le deuxième point, il suffit de prendre au hasard 
+un $z\in k_1^{\times}$ et de l'élever à la puissance $(q^n - 1)/m$ jusqu'à tomber 
+sur un élément d'ordre $m$, la probabalité que cela arrive est de $\varphi(m)/m$; 
+il y a au plus $m$ éléments solutions de $X^m - 1$ dans $\GF{q^n}$ et seulement 
+$\varphi(m)$ éléments d'ordre exactement $m$. Si $m$ est premier, ce qui sera bien 
+souvent le cas, la chance de tomber sur un élément d'ordre exactement $m$ est 
+quasiment assurée par cette méthode.
 
 \begin{ex}
-Illustrons la méthode par un exemple directement tiré du papier de Pinch
-(\cite{Pin}). On se place dans $\GF{11}$ et on considère les deux polynôme
-irréductibles sur $\GF{11}$, $f = X^{23} + 8X^2 + X + 9$ et $g = Y^{23} + 3Y^2 +
-4Y + 9$. On pose $m = 829$, on vérifiera qu'il divise bien $11^{23} - 1$ et 
-qu'il est premier avec $11$; en fait, il est lui-même premier. On définit $k_1$ 
-et $k_2$ comme les corps de ruptures de $f$ et $g$ respectivement.\par
+Illustrons la méthode par un exemple directement tiré de l'article de Pinch
+(\cite{Pin}). On considère les deux polynômes irréductibles sur $\GF{11}$, 
+$f = X^{23} + 8X^2 + X + 9$ et $g = Y^{23} + 3Y^2 + 4Y + 9$. On pose $m = 829$, 
+on vérifiera qu'il divise bien $11^{23} - 1$ et qu'il est premier avec $11$; 
+en fait, il est lui-même premier. On définit $k_1$ et $k_2$ comme les corps de 
+ruptures de $f$ et $g$ respectivement.\par
 Dans cet exemple, il se trouve que $x^{\tfrac{11^{23} - 1}{829}}$ et 
-$y^{\tfrac{11^{23} - 1}{829}}$ sont déjà des racines primitives \nroot{m} de 
-l'unité, voici leurs expressions :
+$y^{\tfrac{11^{23} - 1}{829}}$ sont déjà des racines primitives 829-ième de 
+l'unité, voici leurs expressions dans les bases monomiales engendrées par $x$ et
+$y$ :
 \begin{align*}
 \alpha(x) =&\hspace{0.15cm} 7 + 8x + 4x^2 + 4x^4 + 4x^5 + 10x^6 + 4x^7 + 3x^8 + 
 5x^9\\
 & + 2x^{10} + 6x^{11} + 4x^{12} + 8x^{13} + 6x^{14} + 4x^{15} + 4x^{16}\\
-& + 5x^{17}  + 7x^{18} + 4x^{19} + x^{20} + 8x^{22}
+& + 5x^{17}  + 7x^{18} + 4x^{19} + x^{20} + 8x^{22},
 \end{align*}
-et
 \begin{align*}
 \beta(y) =&\hspace{0.15cm}1 + y + 4y^2 + 4y^3 + 9y^4 + y^5 + 6y^6 + 3y^7 + 3y^8 
 + 3y^9\\
 & + 6y^{10} + 5y^{11} + 6y^{12} + 8y^{13} + y^{14} + 9y^{15} + 4y^{16}\\
 & + 3y^{17} + 5y^{18} + y^{19} + 10y^{20} + 10y^{21} + 6y^{22}
 \end{align*}
-Le but va donc être de calculer les matrices de passage entre les bases
+Le but est de calculer les matrices de passage entre les bases
 $(\alpha(x)^i)_{i\in I}$ et $(\beta(y)^{si})_{i\in I}$, pour $s < 829$.
 Dans ce cas précis, il se trouve que la puissance $s = 14$ convient. En 
 calculant la matrice de passage, on trouve alors les coefficients de l'image de 
@@ -1320,19 +1039,45 @@ extension afin de chercher un $m$ plus petit. En effet, imaginons qu'on ait deux
 extensions de petit degré $k'_1$ et $k'_2$ de $k_1$ et $k_2$ respectivement. Si
 on applique la méthode de Pinch à $k'_1$ et $k'_2$ et qu'on trouve un
 isomorphisme, il suffira alors de le restreindre à $k_1$.\par
+
 \vspace{0.3cm}
 L'idée est la suivante, on a les corps $k'_1$ et $k'_2$, extensions de degré $o$
 petit de $k_1$ et $k_2$ respectivement, tels que $m$ petit divise $q^{n.o} -
 1$ et soit premier avec $q$. On peut alors trouver deux racines primitive
 \nroot{m} de l'unité $\zeta_{m}$ et $\zeta'_m$ qui engendrent $k'_1$ et $k'_2$
 respectivement et tels que $\phi(\zeta_m) = \phi(\zeta'_m)$. Alors on a : 
-\[\phi(\textup{Tr\;}_{k'_1/k_1}(\zeta_{m})) =
-\textup{Tr\;}_{k'_2/k_2}(\zeta'_{m})\]
+\begin{equation}
+\phi(\textup{Tr\;}_{k'_1/k_1}(\zeta_{m})) =
+\textup{Tr\;}_{k'_2/k_2}(\zeta'_{m})
+\end{equation}
 De plus, les traces sont aussi des générateurs de leurs corps respectifs, on 
 %TODO: tu dois encore le prouver, on peut sûrement s'inspirer le preuve pour le
 %même résultats mais dans le cas d'éléments normaux.
 aura besoin de ne manipuler que des matrices de taille $o$ au lieu de taille 
-$n.o$.\par
+$n.o$. On résume la situation par le schéma suivant :
+
+\begin{equation}
+\begin{tikzpicture}
+\matrix(m)[matrix of math nodes,
+row sep=0.5em, column sep=1.5em,
+text height=2ex, text depth=1ex]
+{\GF{q}[\zeta_m]& & \\
+&\GF{q}[\Tr{\zeta_m}]&\\
+& & \GF{p}[\Tr{\zeta_m}]\\
+\GF{q^o}& & \\
+&\GF{q}& \\
+& & \GF{p}\\};
+\path[-,font=\scriptsize,>=angle 90]
+(m-1-1) edge node[below] {$o$} (m-2-2)
+(m-4-1) edge node[below] {$o$} (m-5-2)
+(m-2-2) edge node[below] {$r$} (m-3-3)
+(m-5-2) edge node[below] {$r$} (m-6-3)
+(m-1-1) edge node[left] {$n$} (m-4-1)
+(m-2-2) edge node[left] {$n$} (m-5-2)
+(m-3-3) edge node[left] {$n$} (m-6-3);
+\end{tikzpicture}
+\end{equation}
+
 %TODO : Tout ce truc sert vraiment ?! Tu peux éventuellement rajouter l'exemple
 %pour illustrer le fait que ce n'est pas si simple de fabriquer des éléments
 %uniques. Réponse : Oui ça sert même grave, faudra le prouve- oh wait, c'est
@@ -1468,9 +1213,8 @@ Le contexte est le suivant, imaginons qu'on soit parvenu à déterminer deux
 déterminer l'image de $x$ par celui-ci. Comme dit plus haut, on veut trouver les
 coefficients de $x$ dans la base normale engendrée par $v$, en déduire son
 image dans la base normale engendrée par $w$ et pour finir son image dans la 
-base monomial engendrée par $y$. On peut résumer la situation de la manière 
-suivante :
-\begin{center}
+base monomial engendrée par $y$. La situation se résume de la façon suivante :
+\begin{equation}
 \begin{tikzpicture}
 \matrix(m)[matrix of math nodes,
 row sep=3em, column sep=5em,
@@ -1483,14 +1227,15 @@ text height=2ex, text depth=2ex]
 (m-1-1) edge node[left] {$\pi$} (m-2-1)
 (m-2-2) edge node[right] {$\pi^{\prime}$} (m-1-2);
 \end{tikzpicture}
-\end{center}
+\end{equation}
 
-La flêche $\pi^{\prime}$ est plus ou moins gratuite, il suffit d'exprimer $w$ en
-fonction des $y^i$ mais en général les éléments sont déjà exprimés en fonction 
-de la base monomiale. La seule flêche qui pose un problème est celle 
-correspondant à $\pi$ qui permet d'exprimer $x$ en fonction des $v^{p^i}$. C'est
-pour cette flêche là qu'on va effectuer un peu plus de travail.
-Soit $z\in\GF{q^n}$ alors il existe des $c_i\in\GF{q}$ tels que :
+L'application $\GF{q}$-linéaire $\pi^{\prime}$ est plus ou moins gratuite, il 
+suffit d'exprimer $w$ en fonction des $y^i$ ce qui prend $O(...)$ opérations, 
+mais en général les éléments sont déjà exprimés en fonction de la base monomiale. 
+La seule flêche qui pose un problème est celle correspondant à $\pi$ qui permet 
+d'exprimer $x$ en fonction des $v^{p^i}$. C'est pour cette application qu'on va
+devoir effectuer tout le travail. Soit $z\in\GF{q^n}$ alors il existe des 
+$c_i\in\GF{q}$ tels que :
 \[z = \sum_{0 \leq i < n}{c_iv^{q^i}}\]
 En utilisant le Frobenius, on obtient pour $0\leq j < n$ :
 \[z^{q^{n-j}} = \sum_{0\leq i < n}{c_iv^{q^{i+n-j}}}\]
@@ -1505,7 +1250,7 @@ coefficients de $B^{-1}$, on a bien :
 \[c_i = \sum_{0\leq j < n}{d_{ij}\lambda\left(z^{q^{n-j}}\right)}\]
 pour $0\leq i < n$. Reste à savoir si la matrice $B$ sera effectivement 
 inversible.
-On peut commencer par rappeler un résultat classique d'algèbre linéaire qui
+On commence par rappeler un résultat classique d'algèbre linéaire qui
 assure que toute forme linéaire peut s'exprimer sous la forme :
 \[x \mapsto \Tr{\alpha x}\]
 pour un certain $\alpha\in\GF{q}$. On peut donc écrire les coefficients de $B$ 
@@ -1563,22 +1308,7 @@ suivant :
 \end{equation*}
 \end{thm}
 \begin{proof}
-La matrice identité étant contenue dans l'ensemble des matrices circulantes, 
-montrons alors qu'il s'agit d'un sous-anneau. On voit facilement que la sommes 
-de deux matrices circulantes est tourjous circulante. Pour le produit, prenons 
-$A$ et $B$ deux matrices circulantes de tailles $n$, on notera $C := AB$. On a :
-\[c_{ij} = \sum_{k=0}^{n-1}{a_{ik}b_{kj}}\]
-Donc si on défini, en tenant compte de la structure des matrices circulantes, 
-$a_{i\,-1} := a_{in-1}$ et $b_{-1j} := b_{n-1j}$, on arrive à :
-\begin{align*}
-c_{i+1j+1} &= \sum_{k=0}^{n-1}{a_{i+1k}b_{kj+1}}\\
-&= \sum_{k=1}^{n-1}{a_{ik-1}b_{k-1j}} + a_{in-1}b_{n-1j}\\
-&= \sum_{k^{\prime}=0}^{n-1}{a_{ik^{\prime}}b_{k^{\prime}j}}\\
-&= c_{ij}
-\end{align*}
-ce qui montre que le produit est encore une matrice circulante; il s'agit donc 
-bien d'un sous-anneau.\par
-Montrons ensuite que l'application $\psi$ est un morphisme d'anneaux. On a bien 
+Montrons que l'application $\psi$ est un morphisme d'anneaux. On a bien 
 évidemment $\psi(I_n) = 1$ et de manière relativement immédiate :
 \begin{align*}
 \psi(A + B) &= \sum_{0\leq j < n}{(a_{0j} + b_{0j})\omega^j}\\
@@ -1704,7 +1434,7 @@ ce qu'il fallait démontrer.\\
 %TODO: Foutre le schéma qui passe de la carac 0 à la carac finie, peut-être ?
 %Dépend de comment je veux aborder le problème..
 
-\subsection{Algorithme \& analyse de complexité}
+\subsection{Algorithme eetanalyse de complexité}
 %TODO: Détailler l'algorithme de l'article/code de Luca + analyser la complexité
 %de ces algos et les "prouver" (montrer que ça marche bien, cela dit c'est 
 %peut-être largement faisable avant).
@@ -1796,19 +1526,19 @@ Ainsi, le coût total de l'algorithme est un $O(E(n)(n\,\textup{log\;}q +
 m\,\textup{log\;}m/n))$. Tant que $m\in o(n^2)$, on peut négliger les termes en
 $m$ et se contenter d'une complexite en $O(E(n)n\,\textup{log\;}q)$.
 
-\begin{prop}
-L'algorithme \ref{alg:gausspersansext} est correct dans le sens où l'élément
-produit :
-\[\eta(\zeta_m) = \sum_{a\in\mathcal{K}}{\zeta_m^a}\]
-est un élément normal de $\GF{q^n}$ unique sous l'action du groupe de
-$\textup{Gal}(\GF{q^n}/\GF{q}) = \langle{q}\rangle$.
-\end{prop}
-\begin{proof}
-Les conditions (1), (2) et (3) permettent d'appliquer le théorème
-\ref{th:gaussnormal} qui assure que $\eta(\zeta_m)$ est un élément normal. Le
-fait qu'il soit unique sous l'action du groupe de Galois est justifié par le
-lemme \ref{lem:gaussconj}.\\
-\end{proof}
+%\begin{prop}
+%L'algorithme \ref{alg:gausspersansext} est correct dans le sens où l'élément
+%produit :
+%\[\eta(\zeta_m) = \sum_{a\in\mathcal{K}}{\zeta_m^a}\]
+%est un élément normal de $\GF{q^n}$ unique sous l'action du groupe de
+%$\textup{Gal}(\GF{q^n}/\GF{q}) = \langle{q}\rangle$.
+%\end{prop}
+%\begin{proof}
+%Les conditions (1), (2) et (3) permettent d'appliquer le théorème
+%\ref{th:gaussnormal} qui assure que $\eta(\zeta_m)$ est un élément normal. Le
+%fait qu'il soit unique sous l'action du groupe de Galois est justifié par le
+%lemme \ref{lem:gaussconj}.\\
+%\end{proof}
 
 \vspace{0.3cm}
 $\bullet\; o > 1$
@@ -1827,9 +1557,6 @@ un sous-groupe d'ordre $\varphi(m)/(n.o)$,
  
 \end{enumerate}
 \vspace{0.3cm}
-
-
-
 
 \begin{algorithm}
 \caption{Détermination d'un élément normal unique dans un corps finis
@@ -1851,8 +1578,8 @@ groupe de Galois}
 \end{algorithm}
 
 \begin{prop} 
-Les algorithmes \ref{alg:gaussperavecext} sont
-corrects.
+Les algorithmes \ref{alg:gausspersansext} et \ref{alg:gaussperavecext}
+sont corrects.
 \end{prop}
 
 \subsubsection*{Détermination de l'isomorphisme}
@@ -1875,13 +1602,10 @@ normale engendrée par $v$}
 \FOR{$i = 0$ \TO $n-1$}
     \STATE $B_i = \Tr{v\times v^{q^{n-(i+1)}}}$
 \ENDFOR
-\medskip
 \STATE $I = (\sum_{i = 0}^{n-1}{B_i\cdot \omega^i})^{-1}$
-\medskip
 \FOR{$i = 0$ \TO $n-1$}
     \STATE $T_i = \Tr{v\times z^{q^{n-i}}}$
 \ENDFOR
-\medskip
 \FOR{$i = 0$ \TO $n-1$}
     \STATE $c_i = \sum_{j=0}^{n-1}{I_{(j-i)\bmod n}T_j}$
 \ENDFOR
@@ -1891,7 +1615,7 @@ normale engendrée par $v$}
 \end{algorithm}
 On commence par élever à la puissance $q$ plusieurs polynômes sur $\GF{q}$, 
 on les multiplie par un autre polynôme et enfin on calcule la trace de chacun 
-de ces produits; on effectue alors $n$ fois cette opération. D'où un 
+de ces produits; on effectue alors $n$ fois cette opération. Donc un 
 $O(nE(n)\textup{log}\;q + nE(n)) + n\textup{T}(n) = O(nE(n)\textup{log}\;q + 
 nE(n))$ opérations, 
 où $\textup{T}(n)$ est la complexité du calcul de la trace d'un élément
@@ -1947,7 +1671,7 @@ Le théorème \ref{th:matcirciso} permet de conclure.\\
 %comment on pick les courbes (à ce moment là on pourra aussi justifier avec le 
 %résultat sur les tordues).
 
-\subsection{Algorithme \& Analyse de complexité}
+\subsection{Algorithme et Analyse de complexité}
 %TODO: Décrire l'algorithme et donner sa complexité.
 
 \part{Implémentation}
@@ -1955,10 +1679,15 @@ Le théorème \ref{th:matcirciso} permet de conclure.\\
 %TODO: Comparer les deux méthodes ou même avec l'implémentation de base de SAGE 
 %(retrouver une simple racine). Détailler les limitations dû à SAGE, peut-être
 %prendre une partie de la conclusion en expliquant ce qui pourrait être changer.
+Dans cette partie, nous discuterons de l'implémentation des algorithmes, des
+résultats numériques obtenues et nous comparrons ces résultats avec d'autres
+méthodes déjà mises en place. 
 
 \section{Trouver $m$}
 %TODO: Des détails sur m et comment on le trouve (forme an + 1, premier ou
 %puissance d'un nombre premier; pour la méthode cyclotomique et elliptique
+La détermination d'une borne raisonnable pour $m$ demanderait un peu plus
+d'expérimentations.
 
 \section{Résultats numériques}
 %TODO: Je ne sais pas vraiment quoi mettre, je pourrais juste montrer
@@ -1982,11 +1711,22 @@ Le théorème \ref{th:matcirciso} permet de conclure.\\
 \addcontentsline{toc}{part}{Références}
 \begin{thebibliography}{LC}
 
-\bibitem{Rai} \emph{Efficient Computation of Isomorphism Between Finite Fields},
-\bsc{Eric M. Rains}, 1996.
+\bibitem{All} \emph{Explicit Computation of Isomorphisms between Finite
+Fields}, \bsc{Bill Allombert}, Elsevier Science, \bsc{url :}
+\url{http://www.sciencedirect.com/science/article/pii/S1071579701903442}
 
-\bibitem{Pin} \emph{Recognising Elements of Finite Fields}, \bsc{Richard G.E. 
-Pinch}, Cryptography and coding II, p. 193-197, Oxford University Press, 1992.
+\bibitem{Esc} \emph{Théorie de Galois}, \bsc{Jean-Pierre Escofier}, Dunod, 2nde
+éd., 2000.
+
+\bibitem{FeGaSho} \emph{Normal Basis \textup{via} General Gauss Periods},
+\bsc{Sandra Feisel}, \bsc{Joachim von zur Gathen} \& \bsc{M. Amin Shokrollahi}, 
+Mathematics of computation, Volume 68, Number 225, January 1999, p. 271-290
+
+\bibitem{GaGe} \emph{Modern Computer Algebra}, \bsc{Joachim von zur Gathen} \&
+\bsc{Jürgen Gerhard}, 3rd edition, Cambridge
+
+\bibitem{Lan} \emph{Algebraic Number Theory}, \bsc{Serge Lang}, Graduate Texts
+in Mathematics, 2nd ed., Springer, 2000.
 
 \bibitem{LiNi1} \emph{Finite Fields}, \bsc{Rudolf Lidl} \& 
 \bsc{Harald Niederreiter}, Encyclopedia of mathematics and its applications vol.
@@ -1996,61 +1736,35 @@ Pinch}, Cryptography and coding II, p. 193-197, Oxford University Press, 1992.
 \bsc{Rudolf Lidl} \& \bsc{Harald Niederreiter}, Cambridge University Press,
 1986.
 
-\bibitem{Per} \emph{Cours d'algèbre}, \bsc{Daniel Perrin}, ellipses, 1996.
-
-\bibitem{Sil} \emph{The Arithmetic of Elliptic Curves}, 
-\bsc{Joseph H. Silverman}, Graduate texts in mathematics, Springer, 2nd ed. 
-2009.
-
-\bibitem{Was2} \emph{Elliptic Curves, Number Theory and Cryptography},
-\bsc{Lawrence C. Washington}
-
-\bibitem{Sam} \emph{Théorie algébrique des nombres}, \bsc{Pierre Samuel}, 
-Hermann, 1971.
-
-\bibitem{Kim} \emph{Number Theory II}, \bsc{Kimbal Martin}, University of
-Oklahoma, 2011, \bsc{url :} \url{http://www2.math.ou.edu/~kmartin/ntii/ntii.pdf}
-
-\bibitem{Lan} \emph{Algebraic Number Theory}, \bsc{Serge Lang}, Graduate Texts
-in Mathematics, 2nd ed., Springer, 2000.
-
-\bibitem{Nek} \emph{Théorie de Galois}, \bsc{Jan Nekov\'a\v{r}}, Université 
-Pierre et Marie Curie, 2003, \bsc{url :} 
-\url{http://www.math.jussieu.fr/~nekovar/co/ln/gal/g.pdf}.
-
-\bibitem{Esc} \emph{Théorie de Galois}, \bsc{Jean-Pierre Escofier}, Dunod, 2nde
-éd., 2000.
-
-\bibitem{Pol} \emph{Algèbre et théorie de Galois}, \bsc{Patrick Polo}, 
-Université Pierre et Marie Curie, 2007, \bsc{url :} 
-\url{http://www.math.jussieu.fr/~polo/M1/}.
-
-\bibitem{Was1} \emph{Introduction to Cyclotomic Fields}, \bsc{Lawrence C. 
-Washington}, Graduate texts in mathematics, Springer-Verlag, 1982.
-
 \bibitem{MuPa} \emph{Handbook of Finite Fields}, \bsc{Gary L. Mullen} \& 
 \bsc{Daniel Panario}, Discrete mathematics and its applications, Series Editor 
 Kenneth H. Rosen, CRC Press.
-
-\bibitem{GaGe} \emph{Modern Computer Algebra}, \bsc{Joachim von zur Gathen} \&
-\bsc{Jürgen Gerhard}, 3rd edition, Cambridge
-
-\bibitem{FeGaSho} \emph{Normal Basis \textup{via} General Gauss Periods},
-\bsc{Sandra Feisel}, \bsc{Joachim von zur Gathen} \& \bsc{M. Amin Shokrollahi}, 
-Mathematics of computation, Volume 68, Number 225, January 1999, p. 271-290
 
 \bibitem{MiMoScho} \emph{Computing the Eigenvalue in the Schoof-Elkies-Atkin
 Algorithm using Abelian Lifts}, \bsc{P. Mih\u{a}ilescu}, \bsc{F. Morain} \&
 \bsc{É. Schost}, 2007, \bsc{url :}
 \url{http://hal.inria.fr/LIX/inria-00130142/en/}
 
-\bibitem{All} \emph{Explicit Computation of Isomorphisms between Finite
-Fields}, \bsc{Bill Allombert}, Elsevier Science, \bsc{url :}
-\url{http://www.sciencedirect.com/science/article/pii/S1071579701903442}
+\bibitem{Per} \emph{Cours d'algèbre}, \bsc{Daniel Perrin}, ellipses, 1996.
 
-\bibitem{Dat} \emph{Théorie algébrique des nombres}, \bsc{Jean-François Dat},
-Université Pierre et Marie Curie, 2013, \bsc{url}
-\url{https://www.imj-prg.fr/~jean-francois.dat/enseignement/TNM2/TNM2.pdf}
+\bibitem{Pin} \emph{Recognising Elements of Finite Fields}, \bsc{Richard G.E. 
+Pinch}, Cryptography and coding II, p. 193-197, Oxford University Press, 1992.
+
+\bibitem{Rai} \emph{Efficient Computation of Isomorphism Between Finite Fields},
+\bsc{Eric M. Rains}, 1996.
+
+\bibitem{Sam} \emph{Théorie algébrique des nombres}, \bsc{Pierre Samuel}, 
+Hermann, 1971.
+
+\bibitem{Sil} \emph{The Arithmetic of Elliptic Curves}, 
+\bsc{Joseph H. Silverman}, Graduate texts in mathematics, Springer, 2nd ed. 
+2009.
+
+\bibitem{Was1} \emph{Introduction to Cyclotomic Fields}, \bsc{Lawrence C. 
+Washington}, Graduate texts in mathematics, Springer-Verlag, 1982.
+
+\bibitem{Was2} \emph{Elliptic Curves, Number Theory and Cryptography},
+\bsc{Lawrence C. Washington}
 
 \end{thebibliography}
 \end{document}
