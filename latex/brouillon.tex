@@ -82,7 +82,7 @@ $\overline{\mathbb{F}}_5$ se présente sous la forme suivante :
 \matrix(m)[matrix of math nodes,
 row sep=1em, column sep=3em,
 text height=2ex, text depth=0.5ex]
-{ & &\overline{\GF{q}} &  &\\
+{ & &\overline{\mathbb{F}}_q &  &\\
 \GF{5^4} & & \GF{5^6} & &\\
 & \GF{5^2} & & \GF{5^3} & \GF{5^5}\\
 & & \GF{5} & & \\};
@@ -764,8 +764,8 @@ serons utiles, on parlera des points de torsion, des périodes elliptiques et de
 tordues d'une courbe elliptique. Dûe à la nature un peu extérieur des courbes
 elliptiques par rapport au isomorphisme de corps finis, on ne s'attardera pas 
 la plupart du temps, à définir les notions de géométrie algébriques. On invitera
-le lecteur à consulter les deux premiers chapitre de \cite{Sil} pour plus de
-précision.
+le lecteur à consulter les deux premiers chapitre du livre de 
+Silvermann\cite{Sil} pour plus de précision.
 
 \subsection{Définitions}
 %TODO: Rapide énoncé des changements de variable, comment on arrive à la forme
@@ -831,7 +831,7 @@ $\tO{n\,\textup{log\,}q}$ opérations sur $\GF{q}$. Sachant qu'on cherche une
 racine sur une extension de degré $n$, la complexité devient 
 $O(\E{n}\,\textup{log\;}n\,\textup{log}(nq^n))$ ou $\tO{n^2\,\textup{log\,}q}$.
 % = O~(n^3) ?
-On note aussi l'existence d'une méthode établie par Allombert \cite{All} qui 
+On note aussi l'existence d'une méthode établie par Allombert\cite{All} qui 
 consiste essentiellement à utiliser l'algèbre linéaire pour déterminer un
 isomorphisme, donc une complexité en $O(n^{\omega})$ avec $2<\omega<3$.\par
 Un premier pas vers une méthode plus performante est la méthode de Pinch, 
@@ -919,8 +919,8 @@ premier et plus grand que $5$, ce qui sera bien souvent le cas, la chance de
 tomber sur une racine primitive de l'unité est de plus de $80\%$ et elle atteint
 $95\%$ dès que $m \geq 23$. 
 \begin{ex}
-Illustrons la méthode par un exemple directement tiré de l'article de Pinch
-(\cite{Pin}). On considère les deux polynômes irréductibles sur $\GF{11}$, 
+Illustrons la méthode par un exemple directement tiré de l'article de 
+Pinch\cite{Pin}. On considère les deux polynômes irréductibles sur $\GF{11}$, 
 $f = X^{23} + 8X^2 + X + 9$ et $g = Y^{23} + 3Y^2 + 4Y + 9$. On pose $m = 829$, 
 on vérifiera qu'il divise bien $11^{23} - 1$ et qu'il est premier avec $11$; 
 en fait, il est lui-même premier. On définit $k_1$ et $k_2$ comme les corps de 
@@ -985,10 +985,11 @@ cyclotomique qu'on va étudier dans la section suivante.
 %Présenter pas à pas l'article de Rains (en gros), en enlevant ce qui nous 
 %concernerait moins et en rajoutant ce qu'il n'a pas mis (tous les détails 
 %sur l'algorithme convert et sa complexité).
-On va maintenant parler de la méthode Rains dites cyclotomique pour calculer des
-isomorphismes de corps finis. Elle fera usage d'éléments normaux, pour pouvoir
-travailler sur des petites extensions, et de périodes de Gauss, afin d'avoir des
-éléments unique sous l'action du groupe de Galois de l'extension.
+La méthode de Rains cyclotomique est une extension de la méthode de Pinch
+cyclotomique. Les principaux changements sont l'utilisation de petites
+extensions des corps considérés afin de pouvoir trouver un $m$ plus petit et
+l'usage des périodes de Gauss afin de déterminer des éléments uniques sous
+l'action du groupe de Galois reliés par un isomorphisme.
 
 \subsection{Principe}
 %TODO: Passer par une petite extension pour réduire la taille de m, utilisation
@@ -999,9 +1000,10 @@ satisfait certaines conditions permettant de trouver des racines \nroot{m}
 primitive de l'unité qui engendrent les corps qui nous intéressent.\par
 Si on ne trouve pas de $m$ assez petit, il se peut qu'on ait besoin de
 travailler dans de petites extensions de $k_1$ et $k_2$, voir
-\ref{sec:extension}. Il faut alors construire des élements normaux reliés par un
-isomorphisme entre $k_1$ et $k_2$ ou leurs extensions, ce qui est fait 
-\textit{via} les périodes de Gauss dans la section \ref{sec:gaussper}.\par
+\ref{sec:extension}. Il faut alors construire des élements normaux uniques 
+reliés par un isomorphisme entre $k_1$ et $k_2$ ou leurs extensions, ce qui est
+effectué \textit{via} les \emph{périodes de Gauss} dans la section 
+\ref{sec:gaussper}.\par
 Une fois les éléments uniques obtenus, si on a utilisé des extensions alors on
 calcule leurs traces afin d'obtenir des éléments normaux des corps $k_1$ et 
 $k_2$. Une fois ceux-ci obtenus, il ne reste plus qu'à convertir la base normale
@@ -1043,7 +1045,7 @@ de $x$ par l'isomorphisme reliant les deux éléments normaux. C'est ce qui va
 \subsection{Utilisation d'une extension}% Utile ?
 \label{sec:extension}
 La première limitation de la méthode de Pinch est la taille du facteur
-$m$, Rains propose alors dans son article (\cite{Rai}) de passer par une petite
+$m$, Rains propose alors dans son article \cite{Rai} de passer par une petite
 extension de $\GF{q^n}$ afin de trouver un $m$ plus petit. En effet, imaginons 
 qu'on ait deux extensions de petit degré $k'_1$ et $k'_2$ de $k_1$ et $k_2$ 
 respectivement. Si on applique la méthode de Pinch à $k'_1$ et $k'_2$ et 
@@ -1126,6 +1128,7 @@ l'anneau $\GF{p}[X]/(X^n - 1)$.
 %TODO: LiNi2 3.73.. Va y'en avoir des résultats à montrer pour ça.
 \end{proof}
 \begin{cor}
+\label{cor:tracenorm}
 Soit $L/K$ une extension de corps finis de caractéristique $p$, premier. Si
 $x\in L$ est un élément normal de $L$ sur $K$, alors $\textup{Tr}_{L/K}(x)$ est 
 un élément normal de $K$ sur $\GF{p}$. Si de plus$[L:K]$ est une puissance de 
@@ -1247,7 +1250,7 @@ démontre le lemme.\\
 \end{proof}
 Reste maintenant à expliquer d'où vient l'anneau 
 $\mathbb{F}_q[\omega]/(\omega^n - 1)$. Il se trouve que la matrice $B$ a une 
-propriété particulière, elle est ce qu'on appelle une matrice circulante, 
+propriété particulière, elle est ce qu'on appelle une matrice \emph{circulante},
 \textit{i.e.} pour obtenir la ligne suivante, il suffit de décaler tous les 
 éléments vers la droite en faisant passer le dernier coefficient en première 
 position. Ou plus formellement, si :
@@ -1318,6 +1321,7 @@ sont premiers entre eux, alors $p$ est non ramifié dans $R_m$ ou par abus de
 langage dans $K[\mu_m]/K := K[X]/\Phi(X)$ où $\mu_m := \mu_{m,\overline{\CC}}$. 
 Alors on a le schéma suivant :
 \begin{equation}
+\label{schema:gaussnorm}
 \begin{tikzpicture}
 \matrix(m)[matrix of math nodes,
 row sep=1em, column sep=3em,
@@ -1350,12 +1354,13 @@ le groupe de décomposition de $\mathfrak{B}/\mathfrak{p}$.
 \begin{defn}
 Supposons qu'il existe un sous-groupe $S\subset\zmodninv{m}$ tel que
 $\zmodninv{m} = \langle{q}\rangle\times S$. Pour toute racine \nroot{m} de
-l'unité $\zeta_m$, on définit la période de Gauss suivante :
+l'unité $\zeta_m$, on définit la \emph{période de Gauss} comme suit :
 \begin{equation}
 \eta(\zeta_m) = \sum_{\sigma\in S}{\zeta_m^{\sigma}}.
 \end{equation}
 \end{defn}
 \begin{prop}
+\label{prop:gaussperconj}
 Le groupe de Galois $\textup{Gal}(\GF{q}[\mu_m]/\GF{q})\simeq\langle{q}\rangle$
 agit transitivement sur les périodes de Gauss $\eta(\zeta_m)$ pour tout
 $\zeta_m\in\eta_m^{\times}$.
@@ -1368,118 +1373,111 @@ Soit $\tau\in\langle{q}\rangle$, alors :
 
 \end{proof}
 \subsection{Algorithme et analyse de complexité}
+\label{sec:algcompcycl}
 %TODO: Détailler l'algorithme de l'article/code de Luca + analyser la complexité
 %de ces algos et les "prouver" (montrer que ça marche bien, cela dit c'est 
 %peut-être largement faisable avant).
 Maintenant qu'on a tous les résultats théoriques qu'il nous faut, on va pouvoir
-énoncer et justifier les aglorithmes pour déterminer l'isomorphisme. Rappelons
-le contexte et les paramètres.\par
-On a $f$ et $g$ deux polynômes irréductibles de degré $n$ distincts sur
-$\GF{q}$, on note :
+énoncer et justifier les aglorithmes pour déterminer l'isomorphisme. 
+On rappelle brièvement la situation, on a $f$ et $g$ deux polynômes 
+irréductibles de degré $n$ distincts sur $\GF{q}$, on note :
 \[k_1 := \GF{q}[X]/(f)\etmath k_2 := \GF{q}[Y]/(g)\]
 avec $q = p^r$ pour $r$ un entier naturel non nul et $p$ un nombre premier
-impair. On va construire, en utilisant des racines primitive \nroot{m} de 
-l'unité, me sans facteurs carrés, des éléments uniques de $k_1$ et $k_2$ sous 
-l'action du groupe de Galois de $\GF{q^n}$ de telle sorte qu'ils soient reliés 
-par un isomorphisme. On en déduira l'image de $x$ et on aura déterminé
-l'isomorphisme.
+impair. Il nous faut alors déterminer deux éléments normaux uniques sous
+l'action du groupe de Galois de $\GF{q^n}/\GF{q}$ et en déduire l'image de $x :=
+\overline{X}$ pour déterminer complètement l'isomorphisme. 
 
 \subsubsection*{Recherche d'un élément normal unique}
 On commence par chercher un entier $m$ divisant $q^n - 1$ avec $\varphi(m)$
 divisible par $n$, tel que :
 \vspace{0.3cm}
 \begin{enumerate}[(1)]
-\item $\langle{q}\rangle \times \mathcal{K} = \zmodninv{m}$ pour $\mathcal{K}$ 
+\item $\langle{q}\rangle \times S = \zmodninv{m}$ pour $S$ 
 un sous-groupe de $\zmodninv{m}$ d'ordre $\varphi(m)/n$,
-\item $(m, q) = 1$,
+\item $m$ et $q$ soit premiers entre eux,
 \item $m$ soit sans facteurs carrés.
 \end{enumerate}
 \vspace{0.3cm}
 La condition (1) est équivalente à demander que $\langle{q}\rangle$ soit d'ordre
-$n$ dans $\zmodninv{m}$. Sous ces conditions, on peut appliquer le théorème 
-%\ref{th:gaussnormal} 
-pour calculer une période de Gauss $\eta(\zeta_m) = 
-\sum_{a\in\mathcal{K}}{\zeta_m^a}$ afin d'obtenir un élément unique dans chaque
-extension de corps.
-
+$n$ dans $\zmodninv{m}$ et donc que l'extension engendrée par les racines
+primitives \nroot{m} de l'unité soit bien de degré $n$ sur $\GF{q}$ (\emph{cf.}
+\ref{schema:gaussnorm}). Sous ces conditions, on peut appliquer le théorème (à
+venir) et la proposition \ref{prop:gaussperconj} qui assurent qu'une période de 
+Gauss $\eta(\zeta_m) = \sum_{a\in S}{\zeta_m^a}$ est bien un élément normal 
+unique sous l'action de Galois.
+\vspace{0.3cm}
 \begin{rem}
 Il se trouve que l'algorithme ne peut pas fonctionner si $q$ est une puissance
-$r$ de $p$, qui ne soit pas premier avec $n$. En effet, on a 
-$\langle{q,\mathcal{K}}\rangle = \zmodninv{m}$, donc par définition $p = 
-sq^a\bmod m$ pour un $s\in\mathcal{K}$ et $0 \leq a < n$, alors
-$q=s^rq^{ar} \bmod m$. Or, $q$ ne peut être écrit que d'une seule façon comme 
-produit d'un élément de $\mathcal{K}$ et d'une puissance
-de $q$, d'où $s^r = 1$ et $q^{ar - 1} = 1 \bmod m$. Ce qui implique que $n$
-divise $ar - 1$ et donc que $(n, r) = 1$.\par
-Une solution possible serait de calculer un générateur
-$\alpha$ de $k/\GF{p^{d/c}}$, son polynôme minimal serait alors uniquement
-défini sur $\GF{p^{d/c}}$ mais se scinderait en $c$ facteurs sur $\GF{q}$, ce
-qui nous obligerait à réutiliser la méthode trial-and-error de Pinch.
+$r$ non première avec $n$ de $p$. En effet, on a $\langle{q,S}\rangle = 
+\zmodninv{m}$, donc par définition $p = sq^a\bmod m$ pour un $s\in S$ et $0 
+\leq a < n$, alors $q=s^rq^{ar} \bmod m$. Or, $q$ ne peut être écrit que d'une 
+seule façon comme produit d'un élément de $S$ et d'une puissance de $q$, d'où 
+$s^r = 1$ et $q^{ar - 1} = 1 \bmod m$. Ce qui implique que $n$ divise $ar - 1$ 
+et donc que $(n, r) = 1$.\par
+Une solution possible serait de calculer un générateur $\alpha$ de 
+$k/\GF{p^{d/c}}$, son polynôme minimal serait alors uniquement défini sur 
+$\GF{p^{d/c}}$ mais se scinderait en $c$ facteurs sur $\GF{q}$, ce qui nous 
+obligerait à réutiliser la méthode trial-and-error de Pinch.
 \end{rem}
-Un autre problème est la taille du paramètre $m$, il se peut qu'il soit de
-taille proche de $q^n - 1$ ce qui est beaucoup trop important. Une solution
-possible proposée par Rains (\cite{Rai}) est d'utiliser une petite extension de
-$\GF{q^n}$ de degré $o$. Le choix d'utiliser une extension ou non sera détaillé 
-dans la partie implémentation \ref{trois}; globablement, il s'agira d'une borne
-sur $m$. Commençons par décrire plus précisément l'algorithme dans le cas où 
-aucune extension supplémentaire n'est utilisée.
-
 \vspace{0.3cm}
-$\bullet\; o = 1$\par
-\vspace{0.2cm}
-Imaginons qu'on ait trouvé un $m$ relativement petit, satisfaisant les points
-(1), (2) et (3), divisant $q^n - 1$ et tel que $n\mid\varphi(m)$. Dans ce cas, 
-on peut travailler directement dans les corps $k_1$ et $k_2$. L'algorithme est 
-donc lui suivant :
+Comme cela a été exposé au point \ref{sec:extension}, si on ne trouve pas de $m$
+assez petit alors il faut passer par une extension de petit degré $o$ de
+$\GF{q^n}$. On traite alors la recherche d'un élément unique de deux façons
+disctinctes.
+ 
+\paragraph{$\bullet$ Cas rationnel $o = 1$}
+Imaginons qu'on ait trouvé un $m$ relativement petit, divisant $q^n - 1$,
+divisible par $n$ et satisfaisant les points (1), (2) et (3). Dans ce cas, on 
+peut travailler directement dans les corps $k_1$ et $k_2$. Le tout est résumé
+dans l'algorithme \ref{alg:gausspersansext}.
 
 \begin{algorithm}
 \caption{Détermination d'un élément normal unique dans un corps fini}
 \label{alg:gausspersansext}
 \begin{algorithmic}[1]
-\REQUIRE $k$, $m$ \COMMENT{$k$ un corps fini, $m$ un entier divisant $q^n - 1$
-satisfaisant les conditions (1), (2) et (3)}
-\ENSURE $\eta$ \COMMENT{Un élément normal unique de $k$
-sous l'action de son groupe de Galois}
+\REQUIRE $k$ un corps fini de cardinal $q^n$; $m$ un entier 
+divisant $q^n - 1$ et tel que $n\mid\varphi(m)$, satisfaisant les conditions 
+(1), (2) et (3).
+\ENSURE $\eta$, un élément normal unique de $k$ sous l'action de Galois.
 \bigskip
 \REPEAT
     \STATE $\zeta_m = \textup{rand}(k)^{(q^n - 1)/m}$
 \UNTIL{$\zeta_m^m = 1$\quad\&\quad$\forall d\mid m,\;d\neq m,\;\zeta_m^d\neq1$}
-\STATE $\eta = \sum_{a\in\mathcal{K}}{\zeta_m^a}$
+\STATE $\eta = \sum_{a\in S}{\zeta_m^a}$
 \RETURN $\eta$
 \end{algorithmic}
 \end{algorithm}
-Pour trouver une racine primitive \nroot{m} de l'unité, on prend un élément au
-hasard dans $\GF{q^n}$, on l'élève à la puissance $(q^n - 1)/m$ et on teste si
-le résultat élevé à la puissance $m/l$ vaut $1$ ou non pour $l$ un diviseur 
-premier strict de $m$. On s'attend à ce que cela réussisse après $O(1)$ essaies;
-chaque essaie prenant $O(E(n)n\,\textup{log\;}q)$ opérations.\par
-Maintenant, on doit calculer la période elliptiques $\eta := \eta(\zeta_m)$,
+On va chercher à déterminer sa complexité. Pour trouver une racine primitive 
+\nroot{m} de l'unité, on prend un élément au hasard dans $\GF{q^n}$, on l'élève 
+à la puissance $(q^n - 1)/m$ et on teste si le résultat élevé à la puissance 
+$m/\ell$ vaut $1$ ou non pour $\ell$ un diviseur premier strict de $m$. On 
+s'attend à ce que cela réussisse après $O(1)$ essaies; chaque essaie prenant 
+$O(E(n)n\,\textup{log\;}q)$ opérations.\par
+On doit ensuite calculer la période de Gauss $\eta := \eta(\zeta_m)$,
 d'après ce qui précéde cela revient à faire $\varphi(m)/n$ exponentiation dans
-$\GF{q^n}$ d'exposant au plus $m$, donc un $O((m\textup{log\;}m)E(n)/n)$.\par
-Ainsi, le coût total de l'algorithme est un $O(E(n)(n\,\textup{log\;}q +
-m\,\textup{log\;}m/n))$. Tant que $m\in o(n^2)$, on peut négliger les termes en
-$m$ et se contenter d'une complexite en $O(E(n)n\,\textup{log\;}q)$.
+$\GF{q^n}$ d'exposant au plus $m$, cela se fait $O((m\textup{log\;}m)E(n)/n)$
+opérations.\par
+Ainsi, le coût total de l'algorithme est de $O(E(n)(n\,\textup{log\;}q +
+m\,\textup{log\;}m/n))$ opérations dans $\GF{q}$. Tant que $m\in o(n^2)$, on 
+peut négliger les termes en $m$ et se contenter d'une complexite en 
+$O(E(n)n\,\textup{log\;}q)$.
 
-%\begin{prop}
-%L'algorithme \ref{alg:gausspersansext} est correct dans le sens où l'élément
-%produit :
-%\[\eta(\zeta_m) = \sum_{a\in\mathcal{K}}{\zeta_m^a}\]
-%est un élément normal de $\GF{q^n}$ unique sous l'action du groupe de
-%$\textup{Gal}(\GF{q^n}/\GF{q}) = \langle{q}\rangle$.
-%\end{prop}
-%\begin{proof}
-%Les conditions (1), (2) et (3) permettent d'appliquer le théorème
-%\ref{th:gaussnormal} qui assure que $\eta(\zeta_m)$ est un élément normal. Le
-%fait qu'il soit unique sous l'action du groupe de Galois est justifié par le
-%lemme \ref{lem:gaussconj}.\\
-%\end{proof}
+\begin{prop}
+L'algorithme \ref{alg:gausspersansext} est correct.
+\end{prop}
+\begin{proof}
+Les conditions (1), (2) et (3) permettent d'appliquer le théorème (à venir) qui 
+assure que $\eta$ est un élément normal de $\GF{q^n}$ sur $\GF{q}$. Le 
+fait qu'il soit unique sous l'action du groupe de Galois est justifié par la 
+proposition \ref{prop:gaussperconj}.\\
+\end{proof}
 
-\vspace{0.3cm}
-$\bullet\; o > 1$
+\paragraph{$\bullet$ Cas général $o > 1$}
 Dans le cas où on ait besoin d'utiliser une extension, il faut modifier
 légèrement les conditions sur $m$ et les hypothèses de départ. L'entier $m$
-divise toujours $q^{n.o} - 1$ et si on pose $ord_m(q)$ l'ordre de $q$ modulo 
-$m$, il faut que celui-ci soit multiple de $n$.
+divise toujours $q^{n.o} - 1$ et si on note $ord_m(q)$ l'ordre de $q$ modulo 
+$m$, il faut que celui-ci soit multiple de $n$. Si on pose $o = ord_m(q)/n$, les
+nouvelles conditions sont :
 
 \vspace{0.3cm}
 \begin{enumerate}[(1')]
@@ -1487,20 +1485,56 @@ $m$, il faut que celui-ci soit multiple de $n$.
 un sous-groupe d'ordre $\varphi(m)/(n.o)$,
 
 \item $(o, n) = 1$
-
  
 \end{enumerate}
 \vspace{0.3cm}
+
+La condition (1') est juste l'équivalent de (1) mais pour une extension
+de degré différent. La seconde condition en revanche est d'ordre pratique, elle 
+permet notamment de construire l'extension depuis un polynôme à coefficients 
+dans $\GF{q}$. La condition (3) ne change pas et on obtient alors l'algorithme 
+\ref{alg:gaussperavecext}. 
+\vspace{0.3cm}
+\begin{rem}
+Si on rajoute en plus la condition $(n,r) = 1$, on peut alors directement 
+prendre des polynômes à coefficients dans $\GF{p}$, cela est aussi valable pour 
+l'algorithme \ref{alg:gausspersansext}.
+\end{rem}
+\vspace{0.3cm}
+On définit alors $h$ dans $\GF{q}[X]$, irréductible de degré $o$ et on définira
+les extensions :
+\begin{equation}
+k_1' := k_1[U]/(h) \etmath k_2' := k_2[V]/(h)
+\end{equation}
+dans lesquelles on travaillera. Si on pose $\eta_1 = \sum_{\sigma\in
+S}{\zeta_m^{\sigma}}$ et $\eta_2 = \sum_{\sigma\in S}{\zeta_m'^{\sigma}}$ alors
+on peut résumer la situation au schéma suivant :
+\begin{equation}
+\begin{tikzpicture}
+\matrix(m)[matrix of math nodes,
+row sep=3em, column sep=3em,
+text height=1.5ex, text depth=0.25ex]
+{\GF{q}[\eta_1] & \GF{q}[\eta_2]\\
+\GF{q}[\Tr{\eta}] & \GF{q}[\Tr{\eta_2}]\\};
+\path[->,font=\scriptsize,>=angle 90]
+(m-1-1) edge node[auto] {$\phi$} (m-1-2)
+(m-2-1) edge node[auto] {$\phi$} (m-2-2);
+\path[-,font=\scriptsize,>=angle 90]
+(m-1-1) edge node[left] {$o$} (m-2-1)
+(m-1-2) edge node[right] {$o$} (m-2-2);
+\end{tikzpicture}
+\end{equation}
 
 \begin{algorithm}
 \caption{Détermination d'un élément normal unique dans un corps finis
 \textit{via} une extension}
 \label{alg:gaussperavecext}
 \begin{algorithmic}[1]
-\REQUIRE $k$, $m$, $h$ \COMMENT{$k$ un corps fini, $m$ un entier divisant $q^n -
-1$satisfaisant les conditions \textit{TODO}, $h$ \textit{TODO}}
-\ENSURE $\eta$ \COMMENT{Un élément normal unique de $k$ sous l'action de son
-groupe de Galois}
+\REQUIRE $k$ un corps fini de cardinal $q^{n.o}$, $m$ un entier divisant $q^n -
+1$ et tel que $n\mid\varphi(n)$, satisfaisant les conditions (1'), (2') et (3), 
+$h$ un polynôme de degré $o$ à coefficients dans $\GF{q}$.
+\ENSURE $\eta$, un élément normal unique de $k$ sous l'action de Galois.
+\bigskip
 \STATE $k' := k/(h)$
 \REPEAT
     \STATE $\zeta_m = \textup{rand}(k')^{(q^{n.o} - 1)/m}$
@@ -1512,16 +1546,23 @@ groupe de Galois}
 \end{algorithm}
 
 \begin{prop} 
-Les algorithmes \ref{alg:gausspersansext} et \ref{alg:gaussperavecext}
-sont corrects.
+L'algorithme \ref{alg:gaussperavecext} est correct.
 \end{prop}
+\begin{proof}
+Le théorème (à venir) et la proposition \ref{prop:gaussperconj} assure que
+$\eta$ est un élément normal unique de $\GF{q^{n.o}}$. Il suffit alors
+d'appliquer le corollaire \ref{cor:tracenorm} pour assurer que $\Tr{\eta}$ est
+un élément normal de $\GF{q^n}$.\\
+\end{proof}
 
 \subsubsection*{Détermination de l'isomorphisme}
 Reste alors à déterminer exactement l'isomorphisme, c'est-à-dire calculer son
 image en $x$. Comme on l'a expliqué au début de la sous-section, il suffit juste
 de récupérer les coefficients de $x$ par rapport à la base normale engendrée par
 $\eta(\zeta_m)$; alors il nous restera plus qu'à reporter les coefficients 
-trouvés dans la base normale engendrée par $\eta(\zeta'_m)$.
+trouvés dans la base normale engendrée par $\eta(\zeta'_m)$. On rappelle
+l'existence de l'isomorphisme reliant les matrices circulantes de tailles $n$ 
+sur $\GF{q}$ et l'anneau $\GF{q}[\omega]/(\omega^n - 1)$.
 
 \begin{algorithm}
 \caption{Conversion de la base polynomiale vers la base normale}
@@ -1582,6 +1623,34 @@ note $d_{ij}$ les coefficients de la matrice $B^{-1}$, on a bien :
 Le théorème \ref{th:matcirciso} permet de conclure.\\
 \end{proof}
 
+\subsubsection*{Algorithme principal}
+
+On peut désormais énoncer complètement l'algorithme de Rains cyclotomique, il
+s'agit de l'algorithme \ref{alg:rainscycl}.
+
+\begin{algorithm}
+\caption{Détermination d'un isomorphisme entre deux corps finis de même
+cardinal}
+\label{alg:rainscycl}
+\begin{algorithmic}[1]
+\REQUIRE $k_1$, $k_2$ deux corps finis à $q^n$ éléments.
+\ENSURE $\phi(x)$ l'image de la classe de $X$ par un isomorphisme $\phi : k_1
+\to k_2$. 
+\bigskip
+\FOR{$i = 0$ \TO $bound$}
+\IF{$i$ satisfait (1), (2) et (3)}
+    \STATE $m := i$
+    \STATE \textbf{BREAK}
+\ENDIF
+\ENDFOR
+\IF{un $m<bound$ est trouvé}
+\STATE
+\ELSE
+\STATE
+\ENDIF
+
+\end{algorithmic}
+\end{algorithm}
 
 \section{Algorithme de Rains : méthode elliptique}
 %TODO: Résumer/Détailler le papier de Luca, rajouter les résultats sur
@@ -1589,23 +1658,44 @@ Le théorème \ref{th:matcirciso} permet de conclure.\\
 %(probablement fait avec le papier de Luca et Mihailescu pour les périodes ?)
 %, détailler les différentes étapes, les paramètres, la façon de trouver m 
 %etc.
+Utiliser pour groupe algébrique $\Gamma$ le groupe des points d'une courbe
+elliptique avait déjà été proposé par Pinch\cite{Pin}. Comme pour la méthode
+cyclotomique, on cherche des points d'ordre petit $m$ divisant le nombre de
+point d'une courbe elliptique et, en utilisant les mêmes techniques que pour la
+méthode faisant usage des racines de l'unité, on essaie de trouver un
+isomorphisme reliant leurs abscisses. Cependant, on peut éviter d'utiliser la
+méthode trial-and-error de Pinch en utilisant judicieusement la structure des
+groupe de Galois en jeu. 
 \subsection{Principe}
 %TODO: Choix d'un point d'ordre m sur une bonne courbe elliptique engendre 
 %l'extension, utilisation des périodes elliptiques afin d'avoir un élément 
 %stable par l'action du groupe de Galois (Énoncer les lemmes etc.)
-
-\subsection{Périodes elliptiques}
-%TODO: Prouver et définir les périodes elliptiques (peut-être que ce serait à
-%faire directement dans la partie algorithme elliptique de Rains ?)
-
+On commence par chercher un entier $m$ et une courbe $E/\GF{q}$ satisfaisant
+plusieurs conditions, notamment des conditions reliant la trace du Frobenius de
+$E/\GF{q}$, $m$ et le nombre de points rationnels de $E$ sur $\GF{q^n}$; ce sera
+étudié plus en détail dans la section \ref{sec:choixparam}.\par
+Il faut alors calculer des points d'ordre exactement $m$ sur $E/k_1$ et $E/k_2$.
+Selon le $j$-invariant et la trace (du Frobenius) de $E$, on va alors calculer
+ce qu'on appelle les \emph{périodes elliptiques} qui consistent principalement à
+sommer les abscisses de l'orbites d'un point de $m$-torsion sous l'action d'un
+sous-groupe de $\zmodninv{m}$, ce sera détailler dans la section
+\ref{sec:perell}. On aura alors obtenu des éléments normaux et il nous suffira 
+de procéder comme dans la méthode cyclotomique \ref{sec:algcompcycl} afin
+d'obtenir l'isomorphisme désiré.
 
 \subsection{Choix des paramètres}
+\label{sec:choixparam}
 %TODO: Justifier le choix de m par rapport à n et q, tout ce qui concerne la 
 %valeur propre d'ordre n et donc le choix de traces qui s'en suit, expliquer 
 %comment on pick les courbes (à ce moment là on pourra aussi justifier avec le 
 %résultat sur les tordues).
 
-\subsection{Algorithme et Analyse de complexité}
+\subsection{Périodes elliptiques}
+\label{sec:perell}
+%TODO: Prouver et définir les périodes elliptiques (peut-être que ce serait à
+%faire directement dans la partie algorithme elliptique de Rains ?)
+
+\subsection{Algorithme et analyse de complexité}
 %TODO: Décrire l'algorithme et donner sa complexité.
 
 \part{Implémentation}
@@ -1617,7 +1707,7 @@ Dans cette partie, nous discuterons de l'implémentation des algorithmes, des
 résultats numériques obtenues et nous comparrons ces résultats avec d'autres
 méthodes déjà mises en place. 
 
-\section{Trouver $m$}
+\section{Recherche de $m$}
 %TODO: Des détails sur m et comment on le trouve (forme an + 1, premier ou
 %puissance d'un nombre premier; pour la méthode cyclotomique et elliptique
 La détermination d'une borne raisonnable pour $m$ demanderait un peu plus
