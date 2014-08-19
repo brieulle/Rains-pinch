@@ -1441,9 +1441,9 @@ divisant $q^n - 1$ et tel que $n\mid\varphi(m)$, satisfaisant les conditions
 \ENSURE $\eta$, un élément normal unique de $k$ sous l'action de Galois.
 \bigskip
 \REPEAT
-    \STATE $\zeta_m = \textup{rand}(k)^{(q^n - 1)/m}$
+    \STATE $\zeta_m \leftarrow \textup{rand}(k)^{(q^n - 1)/m}$
 \UNTIL{$\zeta_m^m = 1$\quad\&\quad$\forall d\mid m,\;d\neq m,\;\zeta_m^d\neq1$}
-\STATE $\eta = \sum_{a\in S}{\zeta_m^a}$
+\STATE $\eta \leftarrow \sum_{a\in S}{\zeta_m^a}$
 \RETURN $\eta$
 \end{algorithmic}
 \end{algorithm}
@@ -1481,7 +1481,7 @@ nouvelles conditions sont :
 
 \vspace{0.3cm}
 \begin{enumerate}[(1')]
-\item $\langle{q}\rangle\times\mathcal{K} = \zmodninv{m}$ pour $\mathcal{K}$ 
+\item $\langle{q}\rangle\times S = \zmodninv{m}$ pour $S$ 
 un sous-groupe d'ordre $\varphi(m)/(n.o)$,
 
 \item $(o, n) = 1$
@@ -1535,12 +1535,13 @@ text height=1.5ex, text depth=0.25ex]
 $h$ un polynôme de degré $o$ à coefficients dans $\GF{q}$.
 \ENSURE $\eta$, un élément normal unique de $k$ sous l'action de Galois.
 \bigskip
-\STATE $k' := k/(h)$
+\STATE $k' \leftarrow k/(h)$
 \REPEAT
-    \STATE $\zeta_m = \textup{rand}(k')^{(q^{n.o} - 1)/m}$
-\UNTIL{$\zeta_m^m = 1$\quad\&\quad$\forall d\mid m,\;d\neq m,\;\zeta_m^d\neq1$}
-\STATE $\alpha = \sum_{a\in\mathcal{K}}{\zeta_m^a}$
-\STATE $\eta = \textup{Tr}_{k'/k}(\alpha)$
+    \STATE $\zeta_m \leftarrow \textup{rand}(k')^{(q^{n.o} - 1)/m}$
+\UNTIL{$\zeta_m^m = 1$\quad\&\quad$\forall 
+    d\mid m,\;d\neq m,\;\zeta_m^d\neq1$}
+\STATE $\alpha \leftarrow \sum_{a\in S}{\zeta_m^a}$
+\STATE $\eta \leftarrow \textup{Tr}_{k'/k}(\alpha)$
 \RETURN $\eta$
 \end{algorithmic}
 \end{algorithm}
@@ -1550,7 +1551,7 @@ L'algorithme \ref{alg:gaussperavecext} est correct.
 \end{prop}
 \begin{proof}
 Le théorème (à venir) et la proposition \ref{prop:gaussperconj} assure que
-$\eta$ est un élément normal unique de $\GF{q^{n.o}}$. Il suffit alors
+$\eta$ est un élément normal unique de $\GF{q^{n}}$. Il suffit alors
 d'appliquer le corollaire \ref{cor:tracenorm} pour assurer que $\Tr{\eta}$ est
 un élément normal de $\GF{q^n}$.\\
 \end{proof}
@@ -1575,14 +1576,14 @@ ci-dessus}
 normale engendrée par $v$}
 \bigskip
 \FOR{$i = 0$ \TO $n-1$}
-    \STATE $B_i = \Tr{v\times v^{q^{n-(i+1)}}}$
+    \STATE $B_i \leftarrow \Tr{v\times v^{q^{n-(i+1)}}}$
 \ENDFOR
-\STATE $I = (\sum_{i = 0}^{n-1}{B_i\cdot \omega^i})^{-1}$
+\STATE $I \leftarrow (\sum_{i = 0}^{n-1}{B_i\cdot \omega^i})^{-1}$
 \FOR{$i = 0$ \TO $n-1$}
-    \STATE $T_i = \Tr{v\times z^{q^{n-i}}}$
+    \STATE $T_i \leftarrow \Tr{v\times z^{q^{n-i}}}$
 \ENDFOR
 \FOR{$i = 0$ \TO $n-1$}
-    \STATE $c_i = \sum_{j=0}^{n-1}{I_{(j-i)\bmod n}T_j}$
+    \STATE $c_i \leftarrow \sum_{j=0}^{n-1}{I_{(j-i)\bmod n}T_j}$
 \ENDFOR
 \RETURN $c$
 
@@ -1627,6 +1628,7 @@ Le théorème \ref{th:matcirciso} permet de conclure.\\
 
 On peut désormais énoncer complètement l'algorithme de Rains cyclotomique, il
 s'agit de l'algorithme \ref{alg:rainscycl}.
+%TODO: redétaille l'algorithme un peu.
 
 \begin{algorithm}
 \caption{Détermination d'un isomorphisme entre deux corps finis de même
@@ -1638,16 +1640,29 @@ cardinal}
 \to k_2$. 
 \bigskip
 \FOR{$i = 0$ \TO $bound$}
-\IF{$i$ satisfait (1), (2) et (3)}
-    \STATE $m := i$
-    \STATE \textbf{BREAK}
+\IF{$\big(n\mid\varphi(i)\big)$ \& $\big((n,\varphi(i)/n) = 1\big)$ \&
+$\big(\exists\alpha\in\zmodninv{m} : ord_m(\alpha) = n\big)$}
+    \STATE $m \leftarrow i$
+    \STATE \textbf{break}
 \ENDIF
 \ENDFOR
-\IF{un $m<bound$ est trouvé}
-\STATE
+\STATE $o \leftarrow ord_m(q)/n$
+\IF{$o = 1$}
+    \STATE Calculer $\eta_1$ en utilisant l'algorithme \ref{alg:gausspersansext}
+    \STATE Calculer $\eta_2$ en utilisant l'algorithme \ref{alg:gausspersansext}
 \ELSE
-\STATE
+    \STATE Trouver un polynôme irréductible $h$ de degré $o$ sur $\GF{q}$
+    \STATE Calculer $\theta_1$ en utilisant l'algorithme 
+    \ref{alg:gaussperavecext}
+    \STATE Calculer $\theta_2$ en utilisant l'algorithme 
+    \ref{alg:gaussperavecext}
+    \STATE $\eta_1 \leftarrow \Tr{\theta_1}$
+    \STATE $\eta_2 \leftarrow \Tr{\theta_2}$
 \ENDIF
+\STATE Construire $\GF{q}[\omega]/(\omega^n - 1)$
+\STATE Calculer $c$ en utilisant l'algorithme \ref{alg:convert}
+
+\RETURN $\sum_{i\in\lbrace{0,\dots,n-1}\rbrace}{c_i\eta_2^{q^i}}$
 
 \end{algorithmic}
 \end{algorithm}
