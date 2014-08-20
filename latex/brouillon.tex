@@ -16,6 +16,7 @@
 \usepackage{tikz-cd}
 \usepackage{rotating}
 \usetikzlibrary{matrix,arrows,decorations.pathmorphing}
+\usepackage{array}
 
 % Numérotation des sections, sous-sections, équations, etc.
 \numberwithin{section}{part}
@@ -157,11 +158,11 @@ p\cdot x = \underbrace{x+\dots+x}_{p\textup{ fois}} = 0.
 \end{equation}
 Un corps fini est muni de l'automorphisme de Frobenius définie par :
 \begin{equation}
-\textup{Fr} : x \mapsto x^p.
+\phi_p : x \mapsto x^p.
 \end{equation}
 On a aussi :
 \begin{equation}
-\textup{Fr}_q = \underbrace{\textup{Fr}\circ\cdots\circ\textup{Fr}}_{r\textup{
+\phi_q = \underbrace{\phi\circ\cdots\circ\phi}_{r\textup{
 fois}},
 \end{equation}
 qui à tout $x\in \bar{K}$ associe $x^q$.\par
@@ -289,38 +290,6 @@ $P$ soit scindé dans $L$ et que ses racines engendrent $L$ sur $K$.
 Tout $P\in k[X]$ non constant admet un corps de décomposition unique à 
 isomorphisme près.
 \end{thm}
-\begin{proof}
-\textit{(Existence)}
-Pour prouver l'existence du corps de décomposition, il suffit de se placer 
-dans la clôture algébrique de $k$, alors si on note $K_0$ le corps engendré 
-par $\alpha_1,\dots,\alpha_n$ les racines de $P$, il est clair que $K_0$ est 
-le corps de décomposition de $P$.\par
-\textit{(Unicité)}
-On veut en réalité montrer que si on a deux corps de décomposition, alors ils 
-sont isomorphes. Soit deux corps $k$ et $k^{\prime}$ isomorphes, on note $\phi$
-l'isomorphisme, qu'on étend alors de façon évidente en un isomorphisme de $k[X]$
-dans $k^{\prime}[X]$; \textit{i.e.} on applique $\phi$ au coefficients des 
-polynômes. On pose  $L$ et $L'$ les corps de décomposition de $P\in k[X]$ et $P'
-= \phi(P) \in k^{\prime}[X]$ respectivement.\par
-Raisonnons par récurrence sur $[L:k]$, si $L = k$ alors $L^{\prime} =
-k^{\prime}$. Sinon prenons $\alpha\in L$ une racine de $P$ qui n'est pas dans
-$k$ et notons $Q$ son polynôme minimal sur $k$. On a alors $\alpha'$ racine de 
-$P'$ et $Q'$ son polynôme minimal sur $k'$. Posons $M = k(\alpha)$ et $M' =
-k'(\alpha)$, ainsi $M$ (resp. $M'$) est un corps de décomposition de $Q$ (resp.
-$Q'$) sur $k$ (resp. $k'$). Puisque les corps de rupture sont uniques, modulo
-l'isomorphisme qui envoie une racine sur l'autre, il existe donc un isomorphisme
-$\psi : M \to M'$ tel que $\psi(\alpha) = \alpha'$. On a la situation suivante :
-
-\begin{align*}
-&P = (X - \alpha)S(X)\in M[X]\\
-&P' = (X - \alpha')S'(X)\in M'[X]
-\end{align*}
-
-Comme $\alpha' = \psi(\alpha)$ alors $S'=\psi{\alpha}$, ainsi $L$ est un corps
-de décomposition pour $S$ et $L'$ pour $S'$; d'où par l'hypothèse de récurrence
-sur les degrés, on a un isomorphisme de $L \to L'$ prolongeant $\psi$ et on a 
-démontré ce qu'il fallait.\\
-\end{proof}
 
 Penchons-nous alors plus en détails sur les corps finis. On peut se demander
 étant donné un corps fini $\GF{p^n}$ quels peuvent être les corps qui le
@@ -467,26 +436,6 @@ P\textup{ séparable } \Leftrightarrow P'\neq 0.
 \end{equation}
 \end{prop}
 
-\begin{prop}
-Soit $k \subset L \subset K$ des extensions de corps. Si $K/k$ est séparable
-alors $L/k$ et $K/L$ le sont aussi.
-\end{prop}
-\begin{proof}
-Le corps $L$ étant contenu dans $K$, tous ses éléments sont aussi séparables.
-Démontrons le lemme suivante :
-\begin{lem}
-\label{lem:divsep}
-Soit $P$ un polynôme séparable sur k, $L$ une extension de $k$ et $Q$ un
-diviseur de $P$ dans $L[X]$. Alors $Q$ est spérable sur $L$.
-\end{lem}
-\begin{proof}
-Soit $K$ un corps de décomposition de $P$ sur $L$, alors $Q$ est scindé dans $L$
-et ses racines sont parmi celles de $P$ qui sont déjà deux à deux distinctes.\\
-\end{proof}
-Pour finir, soit $x\in K$ alors $\Irr{L}{x}$ est un diviseur de $\Irr{k}{x}$ 
-dans $L[X]$ et on conclut en appliquant le lemme.\\
-\end{proof}
-
 Soit $f$ un polynôme irréductible de degré $n$ sur un corps $K$. Soit $\alpha_1 
 = a$ une racine de $f$ et $\alpha_2,\dots,\alpha_n$ les autres racines de $f$ 
 dans un corps de décomposition. Alors on dit que les $\alpha_i$ sont les 
@@ -537,7 +486,7 @@ comme le montre le théorème suivant :
 Soit $n\geq1$ et $\GF{q}$ le corps à $q=p^r$ éléments, avec $p$ premier.
 L'extension $\GF{q^n}/\GF{q}$ est galoisienne et son groupe de Galois
 $\textup{Gal}(\GF{q^n}/\GF{q})$ est cyclique d'ordre $n$, engendré par 
-l'automorphisme de Frobenius $\textup{Fr}_q$.
+l'automorphisme de Frobenius $\phi_q$.
 \end{thm}
 \begin{proof}
 On a déjà montré que $\GF{q^n}$ était le corps de décomposition de $Q = X^{q^n} 
@@ -549,10 +498,10 @@ et donc :
 Comme le Frobenius est un $\GF{q}$-automorphisme, c'est un morphisme et un 
 élément de $\GF{q}$ élevé à la puissance $q^n$ est toujours égal à lui-même, 
 c'est un élément de $\textup{Gal}(\GF{q^n}/\GF{q})$. Notons $d$ son ordre, alors
-$\textup{Fr}_q^d = Id_{\GF{q^n}}$ ou encore, pour tout $x\in\GF{q^n}$ :
-\[\textup{Fr}_q^d(x) = x^{q^d} = x \Leftrightarrow x^{q^d} - x = 0\]
+$\phi_q^d = Id_{\GF{q^n}}$ ou encore, pour tout $x\in\GF{q^n}$ :
+\[\phi_q^d(x) = x^{q^d} = x \Leftrightarrow x^{q^d} - x = 0\]
 Le polynôme $X^{q^d} - X$ ayant au plus $d$ racines, on a $d\geq n$ et donc $d =
-n$ d'où $\textup{Fr}_q$ engendre $\textup{Gal}(\GF{q^n}/\GF{q})$ et donc le
+n$ d'où $\phi_q$ engendre $\textup{Gal}(\GF{q^n}/\GF{q})$ et donc le
 résultat.\\
 \end{proof}
 
@@ -764,7 +713,7 @@ serons utiles, on parlera des points de torsion, des périodes elliptiques et de
 tordues d'une courbe elliptique. Dûe à la nature un peu extérieur des courbes
 elliptiques par rapport au isomorphisme de corps finis, on ne s'attardera pas 
 la plupart du temps, à définir les notions de géométrie algébriques. On invitera
-le lecteur à consulter les deux premiers chapitre du livre de 
+le lecteur à consulter les trois premiers chapitre du livre de 
 Silvermann\cite{Sil} pour plus de précision.
 
 \subsection{Définitions}
@@ -772,10 +721,145 @@ Silvermann\cite{Sil} pour plus de précision.
 %"simple"; liste des différents paramètres/invariants qui nous intéressent.
 %j-invariant, groupe d'automorphisme ?> c'est peut-être là que je peux utiliser
 %le module de Tate...
+Soit $K$ un corps et $f$ un polynôme homogène dans $K[X_0,\dots,X_n]$, on
+appelle \emph{courbe projective} tout ensemble de la forme :
+\begin{equation}
+C := \lbrace{[x,y,z]\in \PP{2}(K) : f(x,y,z) = 0}\rbrace
+\end{equation}
+\begin{defn}
+Une \emph{courbe elliptique} est un couple $(E,\EO)$ où $E$ est une courbe 
+projective lisse de genre $1$ et $\EO$ est un point de $E$ qu'on appelle 
+l'origine.
+\end{defn}
+Par abus de langage, on désignera une courbe elliptique par sa courbe projective
+$E$. Il se trouve qu'il existe des fonctions $x$ et $y$ dans l'anneau de 
+fonctions $K(E)$ de $E$ qui permettent d'identifier $E$ à une courbe de 
+Weierstrass en envoyant $\EO$ sur $[0,1,0]$. Pour les corps $K$ de 
+caractéristique différente de $2$ et $3$, cela revient à définir $E$, après 
+plusieurs changements de variables et en posant $z = 1$, de la façon suivante :
+\begin{equation}
+\label{eq:weiersimpl}
+E : y^2 = x^3 + ax + b\quad\textup{avec}\quad \Delta := -16(4a^3 + 27b^2)\neq 0,
+\end{equation}
+c'est cette définition qu'on utilisera pour désigner une courbe elliptique. On
+appelle $\Delta$ le \emph{discriminant} de $E$ et la condition $\Delta\neq0$ est
+équivalente au fait que $E$ soit lisse. Un invariant important des courbes 
+elliptiques s'appelle le \emph{$j$-invariant} de $E$ :
+\begin{equation}
+j(E) = -1728\dfrac{(4a)^3}{\Delta}.
+\end{equation}
+On écrira simplement $j$ quand il n'y aura pas de confusion possible.
+On notera $E/K$ pour signifier que les coefficients $a, b$ sont dans $K$. On
+parlera de points rationnels d'un corps $L\subset\overline{K}$ pour les points
+$P := [x,y,1]$ dans $E$ tel que $x, y$ sont dans $L$ et on notera leur ensemble
+$E(L)$.\par
+\vspace{0.3cm}
+Si on munit $E$ de la loi de composition de \emph{corde tangente}, désignée par
+$\oplus$, alors $E$ possède une structure de groupe abélien avec pour élément 
+neutre $\EO$. On dit qu'un point $P$ est un \emph{point de torsion} s'il existe 
+un $m\in\ZZ$ tel que 
+\begin{equation}
+[m]P = \underbrace{P\oplus\dots\oplus P}_{\textup{m fois}} = \EO.
+\end{equation}
+On notera alors l'ensemble des points de \emph{$m$-torsion} :
+\begin{equation}
+E[m] = \lbrace{P\in E(\overline{K}) : [m]P = \EO}\rbrace.
+\end{equation}
+On a les résultats suivants :
+\vspace{0.3cm}
+\begin{itemize}
+\item Si $\textup{car}(K) = 0$ ou $\textup{car}(K) = p > 0$ et $p\not|\,m$ 
+alors :
+\begin{equation}
+E[m] = \zmodn{m}\times\zmodn{m}
+\end{equation}
+\item Si $\textup{car}(K) = p > 0$ alors on a l'une des deux situations :
+    \begin{align} 
+    E[p^e] &= \lbrace{\EO}\rbrace, \quad \forall e\in\NN^{*}\\
+    E[p^e] &= \zmodn{p^e}\quad \forall e\in\NN^{*}
+    \end{align}
+\end{itemize}
+\vspace{0.3cm}
+
+Soit $E_1$ et $E_2$ deux courbes elliptiques, une \emph{isogénie} est un
+morphisme de $\varphi : E_1 \rightarrow E_2$ tel que $\varphi(\EO) = \EO$. C'est
+en fait un homomorphisme de groupe et on note $\textup{Hom}(E_1, E_2)$
+l'ensemble des isogénies de $E_1$ vers $E_2$. L'ensemble $\textup{End}(E)$ des
+endormorphisme de $E$ est un anneau de caractéristique $0$, intègre et de rang
+au plus $4$ en tant que $\ZZ$-module. L'objet qui nous intéressera plus
+particulièrement est l'ensemble des endormorphisme inversible, qu'on notera
+$\textup{Aut}(E)$. Le théorème suivant détaille sa structure.
+\begin{thm}
+\label{th:autell}
+Soit $E/K$ une courbe elliptique, alors $\textup{Aut}(E)$ est un groupe fini
+d'ordre divisant $24$. Plus précisément, on a le tableau suivant :
+
+\begin{equation}
+\begin{tabular}{|c|c|c|}
+    \hline
+    \#Aut$(E)$ & $j(E)$ & car$(K)$\\
+    \hline\hline
+    $2$ & $j(E)\neq0,1728$ & $-$\\
+    \hline
+    $4$ & $j(E) = 1728$ & car$(K)\neq 2, 3$\\
+    \hline
+    $6$ & $j(E) = 0$ & car$(K)\neq 2, 3$\\
+    \hline
+    $12$ & $j(E) = 0 = 1728$ & car$(K) = 3$\\
+    \hline
+    $24$ & $j(E) = 0 = 1728$ & car$(K) = 2$\\
+    \hline
+\end{tabular}
+\end{equation}
+\end{thm}
+Les automorphismes pour les courbes elliptiques de la forme
+\ref{eq:weiersimpl} sont tous définis par : 
+\begin{equation}
+x = u^2x'\etmath y = u^3y',
+\end{equation}
+pour $u\in\overline{K}^{\times}$; ce sont les seuls changements de variables qui
+conservent cette forme.
 \subsection{Corps finis}
 %TODO: Nombres de points, théorème de Hasse, Frobenius, trace, points de 
 %torsions
-
+On peut aussi considérer les courbes elliptiques sur les corps finis $\GF{q}$.
+Dans ce cas, le nombre de point d'une courbe elliptique $E/\GF{q}$ n'a qu'un
+nombre fini de point. Plus précisément, on a le théorème suivant :
+\begin{thm}[Hasse]
+\label{th:hasse}
+Soit $E/\GF{q}$ une courbe elliptique défini sur $\GF{q}$ alors on a l'inégalité
+suivante :
+\begin{equation}
+\vert{q + 1 - \#E(\GF{q})}\vert\leq 2\sqrt{q}.
+\end{equation}
+\end{thm}
+Le morphisme de Frobenius $\phi_q$ agit sur les coordonnées des points de
+$E(\overline{\mathbb{F}}_q)$ :
+\begin{equation}
+\phi_q(x,y) = (x^q, y^q)\etmath \phi_q(\EO) = (\EO),
+\end{equation}
+il s'agit d'un endomorphisme de $E$. En particulier, on a complètement 
+caractérisé les points rationnels d'une courbe sur les corps finis :
+\begin{equation}
+P\in E(\GF{q}) \Leftrightarrow \phi_q(P) = P.
+\end{equation}
+\begin{prop}
+Soit $E/\GF{q}$ une courbe elliptique, si on pose $t = q + 1 - \#E(\GF{q})$
+alors on a :
+\begin{equation}
+\label{eq:frpolmin}
+\phi_q^2 - t\phi_q + q = 0,
+\end{equation}
+en tant qu'endomorphisme de $E$ et $t$ est l'unique entier tel que l'égalité
+soit vérifiée. De plus, pour $m$ premier avec $q$, $t$ est aussi l'unique entier
+tel que :
+\begin{equation}
+t \equiv \Tr{\phi_q} \bmod m.
+\end{equation}
+\end{prop}
+En particulier, le polynôme \ref{eq:frpolmin} est le polynôme minimal du
+Frobenius de $E$. Par abus de langage, on parlera parfois de $t$ comme de la 
+trace de $E$.
 
 \subsection{Courbes supersingulières}
 %TODO: Définitions Twists quadratiques, courbes $y^2 = x^3 + x$ et 
@@ -868,11 +952,11 @@ de l'unité.\par
 On choisit $\zeta'_m$ une racine primitive \nroot{m} de l'unité dans $k_2$
 alors $\zeta_m$ s'enverra sur une puissance $\zeta'_m$ puisque le groupe 
 mulitplicatif d'un corps est cyclique. On définit pour $0 < s < m$ les
-applications $\phi_s : k_1 \to k_2$ , telles que :
+applications $\phi^s : k_1 \to k_2$ , telles que :
 \begin{equation}
-\phi_s(\zeta_m) = (\zeta'_m)^s.
+\phi^s(\zeta_m) = (\zeta'_m)^s.
 \end{equation}
-Le but est de déterminer quel $\phi_s$ définit un isomorphisme.\par
+Le but est de déterminer quel $\phi^s$ définit un isomorphisme.\par
 Pour cela, on utilise de l'algèbre linéaire. Si on a deux bases 
 $(x_i)_{i\in I}$, $(y_i)_{i\in I}$ de $k_1$, $k_2$ respectivement, telles 
 qu'il existe un isomorphisme $\phi$ qui envoie $x_i$ sur $y_i$, alors il nous
@@ -891,10 +975,10 @@ $x_i = \nu_1^i$ et $y_i = \nu_2^i$.\par
 Mais comme les racines $\zeta_m$ et $\zeta'_m$ sont choisies de telle sorte 
 qu'elles n'engendrent aucuns des sous-corps de $\GF{q^n}$ cela veut 
 dire, en particulier, qu'elles sont racines de $f$ et $g$. On pose donc 
-$x_i = \zeta_m^i$ et $y_i = (\zeta'_m)^{si}$ selon l'application $\phi_s$ qu'on 
+$x_i = \zeta_m^i$ et $y_i = (\zeta'_m)^{si}$ selon l'application $\phi^s$ qu'on 
 souhaite tester. On déduit l'image de $x$ de la matrice $C$, dont les 
 coefficients dans la base monomiale engendrée par $y$ sont sur la deuxième 
-ligne. Alors, si $\phi_s(x)$ est racine de $f$ sur $k_2$, l'application $\phi_s$
+ligne. Alors, si $\phi^s(x)$ est racine de $f$ sur $k_2$, l'application $\phi^s$
 est effectivement un isomorphisme. La méthode peut se résumer ainsi :
 \vspace{0.3cm}
 \begin{enumerate}[1.]
@@ -905,7 +989,7 @@ $q$ soit premier $m$.
 $\zeta'_m$ dans $k_2$.
 
 \item  Déterminer pour quel $s\in \lbrace{1,\dots,m-1}\rbrace$, l'application
-$\phi_s$ telle que $\phi_s(\zeta_m) = (\zeta'_m)^s$, est un isomorphisme.
+$\phi^s$ telle que $\phi^s(\zeta_m) = (\zeta'_m)^s$, est un isomorphisme.
 \end{enumerate}
 \vspace{0.3cm}
 La condition $q$ premier avec $m$ est là pour assurer qu'une racine primitive
@@ -1042,7 +1126,7 @@ de $x$ par l'isomorphisme reliant les deux éléments normaux. C'est ce qui va
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\subsection{Utilisation d'une extension}% Utile ?
+\subsection{Utilisation d'une extension}
 \label{sec:extension}
 La première limitation de la méthode de Pinch est la taille du facteur
 $m$, Rains propose alors dans son article \cite{Rai} de passer par une petite
@@ -1196,7 +1280,7 @@ il existe des $c_i\in\GF{q}$ tels que :
 \begin{equation}
 z = \sum_{0 \leq i < n}{c_iv^{q^i}}.
 \end{equation}
-En appliquant $\textup{Fr}_{q^{n-j}}$ puis une forme $\GF{q}$-linéaire $\lambda
+En appliquant $\phi_{q^{n-j}}$ puis une forme $\GF{q}$-linéaire $\lambda
 : \GF{q^n} \to \GF{q}$, on obtient :
 \begin{equation}
 \lambda\left(z^{q^{n-j}}\right) = \sum_{0\leq i < n}
@@ -1370,8 +1454,12 @@ Soit $\tau\in\langle{q}\rangle$, alors :
 \begin{equation}
 \eta(\zeta_m)^{\tau} = \sum_{\sigma\in S}{\zeta_m^{\sigma\tau}}
 \end{equation}
-
+comme $\zmodninv{m} = \langle{q}\rangle\times S$ alors pour chaque
+$\tau\in\langle{q}\rangle$ on a $\zeta_m^{\tau} = \zeta_m'$ un autre générateur
+de $\mu_m$ ou encore $\eta(\zeta_m)^{\tau} = \eta(\zeta'_m)$, d'où
+$\langle{q}\rangle$ agit transitiviement sur les $\eta(\zeta_m)$.\\
 \end{proof}
+
 \subsection{Algorithme et analyse de complexité}
 \label{sec:algcompcycl}
 %TODO: Détailler l'algorithme de l'article/code de Luca + analyser la complexité
@@ -1395,7 +1483,8 @@ divisible par $n$, tel que :
 \item $\langle{q}\rangle \times S = \zmodninv{m}$ pour $S$ 
 un sous-groupe de $\zmodninv{m}$ d'ordre $\varphi(m)/n$,
 \item $m$ et $q$ soit premiers entre eux,
-\item $m$ soit sans facteurs carrés.
+\item $m$ soit sans facteurs carrés,
+\item $\varphi(m)$ et $r$ sont premiers entre eux, avec $q = p^r$.
 \end{enumerate}
 \vspace{0.3cm}
 La condition (1) est équivalente à demander que $\langle{q}\rangle$ soit d'ordre
@@ -1404,16 +1493,18 @@ primitives \nroot{m} de l'unité soit bien de degré $n$ sur $\GF{q}$ (\emph{cf.
 \ref{schema:gaussnorm}). Sous ces conditions, on peut appliquer le théorème (à
 venir) et la proposition \ref{prop:gaussperconj} qui assurent qu'une période de 
 Gauss $\eta(\zeta_m) = \sum_{a\in S}{\zeta_m^a}$ est bien un élément normal 
-unique sous l'action de Galois.
+unique sous l'action de Galois. La condition (4) permet d'assurer que 
+$\langle{p}\rangle = \langle{q}\rangle$ dans $\zmodninv{m}$, on peut donc 
+prouver les résultats dans $\GF{q}$ ou $\GF{p}$.
 \vspace{0.3cm}
 \begin{rem}
-Il se trouve que l'algorithme ne peut pas fonctionner si $q$ est une puissance
-$r$ non première avec $n$ de $p$. En effet, on a $\langle{q,S}\rangle = 
-\zmodninv{m}$, donc par définition $p = sq^a\bmod m$ pour un $s\in S$ et $0 
-\leq a < n$, alors $q=s^rq^{ar} \bmod m$. Or, $q$ ne peut être écrit que d'une 
-seule façon comme produit d'un élément de $S$ et d'une puissance de $q$, d'où 
-$s^r = 1$ et $q^{ar - 1} = 1 \bmod m$. Ce qui implique que $n$ divise $ar - 1$ 
-et donc que $(n, r) = 1$.\par
+Il se trouve que l'algorithme ne peut pas fonctionner si $q$  est une 
+puissance $r$ non première avec $n$ de $p$. En effet, on a $\langle{q,S}\rangle 
+= \zmodninv{m}$, donc par définition $p = sq^a\bmod m$ pour un $s\in S$ et $0 
+\leq a < n$, alors $q=s^rq^{ar} \bmod m$. 
+Or, $q$ ne peut être écrit que d'une seule façon comme produit d'un élément de 
+$S$ et d'une puissance de $q$, d'où $s^r = 1$ et $q^{ar - 1} = 1 \bmod m$. 
+Ce qui implique que $n$ divise $ar - 1$ et donc que $(n, r) = 1$.\par
 Une solution possible serait de calculer un générateur $\alpha$ de 
 $k/\GF{p^{d/c}}$, son polynôme minimal serait alors uniquement défini sur 
 $\GF{p^{d/c}}$ mais se scinderait en $c$ facteurs sur $\GF{q}$, ce qui nous 
@@ -1437,7 +1528,7 @@ dans l'algorithme \ref{alg:gausspersansext}.
 \begin{algorithmic}[1]
 \REQUIRE $k$ un corps fini de cardinal $q^n$; $m$ un entier 
 divisant $q^n - 1$ et tel que $n\mid\varphi(m)$, satisfaisant les conditions 
-(1), (2) et (3).
+(1), (2), (3) et (4).
 \ENSURE $\eta$, un élément normal unique de $k$ sous l'action de Galois.
 \bigskip
 \REPEAT
@@ -1530,9 +1621,9 @@ text height=1.5ex, text depth=0.25ex]
 \textit{via} une extension}
 \label{alg:gaussperavecext}
 \begin{algorithmic}[1]
-\REQUIRE $k$ un corps fini de cardinal $q^{n.o}$, $m$ un entier divisant $q^n -
-1$ et tel que $n\mid\varphi(n)$, satisfaisant les conditions (1'), (2') et (3), 
-$h$ un polynôme de degré $o$ à coefficients dans $\GF{q}$.
+\REQUIRE $k$ un corps fini de cardinal $q^n$, $m$ un entier divisant $q^n -
+1$ et tel que $n\mid\varphi(n)$, satisfaisant les conditions (1'), (2'), (3) et
+(4), $h$ un polynôme de degré $o$ à coefficients dans $\GF{q}$.
 \ENSURE $\eta$, un élément normal unique de $k$ sous l'action de Galois.
 \bigskip
 \STATE $k' \leftarrow k/(h)$
@@ -1569,11 +1660,10 @@ sur $\GF{q}$ et l'anneau $\GF{q}[\omega]/(\omega^n - 1)$.
 \caption{Conversion de la base polynomiale vers la base normale}
 \label{alg:convert}
 \begin{algorithmic}[1]
-\REQUIRE $z$, $v$, $n$, $p$, $\omega$ \COMMENT{$z\in\GF{q^n}$, $v$ élément 
-normal, $n$ degré de l'extension, $p$ caractéristique, $\omega$ défini 
-ci-dessus}
-\ENSURE $c$ \COMMENT{Tuple contenant les coefficients de $z$ dans la base 
-normale engendrée par $v$}
+\REQUIRE $z\in\GF{q^n}$, $v$ élément normal, $n$ degré de l'extension, $p$ 
+caractéristique, $\omega$ défini ci-dessus.
+\ENSURE $c$, tuple contenant les coefficients de $z$ dans la base 
+normale engendrée par $v$.
 \bigskip
 \FOR{$i = 0$ \TO $n-1$}
     \STATE $B_i \leftarrow \Tr{v\times v^{q^{n-(i+1)}}}$
@@ -1635,7 +1725,8 @@ s'agit de l'algorithme \ref{alg:rainscycl}.
 cardinal}
 \label{alg:rainscycl}
 \begin{algorithmic}[1]
-\REQUIRE $k_1$, $k_2$ deux corps finis à $q^n$ éléments.
+\REQUIRE $k_1$, $k_2$ deux corps finis à $q^n$ éléments, $bound$ un entier
+positif
 \ENSURE $\phi(x)$ l'image de la classe de $X$ par un isomorphisme $\phi : k_1
 \to k_2$. 
 \bigskip
@@ -1660,7 +1751,7 @@ $\big(\exists\alpha\in\zmodninv{m} : ord_m(\alpha) = n\big)$}
     \STATE $\eta_2 \leftarrow \Tr{\theta_2}$
 \ENDIF
 \STATE Construire $\GF{q}[\omega]/(\omega^n - 1)$
-\STATE Calculer $c$ en utilisant l'algorithme \ref{alg:convert}
+\STATE Calculer les $c_i$ en utilisant l'algorithme \ref{alg:convert}
 
 \RETURN $\sum_{i\in\lbrace{0,\dots,n-1}\rbrace}{c_i\eta_2^{q^i}}$
 
@@ -1709,7 +1800,27 @@ d'obtenir l'isomorphisme désiré.
 \label{sec:perell}
 %TODO: Prouver et définir les périodes elliptiques (peut-être que ce serait à
 %faire directement dans la partie algorithme elliptique de Rains ?)
-
+La caractéristique principale de l'algorithme de Rains, comme on a pu le voir
+dans la section précédente, est l'utilisation d'éléments normaux uniques sous
+l'action d'un certains groupes. Ici, il se trouve que l'unicité sera déduite de
+l'action du Frobenius de la courbe elliptique choisie $E/\GF{q}$ sur des points
+de torsion d'ordre $m$ sur la courbe $E(\GF{q^n})$.
+\begin{prop}
+L'endomorphisme de Frobenius $\phi_q$ agit transitivement sur les périodes 
+elliptiques $\eta_{\alpha}(P)$. \end{prop}
+\begin{proof}
+Comme $P$ est dans l'espace propre de la valeure propre $\alpha$, lui appliquer 
+$\phi_q$ revient à le multiplier par $\alpha$. Si on prend 
+$\tau\in\langle\alpha\rangle$ alors on a pour $d\geq1$ tel que $\alpha^d = \tau 
+\bmod m$ :
+\begin{equation}
+\phi_q^d(\eta_{\alpha}(P)) = \sum_{\sigma\in
+S}{\left([\sigma][\tau]P\right)_X^{\#\textup{Aut}(E)/2}}
+\end{equation}
+Or, on a $\zmodninv{m}/\textup{Aut}(E) = \langle\alpha\rangle \times S$ donc
+$[\tau]P$ est encore un point primitif d'ordre $m$ dans l'espace propre de 
+$\alpha$.\\
+\end{proof}
 \subsection{Algorithme et analyse de complexité}
 %TODO: Décrire l'algorithme et donner sa complexité.
 
