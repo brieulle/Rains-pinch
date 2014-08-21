@@ -1399,7 +1399,12 @@ text height=1.5ex, text depth=0.25ex]
 \end{equation}
 Où $\zmodninv{m}$ est le groupe de Galois de $\QQ[\mu_m]/\QQ$, $G$ est le groupe
 de Galois de $K[\mu_m]/K$, sous-groupe de $\zmodninv{m}$ et $\langle{q}\rangle$
-le groupe de décomposition de $\mathfrak{B}/\mathfrak{p}$.
+le groupe de décomposition de $\mathfrak{B}/\mathfrak{p}$ ($=
+\GF{q}[\mu_m]/\GF{q}$ ?). On a en particulier l'inclusion
+$\langle{q}\rangle\subset G\subset\zmodninv{m}$ avec 
+\begin{equation}
+\#G/\langle{q}\rangle=g\etmath\#\langle{q}\rangle = f = [K[\mu_m]:K]/g.
+\end{equation}
 %TODO: Rajouter ce qui reste ? À voir ce dont on a besoin pour la
 %démonstration...
 
@@ -1425,8 +1430,23 @@ Soit $\tau\in\langle{q}\rangle$, alors :
 comme $\zmodninv{m} = \langle{q}\rangle\times S$ alors pour chaque
 $\tau\in\langle{q}\rangle$ on a $\zeta_m^{\tau} = \zeta_m'$ un autre générateur
 de $\mu_m$ ou encore $\eta(\zeta_m)^{\tau} = \eta(\zeta'_m)$, d'où
-$\langle{q}\rangle$ agit transitiviement sur les $\eta(\zeta_m)$.\\
+$\langle{q}\rangle$ agit transitivement sur les $\eta(\zeta_m)$.\\
 \end{proof}
+Le but de la section va être de démontrer le théorème suivant :
+
+\begin{thm}
+\label{th:gausspernorm}
+Soit $\GF{q^n}/\GF{q}$ une extension de degré $n$ et un entier $m$ tel que :
+\vspace{0.3cm}
+\begin{enumerate}[(i)]
+    \item $\zmodninv{m} = \langle{q}\times S$ pour $S$ un sous-groupe,
+    \item $(\varphi(m), r) = 1$,
+    \item $m$ est sans facteur carré.
+\end{enumerate}
+\vspace{0.3cm}
+Si $\#\langle{q}\rangle = n$ alors les périodes $\eta(\zeta_m)$ forment une base
+normale de $\GF{q^n}$ sur $\GF{q}$.
+\end{thm}
 
 \subsection{Algorithme et analyse de complexité}
 \label{sec:algcompcycl}
@@ -1529,10 +1549,10 @@ $O(E(n)n\,\textup{log\;}q)$.
 L'algorithme \ref{alg:gausspersansext} est correct.
 \end{prop}
 \begin{proof}
-Les conditions (1), (2) et (5) permettent d'appliquer le théorème (à venir) qui 
-assure que $\eta$ est un élément normal de $\GF{q^n}$ sur $\GF{q}$. Le 
-fait qu'il soit unique sous l'action du groupe de Galois est justifié par la 
-proposition \ref{prop:gaussperconj}.\\
+Les conditions (1), (2) et (5) permettent d'appliquer le théorème 
+\ref{th:gausspernorm} qui assure que $\eta$ est un élément normal de 
+$\GF{q^n}$ sur $\GF{q}$. Le fait qu'il soit unique sous l'action du groupe de 
+Galois est justifié par la proposition \ref{prop:gaussperconj}.\\
 \end{proof}
 
 \paragraph{$\bullet$ Cas général $o > 1$}
@@ -1593,9 +1613,9 @@ conditions (1) à (5), $h$ un polynôme de degré $o$ à coefficients dans $\GF{
 L'algorithme \ref{alg:gaussperavecext} est correct.
 \end{prop}
 \begin{proof}
-Le théorème (à venir) et la proposition \ref{prop:gaussperconj} assure que
-$\alpha$ est un élément normal unique de $\GF{q^{n.o}}$. Il suffit alors
-d'appliquer le corollaire \ref{cor:tracenorm} pour assurer que $\eta :=
+Le théorème \ref{th:gausspernorm} et la proposition \ref{prop:gaussperconj}
+assure que $\alpha$ est un élément normal unique de $\GF{q^{n.o}}$. Il suffit 
+alors d'appliquer le corollaire \ref{cor:tracenorm} pour assurer que $\eta :=
 \Tr{\alpha}$ soit un élément normal unique de $\GF{q^n}$.\\
 \end{proof}
 
