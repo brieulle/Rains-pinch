@@ -813,7 +813,7 @@ d'ordre divisant $24$. Plus précisément, on a le tableau suivant :
 \end{equation}
 \end{thm}
 Les automorphismes pour les courbes elliptiques de la forme
-\ref{eq:weiersimpl} sont tous définis par : 
+(\ref{eq:weiersimpl}) sont tous définis par : 
 \begin{equation}
 x = u^2x'\etmath y = u^3y',
 \end{equation}
@@ -857,7 +857,7 @@ tel que :
 t \equiv \Tr{\phi_q} \bmod m.
 \end{equation}
 \end{prop}
-En particulier, le polynôme \ref{eq:frpolmin} est le polynôme minimal du
+En particulier, le polynôme (\ref{eq:frpolmin}) est le polynôme minimal du
 Frobenius de $E$. Par abus de langage, on parlera parfois de $t$ comme de la 
 trace de $E$.
 
@@ -883,7 +883,7 @@ pour tout $n, m\in\NN$. En particulier, elle est \emph{superlinéaire} :
 \begin{equation}
 \M{mn}\geq m.\M{n},\quad \M{n + m}\geq\M{n} + \M{m}, \quad \M{n}\geq n.
 \end{equation}
-La seconde propriété de \ref{eq:M1} implique que M est au plus quadratique et 
+La seconde propriété de (\ref{eq:M1}) implique que M est au plus quadratique et 
 donc pour toute constante positive $c$ on a $\M{cn}\in O(\M{n})$.\par
 Le nombre d'opérations nécessaires pour effectuer une mulitplication dans
 $\GF{q^n}$ sera noté $\E{n}\in O(\M{n})$, elle est aussi superlinéaire. De même,
@@ -1094,38 +1094,6 @@ $k_2$. Une fois ceux-ci obtenus, il ne reste plus qu'à convertir la base normal
 de $k_2$ en base monomial et obtient alors l'isormophisme voulu. Ceci est
 détaillé dans la section \ref{sec:elemnorm}.
 
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\iffalse
-
-En attendant un algorithme plus détaillé, on peut résumer la recherche d'un
-élément normal unique de la façon suivante :
-\vspace{0.3cm}
-\begin{enumerate}[(1)]
-\item Trouver un polynôme $h$ de degré $o$ irréductible sur $\GF{q}$ et tel que 
-$(o, n) = 1$.
-
-\item Construire l'extension de degré $o$, $k'_1 = k_1[x]/h(x)$.
-
-\item Chercher une racine primitive \nroot{m} $\zeta_m$ dans $k'_1$.
-
-\item Calculer la periode de Gauss de $\zeta_m$.
-\end{enumerate}
-\vspace{0.3cm}
-Les points (1) et (2) ne seront nécessaires que lorsqu'on aura besoin d'utiliser
-une extension pour trouver le paramètre $m$ assez petit. Il sera bien possible
-que $o = 1$ comme on le montrera dans la sous-section \textit{(la dernière
-probablement)}. Le point (3) a déjà été évoqué pour la méthode de Pinch, à ceci
-pèrs qu'il faudra rajouter $m$ sans facteur carré. Et le point (4) sera traité 
-dans la sous-section \ref{sec:gaussper} comme il a été mentionné plus haut. On 
-répète exactement le même processus pour $k_2$, reste alors à calculer l'image 
-de $x$ par l'isomorphisme reliant les deux éléments normaux. C'est ce qui va 
-être étudier dans la sous-section qui suit.
-\fi
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
 \subsection{Utilisation d'une extension}
 \label{sec:extension}
 La première limitation de la méthode de Pinch est la taille du facteur
@@ -1170,7 +1138,7 @@ text height=2ex, text depth=1ex]
 \end{equation}
 
 Le problème de devoir tester plusieurs candidats avant de tomber sur un 
-isomorphisme est malheureusement toujours présent. C'est à ce moment qu'on va
+isomorphisme est malheureusement toujours présent. C'est à ce moment qu'on 
 utiliser les périodes de Gauss, introduites à la sous-section 
 \ref{sec:gaussper}.
 
@@ -1242,7 +1210,7 @@ $p^k$ fois élément normaux que $L$. La borne est atteinte dans notre cas, ce q
 conclut la démonstration.\\
 \end{proof}
 
-On va maintenant développer plus en détail la partie évaluation de
+On développe maintenant plus en détail la partie évaluation de
 l'isomorphisme. Notamment en illustrant l'isomorphisme entre les matrices
 circulantes de taille $n$ sur $\GF{q}$ et l'anneau $\GF{q}[\omega]/(\omega^n -
 1)$.\par
@@ -1476,32 +1444,38 @@ l'action du groupe de Galois de $\GF{q^n}/\GF{q}$ et en déduire l'image de $x :
 \overline{X}$ pour déterminer complètement l'isomorphisme. 
 
 \subsubsection*{Recherche d'un élément normal unique}
-On commence par chercher un entier $m$ divisant $q^n - 1$ avec $\varphi(m)$
-divisible par $n$, tel que :
+Comme cela a été exposé au point \ref{sec:extension}, si on ne trouve pas de $m$
+assez petit alors il faut passer par une extension de petit degré $o$ de
+$\GF{q^n}$ afin de pouvoir appliquer les résultats à l'extension $\GF{q^{n.o}}$
+et redescendre sur $\GF{q^n}$.\par
+La façon dont on va trouver $m$ est détaillé dans la section
+\ref{sec:recherchemcycl}. En résumé, on cherche le plus petit entier
+$m$ tel qu'il existe $o\in\NN$ tel que :
 \vspace{0.3cm}
 \begin{enumerate}[(1)]
-\item $\langle{q}\rangle \times S = \zmodninv{m}$ pour $S$ 
-un sous-groupe de $\zmodninv{m}$ d'ordre $\varphi(m)/n$,
-\item $m$ et $q$ soit premiers entre eux,
-\item $m$ soit sans facteurs carrés,
-\item $\varphi(m)$ et $r$ sont premiers entre eux, avec $q = p^r$.
+    \item $(q, m) = 1$ et $q$ soit d'ordre $n.o$ dans $\zmodninv{m}$,
+    \item $\varphi(m)/(n.o)$ et $n.o$ soient premiers entre eux,
+    \item $n$ et $o$ soient premiers entre eux,
+    \item $(\varphi(m), r) = 1$ avec $q = p^r$,
+    \item $\zmodninv{m} = \langle{q^o}\rangle\times S$ pour $S$ un sous groupe
+    de $\zmodninv{m}$.
 \end{enumerate}
 \vspace{0.3cm}
-La condition (1) est équivalente à demander que $\langle{q}\rangle$ soit d'ordre
-$n$ dans $\zmodninv{m}$ et donc que l'extension engendrée par les racines
-primitives \nroot{m} de l'unité soit bien de degré $n$ sur $\GF{q}$ (\emph{cf.}
-\ref{schema:gaussnorm}). Sous ces conditions, on peut appliquer le théorème (à
-venir) et la proposition \ref{prop:gaussperconj} qui assurent qu'une période de 
-Gauss $\eta(\zeta_m) = \sum_{a\in S}{\zeta_m^a}$ est bien un élément normal 
-unique sous l'action de Galois. La condition (4) permet d'assurer que 
-$\langle{p}\rangle = \langle{q}\rangle$ dans $\zmodninv{m}$, on peut donc 
-prouver les résultats dans $\GF{q}$ ou $\GF{p}$.
-\vspace{0.3cm}
+Les conditions $(1)$, $(2)$ et $(5)$ sont là pour assurer que les racines 
+\nroot{m} primitives engendrent exactement $\GF{q^{n.o}}$ (\emph{cf.} 
+\ref{schema:gaussnorm}). La condition $(3)$ est d'ordre pratique et permet de
+construire des extensions à partir de polynôme à coefficients directement dans 
+$\GF{q}$ si besoin est. La quatrième condition permet de s'assurer que
+$\langle{p}\rangle = \langle{q}\rangle$ et donc que les résultats sur
+$\GF{p}$ soient encore valables sur $\GF{q}$. Enfin, la dernière condition est
+aussi la plus importante puisqu'elle permet d'appliquer le théorème \emph{(à 
+venir)}.
+
 \begin{rem}
-Il se trouve que l'algorithme ne peut pas fonctionner si $q$  est une 
-puissance $r$ non première avec $n$ de $p$. En effet, on a $\langle{q,S}\rangle 
-= \zmodninv{m}$, donc par définition $p = sq^a\bmod m$ pour un $s\in S$ et $0 
-\leq a < n$, alors $q=s^rq^{ar} \bmod m$. 
+Il se trouve que l'algorithme ne peut pas fonctionner si $q$ est une puissance 
+$r$ de $p$ non première avec $n$, le degré de l'extension. En effet, on a 
+$\langle{q}\rangle\times S = \zmodninv{m}$, donc par définition $p = sq^a\bmod 
+m$ pour un $s\in S$ et $0 \leq a < n$, alors $q=s^rq^{ar} \bmod m$. 
 Or, $q$ ne peut être écrit que d'une seule façon comme produit d'un élément de 
 $S$ et d'une puissance de $q$, d'où $s^r = 1$ et $q^{ar - 1} = 1 \bmod m$. 
 Ce qui implique que $n$ divise $ar - 1$ et donc que $(n, r) = 1$.\par
@@ -1511,24 +1485,21 @@ $\GF{p^{d/c}}$ mais se scinderait en $c$ facteurs sur $\GF{q}$, ce qui nous
 obligerait à réutiliser la méthode trial-and-error de Pinch.
 \end{rem}
 \vspace{0.3cm}
-Comme cela a été exposé au point \ref{sec:extension}, si on ne trouve pas de $m$
-assez petit alors il faut passer par une extension de petit degré $o$ de
-$\GF{q^n}$. On traite alors la recherche d'un élément unique de deux façons
-disctinctes.
- 
+Alors selon la valeur de $o$ lorsqu'on cherche $m$, \emph{i.e.} si $o = 
+ord_m(q)/n = 1$ ou $> 1$, il y aura deux façons différentes de procéder, c'est 
+ce qu'on va détailler plus bas.
 \paragraph{$\bullet$ Cas rationnel $o = 1$}
-Imaginons qu'on ait trouvé un $m$ relativement petit, divisant $q^n - 1$,
-divisible par $n$ et satisfaisant les points (1), (2) et (3). Dans ce cas, on 
-peut travailler directement dans les corps $k_1$ et $k_2$. Le tout est résumé
-dans l'algorithme \ref{alg:gausspersansext}.
+Imaginons qu'on ait trouvé un $m$ satisfaisant les conditions $(1)$ à $(5)$ avec
+$o = 1$ ou $q$ directement d'ordre $n$ . Dans ce cas, on peut travailler 
+directement dans les corps $k_1$ et $k_2$ pour trouver calculer les périodes de
+Gauss. Le tout est résumé dans l'algorithme \ref{alg:gausspersansext}.
 
 \begin{algorithm}
 \caption{Détermination d'un élément normal unique dans un corps fini}
 \label{alg:gausspersansext}
 \begin{algorithmic}[1]
-\REQUIRE $k$ un corps fini de cardinal $q^n$; $m$ un entier 
-divisant $q^n - 1$ et tel que $n\mid\varphi(m)$, satisfaisant les conditions 
-(1), (2), (3) et (4).
+\REQUIRE $k$ un corps fini de cardinal $q^n$; $m$ un entier divisible par $n$
+satisfaisant les conditions (1) à (5).
 \ENSURE $\eta$, un élément normal unique de $k$ sous l'action de Galois.
 \bigskip
 \REPEAT
@@ -1538,7 +1509,7 @@ divisant $q^n - 1$ et tel que $n\mid\varphi(m)$, satisfaisant les conditions
 \RETURN $\eta$
 \end{algorithmic}
 \end{algorithm}
-On va chercher à déterminer sa complexité. Pour trouver une racine primitive 
+On veut déterminer sa complexité, pour trouver une racine primitive 
 \nroot{m} de l'unité, on prend un élément au hasard dans $\GF{q^n}$, on l'élève 
 à la puissance $(q^n - 1)/m$ et on teste si le résultat élevé à la puissance 
 $m/\ell$ vaut $1$ ou non pour $\ell$ un diviseur premier strict de $m$. On 
@@ -1554,46 +1525,20 @@ peut négliger les termes en $m$ et se contenter d'une complexite en
 $O(E(n)n\,\textup{log\;}q)$.
 
 \begin{prop}
+\label{prop:algsansext}
 L'algorithme \ref{alg:gausspersansext} est correct.
 \end{prop}
 \begin{proof}
-Les conditions (1), (2) et (3) permettent d'appliquer le théorème (à venir) qui 
+Les conditions (1), (2) et (5) permettent d'appliquer le théorème (à venir) qui 
 assure que $\eta$ est un élément normal de $\GF{q^n}$ sur $\GF{q}$. Le 
 fait qu'il soit unique sous l'action du groupe de Galois est justifié par la 
 proposition \ref{prop:gaussperconj}.\\
 \end{proof}
 
 \paragraph{$\bullet$ Cas général $o > 1$}
-Dans le cas où on ait besoin d'utiliser une extension, il faut modifier
-légèrement les conditions sur $m$ et les hypothèses de départ. L'entier $m$
-divise toujours $q^{n.o} - 1$ et si on note $ord_m(q)$ l'ordre de $q$ modulo 
-$m$, il faut que celui-ci soit multiple de $n$. Si on pose $o = ord_m(q)/n$, les
-nouvelles conditions sont :
-
-\vspace{0.3cm}
-\begin{enumerate}[(1')]
-\item $\langle{q}\rangle\times S = \zmodninv{m}$ pour $S$ 
-un sous-groupe d'ordre $\varphi(m)/(n.o)$,
-
-\item $(o, n) = 1$
- 
-\end{enumerate}
-\vspace{0.3cm}
-
-La condition (1') est juste l'équivalent de (1) mais pour une extension
-de degré différent. La seconde condition en revanche est d'ordre pratique, elle 
-permet notamment de construire l'extension depuis un polynôme à coefficients 
-dans $\GF{q}$. La condition (3) ne change pas et on obtient alors l'algorithme 
-\ref{alg:gaussperavecext}. 
-\vspace{0.3cm}
-\begin{rem}
-Si on rajoute en plus la condition $(n,r) = 1$, on peut alors directement 
-prendre des polynômes à coefficients dans $\GF{p}$, cela est aussi valable pour 
-l'algorithme \ref{alg:gausspersansext}.
-\end{rem}
-\vspace{0.3cm}
-On définit alors $h$ dans $\GF{q}[X]$, irréductible de degré $o$ et on définira
-les extensions :
+Si jamais $q$ n'est pas d'ordre $n$ alors on doit passer par une extension de
+degré $o = ord_m(q)/n$. Pour cela on définit $h$ dans $\GF{q}[X]$, irréductible 
+de degré $o$ et on définit les extensions :
 \begin{equation}
 k_1' := k_1[U]/(h) \etmath k_2' := k_2[V]/(h)
 \end{equation}
@@ -1606,7 +1551,7 @@ on peut résumer la situation au schéma suivant :
 row sep=3em, column sep=3em,
 text height=1.5ex, text depth=0.25ex]
 {\GF{q}[\eta_1] & \GF{q}[\eta_2]\\
-\GF{q}[\Tr{\eta}] & \GF{q}[\Tr{\eta_2}]\\};
+\GF{q}[\Tr{\eta_1}] & \GF{q}[\Tr{\eta_2}]\\};
 \path[->,font=\scriptsize,>=angle 90]
 (m-1-1) edge node[auto] {$\phi$} (m-1-2)
 (m-2-1) edge node[auto] {$\phi$} (m-2-2);
@@ -1616,14 +1561,20 @@ text height=1.5ex, text depth=0.25ex]
 \end{tikzpicture}
 \end{equation}
 
+\begin{rem}
+Si on rajoute en plus la condition $(n,r) = 1$, on peut alors directement 
+prendre des polynômes à coefficients dans $\GF{p}$, cela est aussi valable pour 
+l'algorithme \ref{alg:gausspersansext}.
+\end{rem}
+\vspace{0.3cm}
+
 \begin{algorithm}
 \caption{Détermination d'un élément normal unique dans un corps finis
 \textit{via} une extension}
 \label{alg:gaussperavecext}
 \begin{algorithmic}[1]
-\REQUIRE $k$ un corps fini de cardinal $q^n$, $m$ un entier divisant $q^n -
-1$ et tel que $n\mid\varphi(n)$, satisfaisant les conditions (1'), (2'), (3) et
-(4), $h$ un polynôme de degré $o$ à coefficients dans $\GF{q}$.
+\REQUIRE $k$ un corps fini de cardinal $q^n$, $m$ un entier satisfaisant les 
+conditions (1) à (5), $h$ un polynôme de degré $o$ à coefficients dans $\GF{q}$.
 \ENSURE $\eta$, un élément normal unique de $k$ sous l'action de Galois.
 \bigskip
 \STATE $k' \leftarrow k/(h)$
@@ -1638,13 +1589,14 @@ text height=1.5ex, text depth=0.25ex]
 \end{algorithm}
 
 \begin{prop} 
+\label{prop:algavecext}
 L'algorithme \ref{alg:gaussperavecext} est correct.
 \end{prop}
 \begin{proof}
 Le théorème (à venir) et la proposition \ref{prop:gaussperconj} assure que
-$\eta$ est un élément normal unique de $\GF{q^{n}}$. Il suffit alors
-d'appliquer le corollaire \ref{cor:tracenorm} pour assurer que $\Tr{\eta}$ est
-un élément normal de $\GF{q^n}$.\\
+$\alpha$ est un élément normal unique de $\GF{q^{n.o}}$. Il suffit alors
+d'appliquer le corollaire \ref{cor:tracenorm} pour assurer que $\eta :=
+\Tr{\alpha}$ soit un élément normal unique de $\GF{q^n}$.\\
 \end{proof}
 
 \subsubsection*{Détermination de l'isomorphisme}
@@ -1700,6 +1652,7 @@ ou de manière plus simple, elle est en $O(nE(n)\textup{log}\;q)$ qui domine le
 reste.
 
 \begin{prop}
+\label{prop:algconvert}
 L'algorithme \ref{alg:convert} est correct.
 \end{prop}
 \begin{proof}
@@ -1716,27 +1669,24 @@ Le théorème \ref{th:matcirciso} permet de conclure.\\
 
 \subsubsection*{Algorithme principal}
 
-On peut désormais énoncer complètement l'algorithme de Rains cyclotomique, il
-s'agit de l'algorithme \ref{alg:rainscycl}.
-%TODO: redétaille l'algorithme un peu.
+On peut désormais énoncer complètement l'algorithme de Rains cyclotomique : on
+commence par chercher le plus petit entier $m$ qui satisfait les conditions
+$(1)$ à $(5)$, on calcule alors les périodes de Gauss dans $k_1$ et $k_2$ ou
+dans leurs extensions et on finit par calculer les coefficients de $x$ dans la
+base normale engendrée par $\eta_2$; en réécrivant $\eta_2$ en fonction de $y$,
+on retrouve alors l'image de $x$ dans la base monomiale engendrée par $y$ et on
+peut calculer l'image de n'importe quel élément de $k_1$.
 
 \begin{algorithm}
 \caption{Détermination d'un isomorphisme entre deux corps finis de même
 cardinal}
 \label{alg:rainscycl}
 \begin{algorithmic}[1]
-\REQUIRE $k_1$, $k_2$ deux corps finis à $q^n$ éléments, $bound$ un entier
-positif
+\REQUIRE $k_1$, $k_2$ deux corps finis à $q^n$ éléments
 \ENSURE $\phi(x)$ l'image de la classe de $X$ par un isomorphisme $\phi : k_1
 \to k_2$. 
 \bigskip
-\FOR{$i = 0$ \TO $bound$}
-\IF{$\big(n\mid\varphi(i)\big)$ \& $\big((n,\varphi(i)/n) = 1\big)$ \&
-$\big(\exists\alpha\in\zmodninv{m} : ord_m(\alpha) = n\big)$}
-    \STATE $m \leftarrow i$
-    \STATE \textbf{break}
-\ENDIF
-\ENDFOR
+\STATE Chercher le plus petit entier $m$ satisfaisant $(1)$ à $(5)$
 \STATE $o \leftarrow ord_m(q)/n$
 \IF{$o = 1$}
     \STATE Calculer $\eta_1$ en utilisant l'algorithme \ref{alg:gausspersansext}
@@ -1757,6 +1707,15 @@ $\big(\exists\alpha\in\zmodninv{m} : ord_m(\alpha) = n\big)$}
 
 \end{algorithmic}
 \end{algorithm}
+
+\begin{prop}
+L'algorithme \ref{alg:rainscycl} est correct.
+\end{prop}
+\begin{proof}
+Il suffit d'appliquer successivement les propositions $\ref{prop:algsansext}$ et
+$\ref{prop:algconvert}$ ou $\ref{prop:algavecext}$ et $\ref{prop:algconvert}$,
+selon la valeur de $o$.\\
+\end{proof}
 
 \section{Algorithme de Rains : méthode elliptique}
 %TODO: Résumer/Détailler le papier de Luca, rajouter les résultats sur
@@ -1781,7 +1740,7 @@ plusieurs conditions, notamment des conditions reliant la trace du Frobenius de
 $E/\GF{q}$, $m$ et le nombre de points rationnels de $E$ sur $\GF{q^n}$; ce sera
 étudié plus en détail dans la section \ref{sec:choixparam}.\par
 Il faut alors calculer des points d'ordre exactement $m$ sur $E/k_1$ et $E/k_2$.
-Selon le $j$-invariant et la trace (du Frobenius) de $E$, on va alors calculer
+Selon le $j$-invariant et la trace (du Frobenius) de $E$, on calcule alors  
 ce qu'on appelle les \emph{périodes elliptiques} qui consistent principalement à
 sommer les abscisses de l'orbites d'un point de $m$-torsion sous l'action d'un
 sous-groupe de $\zmodninv{m}$, ce sera détailler dans la section
@@ -1822,6 +1781,7 @@ $[\tau]P$ est encore un point primitif d'ordre $m$ dans l'espace propre de
 $\alpha$.\\
 \end{proof}
 \subsection{Algorithme et analyse de complexité}
+\label{sec:algcompell}
 %TODO: Décrire l'algorithme et donner sa complexité.
 
 \part{Implémentation}
@@ -1831,13 +1791,58 @@ $\alpha$.\\
 %prendre une partie de la conclusion en expliquant ce qui pourrait être changer.
 Dans cette partie, nous discuterons de l'implémentation des algorithmes, des
 résultats numériques obtenues et nous comparrons ces résultats avec d'autres
-méthodes déjà mises en place. 
+méthodes déjà mises en place.\par
+Les tests seront effectués sur une machine virtuel sous arch linux (donner la
+version etc.), doté d'un processeur XEON 4 c\oe urs à $3$GHz chacuns et de
+$1.23$go de RAM. Les algorithmes ont été implémentés et exécutés sous le 
+logiciel \href{http://www.sagemath.org/}{SAGE} en version $6.2$ et
+\emph{(peut-être)} une partie du code fait usage de la bibliothèque
+\href{http://www.flintlib.org/}{FLINT}. Des limitations du logiciel SAGE nous
+empêche de traiter le cas des extensions de $\GF{q}$ avec $q = p^r$; on ne
+traitera alors que le cas $q = p$.
 
-\section{Recherche de $m$}
+\section{Recherche du paramètre $m$}
 %TODO: Des détails sur m et comment on le trouve (forme an + 1, premier ou
 %puissance d'un nombre premier; pour la méthode cyclotomique et elliptique
-La détermination d'une borne raisonnable pour $m$ demanderait un peu plus
-d'expérimentations.
+La détermination d'une borne optimale pour $m$ nécessiterait un peu plus
+d'expérimentations que ce qui est possible à l'heure actuelle. La solution 
+adoptée dans le programme est de fixer une borne arbitraire et de chercher un
+nombre premier :
+\begin{equation}
+\label{eq:formedem}
+m := an + 1 
+\end{equation}
+qui satisfassent les conditions nécessaires pour le bon fonctionnement
+des différents algorithmes. En effet, il y a de bonne chance qu'un entier de ce
+type nous convienne puisque nous avons besoin d'un élément d'ordre $n$ dans
+$\zmodninv{m}$ et que cette forme implique forcément que $\varphi(m) = 
+an$ soit divisible par $n$.\par
+On teste alors tous les entiers de la forme (\ref{eq:formedem}) en augmentant la
+valeur de $a$ jusqu'à tomber sur le premier bon candidat ou atteindre la borne.
+Si la borne est atteinte sans qu'un bon candidat ait été trouvé, alors 
+l'algorithme a échoué et il faut recommencer avec une borne plus grande. On 
+rappelle que les critères de sélection pour l'entier $m$ sont donnés au 
+\ref{sec:algcompcycl}, pour la méthode cyclotomique, et au \ref{sec:algcompell},
+pour la méthode elliptique.
+
+\subsection{Pour la méthode cyclotomique}
+\label{sec:recherchemcycl}
+
+La recherche de $m$ dans la méthode cyclotomique est plutôt directe. On regarde
+les entiers de la forme (\ref{eq:formedem}) et on test si $m$ est effectivement
+premier, si $(\varphi(m)/n, n) = 1$ et si $ord_m(p)$ est divisible par $n$. Les 
+autres conditions ne sont plus nécessaires :
+\vspace{0.3cm}
+\begin{itemize}
+    \item $(\varphi(m), r) = 1$ disparait automatiquement comme on
+    ne considère uniquement le cas $q = p$;
+    
+    \item $m$ est nécessairement sans facteur carré puisqu'on le prend premier;
+\end{itemize}
+\vspace{0.3cm}
+
+\subsection{Pour la méthode elliptique}
+\label{sec:recherchermell}
 
 \section{Résultats numériques}
 %TODO: Je ne sais pas vraiment quoi mettre, je pourrais juste montrer
