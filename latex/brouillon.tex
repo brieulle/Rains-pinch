@@ -43,6 +43,7 @@
 \newcommand\E[1]{\textup{E}(#1)}
 \newcommand\I[1]{\textup{I}(#1)}
 \newcommand\tO[1]{\widetilde{O}(#1)}
+\newcommand\groupgen[1]{\langle{#1}\rangle}
 
 % Éviter l'overlap dans la table des matières pour les sections, sous-sections
 % etc.
@@ -56,7 +57,7 @@
 \author{Ludovic Brieulle}
 \newtheorem{thm}{Théorème}[section]
 \newtheorem{lem}[thm]{Lemme}
-\newtheorem{cor}{Corollaire}[thm]
+\newtheorem{cor}[thm]{Corollaire}
 \newtheorem{prop}[thm]{Proposition}
 \theoremstyle{definition}
 \newtheorem{defn}[thm]{Définition}
@@ -613,6 +614,7 @@ a choisi $\zeta$ arbitrairement, on obtient le résultat voulu.\\
 \end{proof}
 
 \begin{prop}
+\label{prop:cyclgal}
 Soit $n \geq 2$ et $\zeta$ une racine primitive \nroot{n} de l'unité sur $\QQ$
 , alors l'extension $\QQ(\zeta_m)/\QQ$ est galoisienne. En particulier, on a 
 les points suivant :
@@ -658,44 +660,52 @@ théorème. %\ref{th:gaussnormal}.
 \subsection{Définitions}
 %TODO :Définitions (normes, traces, éléments algébriques, etc.)
 % entiers algébrique, anneaux des entiers, discriminant (?)
-Commençons par le théorème suivant :
-\begin{thm}
-Soit $K$ un corps, $A\subset K$ un sous-anneau et $x\in K$. Alors les trois
-points suivants sont équivalents :
-\begin{enumerate}[a)]
-\item L'élément $x$ est racine d'un polynôme unitaire à coefficients dans $A$.
-
-\item L'anneau $A[x]$ est un $A$-module de type fini.
-
-\item Il existe un $A$-module de type fini $M$ qui contient $A[x]$.
-
-\end{enumerate}
-\end{thm}
-\begin{proof}
-Supposons a) vraie, alors on a $a_0,\dots,a_{n-1}\in A$ tels que :
-\[x^n + a_{n-1}x^{n-1} + \dots + a_0 = 0\]
-Notons $M$ le $A$-module engendré par $1, x,\dots, x^{n-1}$, on a alors $x^n\in
-M$ et on montre par récurrence sur $j$ que $x^{n+j} = -a_{n-1}x^{n-1 +
-j}-\dots- a_0x^j$ sont dans $M$. Comme l'anneau $A[x]$ est engendré par les
-$x^j$ pour $j\geq0$, donc $A[x] \subseteq M$; l'autre inclusion étant immédiate,
-on a donc $A[x] = M$.\par
-L'implication de b) vers c) est immédiate. Supposons qu'il existe un $M =
-\langle{v_1,\dots,v_n}\rangle$ tel que $A[x]\subset M$ ou encore $xM \subset M$
-puisque $x\in M$, avec $M\neq 0$. Alors :
-\begin{align*}
-xv_1 &= a_{11}v_1 + \dots + a_{1n}v_n\\
-&\vdots\\
-xv_n &= a_{n1}v_1 + \dots + a_{nn}v_n
-\end{align*}
-avec les $a_{ij}\in A$. 
-\end{proof}
-
-
 
 \subsection{Identité fondamentale}
 %TODO: Idéaux premiers sur les anneaux d'entiers de corps de nombres,
 %décomposition unique, résultat de la théorie de Galois.
+\begin{defn}
+Soit $L/K$ une extension de corps de nombres. Soit maintenant $\mathfrak{p}$ un 
+idéal de $K$ et soit $\mathfrak{p}\EO_L = \prod_{i=1}^{g}{\mathfrak{B}_i^{e_i}}$
+sa décomposition en idéaux premiers dans $L$ avec chaque $\mathfrak{B}_i$
+distincts. On a appelle \emph{indice de ramification} de $\mathfrak{B}_i$ sur 
+$\EO_K$ la valeur 
+\begin{equation}
+e(\mathfrak{B}_i\vert \mathfrak{p}) := e_i
+\end{equation}
+et le \emph{degré d'inertie} ou \emph{degré résiduel} de $\mathfrak{B}_i$ sur
+$\EO_K$ la valeur
+\begin{equation}
+f(\mathfrak{B}_i\vert \mathfrak{p}) := f_i =
+[\EO_K/\mathfrak{B}_i:\EO_K/\mathfrak{p}].
+\end{equation}
+\end{defn}
 
+\begin{thm}[L'identité fondamentale]
+\label{th:fundid}
+Soit $L/K$ une extension de corps de nombres de degré $n$, en reprenant les 
+notations ci-dessus, on a :
+\begin{equation}
+\sum_{i=0}^g{e_if_i} = n = [L:K]
+\end{equation}
+\end{thm}
+
+\begin{thm}
+\label{th:fundidgal}
+Supposons que $L/K$ soit une extension de corps galoisienne de degré $n$. Soit
+$\mathfrak{p}$ un idéal de $K$ et $\mathfrak{p}\EO_L = 
+\prod_{i=1}^{g}{\mathfrak{B}_i^{e_i}}$ sa décomposition en idéaux premiers dans
+$\EO_L$. Alors le groupe $\textup{Gal}(L/K)$ agit transitivement sur
+$\mathfrak{B}_1,\dots,\mathfrak{B}_g$, en particulier $e_1 = \dots = e_g$ et
+$f_1 = \dots = f_g$. Si de plus on pose $e = e_1$ et $f = f_1$, alors on a :
+\begin{equation}
+\mathfrak{p}\EO_L = \mathfrak{B}_1^e\dots\mathfrak{B}_g^e
+\end{equation}
+et l'identité fondamentale devient :
+\begin{equation}
+n = efg
+\end{equation}
+\end{thm}
 
 \begin{thm}
 \label{th:entiercycl}
@@ -1385,8 +1395,8 @@ text height=1.5ex, text depth=0.25ex]
 \path[-,font=\scriptsize,>=angle 90]
 (m-2-1) edge node[left] {$\zmodninv{m}$} (m-4-1)
 (m-3-2) edge node[left] {$G$} (m-1-2)
-(m-1-3) edge node[right] {$\langle{q}\rangle$} (m-3-3)
-(m-4-4) edge node[right] {$\langle{p}\rangle$} (m-2-4)
+(m-1-3) edge node[right] {$\groupgen{q}$} (m-3-3)
+(m-4-4) edge node[right] {$\groupgen{p}$} (m-2-4)
 (m-2-1) edge node[auto] {} (m-1-2)
 (m-4-1) edge node[auto] {} (m-3-2)
 (m-1-3) edge node[auto] {} (m-2-4)
@@ -1398,19 +1408,25 @@ text height=1.5ex, text depth=0.25ex]
 \end{tikzpicture}
 \end{equation}
 Où $\zmodninv{m}$ est le groupe de Galois de $\QQ[\mu_m]/\QQ$, $G$ est le groupe
-de Galois de $K[\mu_m]/K$, sous-groupe de $\zmodninv{m}$ et $\langle{q}\rangle$
-le groupe de décomposition de $\mathfrak{B}/\mathfrak{p}$ ($=
-\GF{q}[\mu_m]/\GF{q}$ ?). On a en particulier l'inclusion
-$\langle{q}\rangle\subset G\subset\zmodninv{m}$ avec 
+de Galois de $K[\mu_m]/K$, sous-groupe de $\zmodninv{m}$ et $\groupgen{q}$
+le groupe de décomposition de 
+$\mathfrak{B}/\mathfrak{p}$, %($= \GF{q}[\mu_m]/\GF{q}$ ?)
+on a en particulier l'inclusion $\groupgen{q}\subset G
+\subset\zmodninv{m}$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\iffalse
 \begin{equation}
-\#G/\langle{q}\rangle=g\etmath\#\langle{q}\rangle = f = [K[\mu_m]:K]/g.
+\#G/\groupgen{q}=g\etmath\#\groupgen{q} = f = [K[\mu_m]:K]/g.
 \end{equation}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %TODO: Rajouter ce qui reste ? À voir ce dont on a besoin pour la
 %démonstration...
 
 \begin{defn}
 Supposons qu'il existe un sous-groupe $S\subset\zmodninv{m}$ tel que
-$\zmodninv{m} = \langle{q}\rangle\times S$. Pour toute racine \nroot{m} de
+$\zmodninv{m} = \groupgen{q}\times S$. Pour toute racine \nroot{m} de
 l'unité $\zeta_m$, on définit la \emph{période de Gauss} comme suit :
 \begin{equation}
 \eta(\zeta_m) = \sum_{\sigma\in S}{\zeta_m^{\sigma}}.
@@ -1418,35 +1434,221 @@ l'unité $\zeta_m$, on définit la \emph{période de Gauss} comme suit :
 \end{defn}
 \begin{prop}
 \label{prop:gaussperconj}
-Le groupe de Galois $\textup{Gal}(\GF{q}[\mu_m]/\GF{q})\simeq\langle{q}\rangle$
+Le groupe de Galois $\textup{Gal}(\GF{q}[\mu_m]/\GF{q})\simeq\groupgen{q}$
 agit transitivement sur les périodes de Gauss $\eta(\zeta_m)$ pour tout
 $\zeta_m\in\eta_m^{\times}$.
 \end{prop}
 \begin{proof}
-Soit $\tau\in\langle{q}\rangle$, alors :
+Soit $\tau\in\groupgen{q}$, alors :
 \begin{equation}
 \eta(\zeta_m)^{\tau} = \sum_{\sigma\in S}{\zeta_m^{\sigma\tau}}
 \end{equation}
-comme $\zmodninv{m} = \langle{q}\rangle\times S$ alors pour chaque
-$\tau\in\langle{q}\rangle$ on a $\zeta_m^{\tau} = \zeta_m'$ un autre générateur
+comme $\zmodninv{m} = \groupgen{q}\times S$ alors pour chaque
+$\tau\in\groupgen{q}$ on a $\zeta_m^{\tau} = \zeta_m'$ un autre générateur
 de $\mu_m$ ou encore $\eta(\zeta_m)^{\tau} = \eta(\zeta'_m)$, d'où
-$\langle{q}\rangle$ agit transitivement sur les $\eta(\zeta_m)$.\\
+$\groupgen{q}$ agit transitivement sur les $\eta(\zeta_m)$.\\
 \end{proof}
 Le but de la section va être de démontrer le théorème suivant :
 
 \begin{thm}
 \label{th:gausspernorm}
-Soit $\GF{q^n}/\GF{q}$ une extension de degré $n$ et un entier $m$ tel que :
+Soit $\GF{q^n}/\GF{q}$ une extension de degré $n$ et un entier $m$ premier avec
+$q$ tel que :
 \vspace{0.3cm}
 \begin{enumerate}[(i)]
-    \item $\zmodninv{m} = \langle{q}\times S$ pour $S$ un sous-groupe,
+    \item $\zmodninv{m} = \groupgen{q}\times S$ pour $S$ un sous-groupe,
     \item $(\varphi(m), r) = 1$,
     \item $m$ est sans facteur carré.
 \end{enumerate}
 \vspace{0.3cm}
-Si $\#\langle{q}\rangle = n$ alors les périodes $\eta(\zeta_m)$ forment une base
+Si $\#\groupgen{q} = n$ alors les périodes $\eta(\zeta_m)$ forment une base
 normale de $\GF{q^n}$ sur $\GF{q}$.
 \end{thm}
+
+La condition (ii) implique que $\groupgen{p} = \groupgen{q}$ et donc que
+$\eta(\zeta_m)$ engendre $\GF{q}[\mu_m]/\GF{q}$ si et seulement s'il engendre
+$\GF{p}[\mu_m]/\GF{p}$. Cela permet d'éviter des discussions supplémentaires 
+lors de la preuve, on se contentera donc de traiter le cas $q = p$.\par
+Pour démontrer le théorème, on va remonter d'un niveau dans la généralité pour
+finalement retomber sur le résultat qu'on souhaite obtenir. On a l'anneau 
+\begin{equation}
+\EO_{m,p} := \GF{p}[X]/\Phi_m(X),
+\end{equation}
+réduction modulo $\mathfrak{p}$ de 
+\begin{equation}
+\EO_m := \ZZ[X]/\Phi_m(X),
+\end{equation}
+où $\EO_m$ est l'anneau des entiers de $\QQ[X]/\Phi_m(X)$ d'après le théorème 
+\ref{th:entiercycl} et $\mathfrak{p} = p\EO_m$ est l'idéal de $\EO_m$ au-dessus 
+de $p$. Comme $\QQ[X]/\Phi_m(X)$ est galoisienne, proposition 
+\ref{prop:cyclgal}, le groupe de Galois $\zmodninv{m}$ agit sur $\EO_m$ et donc 
+sur $\EO_{m,p}$. Soit maintenant $S$ un sous-groupe de $\zmodninv{m}$, on va 
+étudier la forme de l'invariant $\EO_{m,p}^S$  de $\EO_{m,p}$ sous l'action de 
+$S$, réduction modulo $\mathfrak{p}$ de $\EO_m^S$ l'invariant de $\EO_m$ sous
+l'action du groupe $S$.\par
+On a $\mathfrak{p} = \prod_{i=0}^g{\mathfrak{B}_i}$, où $g$ est le nombre
+d'idéal de $\EO_m$ au-dessus de $p$. En effet, l'extension est galoisienne et 
+que $p$ est ramifié dans $\EO_m$ puisque $m$ et $p$ sont premiers entre eux, 
+théorème \ref{th:entiercycl}. Ainsi on a :
+\begin{equation}
+\EO_{m,p}= \EO_m/p\EO_m = \EO_m/\prod_{i=0}^g{\mathfrak{B}_i}
+\end{equation}
+D'après le théorème des restes chinois on obtient finalement :
+\begin{equation}
+\EO_{m,p} = \bigoplus_{i=0}^g{\EO_m/\mathfrak{B}_i}
+\end{equation}
+Or, les $\EO_m/\mathfrak{B}_i$ sont des extensions de corps de $\ZZ/p\ZZ \simeq
+\GF{p}$ de même degré, le degré résiduel $f = [\EO_m/\mathfrak{B}_i:\GF{p}]$. 
+Dans ce cas, on a :
+\begin{equation}
+\label{eq:structinvSmodp}
+\EO_{m,p}^S = \bigoplus_{i=0}^{g'}{\GF{p^f}}
+\end{equation}
+où $g'$ est le nombre d'idéaux de $\EO_m^S$ au-dessus de $p$.
+
+\begin{lem}
+\label{lem:nbprimeabove}
+Soit $p$ un nombre premier et tel que $(m, p) = 1$. Alors le nombre d'idéaux
+premiers de $\EO_m^S$ au-dessus de $p$ est l'index du sous-groupe généré par $p$
+dans $\zmodninv{m}/S$.
+\end{lem}
+\begin{proof}
+Commençons par le cas $S = \groupgen{1}$, alors d'après l'identité fondamentale,
+on a $\varphi(m) = gf$ définis comme ci-dessus. En prenant en compte que le
+corps résiduel $\EO_m/p\EO_m$ est un corps fini, l'action du groupe de Galois
+est uniquement constitué d'éléments de la forme $\sigma_{p^k}(x) = x^{p^k}$.
+Mais cela implique que son degré est donc l'ordre de $p$ dans $\zmodninv{m}$ ce
+qui donne le résultat pour $S = \groupgen{1}$ car dans ce cas :
+\begin{equation}
+g = \varphi(m)/f = [\zmodninv{m}:\groupgen{p}].
+\end{equation}
+
+Considérons maintenant $S$ comme un sous-groupe quelconque. Pour n'importe quel
+$\mathfrak{p}$ de $\EO_m$, l'idéal premier en-dessous de lui dans $\EO_m^S$ est
+l'idéal :
+\begin{equation}
+\prod_{i\in(S_{\mathfrak{p}}S)/S_{\mathfrak{p}}}{\sigma_i(\mathfrak{p})\cap\ZZ}
+\end{equation}
+où $S_{\mathfrak{p}}$ est le stabilisateur de $\mathfrak{p}$. En prenant $i\in 
+S_{\mathfrak{p}}S$ on obtient tous les conjugués de $\mathfrak{p}$ et en
+quotientant par $S_{\mathfrak{p}}$ on supprime les multiplicités plus grandes 
+que $1$; on ne prend qu'une partie de la norme : 
+\begin{equation}
+N_{\QQ[\mu_m]/\QQ}(\mathfrak{p}) =
+\prod_{i\in\zmodninv{m}}{\sigma_i\left(\mathfrak{p}\right)\cap\ZZ} = (p^f)
+\end{equation}
+idéal de $\ZZ$. Réciproquement, si $i\notin S_{\mathfrak{p}}S$ alors 
+$\sigma_i(\mathfrak{p})$ est au-dessus d'un autre idéal premier que 
+$p$. Le cardinale de $(S_{\mathfrak{p}}S)/S$ est la même pour tous les
+$\mathfrak{p}$ au-dessus de $p$ puisqu'ils sont conjugués. Alors le nombre de
+premier de $\EO_m^S$ au-dessus de $p$ est égal à :
+\begin{equation}
+\dfrac{[\zmodninv{m}:\groupgen{p}]}{[\groupgen{p}S:\groupgen{p}]} =
+[\zmodninv{m}:\groupgen{p}S],
+\end{equation}
+
+\begin{equation}
+[\zmodninv{m}/S:\groupgen{p}].
+\end{equation}
+
+\end{proof}
+
+\begin{cor}
+L'anneau $\EO_{m,p}^S$ se factorise en une somme directe de
+$[\zmodninv{m}/S:\groupgen{p}]$ corps tous isomorphes à $\GF{p^n}$, où $n$ est 
+l'ordre de $p$ dans $\zmodninv{m}$.
+\end{cor}
+\begin{proof}
+Il suffit d'appliquer le lemme \ref{lem:nbprimeabove} et l'équation
+(\ref{eq:structinvSmodp}).\\
+\end{proof}
+En particulier si $[\zmodninv{m}/S:\groupgen{p}] = 1$ alors $\EO_{m,p}^S$ est 
+corps, c'est en fait exactement $\GF{p^n}$ avec $\#\groupgen{p} = n$. Reste 
+alors à montrer que les périodes de gauss engendrent effectivement 
+$\EO_{m,p}^S$.
+\begin{lem}
+Soit $m$ un entier sans facteur carré, alors les périodes $\eta(\zeta_m^k)$
+engendrent $\EO_{m,p}^S$, où $k\in\zmodninv{m}/S$.
+\end{lem}
+\begin{proof}
+
+Commençons par considérer le cas $S = \langle1\rangle$ et $m$ premier. Alors on 
+a $\eta(\zeta_m^k) = \zeta_m^k$ et, par définition, les $\zeta_m^k$ engendrent 
+$\EO_{m,p}$ pour $0 \leq k\leq m$. Il suffit alors de montrer que $1$ peut 
+s'exprimer en fonction des $\zeta_m^k$ pour $k > 0$, puisque $k = 0$ n'est pas 
+dans $\zmodninv{m}$. Mais $m$ est premier, alors le polynôme $\phi_m$ 
+donne exactement :
+\begin{equation}
+\textup{Tr}(\zeta_m) = \sum_{0 < k < m}{\zeta_m^k} = 1.
+\end{equation}
+
+Changeons alors seulement l'hypothèse $m$ premier en $m$ sans facteur carré, on 
+va raisonner par récurrence. En particulier, on peut écrire $m = m_1m_2$ avec 
+$(m_1,m_2) = 1$ et le résutlat ci-dessus est encore valable pour $m_1$ et 
+$m_2$. D'après le théorème des restes chinois, on a :
+\[\zmodninv{m} \simeq \zmodninv{m_1} \times \zmodninv{m_2},\]
+ainsi, \textit{via} cette isomorphisme on peut exprimer un élément
+$\eta(\zeta_m^k)$ de $\EO_{m,p}$ comme un produit de deux éléments
+$\eta(\zeta_m^{(k_1)})$ et $\eta(\zeta_m^{k_1})$ dans $\EO_{m_1,p}$ et 
+$\EO_{m_2,p}$, avec $k_1\in\zmodninv{m_1}$ et $k_2\in\zmodninv{m_2}$ 
+respectivement et inversement.
+%TODO: C'est vraiment utile tout ce qui suit ?
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\iffalse
+En effet, prenons un $k\in\zmodninv{m}$ alors on peut l'écrire sous la forme :
+\[k = uk_2m_1 + vk_1m_2\]
+avec $k_1\in\zmodninv{m_1}$, $k_2\in\zmodninv{m_2}$ et $u,v\in\mathbb{Z}$ tels 
+qu'ils soient premiers avec $m_2$ et $m_1$ respectivement. On a donc :
+\begin{align*}
+z_S^{(k)} &= \zeta_m^k\\
+&= \zeta_m^{uk_2m_1 + vk_1m_2}\\
+&= (\zeta_m^{um_1})^{k_1}(\zeta_m^{vm_2})^{k_2}\\
+\end{align*}
+On a bien que $\zeta_m^{um_1}$ est une racine \nroot{$m_2$} puisque 
+$m_1m_2 = m$, mais c'est aussi une racine primitive car $(u,m_2) = 1$ et 
+$(m_1, m_2) = 1$; donc la seul façon d'avoir $kum_1 = m$ est de poser $k = m_2$.
+Le raisonnement est exactement le même pour l'autre terme. D'où le résultat :
+\[z_S^{(k)} = z_S^{(k_1)}z_S^{(k_2)}\].\par
+Pour l'autre sens, on prend le produit suivant :
+\[z_S^{(k_1)}z_S^{(k_2)} = \zeta_{m_1}^{k_1}\zeta_{m_2}^{k_2}\]
+Si on l'élève à la puissance $m_1$ ou $m_2$, le produit ne pourra pas être égal 
+à $1$. En revanche, si on l'élève à la puissance $m$, on obtiendra bien $1$, 
+d'où le fait que c'est une racine primitive \nroot{m} de l'unité. Alors on 
+pourra toujours le réécrire sous la forme : 
+\[\zeta_m^k = z_S^{(k)}\]
+avec $k\in\zmodninv{m}$, ce qu'on cherchait.\par
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Ainsi, comme les $\eta(\zeta_m^{k_1})$ engendrent $\EO_{m_1,p}$ et les 
+$\eta(\zeta^{k_2})$ engendrent $\EO_{m_2,p}$ par réccurence, alors les 
+$\eta(\zeta^k)$ engendrent $\EO_{m,p}$, à nouveau par le théorème des restes 
+chinois.\par
+Pour finir, on considère $S$ un sous-groupe quelconque du groupe de Galois. 
+Prenons un $x$ dans $\EO_{m,p}^S$, alors on peut écrire :
+\begin{equation}
+x = \sum_{i\in S}{\sigma_i(y)}
+\end{equation}
+pour un $y$ dans $\EO_{m,p}$; l'action d'un $\sigma_i$ sur $x$ ne sera alors
+qu'une permutation des termes de la somme. De plus, on peut aussi écrire $y$ 
+sous la forme :
+\begin{equation}
+y = \sum_{(k,m)=1}{c_k\sigma_k(\zeta_m)}
+\end{equation}
+c'est ce qu'on a prouvé plus haut. En combinant les deux expression on obtient 
+alors :
+\begin{align*}
+x &= \sum_{i\in S}{\sum_{(k,m)=1}{c_k\sigma_i\sigma_k(\zeta_m)}}\\
+&= \sum_{(k,m)=1}{c_k\eta(\zeta_m^k)}\\
+\end{align*}
+ce qu'il fallait démontrer.\\
+\end{proof}
+
+Ainsi, si $\zmodninv{m}/S = \groupgen{p}$ et $\#\groupgen{p} = n$, alors les 
+$\eta(\zeta_m^k)$ avec $k\in\groupgen{p}$ sont conjugués dans $\EO_{m,p}^S = 
+\GF{p^n}$ et si $m$ est sans facteurs alors ils l'engendrent d'après le lemme 
+précédent, ce sont donc des élements normaux de $\GF{p^n}$. La condition (ii) 
+implique qu'ils engendrent aussi $\GF{q^n}$ et sont donc des éléments normaux de
+celui-ci. Ce qui achève la preuve du théorème \ref{th:gausspernorm}.
 
 \subsection{Algorithme et analyse de complexité}
 \label{sec:algcompcycl}
@@ -1477,7 +1679,7 @@ $m$ tel qu'il existe $o\in\NN$ tel que :
     \item $\varphi(m)/(n.o)$ et $n.o$ soient premiers entre eux,
     \item $n$ et $o$ soient premiers entre eux,
     \item $(\varphi(m), r) = 1$ avec $q = p^r$,
-    \item $\zmodninv{m} = \langle{q^o}\rangle\times S$ pour $S$ un sous groupe
+    \item $\zmodninv{m} = \groupgen{q^o}\times S$ pour $S$ un sous groupe
     de $\zmodninv{m}$.
 \end{enumerate}
 \vspace{0.3cm}
@@ -1486,7 +1688,7 @@ Les conditions $(1)$, $(2)$ et $(5)$ sont là pour assurer que les racines
 \ref{schema:gaussnorm}). La condition $(3)$ est d'ordre pratique et permet de
 construire des extensions à partir de polynôme à coefficients directement dans 
 $\GF{q}$ si besoin est. La quatrième condition permet de s'assurer que
-$\langle{p}\rangle = \langle{q}\rangle$ et donc que les résultats sur
+$\groupgen{p} = \groupgen{q}$ et donc que les résultats sur
 $\GF{p}$ soient encore valables sur $\GF{q}$. Enfin, la dernière condition est
 aussi la plus importante puisqu'elle permet d'appliquer le théorème \emph{(à 
 venir)}.
@@ -1494,7 +1696,7 @@ venir)}.
 \begin{rem}
 Il se trouve que l'algorithme ne peut pas fonctionner si $q$ est une puissance 
 $r$ de $p$ non première avec $n$, le degré de l'extension. En effet, on a 
-$\langle{q}\rangle\times S = \zmodninv{m}$, donc par définition $p = sq^a\bmod 
+$\groupgen{q}\times S = \zmodninv{m}$, donc par définition $p = sq^a\bmod 
 m$ pour un $s\in S$ et $0 \leq a < n$, alors $q=s^rq^{ar} \bmod m$. 
 Or, $q$ ne peut être écrit que d'une seule façon comme produit d'un élément de 
 $S$ et d'une puissance de $q$, d'où $s^r = 1$ et $q^{ar - 1} = 1 \bmod m$. 
@@ -1790,13 +1992,13 @@ elliptiques $\eta_{\alpha}(P)$. \end{prop}
 \begin{proof}
 Comme $P$ est dans l'espace propre de la valeure propre $\alpha$, lui appliquer 
 $\phi_q$ revient à le multiplier par $\alpha$. Si on prend 
-$\tau\in\langle\alpha\rangle$ alors on a pour $d\geq1$ tel que $\alpha^d = \tau 
+$\tau\in\groupgen{\alpha}$ alors on a pour $d\geq1$ tel que $\alpha^d = \tau 
 \bmod m$ :
 \begin{equation}
 \phi_q^d(\eta_{\alpha}(P)) = \sum_{\sigma\in
 S}{\left([\sigma][\tau]P\right)_X^{\#\textup{Aut}(E)/2}}
 \end{equation}
-Or, on a $\zmodninv{m}/\textup{Aut}(E) = \langle\alpha\rangle \times S$ donc
+Or, on a $\zmodninv{m}/\textup{Aut}(E) = \groupgen{\alpha} \times S$ donc
 $[\tau]P$ est encore un point primitif d'ordre $m$ dans l'espace propre de 
 $\alpha$.\\
 \end{proof}
