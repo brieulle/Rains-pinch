@@ -120,9 +120,9 @@ le but est donc de trouver un isormophisme reliant ces deux corps.
 Une méthode simple et immédiate est d'envoyer $x = \bar{X}$ la classe de $X$
 dans $k_1$ sur une racine de $f$ dans $k_2$. Le problème est que cela revient à 
 factoriser le polynôme $f$ ce qui est beaucoup trop lent. On étudiera dans ce
-rapport deux variantes de la méthode de Rains, l'une dite cyclotomique et
-l'autre dite elliptique, pour déterminer des isomorphismes entre corps finis de
-même cardinal.
+rapport deux variantes d'un algorithm dû à Rains, l'une dite cyclotomique et
+l'autre dite elliptique, lui-même tirer d'un algorithme de Pinch, pour 
+déterminer des isomorphismes entre corps finis de même cardinal.
 
 \newpage
 \addcontentsline{toc}{part}{Table des matières}
@@ -204,7 +204,7 @@ l'unicité se déduit de l'unicité des corps de décomposition, corollaire
 
 \subsection{Extension de corps}
 \label{def:degext}
-Soit $k$ et $K$ deux corps, s'il existe un homomorphisme de $k$ vers $K$ alors
+Soient $k$ et $K$ deux corps, s'il existe un homomorphisme de $k$ vers $K$ alors
 celui-ci est nécessairement injectif. Supposons qu'on ait $f(x) = 0$, cela
 s'écrit aussi $x.f(1) = 0$ donc $x = 0$ puisque un corps n'a pas de diviseur de
 $0$ et $f(1) = 1$. 
@@ -214,8 +214,8 @@ est une extension (de corps) de $k$. On notera $K/k$ une extension de corps.
 Si on a $k\subseteq L \subseteq K$, alors $L/k$ est une sous-extension de
 $K/k$. On appelle corps premier un corps qui n'a pas de sous-corps ou de
 sous-extensions.\par
-Soit $K/k$ une extension de corps et $S$ une partie de $K$. Le sous-corps $L := 
-k(S)$ de $K$ engendré par $S$ sur $k$ est le plus petit sous-corps de $K$ 
+Soit $K/k$ une extension de corps et soit $S$ une partie de $K$. Le sous-corps 
+$L := k(S)$ de $K$ engendré par $S$ sur $k$ est le plus petit sous-corps de $K$ 
 contenant $S$ et $k$. Si $S = \lbrace x_1,\dots,x_n \rbrace$ est fini, alors on 
 note $L = K(x_1,\dots,x_n)$, on dit alors que l'extension est de \emph{type
 fini}. L'extension $L/k$ est dite \emph{monogène} ou \emph{simple} si elle est
@@ -225,16 +225,16 @@ $[K:k] := dim_k(K)$ le \emph{degré} de l'extension. On dit qu'une extension
 $K/k$ est de degré fini si $[K:k] < \infty$.\par
 
 \begin{thm}
-Soit $k \subseteq L \subseteq L$ des extensions de corps de degré fini. Alors on
-a :
+Soient $k \subseteq L \subseteq K$ des extensions de corps de degré fini. Alors 
+on a :
 \begin{equation}
 [K:k] = [K:L][L:k].
 \end{equation}
 \end{thm}
 \begin{proof}
-Soit $[K:L] = m$ et $[L:k] = n$. On a donc que $K$ est un $L$-espace vectoriel 
-de dimension $m$ et $L$ est un $k$-espace vectoriel de dimension $n$, le 
-théorème revient à montrer que $K$ est un $k$-espace vectoriel de dimension 
+On pose $[K:L] = m$ et $[L:k] = n$. On a donc que $K$ est un $L$-espace 
+vectoriel de dimension $m$ et $L$ est un $k$-espace vectoriel de dimension $n$, 
+le théorème revient à montrer que $K$ est un $k$-espace vectoriel de dimension 
 $mn$. Or, d'après ce qui précède, on a $L \simeq k^n$ et $K \simeq L^m$, d'où
 \begin{equation}
 K \simeq \underbrace{L \oplus\dots\oplus L}_{m fois}\simeq\underbrace
@@ -251,9 +251,9 @@ théorème 1.14]{Per}. On dit qu'une extension $K/k$ est algébrique si tous les
 degré fini est algébrique et de type finie.
 
 
-Soit $L/K$ une extension de corps et $\alpha\in L$ un élément algébrique sur
-$K$. Si on note $\Irr{K}{\alpha}$ le \emph{polynôme minimal} de $\alpha$ sur $K$
-et on pose $n := \textup{deg\,}\Irr{K}{\alpha}$ alors l'anneau des polynômes
+Soit $L/K$ une extension de corps et soit $\alpha\in L$ un élément algébrique 
+sur $K$. Si on note $\Irr{K}{\alpha}$ le \emph{polynôme minimal} de $\alpha$ sur
+$K$ et on pose $n := \textup{deg\,}\Irr{K}{\alpha}$ alors l'anneau des polynômes
 sur $K$ en $\alpha$ noté $K[\alpha]$ est égal au corps des fractions rationnels
 en $\alpha$ $K(\alpha)$ et c'est un $K$-espace vectoriel de dimension de $n$ qui
 admet pour base la base $1,\alpha,\dots,\alpha^{n-1}$ qu'on appellera la 
@@ -281,9 +281,9 @@ non constant sur un corps $k$.
 
 \begin{defn}
 \label{def:dec}
-Soit $K$ un corps et $\overline{K}$ une clôture algébrique de $K$. On appelle
-corps de décomposition de $P\in K[X]$, le corps $L\subset\overline{K}$ tel que
-$P$ soit scindé dans $L$ et que ses racines engendrent $L$ sur $K$.
+Soit $K$ un corps et soit $\overline{K}$ une clôture algébrique de $K$. On 
+appelle corps de décomposition de $P\in K[X]$, le corps $L\subset\overline{K}$ 
+tel que $P$ soit scindé dans $L$ et que ses racines engendrent $L$ sur $K$.
 \end{defn}
 
 \begin{thm}
@@ -342,7 +342,7 @@ d'un élément d'une extension par rapport à un sous-corps. On les définit com
 suit:
 
 \begin{defn}
-Soit $L/K$ une extension de dimension finie et $\alpha\in L$. On appelle
+Soit $L/K$ une extension de dimension finie et soit $\alpha\in L$. On appelle
 endormorphisme de multiplication par $\alpha$ l'application :
 \begin{align*}
 m_{\alpha} :&L \longrightarrow L\\
@@ -364,10 +364,10 @@ N_{L/K}(\alpha\alpha') &= N_{L/K}(\alpha)N_{L/K}(\alpha').
 \end{defn}
 
 \begin{prop}
-Soit un $K$ un corps de caractéristique 0 ou fini, $L/K$ une extension
-algébrique de degré $n$ sur $K$. Soit 
-$x_1,\dots, x_n$ les racines du polynôme minimal de $x$, dans le corps de
-décomposition de celui-ci, chacune répétée $[L:K(x)]$ fois; alors on a :
+Soit un $K$ un corps de caractéristique 0 ou fini et soit $L/K$ une extension
+algébrique de degré $n$ sur $K$. Soient $x_1,\dots, x_n$ les racines du polynôme
+minimal de $x$, dans le corps de décomposition de celui-ci, chacune répétée 
+$[L:K(x)]$ fois; alors on a :
 \begin{equation}
 Tr_{L/K}(x) = x_1 + \dots + x_n \etmath N_{L/K}(x) = x_1\dots x_n.
 \end{equation}
@@ -382,8 +382,8 @@ x_1)\dots(X - x_n)$.
 %TODO :Définitions et résutlats de base (sans forcément tout prouver),
 %Frobenius, action de groupes ? Ça me parait raisonnable...
 %Groupe de Galois, élément primitif, extensions galoisiennes, etc.
-Soit un corps $L$ et l'ensemble $G$ des automorphismes de $L$, l'ensemble des
-éléments de $x\in L$ tels que $\sigma(x) = x$ pour tout $\sigma\in G$ est un
+Soit un corps $L$ et soit l'ensemble $G$ des automorphismes de $L$. L'ensemble 
+des éléments de $x\in L$ tels que $\sigma(x) = x$ pour tout $\sigma\in G$ est un
 sous-corps $K$ de $L$, c'est le corps des invariants de $G$. Soit $L/K$ et
 $L'/K$ deux extensions de corps, on appelle $K$-homomorphisme de $L$ dans $L'$ 
 les morphismes de $K$-algèbre de $L$ dans $L'$. Si $L = L'$ alors on parle de
@@ -449,8 +449,8 @@ si $L$ contient tous les conjugués de $a$.
 
 \begin{prop}
 \label{prop:decompnorm}
-Soit $P\in k[X]$ de degré $n\geq 1$ et $K$ un corps de décomposition de $P$ sur
-$k$. Alors $K/k$ est normale.
+Soit $P\in k[X]$ de degré $n\geq 1$ et soit $K$ un corps de décomposition de $P$
+sur $k$. Alors $K/k$ est normale.
 \end{prop}
 
 On peut désormais énoncer un résultat qui permet de déterminer de façon plus
@@ -470,8 +470,8 @@ Sous ces conditions, pour tout $\alpha\in K$ on a :
 \end{equation}
 \end{thm}
 
-\begin{thm} Soit $k$ un corps, $P$ un polynôme de degré $n$ dans $k[X]$ et $K$ 
-un corps de décomposition de $P$. On a :
+\begin{thm} Soit $k$ un corps, soit $P$ un polynôme de degré $n$ dans $k[X]$ et
+soit $K$ un corps de décomposition de $P$. On a :
 \begin{enumerate}
 \item Le groupe de Galois de $K/k$ et donc de $P$ est un sous-groupe du groupe
 symétrique $\textup{S}_n$; donc son ordre divise $n!$.
@@ -484,7 +484,7 @@ Pour les corps finis, déterminer le groupe de Galois est beaucoup plus facile
 comme le montre le théorème suivant :
 
 \begin{thm}
-Soit $n\geq1$ et $\GF{q}$ le corps à $q=p^r$ éléments, avec $p$ premier.
+Soit $n\geq1$ et soit $\GF{q}$ le corps à $q=p^r$ éléments, avec $p$ premier.
 L'extension $\GF{q^n}/\GF{q}$ est galoisienne et son groupe de Galois
 $\textup{Gal}(\GF{q^n}/\GF{q})$ est cyclique d'ordre $n$, engendré par 
 l'automorphisme de Frobenius $\phi_q$.
@@ -530,13 +530,13 @@ vectoriel.
 %TODO : Racines de l'unités et quelques mots sur les polynômes 
 %cyclotomiques et leurs extensions. Peut-être rajouter un ou deux mots sur le 
 %cas des corps finis.
-Soit $A$ un anneau et $n\in\NN$, une racine \nroot{n} de l'unité dans $A$ est un
-élément $u$ de $A$ tel que $u^n = 1$. On note $\mu_{n,A}$ l'ensemble des racines
-\nroot{n} de l'unité dans $A$ et pour tout corps $K$, on note $\mu_{n,\bar{K}}$ 
-l'ensemble des racines de l'unité dans une clôture algébrique de $K$. Comme il 
-ne dépend pas du choix de la clôture algébrique, on le note $\mu_{n,K}$. Dans le
-cas particulier des corps finis, une condition d'existence est le divisibilité
-de l'ordre du groupe multiplicatif par l'entier $n$.\par
+Soit $A$ un anneau et soit $n\in\NN$, une racine \nroot{n} de l'unité dans $A$ 
+est un élément $u$ de $A$ tel que $u^n = 1$. On note $\mu_{n,A}$ l'ensemble des 
+racines \nroot{n} de l'unité dans $A$ et pour tout corps $K$, on note 
+$\mu_{n,\bar{K}}$ l'ensemble des racines de l'unité dans une clôture algébrique 
+de $K$. Comme il ne dépend pas du choix de la clôture algébrique, on le note 
+$\mu_{n,K}$. Dans le cas particulier des corps finis, une condition d'existence 
+est le divisibilité de l'ordre du groupe multiplicatif par l'entier $n$.\par
 
 \begin{prop}
 \label{prop:rootcycl}
@@ -615,9 +615,9 @@ a choisi $\zeta$ arbitrairement, on obtient le résultat voulu.\\
 
 \begin{prop}
 \label{prop:cyclgal}
-Soit $n \geq 2$ et $\zeta$ une racine primitive \nroot{n} de l'unité sur $\QQ$
-, alors l'extension $\QQ(\zeta_m)/\QQ$ est galoisienne. En particulier, on a 
-les points suivant :
+Soit $n \geq 2$ et soit $\zeta$ une racine primitive \nroot{n} de l'unité sur 
+$\QQ$, alors l'extension $\QQ(\zeta_m)/\QQ$ est galoisienne. En particulier, on 
+a les points suivant :
 
 \begin{enumerate}[(i)]
 \item L'extension $\QQ(\zeta_m)/\QQ$ est normale.
@@ -666,18 +666,18 @@ théorème. %\ref{th:gaussnormal}.
 %décomposition unique, résultat de la théorie de Galois.
 \begin{defn}
 Soit $L/K$ une extension de corps de nombres. Soit maintenant $\mathfrak{p}$ un 
-idéal de $K$ et soit $\mathfrak{p}\EO_L = \prod_{i=1}^{g}{\mathfrak{B}_i^{e_i}}$
-sa décomposition en idéaux premiers dans $L$ avec chaque $\mathfrak{B}_i$
-distincts. On a appelle \emph{indice de ramification} de $\mathfrak{B}_i$ sur 
+idéal de $K$ et soit $\mathfrak{p}\EO_L = \prod_{i=1}^{g}{\mathfrak{P}_i^{e_i}}$
+sa décomposition en idéaux premiers dans $L$ avec chaque $\mathfrak{P}_i$
+distincts. On a appelle \emph{indice de ramification} de $\mathfrak{P}_i$ sur 
 $\EO_K$ la valeur 
 \begin{equation}
-e(\mathfrak{B}_i\vert \mathfrak{p}) := e_i
+e(\mathfrak{P}_i\vert \mathfrak{p}) := e_i
 \end{equation}
-et le \emph{degré d'inertie} ou \emph{degré résiduel} de $\mathfrak{B}_i$ sur
+et le \emph{degré d'inertie} ou \emph{degré résiduel} de $\mathfrak{P}_i$ sur
 $\EO_K$ la valeur
 \begin{equation}
-f(\mathfrak{B}_i\vert \mathfrak{p}) := f_i =
-[\EO_K/\mathfrak{B}_i:\EO_K/\mathfrak{p}].
+f(\mathfrak{P}_i\vert \mathfrak{p}) := f_i =
+[\EO_K/\mathfrak{P}_i:\EO_K/\mathfrak{p}].
 \end{equation}
 \end{defn}
 
@@ -693,13 +693,13 @@ notations ci-dessus, on a :
 \begin{thm}
 \label{th:fundidgal}
 Supposons que $L/K$ soit une extension de corps galoisienne de degré $n$. Soit
-$\mathfrak{p}$ un idéal de $K$ et $\mathfrak{p}\EO_L = 
-\prod_{i=1}^{g}{\mathfrak{B}_i^{e_i}}$ sa décomposition en idéaux premiers dans
+$\mathfrak{p}$ un idéal de $K$ et soit $\mathfrak{p}\EO_L = 
+\prod_{i=1}^{g}{\mathfrak{P}_i^{e_i}}$ sa décomposition en idéaux premiers dans
 $\EO_L$. Alors le groupe $\textup{Gal}(L/K)$ agit transitivement sur
-$\mathfrak{B}_1,\dots,\mathfrak{B}_g$, en particulier $e_1 = \dots = e_g$ et
+$\mathfrak{P}_1,\dots,\mathfrak{P}_g$, en particulier $e_1 = \dots = e_g$ et
 $f_1 = \dots = f_g$. Si de plus on pose $e = e_1$ et $f = f_1$, alors on a :
 \begin{equation}
-\mathfrak{p}\EO_L = \mathfrak{B}_1^e\dots\mathfrak{B}_g^e
+\mathfrak{p}\EO_L = \mathfrak{P}_1^e\dots\mathfrak{P}_g^e
 \end{equation}
 et l'identité fondamentale devient :
 \begin{equation}
@@ -709,7 +709,7 @@ n = efg
 
 \begin{thm}
 \label{th:entiercycl}
-Soit $m$ un entier positif et $p$ un nombre premier, l'anneau $R_m := 
+Soit $m$ un entier positif et soit $p$ un nombre premier, l'anneau $R_m := 
 \ZZ[X]/\Phi_m(X)$ est l'anneau des entiers de $\QQ[X]/\Phi_m(X)$. De plus, 
 l'idéal premier $pR_m$ se ramifie dans $R_m$ si et seulement si $p$ ne divise 
 pas $m$.
@@ -731,7 +731,7 @@ Silvermann\cite{Sil} pour plus de précision.
 %"simple"; liste des différents paramètres/invariants qui nous intéressent.
 %j-invariant, groupe d'automorphisme ?> c'est peut-être là que je peux utiliser
 %le module de Tate...
-Soit $K$ un corps et $f$ un polynôme homogène dans $K[X_0,\dots,X_n]$, on
+Soit $K$ un corps et soit $f$ un polynôme homogène dans $K[X_0,\dots,X_n]$, on
 appelle \emph{courbe projective} tout ensemble de la forme :
 \begin{equation}
 C := \lbrace{[x,y,z]\in \PP{2}(K) : f(x,y,z) = 0}\rbrace
@@ -758,10 +758,21 @@ elliptiques s'appelle le \emph{$j$-invariant} de $E$ :
 \begin{equation}
 j(E) = -1728\dfrac{(4a)^3}{\Delta}.
 \end{equation}
-On écrira simplement $j$ quand il n'y aura pas de confusion possible.
-On notera $E/K$ pour signifier que les coefficients $a, b$ sont dans $K$. On
-parlera de points rationnels d'un corps $L\subset\overline{K}$ pour les points
-$P := [x,y,1]$ dans $E$ tel que $x, y$ sont dans $L$ et on notera leur ensemble
+On écrira simplement $j$ quand il n'y aura pas de confusion possible. Les deux
+résultats suivant sont particulièrement intéressants :
+\begin{prop}
+\label{prop:j-invariant}
+\begin{enumerate}[(i)]
+    \item Deux courbes elliptiques sont isomorphes si et seulement si elles ont
+    le même $j$-invariant.
+    \item Soit $j_0\in\overline{K}$ alors il existe une courbe elliptique
+    $E/K(j_0)$ telle que $j(E) = j_0$.
+\end{enumerate}
+\end{prop}
+On note $E/K$ pour signifier que les coefficients $a, b$ sont dans $K$, c'est
+équivalent à dire que $E$ est définie sur $K$. On parle de points rationnels 
+d'un corps $L\subset\overline{K}$ pour les points
+$P := [x,y,1]$ dans $E$ tel que $x, y$ sont dans $L$ et on note leur ensemble
 $E(L)$.\par
 \vspace{0.3cm}
 Si on munit $E$ de la loi de composition de \emph{corde tangente}, désignée par
@@ -771,7 +782,7 @@ un $m\in\ZZ$ tel que
 \begin{equation}
 [m]P = \underbrace{P\oplus\dots\oplus P}_{\textup{m fois}} = \EO.
 \end{equation}
-On notera alors l'ensemble des points de \emph{$m$-torsion} :
+On note alors l'ensemble des points de \emph{$m$-torsion} :
 \begin{equation}
 E[m] = \lbrace{P\in E(\overline{K}) : [m]P = \EO}\rbrace.
 \end{equation}
@@ -791,13 +802,13 @@ E[m] = \zmodn{m}\times\zmodn{m}
 \end{itemize}
 \vspace{0.3cm}
 
-Soit $E_1$ et $E_2$ deux courbes elliptiques, une \emph{isogénie} est un
+Soient $E_1$ et $E_2$ deux courbes elliptiques, une \emph{isogénie} est un
 morphisme de $\varphi : E_1 \rightarrow E_2$ tel que $\varphi(\EO) = \EO$. C'est
 en fait un homomorphisme de groupe et on note $\textup{Hom}(E_1, E_2)$
 l'ensemble des isogénies de $E_1$ vers $E_2$. L'ensemble $\textup{End}(E)$ des
 endormorphisme de $E$ est un anneau de caractéristique $0$, intègre et de rang
 au plus $4$ en tant que $\ZZ$-module. L'objet qui nous intéressera plus
-particulièrement est l'ensemble des endormorphisme inversible, qu'on notera
+particulièrement est l'ensemble des endormorphisme inversible, qu'on note
 $\textup{Aut}(E)$. Le théorème suivant détaille sa structure.
 \begin{thm}
 \label{th:autell}
@@ -877,8 +888,6 @@ trace de $E$.
 %elliptique de Rains
 
 \section{Complexité et notations}
-%TODO: Définir le $O$ et $O^{\sim}$; définir les notations etc. !!p. 720 de
-%Modern Computer Algebra!!
 Cette courte section nous permettra de définir quelques notions de complexité
 et surtout d'introduire les notations qu'on utilisera pour les futures analyses
 de complexités des algorithmes étudiés.
@@ -905,12 +914,12 @@ est équivalent à $f(n)\in O(g(n)\,\textup{log}^k\,g(n)$.
 \label{deux}
 D'après le théorème \ref{th:isomGF}, deux corps finis de même cardinal sont
 isomorphes. Le théorème \ref{th:elemprim} assure que toute extension de corps 
-fini s'obtient par adjonction de racine d'un certain polynôme irréductible. Il y
-a donc autant de représentations différentes d'un corps fini que de polynômes 
+fini s'obtient par adjonction d'une racine d'un polynôme irréductible. Il y
+a donc autant de façons de définir une extension que de polynômes 
 irréductibles de bon degré. Le problème est comment passer de l'une à 
 l'autre.\par
 %TODO Retravailler peut-être cette partie pour la rendre plus compréhensible
-Soit $f$ et $g$ deux polynômes irréductibles de degré $n$ sur $\GF{q}$, on a :
+Soient $f$ et $g$ deux polynômes irréductibles de degré $n$ sur $\GF{q}$, on a :
 \begin{equation}
 k_1 := \GF{q}[X]/(f) \etmath k_2 := \GF{q}[Y]/(g). 
 \end{equation}
@@ -932,11 +941,8 @@ Un premier pas vers une méthode plus performante est la méthode de Pinch,
 nous allons exposé une de ses variantes dans la section suivante.
 
 \section{Algorithme de Pinch}
-%TODO: Énonciation et descriptions de la méthode de Pinch, justification des 
-%résultats, explication des inconvénients et autre.
 La méthode de Pinch consiste à choisir un groupe $\Gamma$ défini par des 
-relations algébriques sur $\GF{q}$. Puis, on choisit un élément 
-$\gamma\in\Gamma$ tel que:
+relations algébriques sur $\GF{q}$ et un élément $\gamma\in\Gamma$ tel que:
 \vspace{0.3cm}
 \begin{itemize}
 \item il soit d'ordre $m$ petit et défini sur $\GF{q^n}$,
@@ -945,11 +951,9 @@ $\gamma\in\Gamma$ tel que:
 \vspace{0.3cm}
 On exprime alors $\gamma$ en tant que polynôme en $x := \overline{X}$ et en 
 polynôme en $y := \overline{Y}$ et on utilise ces deux expressions pour exprimer
-$x$ en fonction de $y$, afin d'obtenir l'isomorphisme voulu.\par
+$x$ en fonction de $y$ afin d'obtenir l'isomorphisme voulu.\par
 
 \subsection{Méthode cyclotomique}
-%TODO: Explication de la méthode et illustration avec l'exempe de l'article, 
-%peut-être ?
 
 Pour la méthode cyclotomique on utilisera $\Gamma = k_1^{\times}$ et $\gamma$ 
 sera une racine primitive \nroot{m} de l'unité.
@@ -993,7 +997,7 @@ est effectivement un isomorphisme. La méthode peut se résumer ainsi :
 \vspace{0.3cm}
 \begin{enumerate}[1.]
 \item Trouver un entier $m$ "petit" divisant $q^n - 1$ tel que 
-$q$ soit premier $m$. 
+$q$ soit premier avec $m$. 
 
 \item Déterminer une racine \nroot{m} primitive $\zeta_m$ dans $k_1$ et
 $\zeta'_m$ dans $k_2$.
@@ -1009,9 +1013,10 @@ un $z\in k_1^{\times}$ et de l'élever à la puissance $(q^n - 1)/m$ jusqu'à
 tomber sur un élément d'ordre $m$, la probabalité que cela arrive est de 
 $\varphi(m)/m$; il y a au plus $m$ éléments solutions de $X^m - 1$ dans 
 $\GF{q^n}$ et seulement $\varphi(m)$ éléments d'ordre exactement $m$. Si $m$ est
-premier et plus grand que $5$, ce qui sera bien souvent le cas, la chance de
-tomber sur une racine primitive de l'unité est de plus de $80\%$ et elle atteint
-$95\%$ dès que $m \geq 23$. 
+premier et plus grand que $5$, ce qui sera bien souvent le cas, alors la chance 
+de tomber sur une racine primitive de l'unité est de plus de $80\%$ et elle 
+atteint $95\%$ dès que $m \geq 23$; ce n'est donc pas ce qui demandera le plus
+de ressources. 
 \begin{ex}
 Illustrons la méthode par un exemple directement tiré de l'article de 
 Pinch\cite{Pin}. On considère les deux polynômes irréductibles sur $\GF{11}$, 
@@ -1050,7 +1055,6 @@ On peut alors vérifier que $f(\phi(x)) = 0$.
 \end{ex}
 
 \subsection{Limitations}
-%TODO: Taille de m, choisir un élément au hasard
 Le premier problème de cette méthode est qu'il n'y a pas toujours d'élément
 d'ordre "petit" dans $\GF{q^n}^{\times}$. Par exemple, si on prend $p = 2$ et un
 premier de Mersenne égal à $2^n - 1$, on ne trouvera pas d'élement d'ordre plus
@@ -1074,11 +1078,6 @@ cyclotomique qu'on va étudier dans la section suivante.
 
 
 \section{Algorithme de Rains : méthode cyclotomique}
-%TODO  Commencer par une explication concise de la méthode, ce 
-%qu'elle change par rapport à Pinch.\par
-%Présenter pas à pas l'article de Rains (en gros), en enlevant ce qui nous 
-%concernerait moins et en rajoutant ce qu'il n'a pas mis (tous les détails 
-%sur l'algorithme convert et sa complexité).
 La méthode de Rains cyclotomique est une extension de la méthode de Pinch
 cyclotomique. Les principaux changements sont l'utilisation de petites
 extensions des corps considérés afin de pouvoir trouver un $m$ plus petit et
@@ -1086,23 +1085,21 @@ l'usage des périodes de Gauss afin de déterminer des éléments uniques sous
 l'action du groupe de Galois reliés par un isomorphisme.
 
 \subsection{Principe}
-%TODO: Passer par une petite extension pour réduire la taille de m, utilisation
-%des éléments normaux, utilisation des périodes de Gauss.
 
 L'algorithme se résume de la façon suivante. On commence par chercher un $m$ qui
 satisfait certaines conditions permettant de trouver des racines \nroot{m}
 primitive de l'unité qui engendrent les corps qui nous intéressent.\par
 Si on ne trouve pas de $m$ assez petit, il se peut qu'on ait besoin de
 travailler dans de petites extensions de $k_1$ et $k_2$, voir
-\ref{sec:extension}. Il faut alors construire des élements normaux uniques 
+\ref{sec:extension}. Il faut alors construire des élements uniques 
 reliés par un isomorphisme entre $k_1$ et $k_2$ ou leurs extensions, ce qui est
 effectué \textit{via} les \emph{périodes de Gauss} dans la section 
 \ref{sec:gaussper}.\par
-Une fois les éléments uniques obtenus, si on a utilisé des extensions alors on
-calcule leurs traces afin d'obtenir des éléments normaux des corps $k_1$ et 
-$k_2$. Une fois ceux-ci obtenus, il ne reste plus qu'à convertir la base normale
-de $k_2$ en base monomial et obtient alors l'isormophisme voulu. Ceci est
-détaillé dans la section \ref{sec:elemnorm}.
+Si l'utilisation d'une extension a été nécessaire, alors on calcule la trace des
+deux éléments obtenus afin d'avoir des générateurs de l'extension qui nous
+intéresse. Une fois ceux-ci obtenus, il ne reste plus qu'à déterminer
+l'isomorphisme. Ici le choix fait fera usage d'éléments dit normaux, ce qui est
+traité à la section \ref{sec:elemnorm}.
 
 \subsection{Utilisation d'une extension}
 \label{sec:extension}
@@ -1152,13 +1149,8 @@ isomorphisme est malheureusement toujours présent. C'est à ce moment qu'on
 utiliser les périodes de Gauss, introduites à la sous-section 
 \ref{sec:gaussper}.
 
-
-
 \subsection{Éléments normaux}
 \label{sec:elemnorm}
-%TODO: Définitions et résultats utiles pour l'algorithme, justification de
-%l'algorithme (peut-être à mettre dans la partie Galois de la section corps
-%finis), conversion de la base polynomiale à la base normale.
 Il se trouve qu'on peut améliorer le temps nécessaire pour déterminer
 l'isomorphisme en exigant que les générateurs satisfassent une condition plus 
 forte qu'être unique; cette condition est que les générateurs soient des 
@@ -1290,9 +1282,9 @@ On va voir que dans notre cas, il nous suffira de choisir $\alpha = v$.
 
 \begin{lem}
 \label{lem:mattrinv}
-Soit $\alpha,\beta\in\GF{q^n}$ et la matrice $A$ défini par les coefficients 
-$a_{ij} = \Tr{\alpha^{q^i}\beta^{q^j}}$, $A$ est inversible si et seulement si 
-$\alpha$ et $\beta$ sont des éléments normaux.
+Soit $\alpha,\beta\in\GF{q^n}$ et soit la matrice $A$ défini par les 
+coefficients $a_{ij} = \Tr{\alpha^{q^i}\beta^{q^j}}$, $A$ est inversible si et 
+seulement si $\alpha$ et $\beta$ sont des éléments normaux.
 \end{lem}
 \begin{proof}
 Supposons que $\alpha$ ne soit pas un élément normal. Dans ce cas, il existe une
@@ -1364,10 +1356,6 @@ où les $u_i$ sont les coefficients $u$; on aura alors $\psi(A) = u$.\\
 \end{proof}
 
 \subsection{Périodes de Gauss}
-%TODO: Énoncé et justifier les résultats donnés par Rains (notamment le lemme
-%expliquant la forme de $\GF{q}[X]/I$ pour $I$ sous-groupe du groupe de Galois);
-%peut-être à mettre directement dans la partie cyclotomique de la section
-%algorithme de Rains cyclotomique.
 \label{sec:gaussper}
 On connait désormais le type d'élément qui nous intéresse, il faut maintenant 
 trouver un moyen d'en trouver qui soient uniques. Cela revient à trouver des 
@@ -1404,13 +1392,13 @@ text height=1.5ex, text depth=0.25ex]
 \path[->>,font=\scriptsize,>=angle 90]
 (m-4-1) edge node[auto] {$\bmod p$} (m-4-4)
 (m-3-2) edge node[auto] {$\bmod\mathfrak{p}$} (m-3-3)
-(m-1-2) edge node[auto] {$\bmod\mathfrak{B}$} (m-1-3);
+(m-1-2) edge node[auto] {$\bmod\mathfrak{P}$} (m-1-3);
 \end{tikzpicture}
 \end{equation}
 Où $\zmodninv{m}$ est le groupe de Galois de $\QQ[\mu_m]/\QQ$, $G$ est le groupe
 de Galois de $K[\mu_m]/K$, sous-groupe de $\zmodninv{m}$ et $\groupgen{q}$
 le groupe de décomposition de 
-$\mathfrak{B}/\mathfrak{p}$, %($= \GF{q}[\mu_m]/\GF{q}$ ?)
+$\mathfrak{P}/\mathfrak{p}$, %($= \GF{q}[\mu_m]/\GF{q}$ ?)
 on a en particulier l'inclusion $\groupgen{q}\subset G
 \subset\zmodninv{m}$.
 
@@ -1482,29 +1470,36 @@ où $\EO_m$ est l'anneau des entiers de $\QQ[X]/\Phi_m(X)$ d'après le théorèm
 \ref{th:entiercycl} et $\mathfrak{p} = p\EO_m$ est l'idéal de $\EO_m$ au-dessus 
 de $p$. Comme $\QQ[X]/\Phi_m(X)$ est galoisienne, proposition 
 \ref{prop:cyclgal}, le groupe de Galois $\zmodninv{m}$ agit sur $\EO_m$ et donc 
-sur $\EO_{m,p}$. Soit maintenant $S$ un sous-groupe de $\zmodninv{m}$, on va 
-étudier la forme de l'invariant $\EO_{m,p}^S$  de $\EO_{m,p}$ sous l'action de 
-$S$, réduction modulo $\mathfrak{p}$ de $\EO_m^S$ l'invariant de $\EO_m$ sous
-l'action du groupe $S$.\par
-On a $\mathfrak{p} = \prod_{i=0}^g{\mathfrak{B}_i}$, où $g$ est le nombre
-d'idéal de $\EO_m$ au-dessus de $p$. En effet, l'extension est galoisienne et 
-que $p$ est ramifié dans $\EO_m$ puisque $m$ et $p$ sont premiers entre eux, 
-théorème \ref{th:entiercycl}. Ainsi on a :
+sur $\EO_{m,p}$. On notera :
 \begin{equation}
-\EO_{m,p}= \EO_m/p\EO_m = \EO_m/\prod_{i=0}^g{\mathfrak{B}_i}
+\sigma_k(x) = x^k
 \end{equation}
-D'après le théorème des restes chinois on obtient finalement :
+l'action du groupe de Galois. Soit maintenant $S$ un sous-groupe de 
+$\zmodninv{m}$, on va étudier la forme de l'invariant $\EO_{m,p}^S$  de 
+$\EO_{m,p}$ sous l'action de $S$, réduction modulo $\mathfrak{p}$ de $\EO_m^S$ 
+l'invariant de $\EO_m$ sous l'action de $S$.\par
+On a $\mathfrak{p} = \prod_{i=0}^g{\mathfrak{P}_i}$, où $g$ est le nombre
+d'idéaux de $\EO_m$ au-dessus de $p$ et les $\mathfrak{P}_i$ sont des premiers
+de $\EO_m$. En effet, l'extension est galoisienne et $p$ est ramifié dans 
+$\EO_m$ puisque $m$ et $p$ sont premiers entre eux, théorème 
+\ref{th:entiercycl}. Ainsi on a :
 \begin{equation}
-\EO_{m,p} = \bigoplus_{i=0}^g{\EO_m/\mathfrak{B}_i}
+\EO_{m,p} = \EO_m/p\EO_m = \EO_m/\prod_{i=0}^g{\mathfrak{P}_i}
 \end{equation}
-Or, les $\EO_m/\mathfrak{B}_i$ sont des extensions de corps de $\ZZ/p\ZZ \simeq
-\GF{p}$ de même degré, le degré résiduel $f = [\EO_m/\mathfrak{B}_i:\GF{p}]$. 
+D'après le théorème des restes chinois généralisé, on obtient finalement :
+\begin{equation}
+\EO_{m,p} = \bigoplus_{i=0}^g{\EO_m/\mathfrak{P}_i}
+\end{equation}
+Or, les $\EO_m/\mathfrak{P}_i$ sont des extensions de corps de $\ZZ/p\ZZ\simeq
+\GF{p}$ de même degré, le degré résiduel $f = [\EO_m/\mathfrak{P}_i:\GF{p}]$. 
 Dans ce cas, on a :
 \begin{equation}
 \label{eq:structinvSmodp}
-\EO_{m,p}^S = \bigoplus_{i=0}^{g'}{\GF{p^f}}
+\EO_{m,p}^S = \bigoplus_{i=0}^{g'}{\GF{p^{f'}}}.
 \end{equation}
-où $g'$ est le nombre d'idéaux de $\EO_m^S$ au-dessus de $p$.
+où $g'$ est le nombre d'idéaux $\mathfrak{P}'_i$ de $\EO_m^S$ tels que $p\EO_m^S
+= \prod_{i = 0}^{g'}{\mathfrak{P}'_i}$ et $f' = 
+[\EO_m^S/\mathfrak{P}'_i:\GF{p}]$.
 
 \begin{lem}
 \label{lem:nbprimeabove}
@@ -1514,39 +1509,39 @@ dans $\zmodninv{m}/S$.
 \end{lem}
 \begin{proof}
 Commençons par le cas $S = \groupgen{1}$, alors d'après l'identité fondamentale,
-on a $\varphi(m) = gf$ définis comme ci-dessus. En prenant en compte que le
-corps résiduel $\EO_m/p\EO_m$ est un corps fini, l'action du groupe de Galois
-est uniquement constitué d'éléments de la forme $\sigma_{p^k}(x) = x^{p^k}$.
-Mais cela implique que son degré est donc l'ordre de $p$ dans $\zmodninv{m}$ ce
-qui donne le résultat pour $S = \groupgen{1}$ car dans ce cas :
+on a $\varphi(m) = gf$, $g$ et $f$ définis comme ci-dessus. En prenant en compte
+le fait que le corps résiduel $\EO_m/p\EO_m$ est un corps fini, l'action du 
+groupe de Galois est uniquement constitué d'éléments de la forme $\sigma_{p^k}$.
+Mais cela implique que le degré du corps résiduel est donc l'ordre de $p$ dans 
+$\zmodninv{m}$ ce qui donne le résultat pour $S = \groupgen{1}$ car dans ce cas 
+:
 \begin{equation}
 g = \varphi(m)/f = [\zmodninv{m}:\groupgen{p}].
 \end{equation}
 
 Considérons maintenant $S$ comme un sous-groupe quelconque. Pour n'importe quel
-$\mathfrak{p}$ de $\EO_m$, l'idéal premier en-dessous de lui dans $\EO_m^S$ est
-l'idéal :
+$\mathfrak{p}$ de $\EO_m$, l'idéal premier en-dessous de celui-ci dans $\EO_m^S$
+est l'idéal :
 \begin{equation}
-\prod_{i\in(S_{\mathfrak{p}}S)/S_{\mathfrak{p}}}{\sigma_i(\mathfrak{p})\cap\ZZ}
+\prod_{i\in\left(S_{\mathfrak{p}}S\right)/S_{\mathfrak{p}}}
+{\sigma_i(\mathfrak{p})\cap\EO_m^S},
 \end{equation}
-où $S_{\mathfrak{p}}$ est le stabilisateur de $\mathfrak{p}$. En prenant $i\in 
-S_{\mathfrak{p}}S$ on obtient tous les conjugués de $\mathfrak{p}$ et en
-quotientant par $S_{\mathfrak{p}}$ on supprime les multiplicités plus grandes 
-que $1$; on ne prend qu'une partie de la norme : 
-\begin{equation}
-N_{\QQ[\mu_m]/\QQ}(\mathfrak{p}) =
-\prod_{i\in\zmodninv{m}}{\sigma_i\left(\mathfrak{p}\right)\cap\ZZ} = (p^f)
-\end{equation}
-idéal de $\ZZ$. Réciproquement, si $i\notin S_{\mathfrak{p}}S$ alors 
-$\sigma_i(\mathfrak{p})$ est au-dessus d'un autre idéal premier que 
-$p$. Le cardinale de $(S_{\mathfrak{p}}S)/S$ est la même pour tous les
+où $S_{\mathfrak{p}}$ est le stabilisateur de $\mathfrak{p}$ sous l'action de
+$S$. Le groupe quotient $(S_{\mathfrak{p}}S)/S_{\mathfrak{p}}$ permet de ne
+faire apparaitre uniquement les conjugués de $\mathfrak{p}$ a la puissance $1$.
+En intersectant avec $\EO_m^S$, on obtient alors la décomposition de $p\EO_m^S$.
+Réciproquement, si $i\notin S_{\mathfrak{p}}S$ alors $\sigma_i{\mathfrak{p}}$ 
+n'est pas un conjugué de $\mathfrak{p}$ et donc n'est pas au-dessus de $p$.\par
+Le cardinal de $(S_{\mathfrak{p}}S)/S_{\mathfrak{q}}$ est la même pour tous les
 $\mathfrak{p}$ au-dessus de $p$ puisqu'ils sont conjugués. Alors le nombre de
-premier de $\EO_m^S$ au-dessus de $p$ est égal à :
+premiers de $\EO_m^S$ au-dessus de $p$ est égal à :
+%TODO: Transition un poil trop rapide...
 \begin{equation}
 \dfrac{[\zmodninv{m}:\groupgen{p}]}{[\groupgen{p}S:\groupgen{p}]} =
 [\zmodninv{m}:\groupgen{p}S],
 \end{equation}
-
+d'après le troisième théorème d'isomorphisme. Ce qu'on peut encore écrire
+:
 \begin{equation}
 [\zmodninv{m}/S:\groupgen{p}].
 \end{equation}
@@ -1559,12 +1554,15 @@ $[\zmodninv{m}/S:\groupgen{p}]$ corps tous isomorphes à $\GF{p^n}$, où $n$ est
 l'ordre de $p$ dans $\zmodninv{m}$.
 \end{cor}
 \begin{proof}
-Il suffit d'appliquer le lemme \ref{lem:nbprimeabove} et l'équation
-(\ref{eq:structinvSmodp}).\\
+Il suffit d'appliquer le lemme \ref{lem:nbprimeabove}, l'équation
+(\ref{eq:structinvSmodp}) et le fait que $\groupgen{p}$ étant le groupe
+décomposition de $\mathfrak{p}$ son cardinal $\#\groupgen{p}$ est égal à $e'f'$,
+où $e'$ est l'indice de ramification de $\mathfrak{p}$ dans $\EO_m^S$, ici égal 
+à $1$, et $f'$ le degré du corps résiduel.\\
 \end{proof}
-En particulier si $[\zmodninv{m}/S:\groupgen{p}] = 1$ alors $\EO_{m,p}^S$ est 
-corps, c'est en fait exactement $\GF{p^n}$ avec $\#\groupgen{p} = n$. Reste 
-alors à montrer que les périodes de gauss engendrent effectivement 
+En particulier si $[\zmodninv{m}/S:\groupgen{p}] = 1$ alors $\EO_{m,p}^S$ est
+un corps; c'est en fait exactement $\GF{p^n}$, avec $\#\groupgen{p} = n$. Il 
+reste alors à montrer que les périodes de Gauss engendrent effectivement 
 $\EO_{m,p}^S$.
 \begin{lem}
 Soit $m$ un entier sans facteur carré, alors les périodes $\eta(\zeta_m^k)$
@@ -1591,7 +1589,7 @@ ainsi, \textit{via} cette isomorphisme on peut exprimer un élément
 $\eta(\zeta_m^k)$ de $\EO_{m,p}$ comme un produit de deux éléments
 $\eta(\zeta_m^{(k_1)})$ et $\eta(\zeta_m^{k_1})$ dans $\EO_{m_1,p}$ et 
 $\EO_{m_2,p}$, avec $k_1\in\zmodninv{m_1}$ et $k_2\in\zmodninv{m_2}$ 
-respectivement et inversement.
+respectivement, et inversement.
 %TODO: C'est vraiment utile tout ce qui suit ?
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \iffalse
@@ -1645,16 +1643,14 @@ ce qu'il fallait démontrer.\\
 
 Ainsi, si $\zmodninv{m}/S = \groupgen{p}$ et $\#\groupgen{p} = n$, alors les 
 $\eta(\zeta_m^k)$ avec $k\in\groupgen{p}$ sont conjugués dans $\EO_{m,p}^S = 
-\GF{p^n}$ et si $m$ est sans facteurs alors ils l'engendrent d'après le lemme 
-précédent, ce sont donc des élements normaux de $\GF{p^n}$. La condition (ii) 
-implique qu'ils engendrent aussi $\GF{q^n}$ et sont donc des éléments normaux de
-celui-ci. Ce qui achève la preuve du théorème \ref{th:gausspernorm}.
+\GF{p^n}$, d'après la proposition \ref{prop:gaussperconj}, et si $m$ est sans 
+facteurs carrés alors ils l'engendrent d'après le lemme précédent, ce sont donc 
+des élements normaux de $\GF{p^n}$; la condition (ii) implique que ce sont aussi
+des éléments normaux de $\GF{q^n}$. Ce qui achève la preuve du théorème 
+\ref{th:gausspernorm}.
 
 \subsection{Algorithme et analyse de complexité}
 \label{sec:algcompcycl}
-%TODO: Détailler l'algorithme de l'article/code de Luca + analyser la complexité
-%de ces algos et les "prouver" (montrer que ça marche bien, cela dit c'est 
-%peut-être largement faisable avant).
 Maintenant qu'on a tous les résultats théoriques qu'il nous faut, on va pouvoir
 énoncer et justifier les aglorithmes pour déterminer l'isomorphisme. 
 On rappelle brièvement la situation, on a $f$ et $g$ deux polynômes 
@@ -1985,7 +1981,7 @@ La caractéristique principale de l'algorithme de Rains, comme on a pu le voir
 dans la section précédente, est l'utilisation d'éléments normaux uniques sous
 l'action d'un certains groupes. Ici, il se trouve que l'unicité sera déduite de
 l'action du Frobenius de la courbe elliptique choisie $E/\GF{q}$ sur des points
-de torsion d'ordre $m$ sur la courbe $E(\GF{q^n})$.
+de torsion d'ordre $m$ de la courbe $E(\GF{q^n})$.
 \begin{prop}
 L'endomorphisme de Frobenius $\phi_q$ agit transitivement sur les périodes 
 elliptiques $\eta_{\alpha}(P)$. \end{prop}
