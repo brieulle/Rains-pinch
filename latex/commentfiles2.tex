@@ -1,0 +1,2144 @@
+
+\documentclass[a4paper]{article} % papier A4
+\usepackage[utf8]{inputenc}      % accents dans le source
+\usepackage[T1]{fontenc}         % accents dans le pdf
+\usepackage{textcomp}            % symboles complémentaires (euro)
+\usepackage[frenchb]{babel}      % titres en français
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage[colorlinks=false]{hyperref} %Apparemment ça sert à rien...
+\usepackage{enumerate}
+\usepackage{tocloft}             % Pour la table des matières
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{pgf}
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usepackage{rotating}
+\usetikzlibrary{matrix,arrows,decorations.pathmorphing}
+\usepackage{array}
+
+% Numérotation des sections, sous-sections, équations, etc.
+\numberwithin{section}{part}
+\numberwithin{equation}{section}
+
+% Maccros pour les commandes de math
+\newcommand\nroot[1]{\textit{#1}-ième}
+\newcommand\zmodn[1]{\mathbb{Z}/#1\mathbb{Z}}
+\newcommand\zmodninv[1]{(\mathbb{Z}/#1\mathbb{Z})^{\times}}
+\newcommand\GF[1]{\mathbb{F}_{#1}}
+\newcommand\Irr[2]{\textup{Irr}_{#1}(#2)}
+\renewcommand{\algorithmicrequire}{\textbf{Input:}}
+\renewcommand{\algorithmicensure}{\textbf{Ouput:}}
+\newcommand\Tr[1]{\textup{Tr}\left(#1\right)}
+\newcommand\QQ{\mathbb{Q}}
+\newcommand\ZZ{\mathbb{Z}}
+\newcommand\NN{\mathbb{N}}
+\newcommand\CC{\mathbb{C}}
+\newcommand\RR{\mathbb{R}}
+\newcommand\EO{\mathcal{O}}
+\newcommand\PP[1]{\mathbb{P}^{#1}}
+\newcommand\etmath{\textup{\quad et \quad}}
+\newcommand\M[1]{\textup{M}(#1)}
+\newcommand\E[1]{\textup{E}(#1)}
+\newcommand\I[1]{\textup{I}(#1)}
+\newcommand\tO[1]{\widetilde{O}(#1)}
+\newcommand\groupgen[1]{\langle{#1}\rangle}
+
+% Éviter l'overlap dans la table des matières pour les sections, sous-sections
+% etc.
+\setlength{\cftsecnumwidth}{3em}    
+\setlength{\cftsubsecnumwidth}{3em} 
+
+
+\sloppy
+\begin{document}
+\title{Calcul d'isomorphisme de corps finis}
+\author{Ludovic Brieulle}
+\newtheorem{thm}{Théorème}[section]
+\newtheorem{lem}[thm]{Lemme}
+\newtheorem{cor}[thm]{Corollaire}
+\newtheorem{prop}[thm]{Proposition}
+\theoremstyle{definition}
+\newtheorem{defn}[thm]{Définition}
+\newtheorem*{ex}{Exemple}
+\theoremstyle{remark}
+\newtheorem*{rem}{Remarque}
+
+\maketitle
+\part*{Remerciements}
+
+\addcontentsline{toc}{part}{Introduction}
+\part*{Introduction}
+Soit $\GF{q}$ le corps fini à $q = p^r$ éléments, avec $p$ un nombre premier. On
+définit alors $\overline{\mathbb{F}}_q$ sa clôture algébrique. Lorsqu'on a 
+besoin de faire des calculs dans cette clôture, il faut faire les calculs
+directement sur un corps fini en particulier. Il n'y a pas d'unique façon de
+partir d'un corps premier pour \og atteindre\fg\, la clôture algébrique. Les
+différentes façons d'y parvenir peuvent être représenter par ce qu'on appelle 
+un réseau de corps finis. Par exemple, un réseau de corps fini pour 
+$\overline{\mathbb{F}}_5$ se présente sous la forme suivante :
+
+\begin{center}
+\begin{tikzpicture}
+\matrix(m)[matrix of math nodes,
+row sep=1em, column sep=3em,
+text height=2ex, text depth=0.5ex]
+{ & &\overline{\mathbb{F}}_q &  &\\
+\GF{5^4} & & \GF{5^6} & &\\
+& \GF{5^2} & & \GF{5^3} & \GF{5^5}\\
+& & \GF{5} & & \\};
+\path[dashed,-,font=\scriptsize,>=angle 90]
+(m-1-3) edge (m-2-1)
+(m-1-3) edge (m-2-3)
+(m-1-3) edge (m-3-5);
+\path[-,font=\scriptsize,>=angle 90]
+(m-2-1) edge (m-3-2)
+(m-2-3) edge (m-3-2)
+(m-2-3) edge (m-3-4)
+(m-2-1) edge (m-3-2)
+(m-4-3) edge (m-3-2)
+(m-4-3) edge (m-3-4)
+(m-4-3) edge (m-3-5);
+\end{tikzpicture}
+\end{center}
+
+Pour passer d'une branche à l'autre, il faut plonger un corps de l'ancienne
+branche dans un corps de la nouvelle. Seulement, on n'utilise pas nécessairement
+la même représentation\footnote{Par exemple, si on quotiente par deux polynômes
+irréductibles différents ou si on utilise des bases différentes.} pour les deux 
+branches. Une façon de procéder est de construire un isomorphisme entre le corps
+d'une branche et le sous-corps isomorphe de l'autre branche.\par
+Il est connu et prouvé que de deux corps finis de même cardinal sont reliés par
+un isomorphisme. Cependant la preuve de ce résultat ne permet pas d'expliciter
+directement un tel isomorphisme, le trouver demande alors un travail 
+supplémentaire. La situation est la suivante, nous avons deux extensions de 
+$\GF{q}$ de même degré et définies par deux polynômes irréductibles distincts 
+$f$ et $g$. On notera :
+\[k_1=\GF{q}[X]/(f)\etmath k_2=\GF{q}[Y]/(g)\]
+le but est donc de trouver un isormophisme reliant ces deux corps. 
+Une méthode simple et immédiate est d'envoyer $x = \bar{X}$ la classe de $X$
+dans $k_1$ sur une racine de $f$ dans $k_2$. Le problème est que cela revient à 
+factoriser le polynôme $f$ ce qui est beaucoup trop lent. On étudiera dans ce
+rapport deux variantes d'un algorithm dû à Rains, l'une dite cyclotomique et
+l'autre dite elliptique, lui-même tirer d'un algorithme de Pinch, pour 
+déterminer des isomorphismes entre corps finis de même cardinal.
+
+\newpage
+\addcontentsline{toc}{part}{Table des matières}
+\tableofcontents
+\newpage
+
+\part{Rappels théoriques}
+\label{un}
+
+Cette partie consiste principalement à rappeler et énoncer les résultats dont
+nous aurons besoin afin de justifier et mettre en place les deux algorithmes 
+pour calculer les isomorphismes de corps finis. Cette partie n'a pas pour 
+vocation de faire un exposé complet des notions abordées, pour un traité plus 
+détaillé, le lecteur pourra consulter au choix \cite{LiNi1}, \cite{MuPa} ou 
+\cite[chap.~III]{Per} pour les corps finis;
+\cite[chap.~VI]{Sam} ou \cite{Esc} pour la théorie de Galois; \cite{Sam}, 
+\cite{Was1} ou \cite{Lan} pour la théorie des nombres; \cite{Sil} ou 
+\cite{Was2} pour la théorie sur les courbes elliptiques; et pour finir 
+\cite{GaGe} pour tout ce qui concerne le calcul formel en général. On 
+s'efforcera néamoins de démontrer les résultats les plus importants ou 
+fondamentaux. Le c\oe ur du sujet se trouve lui dans la partie \ref{deux}.
+
+\section{Corps finis}
+Dans cette section on rappelle les définitions et démontrer certains 
+résultats liés aux corps finis. Principalement, on étudiera les extensions 
+de corps et la théorie de Galois sur les corps finis. Tous les corps seront
+considérés commutatifs. 
+
+\subsection{Définitions}
+Un corps fini $K$ est un corps à $q = p^r$ éléments, où $p$ un nombre premier
+s'appelle la \emph{caractéristique} de $K$ telle que pour tout $x\in K$ :
+\begin{equation}
+p\cdot x = \underbrace{x+\dots+x}_{p\textup{ fois}} = 0.
+\end{equation}
+Un corps fini est muni de l'automorphisme de Frobenius définie par :
+\begin{equation}
+\phi_p : x \mapsto x^p.
+\end{equation}
+On a aussi :
+\begin{equation}
+\phi_q = \underbrace{\phi\circ\cdots\circ\phi}_{r\textup{
+fois}},
+\end{equation}
+qui à tout $x\in \bar{K}$ associe $x^q$.\par
+On caractérise les éléments de $q$ par l'identité $x^q - x = 0$. En effet, le
+groupe des inversibles de $K$ est d'ordre $q-1$, donc pour tout $x\in K$ on a
+$x^{q-1} = 1$ et il suffit de multiplier par $x$ pour obtenir l'identité.
+On peut complètement caractériser les corps finis par le théorème suivant. Il
+assure entre autre que deux corps finis de même cardinal sont isomorphes, ce qui
+sera le point de départ de notre travail.
+
+\begin{thm}
+\label{th:isomGF}
+Pour tout nombre premier $p$ et tout entier strictement positif $n$, il existe 
+un corps fini à $p^n$ éléments. Tout corps fini à $q = p^n$ éléments est 
+isomorphe au corps de décomposition de $X^q - X$ sur $\GF{p}$. On parlera 
+alors du corps fini à $q$ éléments et on le notera $\GF{q}$.
+\end{thm}
+\begin{proof}
+\textit{(Existence)} Pour $q = p^n$, on considère le polynôme $X^q - X$ dans 
+$\GF{p}[X]$ et on note $K$ son \emph{corps de décomposition}, définition 
+\ref{def:dec}, sur $\GF{p}$. Le polynôme est \emph{séparable}, définition 
+\ref{def:sep}, ou n'a aucune racine multiple puisque sa dérivée est égale à 
+$qX^{q-1} - 1 = -1$, proposition \ref{prop:sepderiv}. Posons $S=\lbrace x\in K 
+: x^q - x = 0\rbrace$, alors $S$ est un sous-corps de $K$; $0$ et $1$ sont 
+dans $K$ et d'après les propriétés sur le Frobenius et les résultats obtenus 
+plus haut on a :
+\begin{equation}
+(a - b)^q = a^q - b^q = a - b \etmath(ab^{-1})^q = a^qb^{-q} = ab^{-1}.
+\end{equation}
+Ainsi, $S$ contient toutes les racines de $X^q - X$ mais comme $K$ a déjà $q$
+éléments, alors $K = S$ est un corps à $q$ éléments.\par
+\textit{(Unicité)} Soit $K$ le corps à $q = p^n$ éléments, il est de 
+caractéristique $p$ et contient $\GF{p}$. On en déduit que $K$ est un corps de 
+décomposition de $X^q - X$ sur $\GF{p}$, puisqu'il est scindé sur $K$, et 
+l'unicité se déduit de l'unicité des corps de décomposition, corollaire 
+\ref{cor:dec}.\\
+\end{proof}
+
+\subsection{Extension de corps}
+\label{def:degext}
+Soient $k$ et $K$ deux corps, s'il existe un homomorphisme de $k$ vers $K$ alors
+celui-ci est nécessairement injectif. Supposons qu'on ait $f(x) = 0$, cela
+s'écrit aussi $x.f(1) = 0$ donc $x = 0$ puisque un corps n'a pas de diviseur de
+$0$ et $f(1) = 1$. 
+On dit que $K$ est une extension de corps de $k$ s'il existe un morphisme de 
+corps $\varphi : k \to K$ ou de façon équivalente, si $k \subseteq K$ alors $K$
+est une extension (de corps) de $k$. On notera $K/k$ une extension de corps.
+Si on a $k\subseteq L \subseteq K$, alors $L/k$ est une sous-extension de
+$K/k$. On appelle corps premier un corps qui n'a pas de sous-corps ou de
+sous-extensions.\par
+Soit $K/k$ une extension de corps et soit $S$ une partie de $K$. Le sous-corps 
+$L := k(S)$ de $K$ engendré par $S$ sur $k$ est le plus petit sous-corps de $K$ 
+contenant $S$ et $k$. Si $S = \lbrace x_1,\dots,x_n \rbrace$ est fini, alors on 
+note $L = K(x_1,\dots,x_n)$, on dit alors que l'extension est de \emph{type
+fini}. L'extension $L/k$ est dite \emph{monogène} ou \emph{simple} si elle est
+engendrée par un seul élément. Si $K/k$ est une extension de corps, alors on 
+peut voir $K$ comme un $k$-espace vectoriel ou une $k$-algèbre. On appelle 
+$[K:k] := dim_k(K)$ le \emph{degré} de l'extension. On dit qu'une extension 
+$K/k$ est de degré fini si $[K:k] < \infty$.\par
+
+\begin{thm}
+Soient $k \subseteq L \subseteq K$ des extensions de corps de degré fini. Alors 
+on a :
+\begin{equation}
+[K:k] = [K:L][L:k].
+\end{equation}
+\end{thm}
+\begin{proof}
+On pose $[K:L] = m$ et $[L:k] = n$. On a donc que $K$ est un $L$-espace 
+vectoriel de dimension $m$ et $L$ est un $k$-espace vectoriel de dimension $n$, 
+le théorème revient à montrer que $K$ est un $k$-espace vectoriel de dimension 
+$mn$. Or, d'après ce qui précède, on a $L \simeq k^n$ et $K \simeq L^m$, d'où
+\begin{equation}
+K \simeq \underbrace{L \oplus\dots\oplus L}_{m fois}\simeq\underbrace
+{k^n\oplus\dots\oplus k^n}_{m fois} \simeq k^{nm},
+\end{equation}
+ce qui prouve le théorème.\\
+\end{proof}
+
+On dit qu'un élément $x\in K$ est \emph{algèbrique} sur $k$ s'il existe un 
+polynôme unitaire à coefficients dans $k$ qui annule $x$. L'ensemble des 
+éléments algébriques d'un corps (sur un sous-corps) forme un corps \cite[p.~64, 
+théorème 1.14]{Per}. On dit qu'une extension $K/k$ est algébrique si tous les 
+éléments de $K$ sont algébriques sur $k$. En particulier, toute extension de
+degré fini est algébrique et de type finie.
+
+
+Soit $L/K$ une extension de corps et soit $\alpha\in L$ un élément algébrique 
+sur $K$. Si on note $\Irr{K}{\alpha}$ le \emph{polynôme minimal} de $\alpha$ sur
+$K$ et on pose $n := \textup{deg\,}\Irr{K}{\alpha}$ alors l'anneau des polynômes
+sur $K$ en $\alpha$ noté $K[\alpha]$ est égal au corps des fractions rationnels
+en $\alpha$ $K(\alpha)$ et c'est un $K$-espace vectoriel de dimension de $n$ qui
+admet pour base la base $1,\alpha,\dots,\alpha^{n-1}$ qu'on appellera la 
+\emph{base monomiale}. En résumé, $K(\alpha)/K$ est une extension de corps de
+degré $n$, on l'appelle le \emph{corps de rupture} de $\Irr{K}{\alpha}$ et
+s'obtient en quotientant l'anneau des polynômes sur $K$ par l'idéal engendré par
+le polynôme minimal de $\alpha$. De façon plus générale, le corps de rupture 
+d'un polynôme $P\in K[X]$ est l'extension de $K$ obtenue en adjoignant une 
+racine $\alpha$ de $P$ à $K$ :
+\begin{equation}
+K(\alpha)\simeq K[X]/(P).
+\end{equation}
+
+Considérons une extension $L/K$ telle que $P\in K[X]$ irréductible admette une 
+racine $\alpha\in L$. Alors $\Irr{K}{\alpha}$ divise $P$, donc est égal à 
+$\lambda P$ pour $\lambda\in K^{\times}$, puisque $P$ est irréductible. Alors 
+le morphisme $K$-algèbre $\phi : K[X] \to L$ défini par $\phi(X) = \alpha$ 
+induit un morphisme de $K$-algèbre $\varphi : K[X]/(P) \to L$ tel que 
+$\varphi(x) = \alpha$. Ce morphisme est unique puisque $x$ engendre $K[X]/(P)$. 
+Ce qui montre en particulier l'existence et l'unicité à isomorphisme près des 
+corps de rupture.\par
+\vspace{0.3cm}
+Une autre notion importante est celle de corps de décomposition d'un polynôme 
+non constant sur un corps $k$.
+
+\begin{defn}
+\label{def:dec}
+Soit $K$ un corps et soit $\overline{K}$ une clôture algébrique de $K$. On 
+appelle corps de décomposition de $P\in K[X]$, le corps $L\subset\overline{K}$ 
+tel que $P$ soit scindé dans $L$ et que ses racines engendrent $L$ sur $K$.
+\end{defn}
+
+\begin{thm}
+\label{cor:dec}
+Tout $P\in k[X]$ non constant admet un corps de décomposition unique à 
+isomorphisme près.
+\end{thm}
+
+Penchons-nous alors plus en détails sur les corps finis. On peut se demander
+étant donné un corps fini $\GF{p^n}$ quels peuvent être les corps qui le
+contiennent. Dans un premier temps, il faut que les deux corps aient la même
+caractéristique. Supposons qu'il existe un morphisme $f : \GF{p^n} \to 
+\GF{\ell^m}$ pour $p$ et $\ell$ premiers. En particulier, on a pour 
+$x\in\GF{p^n}$ :
+\begin{equation}
+f(p.x) = 0 = p.f(x),
+\end{equation}
+pour $f(x)\in\GF{\ell^m}$, donc nécessairement $\ell = p$.\par
+Ainsi, si le morphisme existe alors $\GF{p^n}^{\times}$ est un sous-groupe
+d'ordre $p^n - 1$ de $\GF{p^m}^{\times}$ d'ordre $p^m - 1$. Donc, on a $p^n - 1$
+qui divise $p^m - 1$. Si on écrit $m = q.n + r$ avec $r < n$ alors on obtient :
+\[p^m - 1 = p^r((p^n)^q - 1) + p^r - 1\]
+Or $p^n - 1$ divise $(p^n)^q - 1$ donc comme $p^n - 1$ divise aussi $p^m - 1$ la
+seule possibilité pour $r$ est $0$ et donc $n|m$. On vient de prouver la
+nécessité du critère suivant :
+
+\begin{prop}
+Soit $\GF{q}$ un corps fini à $q = p^m$ éléments, alors tout ses sous-corps sont
+de la forme $\GF{p^n}$ avec $n|m$. Réciproquement, soit $n|m$ alors il existe un
+(et un seul) sous-corps de $\GF{q}$ de cardinal $p^n$.
+\end{prop}
+\begin{proof}
+Pour montrer l'autre sens, il suffit de remarquer que $\GF{p^n}$ correspond aux
+éléments satisfaisant l'équation $X^{p^n} - X$ puisque $p^n - 1$ divise $p^m -
+1$.\\
+\end{proof}
+
+\begin{thm}
+\label{th:elemprim}
+Toute extension séparable (\ref{def:sep}) et de degré fini est simple.
+\end{thm}
+\begin{proof}
+On va se contenter de le prouver dans le cas d'un corps fini; le cas général
+demande un peu plus de travail. On invitera le lecteur à consulter
+\cite[p.~87]{Esc}.\par
+Si $K$ est un corps fini alors son groupe mulitplicatif $K^{\times}$ est
+cyclique (voir par exemple la preuve de la proposition \ref{prop:rootcycl} ou
+\cite[p.~50]{LiNi1}). Dans ce cas, il suffit de prendre pour générateur d'une
+extension $L/k$, le générateur du groupe mulitplicatif de $L$.\\
+\end{proof}
+
+%TODO : Trace, norme, multiplication par un élément ? Non dégénérescence de Tr ?
+
+Deux notions importantes pour les extensions de corps sont la trace et la norme
+d'un élément d'une extension par rapport à un sous-corps. On les définit comme
+suit:
+
+\begin{defn}
+Soit $L/K$ une extension de dimension finie et soit $\alpha\in L$. On appelle
+endormorphisme de multiplication par $\alpha$ l'application :
+\begin{align*}
+m_{\alpha} :&L \longrightarrow L\\
+&x\longmapsto\alpha.x.
+\end{align*}
+On définit alors la trace et la norme de $\alpha$ comme la trace et le 
+déterminant de l'endormorphisme $m_{\alpha}$. Les formules suivantes, pour 
+$\alpha, \alpha'\in L$ :
+\begin{equation}
+m_{\alpha + \alpha'} = m_{\alpha} + m_{\alpha'} \etmath
+m_{\alpha\alpha'} = m_{\alpha}\circ m_{\alpha'}. 
+\end{equation}
+induisent les résultats classiques de la norme et la trace, \textit{i.e.} :
+\begin{align}
+\textup{Tr}_{L/K}(\alpha + \alpha') &= \textup{Tr}_{L/K}(\alpha) +
+\textup{Tr}_{L/K}(\alpha'),\\
+N_{L/K}(\alpha\alpha') &= N_{L/K}(\alpha)N_{L/K}(\alpha').
+\end{align}
+\end{defn}
+
+\begin{prop}
+Soit un $K$ un corps de caractéristique 0 ou fini et soit $L/K$ une extension
+algébrique de degré $n$ sur $K$. Soient $x_1,\dots, x_n$ les racines du polynôme
+minimal de $x$, dans le corps de décomposition de celui-ci, chacune répétée 
+$[L:K(x)]$ fois; alors on a :
+\begin{equation}
+Tr_{L/K}(x) = x_1 + \dots + x_n \etmath N_{L/K}(x) = x_1\dots x_n.
+\end{equation}
+De plus, le polynôme caractéristique de $x$ relativement à $L$ et $K$ est $(X -
+x_1)\dots(X - x_n)$.
+\end{prop}
+%TODO: La preuve, éventuellement.
+%TODO: Je voulais en déduire que la trace est surjective, mais je sais plus trop
+%comment, si tu t'en souviens un jours...
+
+\subsection{Groupe de Galois d'une extension de corps finis}
+%TODO :Définitions et résutlats de base (sans forcément tout prouver),
+%Frobenius, action de groupes ? Ça me parait raisonnable...
+%Groupe de Galois, élément primitif, extensions galoisiennes, etc.
+Soit un corps $L$ et soit l'ensemble $G$ des automorphismes de $L$. L'ensemble 
+des éléments de $x\in L$ tels que $\sigma(x) = x$ pour tout $\sigma\in G$ est un
+sous-corps $K$ de $L$, c'est le corps des invariants de $G$. Soit $L/K$ et
+$L'/K$ deux extensions de corps, on appelle $K$-homomorphisme de $L$ dans $L'$ 
+les morphismes de $K$-algèbre de $L$ dans $L'$. Si $L = L'$ alors on parle de
+$K$-automorphisme et ceux-ci forment un groupe pour la loi de composition.
+
+\begin{thm}
+Soit $L/K$ une extension de corps de type fini de degré $n$, avec $K$ un corps
+fini ou de caractéristique nulle. Les conditions suivantes sont équivalentes :
+\begin{enumerate}[(i)]
+	\item $K$ est le corps des invariants du groupe $G$ des $K$-automorphismes
+de $L$.
+	\item Pour tout $x\in L$, le polynôme minimal de $x$ sur $K$ a toutes ses
+racines dans $L$.
+	\item $L$ est engendré par les racines d'un polynôme sur $K$.
+\end{enumerate}
+Dans ces conditions, le groupe $G$ est d'ordre égal à $n$.
+\end{thm}
+
+\begin{defn}
+\label{def:gal}
+Une extension de corps est galoisienne si elle satisfait les
+conditions du théorème. Dans ce cas, $G$ s'appelle le groupe de Galois de $L/K$,
+on le note $G := Gal(L/K)$. Si $G$ est abélien (resp. cyclique) alors 
+l'extension est dite abélienne (resp. cyclique).
+\end{defn}
+
+Un polynôme irréductible $f$ est \emph{séparable} sur un corps $K$ si toutes
+ses racines dans un corps de décompositions sont distinctes; la notion est
+indépendante du corps de décomposition choisi, puisqu'il existe un $K$-morphisme
+reliant les racines et dans ce cas leurs images sont aussi distinctes. 
+Un élément $\alpha$ est \emph{séparable} sur $K$ si son polynôme minimal est 
+séparable sur $K$.
+
+\begin{defn}
+\label{def:sep}
+Une extension algébrique $L/K$ est \emph{séparable} si tout les $\alpha\in L$
+sont séparables.
+\end{defn}
+
+\begin{rem}
+On peut définir la séparabilité d'un polynôme réductible en se basant sur ses
+facteurs irréductibles, un polynôme sera séparable si tous ses facteurs
+irréductibles le sont.
+\end{rem}
+
+\begin{prop}
+\label{prop:sepderiv}
+Soit $P$ irréductible sur un corps $K$, on a l'équivalence suivante :
+\begin{equation}
+P\textup{ séparable } \Leftrightarrow P'\neq 0.
+\end{equation}
+\end{prop}
+
+Soit $f$ un polynôme irréductible de degré $n$ sur un corps $K$. Soit $\alpha_1 
+= a$ une racine de $f$ et $\alpha_2,\dots,\alpha_n$ les autres racines de $f$ 
+dans un corps de décomposition. Alors on dit que les $\alpha_i$ sont les 
+conjugués de $\alpha$ sur $K$.
+\begin{defn}
+Une extension $L/K$ est \emph{normale} ou \emph{quasi-galoisienne}, si pour tout
+$a\in L$, $\Irr{k}{a}$ a toutes ses racines dans $L$ ou, de façon équivalente,
+si $L$ contient tous les conjugués de $a$.
+\end{defn}
+
+\begin{prop}
+\label{prop:decompnorm}
+Soit $P\in k[X]$ de degré $n\geq 1$ et soit $K$ un corps de décomposition de $P$
+sur $k$. Alors $K/k$ est normale.
+\end{prop}
+
+On peut désormais énoncer un résultat qui permet de déterminer de façon plus
+pratique si une extension est galoisienne ou non.
+
+\begin{thm}
+Soit $K/k$ une extension de degré fini. Les conditions suivantes sont
+équivalentes :
+\begin{enumerate}
+\item L'extension $K/k$ est galoisienne.
+\item L'extension $K/k$ est normale et séparable.
+\item Le corps $K$ est le corps de décomposition d'un polynôme séparable.
+\end{enumerate}
+Sous ces conditions, pour tout $\alpha\in K$ on a :
+\begin{equation}
+\Irr{k}{\alpha} = \prod_{\beta\in G\alpha}{(X - \beta)}.
+\end{equation}
+\end{thm}
+
+\begin{thm} Soit $k$ un corps, soit $P$ un polynôme de degré $n$ dans $k[X]$ et
+soit $K$ un corps de décomposition de $P$. On a :
+\begin{enumerate}
+\item Le groupe de Galois de $K/k$ et donc de $P$ est un sous-groupe du groupe
+symétrique $\textup{S}_n$; donc son ordre divise $n!$.
+\item Si $P$ est irréductible alors le groupe de Galois de $P$ agit
+transitivement sur ses racines; son ordre est divisible par $n$.
+\end{enumerate}
+\end{thm}
+
+Pour les corps finis, déterminer le groupe de Galois est beaucoup plus facile
+comme le montre le théorème suivant :
+
+\begin{thm}
+Soit $n\geq1$ et soit $\GF{q}$ le corps à $q=p^r$ éléments, avec $p$ premier.
+L'extension $\GF{q^n}/\GF{q}$ est galoisienne et son groupe de Galois
+$\textup{Gal}(\GF{q^n}/\GF{q})$ est cyclique d'ordre $n$, engendré par 
+l'automorphisme de Frobenius $\phi_q$.
+\end{thm}
+\begin{proof}
+On a déjà montré que $\GF{q^n}$ était le corps de décomposition de $Q = X^{q^n} 
+- X$, théorème \ref{th:isomGF}, donc que l'extension était normale, proposition 
+\ref{prop:decompnorm}. De plus, comme $Q' = -1 \neq 0$, $Q$ est séparable,
+proposition \ref{prop:sepderiv}, on a bien que $\GF{q^n}/\GF{q}$ est galoisienne
+et donc :
+\[|\textup{Gal}(\GF{q^n}/\GF{q})| = [\GF{q^n}:\GF{q}] = n\]
+Comme le Frobenius est un $\GF{q}$-automorphisme, c'est un morphisme et un 
+élément de $\GF{q}$ élevé à la puissance $q^n$ est toujours égal à lui-même, 
+c'est un élément de $\textup{Gal}(\GF{q^n}/\GF{q})$. Notons $d$ son ordre, alors
+$\phi_q^d = Id_{\GF{q^n}}$ ou encore, pour tout $x\in\GF{q^n}$ :
+\[\phi_q^d(x) = x^{q^d} = x \Leftrightarrow x^{q^d} - x = 0\]
+Le polynôme $X^{q^d} - X$ ayant au plus $d$ racines, on a $d\geq n$ et donc $d =
+n$ d'où $\phi_q$ engendre $\textup{Gal}(\GF{q^n}/\GF{q})$ et donc le
+résultat.\\
+\end{proof}
+
+\begin{defn}
+\label{def:elemnorm}
+Soit $L/K$ une extension galoisienne. On dit que $x\in L$ est un élément
+\emph{normal} de $L$ si son orbite sous l'action du groupe de Galois forme une 
+base de $L$ en tant que $K$-espace vectoriel; ou encore si ses conjugués forment
+une base de $L$ en tant que $K$-espace vectoriel. On appelera cette base la 
+\emph{base normale} de $L$.
+\end{defn}
+
+\begin{thm}
+Soit $L/K$ une extension galoisienne, alors il existe un $x\in L$ dont l'orbite
+par l'action du groupe de Galois forme une base de $L$ en tant que $K$-espace
+vectoriel.
+\end{thm}
+\begin{proof}
+%TODO : Je ne sais pas si ça vaut le coup de faire la preuve. J'aimerais bien
+%mais bon... Tu as Artin et LiNi11 Th 3.72
+\end{proof}
+
+%TODO : Groupe de décomposition et groupe d'inertie ?
+\subsection{Extensions et polynômes cyclotomiques}
+%TODO : Racines de l'unités et quelques mots sur les polynômes 
+%cyclotomiques et leurs extensions. Peut-être rajouter un ou deux mots sur le 
+%cas des corps finis.
+Soit $A$ un anneau et soit $n\in\NN$, une racine \nroot{n} de l'unité dans $A$ 
+est un élément $u$ de $A$ tel que $u^n = 1$. On note $\mu_{n,A}$ l'ensemble des 
+racines \nroot{n} de l'unité dans $A$ et pour tout corps $K$, on note 
+$\mu_{n,\bar{K}}$ l'ensemble des racines de l'unité dans une clôture algébrique 
+de $K$. Comme il ne dépend pas du choix de la clôture algébrique, on le note 
+$\mu_{n,K}$. Dans le cas particulier des corps finis, une condition d'existence 
+est le divisibilité de l'ordre du groupe multiplicatif par l'entier $n$.\par
+
+\begin{prop}
+\label{prop:rootcycl}
+L'ensemble $\mu_{n,K}$ forme un groupe pour la multiplication dans $K$ et si 
+$|\mu_{n,K}| = n$ alors il est non canoniquement isomorphe à $\zmodninv{n}$.
+\end{prop}
+\begin{proof}
+La proposition découle d'un résultat plus général affirmant que tout sous-groupe
+fini $G$ du groupe multiplicatif $K^*$ est formé de racine de l'unité et est 
+cyclique. 
+\begin{lem}
+Soit $G$ un groupe commutatif fini. Il existe $x\in G$ dont l'ordre est le 
+$ppcm$ des ordres des éléments de $G$.
+\end{lem}
+En effet, on sait qu'un groupe commutatif est un $\ZZ$-module (si on le note 
+additivement). D'après la classification des modules de type fini, $G$ est 
+isomorphe à un produit $\zmodn{a_1}\times\dots\times\zmodn{a_n}$ où 
+$a_1|a_2|\dots|a_n$. Aucun des $a_i$ n'est nul, sinon $G$ serait infini; 
+ce serait le produit de $\ZZ^r$ avec des groupes finis. On note $y$ la classe 
+de $1$ dans $\zmodn{a_n}$ et on pose $x = (0,\dots,0,y)$. Alors $x$ est d'ordre 
+$a_n$ et si on prend un élément $z\in G$, avec $z = (z_1,\dots,z_n)$, on a aussi
+$a_nz = 0$ car $a_i|a_n$ pour tout $1\leq i \leq n$. L'élément $x$ est donc
+l'élément recherché.\par
+On en déduit qu'il existe un $z\in G$ d'ordre $n$ tel que $y^n = 1$ pour 
+tout $y\in G$. Comme le nombre de racines de $X^n - 1$ sur un corps est au plus 
+$n$ alors $G$ a au plus $n$ éléments. Or $z$ est d'ordre $n$ donc $G$ contient 
+les éléments $z, z^2,\dots,z^n = 1$ qui sont distincts. Donc $G$ est formé par 
+ces éléments et est cyclique d'ordre $n$. La proposition en découle 
+naturellement.\\
+\end{proof}
+
+\begin{defn}
+On appelle racine \emph{primitive} \nroot{n} un générateur de $\mu_{n,K}$. On 
+note $\mu_{n,K}^{\times}$ l'ensemble de ces racines.
+\end{defn}
+
+Lorsqu'on les considère sur $\CC$, on définit à partir des racines primitives de
+l'unité le polynôme suivant :
+\begin{equation}
+\Phi_n(X) = \prod_{\zeta\in \mu_n^{\times}}{(X - \zeta)}.
+\end{equation}
+
+C'est un polynôme irréductible à coefficients dans $\ZZ$ et de degré
+$\varphi(n)$ où est $\varphi$ est l'indicatrice d'Euler. On l'appelle le
+\emph{polynôme cyclotomique}, il s'agit du polynôme minimal des racines
+\nroot{n} de l'unité. On appelle \emph{corps cyclotomique} le corps
+de décomposition de $\Phi_n$.
+
+\begin{rem}
+Dans le cas $K = \QQ$, le corps de décomposition de $X^n - 1$ est exactement 
+$\QQ(\zeta_n) \simeq \QQ[X]/\phi_n(X)$, où $\zeta_n$ est une racine primitive. 
+C'est en particulier une extension algébrique simple.
+\end{rem}
+
+Le théorème crucial pour la suite du mémoire, il sert notamment à justifier une
+partie de l'algorithme de Rains cyclotomique.
+
+\begin{thm}
+\label{th:polycycldecomp}
+Si $K = \GF{q}$ et $(n,q) = 1$, alors $\phi_n$ se factorise en $\varphi(n)/d$ 
+polynômes unitaires irréductibles dans $\GF{q}[X]$ de même degré égal à $d$. Si
+on note $K^{(n)}$ le corps de décomposition de n'importe lequel de ces facteurs,
+on a :
+\[[K^{(n)}:K] = d\]
+avec $d$ l'ordre multiplicatif de $q$ dans $\zmodn{n}$.
+\end{thm}
+\begin{proof}
+Soit $\zeta$ une racine primitive \nroot{n} de l'unité dans $\GF{q}$, alors 
+$\zeta$ appartient a un sur-corps $\GF{q^k}$ si et seulement si $\zeta^{q^k} = 
+\zeta$; ce qui est équivalent à $q^k \equiv 1 \bmod n$ puisque $\zeta^n = 1$ par
+définition. On pose alors $d$ égal au plus petit $K$ satisfaisant cette 
+condition, dans ce cas $\zeta\in\GF{q^d}$ et ne peut pas être dans un sous-corps
+de celui-ci. Ainsi, le polynôme minimal de $\zeta$ est de degré $d$ et comme on 
+a choisi $\zeta$ arbitrairement, on obtient le résultat voulu.\\
+\end{proof}
+
+\begin{prop}
+\label{prop:cyclgal}
+Soit $n \geq 2$ et soit $\zeta$ une racine primitive \nroot{n} de l'unité sur 
+$\QQ$, alors l'extension $\QQ(\zeta_m)/\QQ$ est galoisienne. En particulier, on 
+a les points suivant :
+
+\begin{enumerate}[(i)]
+\item L'extension $\QQ(\zeta_m)/\QQ$ est normale.
+
+\item On a $[\QQ(\zeta_m):\QQ] = \varphi(n)$.
+
+\item Et $\textup{Gal}(L/K) = \zmodn{n} \simeq \mu_{n,\QQ}$.
+\end{enumerate}
+\end{prop}
+\begin{proof}
+(i) On a vu que $\phi_n$ était le polynôme minimal de toutes les racines 
+\nroot{m} de l'unité et comme ces mêmes racines forment un groupe 
+cyclique, elles sont toutes dans $\QQ(\zeta_m)/\QQ$; d'où l'extension est
+normale.\par
+(ii) $\phi_n$ est irréductible de degré $\varphi(n)$, donc on a bien
+$[\QQ(\zeta):\QQ] = \varphi(n)$.\par
+(iii) Soit $\sigma\in G := \textup{Gal}(L/K$, comme $\sigma(\zeta)$ est un
+conjugué de $\zeta$, nécessairement $\sigma(\zeta) = \zeta^k$ pour un $k$
+premier avec $n$. On a donc l'application $\psi : G \to \zmodninv{n}$ telle que
+$\psi(\sigma) = k$. De plus, pour $\psi(\sigma') = k'$, on a :
+\[\sigma'\circ\sigma(\zeta) = \sigma'(\zeta^k) = \zeta^{kk'}\]
+d'où :
+\[\psi(\sigma\circ\sigma') = \psi(\sigma)\psi(\sigma')\]
+L'application est donc un morphisme de groupes. Elle est aussi injective puisque
+$\psi(\sigma) = 1$ est équivalent à $\psi = \textup{Id}$. On conclut alors en
+appliquant le (ii), ce qui implique que $\psi$ est un isomorphisme, et en 
+rappelant la définition \ref{def:gal}.\\
+\end{proof}
+
+\section{Idéaux d'anneau d'entiers d'un corps de nombre}
+%TODO: Tout ce qui concerne la preuve de Rains avec les idéaux 
+%premiers, les normes d'ideaux, la factorisation unique, Galois, les périodes de
+%Gauss, les périodes elliptiques (Mihailescu et al.) ou plus précisément ce qui 
+%permet d'y arriver.
+Dans cette section, on introduira la notion de corps de nombres, de leur
+anneaux d'entier et des idéaux premiers sur ses anneaux. Le but est d'énoncer 
+l'identité fondamentale dans le cadre des extensions Galoisiennes. Cela sera 
+utile pour la sous-section \ref{sec:gaussper} et plus précisément le 
+théorème. %\ref{th:gaussnormal}.
+\subsection{Définitions}
+%TODO :Définitions (normes, traces, éléments algébriques, etc.)
+% entiers algébrique, anneaux des entiers, discriminant (?)
+
+\subsection{Identité fondamentale}
+%TODO: Idéaux premiers sur les anneaux d'entiers de corps de nombres,
+%décomposition unique, résultat de la théorie de Galois.
+\begin{defn}
+Soit $L/K$ une extension de corps de nombres. Soit maintenant $\mathfrak{p}$ un 
+idéal de $K$ et soit $\mathfrak{p}\EO_L = \prod_{i=1}^{g}{\mathfrak{P}_i^{e_i}}$
+sa décomposition en idéaux premiers dans $L$ avec chaque $\mathfrak{P}_i$
+distincts. On a appelle \emph{indice de ramification} de $\mathfrak{P}_i$ sur 
+$\EO_K$ la valeur 
+\begin{equation}
+e(\mathfrak{P}_i\vert \mathfrak{p}) := e_i
+\end{equation}
+et le \emph{degré d'inertie} ou \emph{degré résiduel} de $\mathfrak{P}_i$ sur
+$\EO_K$ la valeur
+\begin{equation}
+f(\mathfrak{P}_i\vert \mathfrak{p}) := f_i =
+[\EO_K/\mathfrak{P}_i:\EO_K/\mathfrak{p}].
+\end{equation}
+\end{defn}
+
+\begin{thm}[L'identité fondamentale]
+\label{th:fundid}
+Soit $L/K$ une extension de corps de nombres de degré $n$, en reprenant les 
+notations ci-dessus, on a :
+\begin{equation}
+\sum_{i=0}^g{e_if_i} = n = [L:K]
+\end{equation}
+\end{thm}
+
+\begin{thm}
+\label{th:fundidgal}
+Supposons que $L/K$ soit une extension de corps galoisienne de degré $n$. Soit
+$\mathfrak{p}$ un idéal de $K$ et soit $\mathfrak{p}\EO_L = 
+\prod_{i=1}^{g}{\mathfrak{P}_i^{e_i}}$ sa décomposition en idéaux premiers dans
+$\EO_L$. Alors le groupe $\textup{Gal}(L/K)$ agit transitivement sur
+$\mathfrak{P}_1,\dots,\mathfrak{P}_g$, en particulier $e_1 = \dots = e_g$ et
+$f_1 = \dots = f_g$. Si de plus on pose $e = e_1$ et $f = f_1$, alors on a :
+\begin{equation}
+\mathfrak{p}\EO_L = \mathfrak{P}_1^e\dots\mathfrak{P}_g^e
+\end{equation}
+et l'identité fondamentale devient :
+\begin{equation}
+n = efg
+\end{equation}
+\end{thm}
+
+\begin{thm}
+\label{th:entiercycl}
+Soit $m$ un entier positif et soit $p$ un nombre premier, l'anneau $R_m := 
+\ZZ[X]/\Phi_m(X)$ est l'anneau des entiers de $\QQ[X]/\Phi_m(X)$. De plus, 
+l'idéal premier $pR_m$ se ramifie dans $R_m$ si et seulement si $p$ ne divise 
+pas $m$.
+\end{thm}
+\section{Courbes elliptiques}
+%TODO: Définitions (j-invariant, nombres de points, tordues, module de
+%Tate (?) etc.), résultats généraux, sur les corps finis
+On introduit maintenant les courbes elliptiques et plus en particulier les
+courbes elliptiques sur les corps finis. Parmi les notions importantes qui nous
+serons utiles, on parlera des points de torsion, des périodes elliptiques et des
+tordues d'une courbe elliptique. Dûe à la nature un peu extérieur des courbes
+elliptiques par rapport au isomorphisme de corps finis, on ne s'attardera pas 
+la plupart du temps, à définir les notions de géométrie algébriques. On invitera
+le lecteur à consulter les trois premiers chapitre du livre de 
+Silvermann\cite{Sil} pour plus de précision.
+
+\subsection{Définitions}
+%TODO: Rapide énoncé des changements de variable, comment on arrive à la forme
+%"simple"; liste des différents paramètres/invariants qui nous intéressent.
+%j-invariant, groupe d'automorphisme ?> c'est peut-être là que je peux utiliser
+%le module de Tate...
+Soit $K$ un corps et soit $f$ un polynôme homogène dans $K[X_0,\dots,X_n]$, on
+appelle \emph{courbe projective} tout ensemble de la forme :
+\begin{equation}
+C := \lbrace{[x,y,z]\in \PP{2}(K) : f(x,y,z) = 0}\rbrace
+\end{equation}
+\begin{defn}
+Une \emph{courbe elliptique} est un couple $(E,\EO)$ où $E$ est une courbe 
+projective lisse de genre $1$ et $\EO$ est un point de $E$ qu'on appelle 
+l'origine.
+\end{defn}
+Par abus de langage, on désignera une courbe elliptique par sa courbe projective
+$E$. Il se trouve qu'il existe des fonctions $x$ et $y$ dans l'anneau de 
+fonctions $K(E)$ de $E$ qui permettent d'identifier $E$ à une courbe de 
+Weierstrass en envoyant $\EO$ sur $[0,1,0]$. Pour les corps $K$ de 
+caractéristique différente de $2$ et $3$, cela revient à définir $E$, après 
+plusieurs changements de variables et en posant $z = 1$, de la façon suivante :
+\begin{equation}
+\label{eq:weiersimpl}
+E : y^2 = x^3 + ax + b\quad\textup{avec}\quad \Delta := -16(4a^3 + 27b^2)\neq 0,
+\end{equation}
+c'est cette définition qu'on utilisera pour désigner une courbe elliptique. On
+appelle $\Delta$ le \emph{discriminant} de $E$ et la condition $\Delta\neq0$ est
+équivalente au fait que $E$ soit lisse. Un invariant important des courbes 
+elliptiques s'appelle le \emph{$j$-invariant} de $E$ :
+\begin{equation}
+j(E) = -1728\dfrac{(4a)^3}{\Delta}.
+\end{equation}
+On écrira simplement $j$ quand il n'y aura pas de confusion possible. Les deux
+résultats suivant sont particulièrement intéressants :
+\begin{prop}
+\label{prop:j-invariant}
+\begin{enumerate}[(i)]
+    \item Deux courbes elliptiques sont isomorphes si et seulement si elles ont
+    le même $j$-invariant.
+    \item Soit $j_0\in\overline{K}$ alors il existe une courbe elliptique
+    $E/K(j_0)$ telle que $j(E) = j_0$.
+\end{enumerate}
+\end{prop}
+On note $E/K$ pour signifier que les coefficients $a, b$ sont dans $K$, c'est
+équivalent à dire que $E$ est définie sur $K$. On parle de points rationnels 
+d'un corps $L\subset\overline{K}$ pour les points
+$P := [x,y,1]$ dans $E$ tel que $x, y$ sont dans $L$ et on note leur ensemble
+$E(L)$.\par
+\vspace{0.3cm}
+Si on munit $E$ de la loi de composition de \emph{corde tangente}, désignée par
+$\oplus$, alors $E$ possède une structure de groupe abélien avec pour élément 
+neutre $\EO$. On dit qu'un point $P$ est un \emph{point de torsion} s'il existe 
+un $m\in\ZZ$ tel que 
+\begin{equation}
+[m]P = \underbrace{P\oplus\dots\oplus P}_{\textup{m fois}} = \EO.
+\end{equation}
+On note alors l'ensemble des points de \emph{$m$-torsion} :
+\begin{equation}
+E[m] = \lbrace{P\in E(\overline{K}) : [m]P = \EO}\rbrace.
+\end{equation}
+On a les résultats suivants :
+\vspace{0.3cm}
+\begin{itemize}
+\item Si $\textup{car}(K) = 0$ ou $\textup{car}(K) = p > 0$ et $p\not|\,m$ 
+alors :
+\begin{equation}
+E[m] = \zmodn{m}\times\zmodn{m}
+\end{equation}
+\item Si $\textup{car}(K) = p > 0$ alors on a l'une des deux situations :
+    \begin{align} 
+    E[p^e] &= \lbrace{\EO}\rbrace, \quad \forall e\in\NN^{*}\\
+    E[p^e] &= \zmodn{p^e}\quad \forall e\in\NN^{*}
+    \end{align}
+\end{itemize}
+\vspace{0.3cm}
+
+Soient $E_1$ et $E_2$ deux courbes elliptiques, une \emph{isogénie} est un
+morphisme de $\varphi : E_1 \rightarrow E_2$ tel que $\varphi(\EO) = \EO$. C'est
+en fait un homomorphisme de groupe et on note $\textup{Hom}(E_1, E_2)$
+l'ensemble des isogénies de $E_1$ vers $E_2$. L'ensemble $\textup{End}(E)$ des
+endormorphisme de $E$ est un anneau de caractéristique $0$, intègre et de rang
+au plus $4$ en tant que $\ZZ$-module. L'objet qui nous intéressera plus
+particulièrement est l'ensemble des endormorphisme inversible, qu'on note
+$\textup{Aut}(E)$. Le théorème suivant détaille sa structure.
+\begin{thm}
+\label{th:autell}
+Soit $E/K$ une courbe elliptique, alors $\textup{Aut}(E)$ est un groupe fini
+d'ordre divisant $24$. Plus précisément, on a le tableau suivant :
+
+\begin{equation}
+\begin{tabular}{|c|c|c|}
+    \hline
+    \#Aut$(E)$ & $j(E)$ & car$(K)$\\
+    \hline\hline
+    $2$ & $j(E)\neq0,1728$ & $-$\\
+    \hline
+    $4$ & $j(E) = 1728$ & car$(K)\neq 2, 3$\\
+    \hline
+    $6$ & $j(E) = 0$ & car$(K)\neq 2, 3$\\
+    \hline
+    $12$ & $j(E) = 0 = 1728$ & car$(K) = 3$\\
+    \hline
+    $24$ & $j(E) = 0 = 1728$ & car$(K) = 2$\\
+    \hline
+\end{tabular}
+\end{equation}
+\end{thm}
+Les automorphismes pour les courbes elliptiques de la forme
+(\ref{eq:weiersimpl}) sont tous définis par : 
+\begin{equation}
+x = u^2x'\etmath y = u^3y',
+\end{equation}
+pour $u\in\overline{K}^{\times}$; ce sont les seuls changements de variables qui
+conservent cette forme.
+\subsection{Corps finis}
+%TODO: Nombres de points, théorème de Hasse, Frobenius, trace, points de 
+%torsions
+On peut aussi considérer les courbes elliptiques sur les corps finis $\GF{q}$.
+Dans ce cas, le nombre de point d'une courbe elliptique $E/\GF{q}$ n'a qu'un
+nombre fini de point. Plus précisément, on a le théorème suivant :
+\begin{thm}[Hasse]
+\label{th:hasse}
+Soit $E/\GF{q}$ une courbe elliptique défini sur $\GF{q}$ alors on a l'inégalité
+suivante :
+\begin{equation}
+\vert{q + 1 - \#E(\GF{q})}\vert\leq 2\sqrt{q}.
+\end{equation}
+\end{thm}
+Le morphisme de Frobenius $\phi_q$ agit sur les coordonnées des points de
+$E(\overline{\mathbb{F}}_q)$ :
+\begin{equation}
+\phi_q(x,y) = (x^q, y^q)\etmath \phi_q(\EO) = (\EO),
+\end{equation}
+il s'agit d'un endomorphisme de $E$. En particulier, on a complètement 
+caractérisé les points rationnels d'une courbe sur les corps finis :
+\begin{equation}
+P\in E(\GF{q}) \Leftrightarrow \phi_q(P) = P.
+\end{equation}
+\begin{prop}
+Soit $E/\GF{q}$ une courbe elliptique, si on pose $t = q + 1 - \#E(\GF{q})$
+alors on a :
+\begin{equation}
+\label{eq:frpolmin}
+\phi_q^2 - t\phi_q + q = 0,
+\end{equation}
+en tant qu'endomorphisme de $E$ et $t$ est l'unique entier tel que l'égalité
+soit vérifiée. De plus, pour $m$ premier avec $q$, $t$ est aussi l'unique entier
+tel que :
+\begin{equation}
+t \equiv \Tr{\phi_q} \bmod m.
+\end{equation}
+\end{prop}
+En particulier, le polynôme (\ref{eq:frpolmin}) est le polynôme minimal du
+Frobenius de $E$. Par abus de langage, on parlera parfois de $t$ comme de la 
+trace de $E$.
+
+\subsection{Courbes supersingulières}
+%TODO: Définitions Twists quadratiques, courbes $y^2 = x^3 + x$ et 
+%$y^2 = x^3 + 1$ et leurs tordues, pour préparer le terrain pour la partie 
+%elliptique de Rains
+
+\section{Complexité et notations}
+Cette courte section nous permettra de définir quelques notions de complexité
+et surtout d'introduire les notations qu'on utilisera pour les futures analyses
+de complexités des algorithmes étudiés.
+On exprimera le nombre d'opérations en nombre d'opérations sur $\GF{q}$. On note
+$\M{n}$ le nombre d'opérations qu'il faut pour multiplier deux polynômes
+de degré au plus $n$ sur $\GF{q}$. Elle a les propriétés suivantes :
+\begin{equation}
+\label{eq:M1}
+\M{n}/n\geq\M{m}/M\textup{ si }n\geq m,\quad \M{mn} \leq m^2\M{n},
+\end{equation}
+pour tout $n, m\in\NN$. En particulier, elle est \emph{superlinéaire} :
+\begin{equation}
+\M{mn}\geq m.\M{n},\quad \M{n + m}\geq\M{n} + \M{m}, \quad \M{n}\geq n.
+\end{equation}
+La seconde propriété de (\ref{eq:M1}) implique que M est au plus quadratique et 
+donc pour toute constante positive $c$ on a $\M{cn}\in O(\M{n})$.\par
+Le nombre d'opérations nécessaires pour effectuer une mulitplication dans
+$\GF{q^n}$ sera noté $\E{n}\in O(\M{n})$, elle est aussi superlinéaire. De même,
+on note $\I{n}$ le nombre d'opérations pour inverser un élément dans $\GF{q^n}$,
+c'est habituellement supposé être en $O(\M{n}\,\textup{log\,}n)$.
+On utilisera aussi la notation $\tO$. Grossièrement, on a que $f(n)\in\tO{g(n)}$
+est équivalent à $f(n)\in O(g(n)\,\textup{log}^k\,g(n)$.
+\part{Isomorphisme de corps finis}
+\label{deux}
+D'après le théorème \ref{th:isomGF}, deux corps finis de même cardinal sont
+isomorphes. Le théorème \ref{th:elemprim} assure que toute extension de corps 
+fini s'obtient par adjonction d'une racine d'un polynôme irréductible. Il y
+a donc autant de façons de définir une extension que de polynômes 
+irréductibles de bon degré. Le problème est comment passer de l'une à 
+l'autre.\par
+%TODO Retravailler peut-être cette partie pour la rendre plus compréhensible
+Soient $f$ et $g$ deux polynômes irréductibles de degré $n$ sur $\GF{q}$, on a :
+\begin{equation}
+k_1 := \GF{q}[X]/(f) \etmath k_2 := \GF{q}[Y]/(g). 
+\end{equation}
+On veut trouver un isomorphisme qui relie ces deux corps. Une première approche 
+naïve est de chercher une racine de $f$ dans $k_2$ et d'envoyer $x = \bar{X}$ 
+sur cette même racine. Cependant, cela implique de factoriser $f$, d'après 
+\cite[th. 14.14]{GaGe}, factoriser complètement un polynôme de degré $n$ sur 
+$\GF{q}$ prend $O(n\,\M{n}\,\textup{log}(qn))$ ou $\tO{n^2\,\textup{log\,}q}$
+opérations sur $\GF{q}$. Et d'après \cite[cor. 14.16]{GaGe}, trouver une racine 
+se fait en $O(M(n)\,\textup{log\;}n\textup{log}(qn))$ ou 
+$\tO{n\,\textup{log\,}q}$ opérations sur $\GF{q}$. Sachant qu'on cherche une 
+racine sur une extension de degré $n$, la complexité devient 
+$O(\E{n}\,\textup{log\;}n\,\textup{log}(nq^n))$ ou $\tO{n^2\,\textup{log\,}q}$.
+% = O~(n^3) ?
+On note aussi l'existence d'une méthode établie par Allombert\cite{All} qui 
+consiste essentiellement à utiliser l'algèbre linéaire pour déterminer un
+isomorphisme, donc une complexité en $O(n^{\omega})$ avec $2<\omega<3$.\par
+Un premier pas vers une méthode plus performante est la méthode de Pinch, 
+nous allons exposé une de ses variantes dans la section suivante.
+
+\section{Algorithme de Pinch}
+La méthode de Pinch consiste à choisir un groupe $\Gamma$ défini par des 
+relations algébriques sur $\GF{q}$ et un élément $\gamma\in\Gamma$ tel que:
+\vspace{0.3cm}
+\begin{itemize}
+\item il soit d'ordre $m$ petit et défini sur $\GF{q^n}$,
+\item il engendre exactement $\GF{q^n}$; et non un de ses sous-corps.
+\end{itemize}
+\vspace{0.3cm}
+On exprime alors $\gamma$ en tant que polynôme en $x := \overline{X}$ et en 
+polynôme en $y := \overline{Y}$ et on utilise ces deux expressions pour exprimer
+$x$ en fonction de $y$ afin d'obtenir l'isomorphisme voulu.\par
+
+\subsection{Méthode cyclotomique}
+
+Pour la méthode cyclotomique on utilisera $\Gamma = k_1^{\times}$ et $\gamma$ 
+sera une racine primitive \nroot{m} de l'unité.
+Un corps fini contient toutes les racines \nroot{m} de l'unité si et seulement 
+si l'ordre de son groupe multiplicatif est divisible par $m$. En particulier, il
+contient alors des racines \nroot{m} primitives de l'unité. Soit $\zeta_m$ une
+racine \nroot{m} primitive de l'unité dans $k_1$, alors l'image de $\zeta_m$ par
+n'importe quel morphisme $\phi : k_1 \to k_2$ est une racine \nroot{m} primitive
+de l'unité.\par
+On choisit $\zeta'_m$ une racine primitive \nroot{m} de l'unité dans $k_2$
+alors $\zeta_m$ s'enverra sur une puissance $\zeta'_m$ puisque le groupe 
+mulitplicatif d'un corps est cyclique. On définit pour $0 < s < m$ les
+applications $\phi^s : k_1 \to k_2$ , telles que :
+\begin{equation}
+\phi^s(\zeta_m) = (\zeta'_m)^s.
+\end{equation}
+Le but est de déterminer quel $\phi^s$ définit un isomorphisme.\par
+Pour cela, on utilise de l'algèbre linéaire. Si on a deux bases 
+$(x_i)_{i\in I}$, $(y_i)_{i\in I}$ de $k_1$, $k_2$ respectivement, telles 
+qu'il existe un isomorphisme $\phi$ qui envoie $x_i$ sur $y_i$, alors il nous
+suffit de calculer la matrice de passage de la base $(x_i)_{i\in I}$ à
+$(y_i)_{i\in I}$ pour pouvoir déterminer ensuite $\phi(x)$. En posant $A$ la
+matrice avec pour lignes les $x_i$, $B$ la matrice avec pour ligne les $y_i$ et
+$C$ la matrice de passage, il faut alors résoudre le système 
+\begin{equation}
+AC = B.
+\end{equation}
+\par
+Il faut maintenant déterminer les bases $(x_i)_{i\in I}$ et $(y_i)_{i\in I}$. 
+Par exemple, si on trouve deux racines $\nu_1$ et $\nu_2$ de $f$ et $g$ 
+respectivement, telles que $\phi(\nu_1) = \nu_2$, on pourra prendre comme bases 
+$x_i = \nu_1^i$ et $y_i = \nu_2^i$.\par
+Mais comme les racines $\zeta_m$ et $\zeta'_m$ sont choisies de telle sorte 
+qu'elles n'engendrent aucuns des sous-corps de $\GF{q^n}$ cela veut 
+dire, en particulier, qu'elles sont racines de $f$ et $g$. On pose donc 
+$x_i = \zeta_m^i$ et $y_i = (\zeta'_m)^{si}$ selon l'application $\phi^s$ qu'on 
+souhaite tester. On déduit l'image de $x$ de la matrice $C$, dont les 
+coefficients dans la base monomiale engendrée par $y$ sont sur la deuxième 
+ligne. Alors, si $\phi^s(x)$ est racine de $f$ sur $k_2$, l'application $\phi^s$
+est effectivement un isomorphisme. La méthode peut se résumer ainsi :
+\vspace{0.3cm}
+\begin{enumerate}[1.]
+\item Trouver un entier $m$ "petit" divisant $q^n - 1$ tel que 
+$q$ soit premier avec $m$. 
+
+\item Déterminer une racine \nroot{m} primitive $\zeta_m$ dans $k_1$ et
+$\zeta'_m$ dans $k_2$.
+
+\item  Déterminer pour quel $s\in \lbrace{1,\dots,m-1}\rbrace$, l'application
+$\phi^s$ telle que $\phi^s(\zeta_m) = (\zeta'_m)^s$, est un isomorphisme.
+\end{enumerate}
+\vspace{0.3cm}
+La condition $q$ premier avec $m$ est là pour assurer qu'une racine primitive
+\nroot{m} de l'unité engendre exactement $\GF{q^n}$, théorème
+\ref{th:polycycldecomp}. Pour le deuxième point, il suffit de prendre au hasard 
+un $z\in k_1^{\times}$ et de l'élever à la puissance $(q^n - 1)/m$ jusqu'à 
+tomber sur un élément d'ordre $m$, la probabalité que cela arrive est de 
+$\varphi(m)/m$; il y a au plus $m$ éléments solutions de $X^m - 1$ dans 
+$\GF{q^n}$ et seulement $\varphi(m)$ éléments d'ordre exactement $m$. Si $m$ est
+premier et plus grand que $5$, ce qui sera bien souvent le cas, alors la chance 
+de tomber sur une racine primitive de l'unité est de plus de $80\%$ et elle 
+atteint $95\%$ dès que $m \geq 23$; ce n'est donc pas ce qui demandera le plus
+de ressources. 
+\begin{ex}
+Illustrons la méthode par un exemple directement tiré de l'article de 
+Pinch\cite{Pin}. On considère les deux polynômes irréductibles sur $\GF{11}$, 
+$f = X^{23} + 8X^2 + X + 9$ et $g = Y^{23} + 3Y^2 + 4Y + 9$. On pose $m = 829$, 
+on vérifiera qu'il divise bien $11^{23} - 1$ et qu'il est premier avec $11$; 
+en fait, il est lui-même premier. On définit $k_1$ et $k_2$ comme les corps de 
+rupture de $f$ et $g$ respectivement.\par
+Dans cet exemple, il se trouve que $x^{\tfrac{11^{23} - 1}{829}}$ et 
+$y^{\tfrac{11^{23} - 1}{829}}$ sont déjà des racines primitives 829-ième de 
+l'unité, voici leurs expressions dans les bases monomiales engendrées par $x$ et
+$y$ :
+\begin{align*}
+\alpha(x) =&\hspace{0.15cm} 7 + 8x + 4x^2 + 4x^4 + 4x^5 + 10x^6 + 4x^7 + 3x^8 + 
+5x^9\\
+& + 2x^{10} + 6x^{11} + 4x^{12} + 8x^{13} + 6x^{14} + 4x^{15} + 4x^{16}\\
+& + 5x^{17}  + 7x^{18} + 4x^{19} + x^{20} + 8x^{22},
+\end{align*}
+\begin{align*}
+\beta(y) =&\hspace{0.15cm}1 + y + 4y^2 + 4y^3 + 9y^4 + y^5 + 6y^6 + 3y^7 + 3y^8 
++ 3y^9\\
+& + 6y^{10} + 5y^{11} + 6y^{12} + 8y^{13} + y^{14} + 9y^{15} + 4y^{16}\\
+& + 3y^{17} + 5y^{18} + y^{19} + 10y^{20} + 10y^{21} + 6y^{22}
+\end{align*}
+Le but est de calculer les matrices de passage entre les bases
+$(\alpha(x)^i)_{i\in I}$ et $(\beta(y)^{si})_{i\in I}$, pour $s < 829$.
+Dans ce cas précis, il se trouve que la puissance $s = 14$ convient. En 
+calculant la matrice de passage, on trouve alors les coefficients de l'image de 
+$x$ dans $k_2$ sur la deuxième ligne de ladite matrice et l'image de $x$ est :
+\begin{align*}
+\phi(x) =&\hspace{0.15cm} 8 + 9y + y^2 + 2y^3 + 7y^4 + 4y^5 + 6y^6 + 10y^7 + 
+9y^8\\
+& + 10y^9 + 2y^{10} + 2y^{12} + 10y^{13} + 2y^{14} + 7y^{15} + y^{16}\\
+& + 3y^{17} + 2y^{18} + 2y^{20} + y^{21} + y^{22}
+\end{align*}
+On peut alors vérifier que $f(\phi(x)) = 0$.
+\end{ex}
+
+\subsection{Limitations}
+Le premier problème de cette méthode est qu'il n'y a pas toujours d'élément
+d'ordre "petit" dans $\GF{q^n}^{\times}$. Par exemple, si on prend $p = 2$ et un
+premier de Mersenne égal à $2^n - 1$, on ne trouvera pas d'élement d'ordre plus
+petit que $2^n - 1$. Il y a donc un risque qu'on soit obligé de chercher des
+éléments d'ordre proche de $q^n - 1$, ce qui peut poser problème. Dans l'exemple
+ci-dessus, on avait :
+\[q^n - 1 = 11^{23} - 1 = 895430243255237372246530\]
+On obtiendrait alors une complexité exponentielle. Le scénario peut être encore 
+pire avec des valeurs de $q$ et de $n$ beaucoup plus grandes.\par
+Un autre problème est la recherche au hasard des racines primitives de l'unité. 
+Le côté aléatoire du choix fait qu'il n'est jamais certain de pouvoir tomber sur
+deux racines qui sont dans le même facteur irréductible du polynôme
+cyclotomique. Il peut arriver qu'on soit obligé de tester $m-2$ valeurs de $s$
+pour pouvoir enfin tomber sur un isomorphisme.\par
+Il faudrait alors trouver un moyen de pouvoir travailler avec un $m$
+relativement petit même si le cardinal du groupe des inversibles n'a pas de
+facteur petit, et en même temps, pouvoir choisir des éléments uniques sous
+l'action du groupe de Galois afin d'être sûr qu'un isomorphisme existe alors
+entre les deux éléments. C'est ce que fait, entre autre, l'algorithme de Rains 
+cyclotomique qu'on va étudier dans la section suivante.
+
+
+\section{Algorithme de Rains : méthode cyclotomique}
+La méthode de Rains cyclotomique est une extension de la méthode de Pinch
+cyclotomique. Les principaux changements sont l'utilisation de petites
+extensions des corps considérés afin de pouvoir trouver un $m$ plus petit et
+l'usage des périodes de Gauss afin de déterminer des éléments uniques sous
+l'action du groupe de Galois reliés par un isomorphisme.
+
+\subsection{Principe}
+
+L'algorithme se résume de la façon suivante. On commence par chercher un $m$ qui
+satisfait certaines conditions permettant de trouver des racines \nroot{m}
+primitive de l'unité qui engendrent les corps qui nous intéressent.\par
+Si on ne trouve pas de $m$ assez petit, il se peut qu'on ait besoin de
+travailler dans de petites extensions de $k_1$ et $k_2$, voir
+\ref{sec:extension}. Il faut alors construire des élements uniques 
+reliés par un isomorphisme entre $k_1$ et $k_2$ ou leurs extensions, ce qui est
+effectué \textit{via} les \emph{périodes de Gauss} dans la section 
+\ref{sec:gaussper}.\par
+Si l'utilisation d'une extension a été nécessaire, alors on calcule la trace des
+deux éléments obtenus afin d'avoir des générateurs de l'extension qui nous
+intéresse. Une fois ceux-ci obtenus, il ne reste plus qu'à déterminer
+l'isomorphisme. Ici le choix fait fera usage d'éléments dit normaux, ce qui est
+traité à la section \ref{sec:elemnorm}.
+
+\subsection{Utilisation d'une extension}
+\label{sec:extension}
+La première limitation de la méthode de Pinch est la taille du facteur
+$m$, Rains propose alors dans son article \cite{Rai} de passer par une petite
+extension de $\GF{q^n}$ afin de trouver un $m$ plus petit. En effet, imaginons 
+qu'on ait deux extensions de petit degré $k'_1$ et $k'_2$ de $k_1$ et $k_2$ 
+respectivement. Si on applique la méthode de Pinch à $k'_1$ et $k'_2$ et 
+qu'on trouve un isomorphisme, il suffira alors de le restreindre à $k_1$.\par
+L'idée est la suivante, on a les corps $k'_1$ et $k'_2$, extensions de degré $o$
+petit de $k_1$ et $k_2$ respectivement, tels que $m$ petit divise $q^{n.o} -
+1$ et soit premier avec $q$. On peut alors trouver deux racines primitive
+\nroot{m} de l'unité $\zeta_{m}$ et $\zeta'_m$ qui engendrent $k'_1$ et $k'_2$
+respectivement et tels que $\phi(\zeta_m) = \zeta'_m$. Alors on a : 
+\begin{equation}
+\phi(\textup{Tr\;}_{k'_1/k_1}(\zeta_{m})) =
+\textup{Tr\;}_{k'_2/k_2}(\zeta'_{m}).
+\end{equation}
+La surjectivité de la trace permet d'assurer en particulier que ces
+éléments engendrent toujours $k_1$ et $k_2$. On résume la situation par le 
+schéma suivant :
+
+\begin{equation}
+\begin{tikzpicture}
+\matrix(m)[matrix of math nodes,
+row sep=0.5em, column sep=1.5em,
+text height=2ex, text depth=1ex]
+{\GF{q}[\zeta_m]& & \\
+&\GF{q}[\Tr{\zeta_m}]&\\
+& & \GF{p}[\Tr{\zeta_m}]\\
+\GF{q^o}& & \\
+&\GF{q}& \\
+& & \GF{p}\\};
+\path[-,font=\scriptsize,>=angle 90]
+(m-1-1) edge node[below] {$o$} (m-2-2)
+(m-4-1) edge node[below] {$o$} (m-5-2)
+(m-2-2) edge node[below] {$r$} (m-3-3)
+(m-5-2) edge node[below] {$r$} (m-6-3)
+(m-1-1) edge node[left] {$n$} (m-4-1)
+(m-2-2) edge node[left] {$n$} (m-5-2)
+(m-3-3) edge node[left] {$n$} (m-6-3);
+\end{tikzpicture}
+\end{equation}
+
+Le problème de devoir tester plusieurs candidats avant de tomber sur un 
+isomorphisme est malheureusement toujours présent. C'est à ce moment qu'on 
+utiliser les périodes de Gauss, introduites à la sous-section 
+\ref{sec:gaussper}.
+
+\subsection{Éléments normaux}
+\label{sec:elemnorm}
+Il se trouve qu'on peut améliorer le temps nécessaire pour déterminer
+l'isomorphisme en exigant que les générateurs satisfassent une condition plus 
+forte qu'être unique; cette condition est que les générateurs soient des 
+éléments normaux. Imaginons qu'on ait calculé deux éléments normaux $v\in k_1$ 
+et $w\in k_2$ tels que $\phi(v) = w$. Pour finir de résoudre le problème, il 
+faut déterminer les images $\phi(x^i)$ pour $0\leq i < n$. Or comme $\phi(x^i) =
+\phi(x)^i$, il suffit même de déterminer uniquement l'image de $\phi(x)$.\par
+Pour cela, il faut pouvoir être capable à partir d'un élément normal $v$ et d'un
+autre élément $z$, trouver les coefficients de $z$ dans la base de $v$. Puisque,
+si on peut exprimer $x$ sous la forme :
+\[x = \sum_{i\in I}{c_iv^{q^i}}\]
+alors on aura :
+\begin{align*}
+\phi(x) &= \sum_{i\in I}{c_i\phi(v)^{q^i}}\\
+&= \sum_{i\in I}{c_iw^{q^i}}
+\end{align*}
+puisque $\phi$ est un morphisme. Devoir passer de la base normale à la base 
+monomial en $x$ peut se faire, non pas en inversant une matrice, mais en 
+inversant l'élément d'un anneau quotient. C'est ce qui va être exposé dans cette
+sous-section. Dans le cas des corps finis, on a montré que le Frobenius engendre
+le groupe de Galois de $\GF{p^n}$, donc pour un $x\in\GF{p^n}$ ses conjugués 
+sont $x^p, x^{p^2},\dots,x^{p^{n-1}}$. 
+\begin{thm}
+\label{th:nbelemnorm}
+Le nombre d'élements normaux dans $\GF{p^n}$ est égal au nombre d'unités de
+l'anneau $\GF{p}[X]/(X^n - 1)$.
+\end{thm}
+\begin{proof}
+%TODO: LiNi2 3.73.. Va y'en avoir des résultats à montrer pour ça.
+\end{proof}
+\begin{cor}
+\label{cor:tracenorm}
+Soit $L/K$ une extension de corps finis de caractéristique $p$, premier. Si
+$x\in L$ est un élément normal de $L$ sur $K$, alors $\textup{Tr}_{L/K}(x)$ est 
+un élément normal de $K$ sur $\GF{p}$. Si de plus$[L:K]$ est une puissance de 
+$p$ alors la réciproque est aussi vraie.
+\end{cor}
+\begin{proof}
+Puisque la trace est surjective sur les corps finis,alors pour tout $y\in K$ il 
+existe un $y'\in L$ tel que $y = \textup{Tr}_{L/K}(y')$. De là, il suffit alors 
+de prendre l'expression de $y'$ dans la base normale engendrée par $x$ et d'y 
+appliquer la trace; le fait qu'elle soit linéaire montre que 
+$\textup{Tr}_{L/K}(x)$ est aussi une base normale de $K$.\par
+Montrons l'autre sens. Supposons que $K = \GF{q}$ et $L = \GF{q^{p^k}}$ où $q
+= p^n$. D'après le théorème \ref{th:nbelemnorm}, le nombre d'éléments normaux de
+$L$ est égal au nombre d'unité dans $\GF{p}[X]/(X^{p^kn} - 1)$. Comme
+$(X^{p^kn} - 1 ) = (X^n - 1)^{p^k}$, alors un élément de $\GF{p}[X]/(X^{p^kn} - 
+1)$ est une unité si et seulement si sa réduction modulo $(X^n - 1)$ est une
+unité dans $\GF{p}[X]/(X^n - 1)$.
+Comme dans ce cas, $(X^n - 1)^{p^k} \subset (X^n - 1)$, on a $\GF{p}[X]/
+(X^n - 1) \subset \GF{p}[X]/(X^{p^kn} - 1)$, une unité du premier anneau sera 
+donc une unité du second; et comme la réduction de $1$ modulo quoique ce soit 
+est toujours $1$, une unité de $\GF{p}[X]/(X^n - 1)$ est nécessairement une 
+unité de $\GF{p}[X]/(X^{p^kn} - 1)$.\par
+On en déduit que $L$ a $p^k$ fois plus d'éléments normaux que $K$. De façon plus
+générale, un élément de $K$ a exactement $p^k$ antécédents pour la trace, le
+nombre de conjugués, puisque l'extension est galoisienne; donc $L$ a au plus
+$p^k$ fois élément normaux que $L$. La borne est atteinte dans notre cas, ce qui
+conclut la démonstration.\\
+\end{proof}
+
+On développe maintenant plus en détail la partie évaluation de
+l'isomorphisme. Notamment en illustrant l'isomorphisme entre les matrices
+circulantes de taille $n$ sur $\GF{q}$ et l'anneau $\GF{q}[\omega]/(\omega^n -
+1)$.\par
+Le contexte est le suivant, imaginons qu'on soit parvenu à déterminer deux
+éléments normaux $v$ et $w$ tels qu'ils soient reliés par un isomorphisme $\phi
+: k_1\to k_2$. Notre but est de calculer cet isomorphisme, c'est-à-dire de
+déterminer l'image de $x$ par celui-ci. Comme dit plus haut, on veut trouver les
+coefficients de $x$ dans la base normale engendrée par $v$, en déduire son
+image dans la base normale engendrée par $w$ et pour finir son image dans la 
+base monomial engendrée par $y$. La situation se résume de la façon suivante :
+\begin{equation}
+\begin{tikzpicture}
+\matrix(m)[matrix of math nodes,
+row sep=3em, column sep=5em,
+text height=2ex, text depth=2ex]
+{\bigoplus\limits_{i\in I}{\GF{q}\cdot x^i} & \bigoplus\limits_{i\in
+I}{\GF{q}\cdot y^i}\\
+\bigoplus\limits_{i\in I}{\GF{q}\cdot v^{p^i}} & \bigoplus\limits_{i\in
+I}{\GF{q}\cdot w^{p^i}}\\};
+\path[->,font=\scriptsize,>=angle 90]
+(m-1-1) edge node[auto] {$\phi$} (m-1-2)
+(m-2-1) edge node[auto] {$\phi$} (m-2-2)
+(m-1-1) edge node[left] {$\pi$} (m-2-1)
+(m-2-2) edge node[right] {$\pi^{\prime}$} (m-1-2);
+\end{tikzpicture}
+\end{equation}
+
+L'application $\GF{q}$-linéaire $\pi^{\prime}$ est plus ou moins gratuite, il 
+suffit d'exprimer $w$ en fonction des $y^i$ ce qui prend $O(...)$ opérations, 
+mais en général les éléments sont déjà exprimés en fonction de la base 
+monomiale. La seule flêche qui pose un problème est celle correspondant à $\pi$ 
+qui permet d'exprimer $x$ en fonction des $v^{p^i}$. C'est pour cette 
+application qu'on va devoir effectuer tout le travail. Soit $z\in\GF{q^n}$ alors
+il existe des $c_i\in\GF{q}$ tels que :
+\begin{equation}
+z = \sum_{0 \leq i < n}{c_iv^{q^i}}.
+\end{equation}
+En appliquant $\phi_{q^{n-j}}$ puis une forme $\GF{q}$-linéaire $\lambda
+: \GF{q^n} \to \GF{q}$, on obtient :
+\begin{equation}
+\lambda\left(z^{q^{n-j}}\right) = \sum_{0\leq i < n}
+{c_i\lambda\left(v^{q^{i+n-j}}\right)}.
+\end{equation}
+Soit maintenant la matrice $B = (b_{ij})_{(i,j)\in I^2}$ définie par :
+\begin{equation}
+b_{ij} = \lambda\left(v^{q^{i+n-j}}\right).
+\end{equation}
+
+Si la matrice est inversible alors on a terminé, puisque si on note $d_{ij}$ les
+coefficients de $B^{-1}$, on a bien :
+\begin{equation}
+c_i = \sum_{0\leq j < n}{d_{ij}\lambda\left(z^{q^{n-j}}\right)},
+\end{equation}
+pour $0\leq i < n$. Reste à savoir si la matrice $B$ sera effectivement 
+inversible.
+D'après un résultat classique d'algèbre linéaire, toute forme linéaire peut
+s'exprimer sous la forme :
+\begin{equation}
+x \mapsto \Tr{\alpha x},
+\end{equation}
+pour un certain $\alpha\in\GF{q}$. On peut donc réécrire les coefficients de $B$
+sous la forme suivante :
+\begin{equation}
+b_{ij} = \Tr{\alpha v^{q^{i+n-j}}} = \Tr{\alpha^{q^j}v^{q^i}}.
+\end{equation}
+On va voir que dans notre cas, il nous suffira de choisir $\alpha = v$.
+
+\begin{lem}
+\label{lem:mattrinv}
+Soit $\alpha,\beta\in\GF{q^n}$ et soit la matrice $A$ défini par les 
+coefficients $a_{ij} = \Tr{\alpha^{q^i}\beta^{q^j}}$, $A$ est inversible si et 
+seulement si $\alpha$ et $\beta$ sont des éléments normaux.
+\end{lem}
+\begin{proof}
+Supposons que $\alpha$ ne soit pas un élément normal. Dans ce cas, il existe une
+relation de dépendance linéaire entre les conjugués de $\alpha$, alors la 
+combinaison linéaires des lignes de $A$ correspondant à cette dépendance est $0$
+puisque la trace est linéaire; $A$ ne peut donc pas être inversible.\par
+Inversement, supposons que $A$ ne soit pas inversible. Il existe alors une 
+combinaison linéaire de ses lignes qui vaut $0$. Ou encore, il existe une 
+combinaison linéaire $\alpha^{\prime}$ des conjugués $\alpha$ telle que 
+$\Tr{\alpha^{\prime}\beta^{q^j}} = 0$ pour tout $j$ entre $0$ et $n-1$; 
+\textit{i.e.} telle que :
+\[\Tr{\alpha^{\prime}\beta + \alpha^{\prime}\beta^q + \dots + 
+\alpha^{\prime}\beta^{q^{n-1}}}\]
+Or la trace est surjective, donc si $\beta$ est normal cela implique que 
+$\alpha^{\prime} = 0$ mais alors $\alpha$ n'est pas un élément normal; ce qui 
+démontre le lemme.\\
+\end{proof}
+Reste maintenant à expliquer d'où vient l'anneau 
+$\mathbb{F}_q[\omega]/(\omega^n - 1)$. Il se trouve que la matrice $B$ a une 
+propriété particulière, elle est ce qu'on appelle une matrice \emph{circulante},
+\textit{i.e.} pour obtenir la ligne suivante, il suffit de décaler tous les 
+éléments vers la droite en faisant passer le dernier coefficient en première 
+position. Ou plus formellement, si :
+\[i_1 - j_1 \equiv i_2 - j_2 \bmod n\]
+alors on a 
+\[b_{i_1j_1} = b_{i_2j_2}\]
+et inversement. Donc, si on considère :
+\[b_{i+1j+1} = \lambda\left(v^{q^{(i+1) + n - (j+1)}}\right) = 
+\lambda\left(v^{q^{i+n-j}}\right)\]
+on a bien que $b_{ij} = b_{i+1j+1}$ avec $(i+1) - (j+1) \equiv i - j \bmod n$ 
+comme annoncé plus haut. On a alors le théorème suivant :
+
+\begin{thm}
+\label{th:matcirciso}
+Les matrices circulantes de $M_n(\GF{q})$ forment un anneau qui est isomorphe à 
+$\mathbb{F}_q[\omega]/(\omega^n - 1)$ \textup{via} l'isomorphisme d'anneaux
+suivant :
+\begin{equation*}
+\label{eq:isomconvert}
+\psi : B \longmapsto \sum_{0\leq j < n}{b_{0j}\omega^j}.
+\end{equation*}
+\end{thm}
+\begin{proof}
+Montrons que l'application $\psi$ est un morphisme d'anneaux. On a bien 
+évidemment $\psi(I_n) = 1$ et de manière relativement immédiate :
+\begin{align*}
+\psi(A + B) &= \sum_{0\leq j < n}{(a_{0j} + b_{0j})\omega^j}\\
+&= \sum_{0\leq j < n}{a_{0j}\omega^j} + \sum_{0\leq j < n}{b_{0j}\omega^j}\\
+&= \psi(A) + \psi(B).\\
+\end{align*}
+Maintenant, d'après la formule du produit de deux polynômes, on a :
+\begin{align*}
+\psi(A)\psi(B) &= \sum_{0\leq k < n}
+{\bigg(\sum_{i+j=k}{a_{0i}b_{0j}}\bigg)\omega^k}\\
+&= \sum_{0\leq k < n}{\bigg(\sum_{i\equiv k-j \bmod n}{a_{0i}b_{0(k-i \bmod n)}}
+\bigg)\omega^k}.\\
+\end{align*}
+Mais $b_{0k-i} = b_{ik}$ puisque $0 -(k-i) \equiv i-k \bmod n$; en tenant compte
+du fait que $i$ parcourt tout $\zmodn{n}$, on arrive finalement à :
+\[\sum_{0\leq k < n}{\bigg(\sum_{0\leq i < n}{a_{0i}b_{ik}}\bigg)\omega^k} = 
+\psi(AB).\]\par
+Comme les $\omega^k$ sont linéairement indépendants par définition, pour que 
+l'image d'une matrice circulante soit égale à $0$, il faut que sa première 
+ligne, et donc toutes les autres, soit nulle; d'où $\textup{Ker}\,\psi = 
+\{0_n\}$. La surjectivité est immédiate, il suffit de prendre les coefficients 
+d'un élément quelconque $u$ de $\GF{q}[\omega]/(\omega^n - 1)$ et de définir la 
+matrice $A$ de coefficients $a_{ij} = u_{(i-j \bmod n)}$ pour $i,j\in\zmodn{n}$,
+où les $u_i$ sont les coefficients $u$; on aura alors $\psi(A) = u$.\\
+\end{proof}
+
+\subsection{Périodes de Gauss}
+\label{sec:gaussper}
+On connait désormais le type d'élément qui nous intéresse, il faut maintenant 
+trouver un moyen d'en trouver qui soient uniques. Cela revient à trouver des 
+éléments qui ont la même orbite sous l'action du groupe de Galois de
+l'extension, ou encore, à regrouper les différentes orbites du polynôme
+cyclotomiques (puisqu'il se décompose dans $\GF{q^n}$). Une bonne façon de faire
+est d'utiliser les périodes de Gauss qui en plus d'être uniques sous l'action du
+groupe de Galois, fournissent aussi des éléments normaux.\par
+Soit $K$ un corps de nombre et $\EO_K$ son anneau des entiers. Posons 
+$\mathfrak{p}$ l'idéal de $\EO_K$ au-dessus de $p$ tel que $\EO_K/\mathfrak{p} =
+\GF{q}$, pour $q = p^r$. D'après le théorème \ref{th:entiercycl}, si $m$ et $p$
+sont premiers entre eux, alors $p$ est non ramifié dans $R_m$ ou par abus de 
+langage dans $K[\mu_m]/K := K[X]/\Phi(X)$ où $\mu_m := \mu_{m,\overline{\CC}}$. 
+Alors on a le schéma suivant :
+\begin{equation}
+\label{schema:gaussnorm}
+\begin{tikzpicture}
+\matrix(m)[matrix of math nodes,
+row sep=1em, column sep=3em,
+text height=1.5ex, text depth=0.25ex]
+{ &K[\mu_m] & \GF{q}[\mu_m] & \\
+\QQ[\mu_m]& & &\GF{p}[\mu_m]\\
+& K & \GF{q}& \\
+\QQ& & &\GF{p}\\};
+\path[-,font=\scriptsize,>=angle 90]
+(m-2-1) edge node[left] {$\zmodninv{m}$} (m-4-1)
+(m-3-2) edge node[left] {$G$} (m-1-2)
+(m-1-3) edge node[right] {$\groupgen{q}$} (m-3-3)
+(m-4-4) edge node[right] {$\groupgen{p}$} (m-2-4)
+(m-2-1) edge node[auto] {} (m-1-2)
+(m-4-1) edge node[auto] {} (m-3-2)
+(m-1-3) edge node[auto] {} (m-2-4)
+(m-3-3) edge node[auto] {} (m-4-4);
+\path[->>,font=\scriptsize,>=angle 90]
+(m-4-1) edge node[auto] {$\bmod p$} (m-4-4)
+(m-3-2) edge node[auto] {$\bmod\mathfrak{p}$} (m-3-3)
+(m-1-2) edge node[auto] {$\bmod\mathfrak{P}$} (m-1-3);
+\end{tikzpicture}
+\end{equation}
+Où $\zmodninv{m}$ est le groupe de Galois de $\QQ[\mu_m]/\QQ$, $G$ est le groupe
+de Galois de $K[\mu_m]/K$, sous-groupe de $\zmodninv{m}$ et $\groupgen{q}$
+le groupe de décomposition de 
+$\mathfrak{P}/\mathfrak{p}$, %($= \GF{q}[\mu_m]/\GF{q}$ ?)
+on a en particulier l'inclusion $\groupgen{q}\subset G
+\subset\zmodninv{m}$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\iffalse
+\begin{equation}
+\#G/\groupgen{q}=g\etmath\#\groupgen{q} = f = [K[\mu_m]:K]/g.
+\end{equation}
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%TODO: Rajouter ce qui reste ? À voir ce dont on a besoin pour la
+%démonstration...
+
+\begin{defn}
+Supposons qu'il existe un sous-groupe $S\subset\zmodninv{m}$ tel que
+$\zmodninv{m} = \groupgen{q}\times S$. Pour toute racine \nroot{m} de
+l'unité $\zeta_m$, on définit la \emph{période de Gauss} comme suit :
+\begin{equation}
+\eta(\zeta_m) = \sum_{\sigma\in S}{\zeta_m^{\sigma}}.
+\end{equation}
+\end{defn}
+\begin{prop}
+\label{prop:gaussperconj}
+Le groupe de Galois $\textup{Gal}(\GF{q}[\mu_m]/\GF{q})\simeq\groupgen{q}$
+agit transitivement sur les périodes de Gauss $\eta(\zeta_m)$ pour tout
+$\zeta_m\in\eta_m^{\times}$.
+\end{prop}
+\begin{proof}
+Soit $\tau\in\groupgen{q}$, alors :
+\begin{equation}
+\eta(\zeta_m)^{\tau} = \sum_{\sigma\in S}{\zeta_m^{\sigma\tau}}
+\end{equation}
+comme $\zmodninv{m} = \groupgen{q}\times S$ alors pour chaque
+$\tau\in\groupgen{q}$ on a $\zeta_m^{\tau} = \zeta_m'$ un autre générateur
+de $\mu_m$ ou encore $\eta(\zeta_m)^{\tau} = \eta(\zeta'_m)$, d'où
+$\groupgen{q}$ agit transitivement sur les $\eta(\zeta_m)$.\\
+\end{proof}
+Le but de la section va être de démontrer le théorème suivant :
+
+\begin{thm}
+\label{th:gausspernorm}
+Soit $\GF{q^n}/\GF{q}$ une extension de degré $n$ et un entier $m$ premier avec
+$q$ tel que :
+\vspace{0.3cm}
+\begin{enumerate}[(i)]
+    \item $\zmodninv{m} = \groupgen{q}\times S$ pour $S$ un sous-groupe,
+    \item $(\varphi(m), r) = 1$,
+    \item $m$ est sans facteur carré.
+\end{enumerate}
+\vspace{0.3cm}
+Si $\#\groupgen{q} = n$ alors les périodes $\eta(\zeta_m)$ forment une base
+normale de $\GF{q^n}$ sur $\GF{q}$.
+\end{thm}
+
+La condition (ii) implique que $\groupgen{p} = \groupgen{q}$ et donc que
+$\eta(\zeta_m)$ engendre $\GF{q}[\mu_m]/\GF{q}$ si et seulement s'il engendre
+$\GF{p}[\mu_m]/\GF{p}$. Cela permet d'éviter des discussions supplémentaires 
+lors de la preuve, on se contentera donc de traiter le cas $q = p$.\par
+Pour démontrer le théorème, on va remonter d'un niveau dans la généralité pour
+finalement retomber sur le résultat qu'on souhaite obtenir. On a l'anneau 
+\begin{equation}
+\EO_{m,p} := \GF{p}[X]/\Phi_m(X),
+\end{equation}
+réduction modulo $\mathfrak{p}$ de 
+\begin{equation}
+\EO_m := \ZZ[X]/\Phi_m(X),
+\end{equation}
+où $\EO_m$ est l'anneau des entiers de $\QQ[X]/\Phi_m(X)$ d'après le théorème 
+\ref{th:entiercycl} et $\mathfrak{p} = p\EO_m$ est l'idéal de $\EO_m$ au-dessus 
+de $p$. Comme $\QQ[X]/\Phi_m(X)$ est galoisienne, proposition 
+\ref{prop:cyclgal}, le groupe de Galois $\zmodninv{m}$ agit sur $\EO_m$ et donc 
+sur $\EO_{m,p}$. On notera :
+\begin{equation}
+\sigma_k(x) = x^k
+\end{equation}
+l'action du groupe de Galois. Soit maintenant $S$ un sous-groupe de 
+$\zmodninv{m}$, on va étudier la forme de l'invariant $\EO_{m,p}^S$  de 
+$\EO_{m,p}$ sous l'action de $S$, réduction modulo $\mathfrak{p}$ de $\EO_m^S$ 
+l'invariant de $\EO_m$ sous l'action de $S$.\par
+On a $\mathfrak{p} = \prod_{i=0}^g{\mathfrak{P}_i}$, où $g$ est le nombre
+d'idéaux de $\EO_m$ au-dessus de $p$ et les $\mathfrak{P}_i$ sont des premiers
+de $\EO_m$. En effet, l'extension est galoisienne et $p$ est ramifié dans 
+$\EO_m$ puisque $m$ et $p$ sont premiers entre eux, théorème 
+\ref{th:entiercycl}. Ainsi on a :
+\begin{equation}
+\EO_{m,p} = \EO_m/p\EO_m = \EO_m/\prod_{i=0}^g{\mathfrak{P}_i}
+\end{equation}
+D'après le théorème des restes chinois généralisé, on obtient finalement :
+\begin{equation}
+\EO_{m,p} = \bigoplus_{i=0}^g{\EO_m/\mathfrak{P}_i}
+\end{equation}
+Or, les $\EO_m/\mathfrak{P}_i$ sont des extensions de corps de $\ZZ/p\ZZ\simeq
+\GF{p}$ de même degré, le degré résiduel $f = [\EO_m/\mathfrak{P}_i:\GF{p}]$. 
+Dans ce cas, on a :
+\begin{equation}
+\label{eq:structinvSmodp}
+\EO_{m,p}^S = \bigoplus_{i=0}^{g'}{\GF{p^{f'}}}.
+\end{equation}
+où $g'$ est le nombre d'idéaux $\mathfrak{P}'_i$ de $\EO_m^S$ tels que $p\EO_m^S
+= \prod_{i = 0}^{g'}{\mathfrak{P}'_i}$ et $f' = 
+[\EO_m^S/\mathfrak{P}'_i:\GF{p}]$.
+
+\begin{lem}
+\label{lem:nbprimeabove}
+Soit $p$ un nombre premier et tel que $(m, p) = 1$. Alors le nombre d'idéaux
+premiers de $\EO_m^S$ au-dessus de $p$ est l'index du sous-groupe généré par $p$
+dans $\zmodninv{m}/S$.
+\end{lem}
+\begin{proof}
+Commençons par le cas $S = \groupgen{1}$, alors d'après l'identité fondamentale,
+on a $\varphi(m) = gf$, $g$ et $f$ définis comme ci-dessus. En prenant en compte
+le fait que le corps résiduel $\EO_m/p\EO_m$ est un corps fini, l'action du 
+groupe de Galois est uniquement constitué d'éléments de la forme $\sigma_{p^k}$.
+Mais cela implique que le degré du corps résiduel est donc l'ordre de $p$ dans 
+$\zmodninv{m}$ ce qui donne le résultat pour $S = \groupgen{1}$ car dans ce cas 
+:
+\begin{equation}
+g = \varphi(m)/f = [\zmodninv{m}:\groupgen{p}].
+\end{equation}
+
+Considérons maintenant $S$ comme un sous-groupe quelconque. Pour n'importe quel
+$\mathfrak{p}$ de $\EO_m$, l'idéal premier en-dessous de celui-ci dans $\EO_m^S$
+est l'idéal :
+\begin{equation}
+\prod_{i\in\left(S_{\mathfrak{p}}S\right)/S_{\mathfrak{p}}}
+{\sigma_i(\mathfrak{p})\cap\EO_m^S},
+\end{equation}
+où $S_{\mathfrak{p}}$ est le stabilisateur de $\mathfrak{p}$ sous l'action de
+$S$. Le groupe quotient $(S_{\mathfrak{p}}S)/S_{\mathfrak{p}}$ permet de ne
+faire apparaitre uniquement les conjugués de $\mathfrak{p}$ a la puissance $1$.
+En intersectant avec $\EO_m^S$, on obtient alors la décomposition de $p\EO_m^S$.
+Réciproquement, si $i\notin S_{\mathfrak{p}}S$ alors $\sigma_i{\mathfrak{p}}$ 
+n'est pas un conjugué de $\mathfrak{p}$ et donc n'est pas au-dessus de $p$.\par
+Le cardinal de $(S_{\mathfrak{p}}S)/S_{\mathfrak{q}}$ est la même pour tous les
+$\mathfrak{p}$ au-dessus de $p$ puisqu'ils sont conjugués. Alors le nombre de
+premiers de $\EO_m^S$ au-dessus de $p$ est égal à :
+%TODO: Transition un poil trop rapide...
+\begin{equation}
+\dfrac{[\zmodninv{m}:\groupgen{p}]}{[\groupgen{p}S:\groupgen{p}]} =
+[\zmodninv{m}:\groupgen{p}S],
+\end{equation}
+d'après le troisième théorème d'isomorphisme. Ce qu'on peut encore écrire
+:
+\begin{equation}
+[\zmodninv{m}/S:\groupgen{p}].
+\end{equation}
+
+\end{proof}
+
+\begin{cor}
+L'anneau $\EO_{m,p}^S$ se factorise en une somme directe de
+$[\zmodninv{m}/S:\groupgen{p}]$ corps tous isomorphes à $\GF{p^n}$, où $n$ est 
+l'ordre de $p$ dans $\zmodninv{m}$.
+\end{cor}
+\begin{proof}
+Il suffit d'appliquer le lemme \ref{lem:nbprimeabove}, l'équation
+(\ref{eq:structinvSmodp}) et le fait que $\groupgen{p}$ étant le groupe
+décomposition de $\mathfrak{p}$ son cardinal $\#\groupgen{p}$ est égal à $e'f'$,
+où $e'$ est l'indice de ramification de $\mathfrak{p}$ dans $\EO_m^S$, ici égal 
+à $1$, et $f'$ le degré du corps résiduel.\\
+\end{proof}
+En particulier si $[\zmodninv{m}/S:\groupgen{p}] = 1$ alors $\EO_{m,p}^S$ est
+un corps; c'est en fait exactement $\GF{p^n}$, avec $\#\groupgen{p} = n$. Il 
+reste alors à montrer que les périodes de Gauss engendrent effectivement 
+$\EO_{m,p}^S$.
+\begin{lem}
+Soit $m$ un entier sans facteur carré, alors les périodes $\eta(\zeta_m^k)$
+engendrent $\EO_{m,p}^S$, où $k\in\zmodninv{m}/S$.
+\end{lem}
+\begin{proof}
+
+Commençons par considérer le cas $S = \langle1\rangle$ et $m$ premier. Alors on 
+a $\eta(\zeta_m^k) = \zeta_m^k$ et, par définition, les $\zeta_m^k$ engendrent 
+$\EO_{m,p}$ pour $0 \leq k\leq m$. Il suffit alors de montrer que $1$ peut 
+s'exprimer en fonction des $\zeta_m^k$ pour $k > 0$, puisque $k = 0$ n'est pas 
+dans $\zmodninv{m}$. Mais $m$ est premier, alors le polynôme $\phi_m$ 
+donne exactement :
+\begin{equation}
+\textup{Tr}(\zeta_m) = \sum_{0 < k < m}{\zeta_m^k} = 1.
+\end{equation}
+
+Changeons alors seulement l'hypothèse $m$ premier en $m$ sans facteur carré, on 
+va raisonner par récurrence. En particulier, on peut écrire $m = m_1m_2$ avec 
+$(m_1,m_2) = 1$ et le résutlat ci-dessus est encore valable pour $m_1$ et 
+$m_2$. D'après le théorème des restes chinois, on a :
+\[\zmodninv{m} \simeq \zmodninv{m_1} \times \zmodninv{m_2},\]
+ainsi, \textit{via} cette isomorphisme on peut exprimer un élément
+$\eta(\zeta_m^k)$ de $\EO_{m,p}$ comme un produit de deux éléments
+$\eta(\zeta_m^{(k_1)})$ et $\eta(\zeta_m^{k_1})$ dans $\EO_{m_1,p}$ et 
+$\EO_{m_2,p}$, avec $k_1\in\zmodninv{m_1}$ et $k_2\in\zmodninv{m_2}$ 
+respectivement, et inversement.
+%TODO: C'est vraiment utile tout ce qui suit ?
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\iffalse
+En effet, prenons un $k\in\zmodninv{m}$ alors on peut l'écrire sous la forme :
+\[k = uk_2m_1 + vk_1m_2\]
+avec $k_1\in\zmodninv{m_1}$, $k_2\in\zmodninv{m_2}$ et $u,v\in\mathbb{Z}$ tels 
+qu'ils soient premiers avec $m_2$ et $m_1$ respectivement. On a donc :
+\begin{align*}
+z_S^{(k)} &= \zeta_m^k\\
+&= \zeta_m^{uk_2m_1 + vk_1m_2}\\
+&= (\zeta_m^{um_1})^{k_1}(\zeta_m^{vm_2})^{k_2}\\
+\end{align*}
+On a bien que $\zeta_m^{um_1}$ est une racine \nroot{$m_2$} puisque 
+$m_1m_2 = m$, mais c'est aussi une racine primitive car $(u,m_2) = 1$ et 
+$(m_1, m_2) = 1$; donc la seul façon d'avoir $kum_1 = m$ est de poser $k = m_2$.
+Le raisonnement est exactement le même pour l'autre terme. D'où le résultat :
+\[z_S^{(k)} = z_S^{(k_1)}z_S^{(k_2)}\].\par
+Pour l'autre sens, on prend le produit suivant :
+\[z_S^{(k_1)}z_S^{(k_2)} = \zeta_{m_1}^{k_1}\zeta_{m_2}^{k_2}\]
+Si on l'élève à la puissance $m_1$ ou $m_2$, le produit ne pourra pas être égal 
+à $1$. En revanche, si on l'élève à la puissance $m$, on obtiendra bien $1$, 
+d'où le fait que c'est une racine primitive \nroot{m} de l'unité. Alors on 
+pourra toujours le réécrire sous la forme : 
+\[\zeta_m^k = z_S^{(k)}\]
+avec $k\in\zmodninv{m}$, ce qu'on cherchait.\par
+\fi
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Ainsi, comme les $\eta(\zeta_m^{k_1})$ engendrent $\EO_{m_1,p}$ et les 
+$\eta(\zeta^{k_2})$ engendrent $\EO_{m_2,p}$ par réccurence, alors les 
+$\eta(\zeta^k)$ engendrent $\EO_{m,p}$, à nouveau par le théorème des restes 
+chinois.\par
+Pour finir, on considère $S$ un sous-groupe quelconque du groupe de Galois. 
+Prenons un $x$ dans $\EO_{m,p}^S$, alors on peut écrire :
+\begin{equation}
+x = \sum_{i\in S}{\sigma_i(y)}
+\end{equation}
+pour un $y$ dans $\EO_{m,p}$; l'action d'un $\sigma_i$ sur $x$ ne sera alors
+qu'une permutation des termes de la somme. De plus, on peut aussi écrire $y$ 
+sous la forme :
+\begin{equation}
+y = \sum_{(k,m)=1}{c_k\sigma_k(\zeta_m)}
+\end{equation}
+c'est ce qu'on a prouvé plus haut. En combinant les deux expression on obtient 
+alors :
+\begin{align*}
+x &= \sum_{i\in S}{\sum_{(k,m)=1}{c_k\sigma_i\sigma_k(\zeta_m)}}\\
+&= \sum_{(k,m)=1}{c_k\eta(\zeta_m^k)}\\
+\end{align*}
+ce qu'il fallait démontrer.\\
+\end{proof}
+
+Ainsi, si $\zmodninv{m}/S = \groupgen{p}$ et $\#\groupgen{p} = n$, alors les 
+$\eta(\zeta_m^k)$ avec $k\in\groupgen{p}$ sont conjugués dans $\EO_{m,p}^S = 
+\GF{p^n}$, d'après la proposition \ref{prop:gaussperconj}, et si $m$ est sans 
+facteurs carrés alors ils l'engendrent d'après le lemme précédent, ce sont donc 
+des élements normaux de $\GF{p^n}$; la condition (ii) implique que ce sont aussi
+des éléments normaux de $\GF{q^n}$. Ce qui achève la preuve du théorème 
+\ref{th:gausspernorm}.
+
+\subsection{Algorithme et analyse de complexité}
+\label{sec:algcompcycl}
+Maintenant qu'on a tous les résultats théoriques qu'il nous faut, on va pouvoir
+énoncer et justifier les aglorithmes pour déterminer l'isomorphisme. 
+On rappelle brièvement la situation, on a $f$ et $g$ deux polynômes 
+irréductibles de degré $n$ distincts sur $\GF{q}$, on note :
+\[k_1 := \GF{q}[X]/(f)\etmath k_2 := \GF{q}[Y]/(g)\]
+avec $q = p^r$ pour $r$ un entier naturel non nul et $p$ un nombre premier
+impair. Il nous faut alors déterminer deux éléments normaux uniques sous
+l'action du groupe de Galois de $\GF{q^n}/\GF{q}$ et en déduire l'image de $x :=
+\overline{X}$ pour déterminer complètement l'isomorphisme. 
+
+\subsubsection*{Recherche d'un élément normal unique}
+Comme cela a été exposé au point \ref{sec:extension}, si on ne trouve pas de $m$
+assez petit alors il faut passer par une extension de petit degré $o$ de
+$\GF{q^n}$ afin de pouvoir appliquer les résultats à l'extension $\GF{q^{n.o}}$
+et redescendre sur $\GF{q^n}$.\par
+La façon dont on va trouver $m$ est détaillé dans la section
+\ref{sec:recherchemcycl}. En résumé, on cherche le plus petit entier
+$m$ tel qu'il existe $o\in\NN$ tel que :
+\vspace{0.3cm}
+\begin{enumerate}[(1)]
+    \item $(q, m) = 1$ et $q$ soit d'ordre $n.o$ dans $\zmodninv{m}$,
+    \item $\varphi(m)/(n.o)$ et $n.o$ soient premiers entre eux,
+    \item $n$ et $o$ soient premiers entre eux,
+    \item $(\varphi(m), r) = 1$ avec $q = p^r$,
+    \item $\zmodninv{m} = \groupgen{q^o}\times S$ pour $S$ un sous groupe
+    de $\zmodninv{m}$.
+\end{enumerate}
+\vspace{0.3cm}
+Les conditions $(1)$, $(2)$ et $(5)$ sont là pour assurer que les racines 
+\nroot{m} primitives engendrent exactement $\GF{q^{n.o}}$ (\emph{cf.} 
+\ref{schema:gaussnorm}). La condition $(3)$ est d'ordre pratique et permet de
+construire des extensions à partir de polynôme à coefficients directement dans 
+$\GF{q}$ si besoin est. La quatrième condition permet de s'assurer que
+$\groupgen{p} = \groupgen{q}$ et donc que les résultats sur
+$\GF{p}$ soient encore valables sur $\GF{q}$. Enfin, la dernière condition est
+aussi la plus importante puisqu'elle permet d'appliquer le théorème \emph{(à 
+venir)}.
+
+\begin{rem}
+Il se trouve que l'algorithme ne peut pas fonctionner si $q$ est une puissance 
+$r$ de $p$ non première avec $n$, le degré de l'extension. En effet, on a 
+$\groupgen{q}\times S = \zmodninv{m}$, donc par définition $p = sq^a\bmod 
+m$ pour un $s\in S$ et $0 \leq a < n$, alors $q=s^rq^{ar} \bmod m$. 
+Or, $q$ ne peut être écrit que d'une seule façon comme produit d'un élément de 
+$S$ et d'une puissance de $q$, d'où $s^r = 1$ et $q^{ar - 1} = 1 \bmod m$. 
+Ce qui implique que $n$ divise $ar - 1$ et donc que $(n, r) = 1$.\par
+Une solution possible serait de calculer un générateur $\alpha$ de 
+$k/\GF{p^{d/c}}$, son polynôme minimal serait alors uniquement défini sur 
+$\GF{p^{d/c}}$ mais se scinderait en $c$ facteurs sur $\GF{q}$, ce qui nous 
+obligerait à réutiliser la méthode trial-and-error de Pinch.
+\end{rem}
+\vspace{0.3cm}
+Alors selon la valeur de $o$ lorsqu'on cherche $m$, \emph{i.e.} si $o = 
+ord_m(q)/n = 1$ ou $> 1$, il y aura deux façons différentes de procéder, c'est 
+ce qu'on va détailler plus bas.
+\paragraph{$\bullet$ Cas rationnel $o = 1$}
+Imaginons qu'on ait trouvé un $m$ satisfaisant les conditions $(1)$ à $(5)$ avec
+$o = 1$ ou $q$ directement d'ordre $n$ . Dans ce cas, on peut travailler 
+directement dans les corps $k_1$ et $k_2$ pour trouver calculer les périodes de
+Gauss. Le tout est résumé dans l'algorithme \ref{alg:gausspersansext}.
+
+\begin{algorithm}
+\caption{Détermination d'un élément normal unique dans un corps fini}
+\label{alg:gausspersansext}
+\begin{algorithmic}[1]
+\REQUIRE $k$ un corps fini de cardinal $q^n$; $m$ un entier divisible par $n$
+satisfaisant les conditions (1) à (5).
+\ENSURE $\eta$, un élément normal unique de $k$ sous l'action de Galois.
+\bigskip
+\REPEAT
+    \STATE $\zeta_m \leftarrow \textup{rand}(k)^{(q^n - 1)/m}$
+\UNTIL{$\zeta_m^m = 1$\quad\&\quad$\forall d\mid m,\;d\neq m,\;\zeta_m^d\neq1$}
+\STATE $\eta \leftarrow \sum_{a\in S}{\zeta_m^a}$
+\RETURN $\eta$
+\end{algorithmic}
+\end{algorithm}
+On veut déterminer sa complexité, pour trouver une racine primitive 
+\nroot{m} de l'unité, on prend un élément au hasard dans $\GF{q^n}$, on l'élève 
+à la puissance $(q^n - 1)/m$ et on teste si le résultat élevé à la puissance 
+$m/\ell$ vaut $1$ ou non pour $\ell$ un diviseur premier strict de $m$. On 
+s'attend à ce que cela réussisse après $O(1)$ essaies; chaque essaie prenant 
+$O(E(n)n\,\textup{log\;}q)$ opérations.\par
+On doit ensuite calculer la période de Gauss $\eta := \eta(\zeta_m)$,
+d'après ce qui précéde cela revient à faire $\varphi(m)/n$ exponentiation dans
+$\GF{q^n}$ d'exposant au plus $m$, cela se fait $O((m\textup{log\;}m)E(n)/n)$
+opérations.\par
+Ainsi, le coût total de l'algorithme est de $O(E(n)(n\,\textup{log\;}q +
+m\,\textup{log\;}m/n))$ opérations dans $\GF{q}$. Tant que $m\in o(n^2)$, on 
+peut négliger les termes en $m$ et se contenter d'une complexite en 
+$O(E(n)n\,\textup{log\;}q)$.
+
+\begin{prop}
+\label{prop:algsansext}
+L'algorithme \ref{alg:gausspersansext} est correct.
+\end{prop}
+\begin{proof}
+Les conditions (1), (2) et (5) permettent d'appliquer le théorème 
+\ref{th:gausspernorm} qui assure que $\eta$ est un élément normal de 
+$\GF{q^n}$ sur $\GF{q}$. Le fait qu'il soit unique sous l'action du groupe de 
+Galois est justifié par la proposition \ref{prop:gaussperconj}.\\
+\end{proof}
+
+\paragraph{$\bullet$ Cas général $o > 1$}
+Si jamais $q$ n'est pas d'ordre $n$ alors on doit passer par une extension de
+degré $o = ord_m(q)/n$. Pour cela on définit $h$ dans $\GF{q}[X]$, irréductible 
+de degré $o$ et on définit les extensions :
+\begin{equation}
+k_1' := k_1[U]/(h) \etmath k_2' := k_2[V]/(h)
+\end{equation}
+dans lesquelles on travaillera. Si on pose $\eta_1 = \sum_{\sigma\in
+S}{\zeta_m^{\sigma}}$ et $\eta_2 = \sum_{\sigma\in S}{\zeta_m'^{\sigma}}$ alors
+on peut résumer la situation au schéma suivant :
+\begin{equation}
+\begin{tikzpicture}
+\matrix(m)[matrix of math nodes,
+row sep=3em, column sep=3em,
+text height=1.5ex, text depth=0.25ex]
+{\GF{q}[\eta_1] & \GF{q}[\eta_2]\\
+\GF{q}[\Tr{\eta_1}] & \GF{q}[\Tr{\eta_2}]\\};
+\path[->,font=\scriptsize,>=angle 90]
+(m-1-1) edge node[auto] {$\phi$} (m-1-2)
+(m-2-1) edge node[auto] {$\phi$} (m-2-2);
+\path[-,font=\scriptsize,>=angle 90]
+(m-1-1) edge node[left] {$o$} (m-2-1)
+(m-1-2) edge node[right] {$o$} (m-2-2);
+\end{tikzpicture}
+\end{equation}
+
+\begin{rem}
+Si on rajoute en plus la condition $(n,r) = 1$, on peut alors directement 
+prendre des polynômes à coefficients dans $\GF{p}$, cela est aussi valable pour 
+l'algorithme \ref{alg:gausspersansext}.
+\end{rem}
+\vspace{0.3cm}
+
+\begin{algorithm}
+\caption{Détermination d'un élément normal unique dans un corps finis
+\textit{via} une extension}
+\label{alg:gaussperavecext}
+\begin{algorithmic}[1]
+\REQUIRE $k$ un corps fini de cardinal $q^n$, $m$ un entier satisfaisant les 
+conditions (1) à (5), $h$ un polynôme de degré $o$ à coefficients dans $\GF{q}$.
+\ENSURE $\eta$, un élément normal unique de $k$ sous l'action de Galois.
+\bigskip
+\STATE $k' \leftarrow k/(h)$
+\REPEAT
+    \STATE $\zeta_m \leftarrow \textup{rand}(k')^{(q^{n.o} - 1)/m}$
+\UNTIL{$\zeta_m^m = 1$\quad\&\quad$\forall 
+    d\mid m,\;d\neq m,\;\zeta_m^d\neq1$}
+\STATE $\alpha \leftarrow \sum_{a\in S}{\zeta_m^a}$
+\STATE $\eta \leftarrow \textup{Tr}_{k'/k}(\alpha)$
+\RETURN $\eta$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{prop} 
+\label{prop:algavecext}
+L'algorithme \ref{alg:gaussperavecext} est correct.
+\end{prop}
+\begin{proof}
+Le théorème \ref{th:gausspernorm} et la proposition \ref{prop:gaussperconj}
+assure que $\alpha$ est un élément normal unique de $\GF{q^{n.o}}$. Il suffit 
+alors d'appliquer le corollaire \ref{cor:tracenorm} pour assurer que $\eta :=
+\Tr{\alpha}$ soit un élément normal unique de $\GF{q^n}$.\\
+\end{proof}
+
+\subsubsection*{Détermination de l'isomorphisme}
+Reste alors à déterminer exactement l'isomorphisme, c'est-à-dire calculer son
+image en $x$. Comme on l'a expliqué au début de la sous-section, il suffit juste
+de récupérer les coefficients de $x$ par rapport à la base normale engendrée par
+$\eta(\zeta_m)$; alors il nous restera plus qu'à reporter les coefficients 
+trouvés dans la base normale engendrée par $\eta(\zeta'_m)$. On rappelle
+l'existence de l'isomorphisme reliant les matrices circulantes de tailles $n$ 
+sur $\GF{q}$ et l'anneau $\GF{q}[\omega]/(\omega^n - 1)$.
+
+\begin{algorithm}
+\caption{Conversion de la base polynomiale vers la base normale}
+\label{alg:convert}
+\begin{algorithmic}[1]
+\REQUIRE $z\in\GF{q^n}$, $v$ élément normal, $n$ degré de l'extension, $p$ 
+caractéristique, $\omega$ défini ci-dessus.
+\ENSURE $c$, tuple contenant les coefficients de $z$ dans la base 
+normale engendrée par $v$.
+\bigskip
+\FOR{$i = 0$ \TO $n-1$}
+    \STATE $B_i \leftarrow \Tr{v\times v^{q^{n-(i+1)}}}$
+\ENDFOR
+\STATE $I \leftarrow (\sum_{i = 0}^{n-1}{B_i\cdot \omega^i})^{-1}$
+\FOR{$i = 0$ \TO $n-1$}
+    \STATE $T_i \leftarrow \Tr{v\times z^{q^{n-i}}}$
+\ENDFOR
+\FOR{$i = 0$ \TO $n-1$}
+    \STATE $c_i \leftarrow \sum_{j=0}^{n-1}{I_{(j-i)\bmod n}T_j}$
+\ENDFOR
+\RETURN $c$
+
+\end{algorithmic}
+\end{algorithm}
+On commence par élever à la puissance $q$ plusieurs polynômes sur $\GF{q}$, 
+on les multiplie par un autre polynôme et enfin on calcule la trace de chacun 
+de ces produits; on effectue alors $n$ fois cette opération. Donc un 
+$O(nE(n)\textup{log}\;q + nE(n)) + n\textup{T}(n) = O(nE(n)\textup{log}\;q + 
+nE(n))$ opérations, 
+où $\textup{T}(n)$ est la complexité du calcul de la trace d'un élément
+de $\GF{q^n}$ et $\textup{T}(n) \in O(E(n))$.
+Par la suite, il s'agit dans un premier temps de la muliplication par un 
+scalaire d'éléments de $\mathbb{F}_p[\omega]/(\omega^n - 1)$ puis de $n$ sommes 
+de polynômes. Ensuite, on inverse le polynôme et on prend la trace de l'élément 
+qu'il représente; ce qui nous donne $O(n + E(n).\textup{log }n)$.\par
+Des lignes $5$ à $7$, il s'agit de la même opération que des lignes 1 à 3, d'où 
+encore une complexité de $O(nE(n)\textup{log}\;q + nE(n))$.
+Les lignes 8 à 10 consistent en $n$ sommes de $n$ multiplications dans le corps 
+de base $\GF{q}$, \textit{i.e.} un grand $O(n)$.
+Au final, la complexité de l'algorithme est égale à:
+\[O(nE(n) + nE(n)\textup{log }q +  E(n)\textup{log }n + n\textup{T}(n) + n)\] 
+ou de manière plus simple, elle est en $O(nE(n)\textup{log}\;q)$ qui domine le 
+reste.
+
+\begin{prop}
+\label{prop:algconvert}
+L'algorithme \ref{alg:convert} est correct.
+\end{prop}
+\begin{proof}
+D'après le point précédent, on a :
+\[\textup{Tr}\left(z^{p^{n-j}}\right) = \sum_{0\leq i < n}{c_i\textup{Tr}
+\left(v^{p^{i+n-j}}\right)}\]
+et la matrice $B$ définie par :
+\[b_{ij} = \Tr{\alpha v^{p^{i+n-j}}} = \Tr{\alpha^{p^j}v^{p^i}}\]
+On sait qu'elle est inversible grâce au lemme \ref{lem:mattrinv}, donc si on
+note $d_{ij}$ les coefficients de la matrice $B^{-1}$, on a bien :
+\[c_i = \sum_{0\leq j < n}{d_{ij}\textup{Tr}\left(z^{p^{n-j}}\right)}\]
+Le théorème \ref{th:matcirciso} permet de conclure.\\
+\end{proof}
+
+\subsubsection*{Algorithme principal}
+
+On peut désormais énoncer complètement l'algorithme de Rains cyclotomique : on
+commence par chercher le plus petit entier $m$ qui satisfait les conditions
+$(1)$ à $(5)$, on calcule alors les périodes de Gauss dans $k_1$ et $k_2$ ou
+dans leurs extensions et on finit par calculer les coefficients de $x$ dans la
+base normale engendrée par $\eta_2$; en réécrivant $\eta_2$ en fonction de $y$,
+on retrouve alors l'image de $x$ dans la base monomiale engendrée par $y$ et on
+peut calculer l'image de n'importe quel élément de $k_1$.
+
+\begin{algorithm}
+\caption{Détermination d'un isomorphisme entre deux corps finis de même
+cardinal}
+\label{alg:rainscycl}
+\begin{algorithmic}[1]
+\REQUIRE $k_1$, $k_2$ deux corps finis à $q^n$ éléments
+\ENSURE $\phi(x)$ l'image de la classe de $X$ par un isomorphisme $\phi : k_1
+\to k_2$. 
+\bigskip
+\STATE Chercher le plus petit entier $m$ satisfaisant $(1)$ à $(5)$
+\STATE $o \leftarrow ord_m(q)/n$
+\IF{$o = 1$}
+    \STATE Calculer $\eta_1$ en utilisant l'algorithme \ref{alg:gausspersansext}
+    \STATE Calculer $\eta_2$ en utilisant l'algorithme \ref{alg:gausspersansext}
+\ELSE
+    \STATE Trouver un polynôme irréductible $h$ de degré $o$ sur $\GF{q}$
+    \STATE Calculer $\theta_1$ en utilisant l'algorithme 
+    \ref{alg:gaussperavecext}
+    \STATE Calculer $\theta_2$ en utilisant l'algorithme 
+    \ref{alg:gaussperavecext}
+    \STATE $\eta_1 \leftarrow \Tr{\theta_1}$
+    \STATE $\eta_2 \leftarrow \Tr{\theta_2}$
+\ENDIF
+\STATE Construire $\GF{q}[\omega]/(\omega^n - 1)$
+\STATE Calculer les $c_i$ en utilisant l'algorithme \ref{alg:convert}
+
+\RETURN $\sum_{i\in\lbrace{0,\dots,n-1}\rbrace}{c_i\eta_2^{q^i}}$
+
+\end{algorithmic}
+\end{algorithm}
+
+\begin{prop}
+L'algorithme \ref{alg:rainscycl} est correct.
+\end{prop}
+\begin{proof}
+Il suffit d'appliquer successivement les propositions $\ref{prop:algsansext}$ et
+$\ref{prop:algconvert}$ ou $\ref{prop:algavecext}$ et $\ref{prop:algconvert}$,
+selon la valeur de $o$.\\
+\end{proof}
+
+\section{Algorithme de Rains : méthode elliptique}
+%TODO: Résumer/Détailler le papier de Luca, rajouter les résultats sur
+%les twists, les périodes, détaillés l'algorithme et sa complexité, le prouver 
+%(probablement fait avec le papier de Luca et Mihailescu pour les périodes ?)
+%, détailler les différentes étapes, les paramètres, la façon de trouver m 
+%etc.
+Utiliser pour groupe algébrique $\Gamma$ le groupe des points d'une courbe
+elliptique avait déjà été proposé par Pinch\cite{Pin}. Comme pour la méthode
+cyclotomique, on cherche des points d'ordre petit $m$ divisant le nombre de
+point d'une courbe elliptique et, en utilisant les mêmes techniques que pour la
+méthode faisant usage des racines de l'unité, on essaie de trouver un
+isomorphisme reliant leurs abscisses. Cependant, on peut éviter d'utiliser la
+méthode trial-and-error de Pinch en utilisant judicieusement la structure des
+groupe de Galois en jeu. 
+\subsection{Principe}
+%TODO: Choix d'un point d'ordre m sur une bonne courbe elliptique engendre 
+%l'extension, utilisation des périodes elliptiques afin d'avoir un élément 
+%stable par l'action du groupe de Galois (Énoncer les lemmes etc.)
+On commence par chercher un entier $m$ et une courbe $E/\GF{q}$ satisfaisant
+plusieurs conditions, notamment des conditions reliant la trace du Frobenius de
+$E/\GF{q}$, $m$ et le nombre de points rationnels de $E$ sur $\GF{q^n}$; ce sera
+étudié plus en détail dans la section \ref{sec:choixparam}.\par
+Il faut alors calculer des points d'ordre exactement $m$ sur $E/k_1$ et $E/k_2$.
+Selon le $j$-invariant et la trace (du Frobenius) de $E$, on calcule alors  
+ce qu'on appelle les \emph{périodes elliptiques} qui consistent principalement à
+sommer les abscisses de l'orbites d'un point de $m$-torsion sous l'action d'un
+sous-groupe de $\zmodninv{m}$, ce sera détailler dans la section
+\ref{sec:perell}. On aura alors obtenu des éléments normaux et il nous suffira 
+de procéder comme dans la méthode cyclotomique \ref{sec:algcompcycl} afin
+d'obtenir l'isomorphisme désiré.
+
+\subsection{Choix des paramètres}
+\label{sec:choixparam}
+%TODO: Justifier le choix de m par rapport à n et q, tout ce qui concerne la 
+%valeur propre d'ordre n et donc le choix de traces qui s'en suit, expliquer 
+%comment on pick les courbes (à ce moment là on pourra aussi justifier avec le 
+%résultat sur les tordues).
+
+\subsection{Périodes elliptiques}
+\label{sec:perell}
+%TODO: Prouver et définir les périodes elliptiques (peut-être que ce serait à
+%faire directement dans la partie algorithme elliptique de Rains ?)
+La caractéristique principale de l'algorithme de Rains, comme on a pu le voir
+dans la section précédente, est l'utilisation d'éléments normaux uniques sous
+l'action d'un certains groupes. Ici, il se trouve que l'unicité sera déduite de
+l'action du Frobenius de la courbe elliptique choisie $E/\GF{q}$ sur des points
+de torsion d'ordre $m$ de la courbe $E(\GF{q^n})$.
+\begin{prop}
+L'endomorphisme de Frobenius $\phi_q$ agit transitivement sur les périodes 
+elliptiques $\eta_{\alpha}(P)$. \end{prop}
+\begin{proof}
+Comme $P$ est dans l'espace propre de la valeure propre $\alpha$, lui appliquer 
+$\phi_q$ revient à le multiplier par $\alpha$. Si on prend 
+$\tau\in\groupgen{\alpha}$ alors on a pour $d\geq1$ tel que $\alpha^d = \tau 
+\bmod m$ :
+\begin{equation}
+\phi_q^d(\eta_{\alpha}(P)) = \sum_{\sigma\in
+S}{\left([\sigma][\tau]P\right)_X^{\#\textup{Aut}(E)/2}}
+\end{equation}
+Or, on a $\zmodninv{m}/\textup{Aut}(E) = \groupgen{\alpha} \times S$ donc
+$[\tau]P$ est encore un point primitif d'ordre $m$ dans l'espace propre de 
+$\alpha$.\\
+\end{proof}
+\subsection{Algorithme et analyse de complexité}
+\label{sec:algcompell}
+%TODO: Décrire l'algorithme et donner sa complexité.
+
+\part{Implémentation}
+\label{trois}
+%TODO: Comparer les deux méthodes ou même avec l'implémentation de base de SAGE 
+%(retrouver une simple racine). Détailler les limitations dû à SAGE, peut-être
+%prendre une partie de la conclusion en expliquant ce qui pourrait être changer.
+Dans cette partie, nous discuterons de l'implémentation des algorithmes, des
+résultats numériques obtenues et nous comparrons ces résultats avec d'autres
+méthodes déjà mises en place.\par
+Les tests seront effectués sur une machine virtuel sous arch linux (donner la
+version etc.), doté d'un processeur XEON 4 c\oe urs à $3$GHz chacuns et de
+$1.23$go de RAM. Les algorithmes ont été implémentés et exécutés sous le 
+logiciel \href{http://www.sagemath.org/}{SAGE} en version $6.2$ et
+\emph{(peut-être)} une partie du code fait usage de la bibliothèque
+\href{http://www.flintlib.org/}{FLINT}. Des limitations du logiciel SAGE nous
+empêche de traiter le cas des extensions de $\GF{q}$ avec $q = p^r$; on ne
+traitera alors que le cas $q = p$.
+
+\section{Recherche du paramètre $m$}
+%TODO: Des détails sur m et comment on le trouve (forme an + 1, premier ou
+%puissance d'un nombre premier; pour la méthode cyclotomique et elliptique
+La détermination d'une borne optimale pour $m$ nécessiterait un peu plus
+d'expérimentations que ce qui est possible à l'heure actuelle. La solution 
+adoptée dans le programme est de fixer une borne arbitraire et de chercher un
+nombre premier :
+\begin{equation}
+\label{eq:formedem}
+m := an + 1 
+\end{equation}
+qui satisfassent les conditions nécessaires pour le bon fonctionnement
+des différents algorithmes. En effet, il y a de bonne chance qu'un entier de ce
+type nous convienne puisque nous avons besoin d'un élément d'ordre $n$ dans
+$\zmodninv{m}$ et que cette forme implique forcément que $\varphi(m) = 
+an$ soit divisible par $n$.\par
+On teste alors tous les entiers de la forme (\ref{eq:formedem}) en augmentant la
+valeur de $a$ jusqu'à tomber sur le premier bon candidat ou atteindre la borne.
+Si la borne est atteinte sans qu'un bon candidat ait été trouvé, alors 
+l'algorithme a échoué et il faut recommencer avec une borne plus grande. On 
+rappelle que les critères de sélection pour l'entier $m$ sont donnés au 
+\ref{sec:algcompcycl}, pour la méthode cyclotomique, et au \ref{sec:algcompell},
+pour la méthode elliptique.
+
+\subsection{Pour la méthode cyclotomique}
+\label{sec:recherchemcycl}
+
+La recherche de $m$ dans la méthode cyclotomique est plutôt directe. On regarde
+les entiers de la forme (\ref{eq:formedem}) et on test si $m$ est effectivement
+premier, si $(\varphi(m)/n, n) = 1$ et si $ord_m(p)$ est divisible par $n$. Les 
+autres conditions ne sont plus nécessaires :
+\vspace{0.3cm}
+\begin{itemize}
+    \item $(\varphi(m), r) = 1$ disparait automatiquement comme on
+    ne considère uniquement le cas $q = p$;
+    
+    \item $m$ est nécessairement sans facteur carré puisqu'on le prend premier;
+\end{itemize}
+\vspace{0.3cm}
+
+\subsection{Pour la méthode elliptique}
+\label{sec:recherchermell}
+
+\section{Résultats numériques}
+%TODO: Je ne sais pas vraiment quoi mettre, je pourrais juste montrer
+%l'évolution de certains paramètres, comparer la progression de certaines
+%valeurs comme le nombre de trace et le nombre de courbe ou je sais plus
+%vraiment quoi... Ah et faire une comparaison avec la méthode elliptique aussi,
+%éventuellement montrer que lorsqu'on a besoin d'une extension la méthode
+%elliptique est bien chouette; à l'inverse, la méthode cyclotomique gère bien
+%sans extension
+
+\section{Comparaison avec d'autres méthodes}
+%TODO: Comparaison avec la méthode naïve, Allombert, autre ?
+
+\part{Conclusion}
+\label{quatre}
+%TODO: Expliquer ce qu'il peut rester à faire (cas général, car(K) = 2 et n 
+%composé, couper et appliquer l'une des deux méthodes selon la nature du m ou 
+%s'il y a besoin de calculer une extension, etc.), où est-ce qu'on peut 
+%récupérer des performances (produit scalaire).
+
+\addcontentsline{toc}{part}{Références}
+\begin{thebibliography}{LC}
+
+\bibitem{All} \emph{Explicit Computation of Isomorphisms between Finite
+Fields}, \bsc{Bill Allombert}, Elsevier Science, \bsc{url :}
+\url{http://www.sciencedirect.com/science/article/pii/S1071579701903442}
+
+\bibitem{Esc} \emph{Théorie de Galois}, \bsc{Jean-Pierre Escofier}, Dunod, 2nde
+éd., 2000.
+
+\bibitem{FeGaSho} \emph{Normal Basis \textup{via} General Gauss Periods},
+\bsc{Sandra Feisel}, \bsc{Joachim von zur Gathen} \& \bsc{M. Amin Shokrollahi}, 
+Mathematics of computation, Volume 68, Number 225, January 1999, p. 271-290
+
+\bibitem{GaGe} \emph{Modern Computer Algebra}, \bsc{Joachim von zur Gathen} \&
+\bsc{Jürgen Gerhard}, 3rd edition, Cambridge
+
+\bibitem{Lan} \emph{Algebraic Number Theory}, \bsc{Serge Lang}, Graduate Texts
+in Mathematics, 2nd ed., Springer, 2000.
+
+\bibitem{LiNi1} \emph{Finite Fields}, \bsc{Rudolf Lidl} \& 
+\bsc{Harald Niederreiter}, Encyclopedia of mathematics and its applications vol.
+20, Cambridge, 1983.
+
+\bibitem{LiNi2} \emph{Introduction to Finite Fields and their Applications},
+\bsc{Rudolf Lidl} \& \bsc{Harald Niederreiter}, Cambridge University Press,
+1986.
+
+\bibitem{MuPa} \emph{Handbook of Finite Fields}, \bsc{Gary L. Mullen} \& 
+\bsc{Daniel Panario}, Discrete mathematics and its applications, Series Editor 
+Kenneth H. Rosen, CRC Press.
+
+\bibitem{MiMoScho} \emph{Computing the Eigenvalue in the Schoof-Elkies-Atkin
+Algorithm using Abelian Lifts}, \bsc{P. Mih\u{a}ilescu}, \bsc{F. Morain} \&
+\bsc{É. Schost}, 2007, \bsc{url :}
+\url{http://hal.inria.fr/LIX/inria-00130142/en/}
+
+\bibitem{Per} \emph{Cours d'algèbre}, \bsc{Daniel Perrin}, ellipses, 1996.
+
+\bibitem{Pin} \emph{Recognising Elements of Finite Fields}, \bsc{Richard G.E. 
+Pinch}, Cryptography and coding II, p. 193-197, Oxford University Press, 1992.
+
+\bibitem{Rai} \emph{Efficient Computation of Isomorphism Between Finite Fields},
+\bsc{Eric M. Rains}, 1996.
+
+\bibitem{Sam} \emph{Théorie algébrique des nombres}, \bsc{Pierre Samuel}, 
+Hermann, 1971.
+
+\bibitem{Sil} \emph{The Arithmetic of Elliptic Curves}, 
+\bsc{Joseph H. Silverman}, Graduate texts in mathematics, Springer, 2nd ed. 
+2009.
+
+\bibitem{Was1} \emph{Introduction to Cyclotomic Fields}, \bsc{Lawrence C. 
+Washington}, Graduate texts in mathematics, Springer-Verlag, 1982.
+
+\bibitem{Was2} \emph{Elliptic Curves, Number Theory and Cryptography},
+\bsc{Lawrence C. Washington}
+
+\end{thebibliography}
+\end{document}
