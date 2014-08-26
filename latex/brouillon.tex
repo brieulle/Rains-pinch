@@ -1440,8 +1440,8 @@ Le but de la section va être de démontrer le théorème suivant :
 
 \begin{thm}
 \label{th:gausspernorm}
-Soit $\GF{q^n}/\GF{q}$ une extension de degré $n$ et un entier $m$ premier avec
-$q$ tel que :
+Soit $\GF{q^n}/\GF{q}$ une extension de degré $n$ et soit un entier $m$ premier 
+avec $q$, tel que :
 \vspace{0.3cm}
 \begin{enumerate}[(i)]
     \item $\zmodninv{m} = \groupgen{q}\times S$ pour $S$ un sous-groupe,
@@ -1529,9 +1529,9 @@ est l'idéal :
 où $S_{\mathfrak{p}}$ est le stabilisateur de $\mathfrak{p}$ sous l'action de
 $S$. Le groupe quotient $(S_{\mathfrak{p}}S)$ permet de trouver les conjugués de
 $\mathfrak{p}$ multiplier par une puissance de celui-ci. En quotientant par
-$S_{\mathfrak{p}}$ on obtient une puissance de $\mathfrak{p}$ égale à $1$ et en 
+$S_{\mathfrak{p}}$, on obtient une puissance de $\mathfrak{p}$ égale à $1$ et en
 intersectant avec $\EO_m^S$, on obtient alors la décomposition de $p\EO_m^S$.
-Réciproquement, si $i\notin S_{\mathfrak{p}}S$ alors $\sigma_i{\mathfrak{p}}$ 
+Réciproquement, si $i\notin S_{\mathfrak{p}}S$ alors $\sigma_i(\mathfrak{p})$ 
 n'est pas un conjugué de $\mathfrak{p}$ et donc n'est pas au-dessus de $p$.\par
 Le cardinal de $(S_{\mathfrak{p}}S)/S_{\mathfrak{q}}$ est la même pour tous les
 $\mathfrak{p}$ au-dessus de $p$ puisqu'ils sont conjugués. Alors le nombre de
@@ -1546,20 +1546,37 @@ d'après le troisième théorème d'isomorphisme. Ce qu'on peut encore écrire
 \begin{equation}
 [\zmodninv{m}/S:\groupgen{p}].
 \end{equation}
-
+% Je comprends pas tout le bordel que Rains fait pour obtenir le nombre d'idéaux
+% au-dessus de p. Comme L^S/Q est aussi de Galois, il suffirait d'utiliser les
+% résultats sur le cardinal du groupe de décomposition ? Il y aurait juste une
+% petite discussion par rapport au fait qu'on considère un sous-groupe de G =
+% Gal(L/Q).
+\vspace{0.3cm}
+\emph{Démonstration alternative du cas général}\par
+Considérons mainenant $S$ sous-groupe quelconque, comme $\QQ[\mu_m]/\QQ$ est 
+commutative alors $\QQ[\mu_m]^S/\QQ$ est aussi galoisienne de groupe de Galois 
+$\zmodninv{m}/S$. Alors on peut reporter l'étude à l'extension 
+$\QQ[\mu_m]^S/\QQ$, on regarde l'action de $\zmodninv{m}/S$ sur les
+$\mathfrak{P}'_i$ tels que $p\EO_m^S = \prod_{i=0}^{g'}{\mathfrak{P}'_i}$. Comme
+il n'y a qu'une seule orbite de cardinal $g'$ alors la formule des classes
+donne :
+\begin{equation}
+g' = \frac{\#\zmodninv{m}/S}{\#\groupgen{p}} = 
+[\zmodninv{m}/S:\groupgen{p}].
+\end{equation}
 \end{proof}
 
 \begin{cor}
 L'anneau $\EO_{m,p}^S$ se factorise en une somme directe de
 $[\zmodninv{m}/S:\groupgen{p}]$ corps tous isomorphes à $\GF{p^n}$, où $n$ est 
-l'ordre de $p$ dans $\zmodninv{m}$.
+l'ordre de $p$ dans $\zmodninv{m}/S$.
 \end{cor}
 \begin{proof}
 Il suffit d'appliquer le lemme \ref{lem:nbprimeabove}, l'équation
 (\ref{eq:structinvSmodp}) et le fait que $\groupgen{p}$ étant le groupe
 décomposition de $\mathfrak{p}$ son cardinal $\#\groupgen{p}$ est égal à $e'f'$,
-où $e'$ est l'indice de ramification de $\mathfrak{p}$ dans $\EO_m^S$, ici égal 
-à $1$, et $f'$ le degré du corps résiduel.\\
+où $e'$ est l'indice de ramification de $\mathfrak{p}$ dans $\EO_m^S$, qui est 
+égal à $1$, et $f'$ le degré du corps résiduel, qui est égal à $n$.\\
 \end{proof}
 En particulier si $[\zmodninv{m}/S:\groupgen{p}] = 1$ alors $\EO_{m,p}^S$ est
 un corps; c'est en fait exactement $\GF{p^n}$, avec $\#\groupgen{p} = n$. Il 
@@ -1669,13 +1686,13 @@ $\GF{q^n}$ afin de pouvoir appliquer les résultats à l'extension $\GF{q^{n.o}}
 et redescendre sur $\GF{q^n}$.\par
 La façon dont on va trouver $m$ est détaillé dans la section
 \ref{sec:recherchemcycl}. En résumé, on cherche le plus petit entier
-$m$ tel qu'il existe $o\in\NN$ tel que :
+$m$ sans facteurs carrés tel qu'il existe $o\in\NN^*$ tel que :
 \vspace{0.3cm}
 \begin{enumerate}[(1)]
     \item $(q, m) = 1$ et $q$ soit d'ordre $n.o$ dans $\zmodninv{m}$,
     \item $\varphi(m)/(n.o)$ et $n.o$ soient premiers entre eux,
     \item $n$ et $o$ soient premiers entre eux,
-    \item $(\varphi(m), r) = 1$ avec $q = p^r$,
+    \item $(\varphi(m), r) = 1$ pour $q = p^r$,
     \item $\zmodninv{m} = \groupgen{q^o}\times S$ pour $S$ un sous groupe
     de $\zmodninv{m}$.
 \end{enumerate}
@@ -1687,9 +1704,8 @@ construire des extensions à partir de polynôme à coefficients directement dan
 $\GF{q}$ si besoin est. La quatrième condition permet de s'assurer que
 $\groupgen{p} = \groupgen{q}$ et donc que les résultats sur
 $\GF{p}$ soient encore valables sur $\GF{q}$. Enfin, la dernière condition est
-aussi la plus importante puisqu'elle permet d'appliquer le théorème \emph{(à 
-venir)}.
-
+aussi la plus importante puisqu'elle permet d'appliquer le théorème 
+\ref{th:gausspernorm}.
 \begin{rem}
 Il se trouve que l'algorithme ne peut pas fonctionner si $q$ est une puissance 
 $r$ de $p$ non première avec $n$, le degré de l'extension. En effet, on a 
@@ -1973,6 +1989,35 @@ d'obtenir l'isomorphisme désiré.
 %valeur propre d'ordre n et donc le choix de traces qui s'en suit, expliquer 
 %comment on pick les courbes (à ce moment là on pourra aussi justifier avec le 
 %résultat sur les tordues).
+On rappelle qu'une courbe elliptique $E/\GF{q}$ est munie de l'endomorphisme de
+Frobenius $\phi_q : [X, Y, Z] \to [X^q, Y^q, Z^q]$ qui a pour polynôme
+minimal $X^2 -tX + q$ avec $\#E(\GF{q}) = q + 1 - t$. Le polynôme
+minimal se scinde dans une extension quadratique et devient $(X -
+\alpha)(X - \beta)$. On rappelle aussi que $\#E(\GF{q^n}) = q^n + 1 - (\alpha^n
++ \beta^n)$.\par
+Si $m$ est premier avec $p$ alors le groupe de $m$-torsion $E[m]$ est de rang
+$2$ et pour toute base fixée $\phi_q$ agit comme une matrice $2\times2$ à
+coefficients dans $\zmodn{m}$ sur $E[m]$.
+\begin{defn}
+Soit $E/\GF{q}$ une courbe elliptique, un nombre premier $\ell$ est appelé
+nombre premier de Elkies pour $E$ si le polynôme minimal de $\phi_q$ se scinde
+en deux facteurs distincts dans $\zmodn{\ell}$.
+\end{defn}
+Si $\ell$ est un premier de Elkies, alors pour une base de $E[\ell]$, $\phi_q$
+agit comme une matrice diagonale :
+\begin{equation}
+\begin{pmatrix}
+\alpha & 0\\
+0 & \beta
+\end{pmatrix}
+\end{equation}
+et pour un entier $n$, le Frobenius de $E/\GF{q^n}$ agit comme une puissance
+\nroot{n} de cette matrice sur $E[\ell]$. Ainsi, l'extension de degré
+$\textup{min}(\textup{ord}_{\ell}(\alpha),\textup{ord}_{\ell}(\beta))$ de 
+$\GF{q}$ est la plus petite extension contenant un point d'ordre $\ell$ et 
+l'extension de degré $\textup{ord}_{\ell}(\phi_q)$ de $\GF{q}$ est la plus
+petite extension contenant tout $E[\ell]$.
+%TODO: Préciser comment ça se fait..
 
 \subsection{Périodes elliptiques}
 \label{sec:perell}
@@ -2064,23 +2109,39 @@ autres conditions ne sont plus nécessaires :
 \label{sec:recherchermell}
 
 \section{Résultats numériques}
-%TODO: Je ne sais pas vraiment quoi mettre, je pourrais juste montrer
-%l'évolution de certains paramètres, comparer la progression de certaines
-%valeurs comme le nombre de trace et le nombre de courbe ou je sais plus
-%vraiment quoi... Ah et faire une comparaison avec la méthode elliptique aussi,
-%éventuellement montrer que lorsqu'on a besoin d'une extension la méthode
-%elliptique est bien chouette; à l'inverse, la méthode cyclotomique gère bien
-%sans extension
+% TODO:
+% - Temps d'exécution complet pour les deux méthodes sur différents paramètres
+% (déterminer l'élément + calcule de l'isomorphisme);
+%
+% - Temps d'exécution pour la détermination des éléments uniques pour les deux
+% méthodes;
+%
+% - Comparer éventuellement le nombre de traces trouvées et le nombre de courbes
+% testées avant de trouver une bonne courbe
+%
+% - Temps pour la détermination de l'isomorphisme (montrer plus tard que
+% finalement, cette méthode est pas si géniale :<);
+%
+% - Autre chose ?
 
 \section{Comparaison avec d'autres méthodes}
-%TODO: Comparaison avec la méthode naïve, Allombert, autre ?
+%TODO: 
+% - Comparer cyclotomique vs elliptic, avec et sans extensions;
+%
+% - Comparer cyclo vs allombert
+%
+% - Comparer allombert vs ellpitic
+%
+% - Comparer détermination de l'isomorphisme entre l'algo de javad et le mien
+% (ou bien je le fais avant ?)
+
 
 \part{Conclusion}
 \label{quatre}
-%TODO: Expliquer ce qu'il peut rester à faire (cas général, car(K) = 2 et n 
-%composé, couper et appliquer l'une des deux méthodes selon la nature du m ou 
-%s'il y a besoin de calculer une extension, etc.), où est-ce qu'on peut 
-%récupérer des performances (produit scalaire).
+%TODO: Expliquer ce qu'il peut rester à faire :  car(K) = 2; n  composé; couper 
+% et appliquer l'une des deux méthodes selon la nature du m ou s'il y a besoin 
+% de calculer une extension, etc.); toute la partie sur la détermination de
+% l'isomorphisme (plus profond etc.)
 
 \addcontentsline{toc}{part}{Références}
 \begin{thebibliography}{LC}
