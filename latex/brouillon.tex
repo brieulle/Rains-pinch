@@ -44,6 +44,7 @@
 \newcommand\I[1]{\textup{I}(#1)}
 \newcommand\tO[1]{\widetilde{O}(#1)}
 \newcommand\groupgen[1]{\langle{#1}\rangle}
+\newcommand\ord[2]{\textup{ord}_{#1}(#2)}
 
 % Éviter l'overlap dans la table des matières pour les sections, sous-sections
 % etc.
@@ -129,7 +130,7 @@ déterminer des isomorphismes entre corps finis de même cardinal.
 \tableofcontents
 \newpage
 
-\part{Rappels théoriques}
+\part{Rappels et contexte théorique}
 \label{un}
 
 Cette partie consiste principalement à rappeler et énoncer les résultats dont
@@ -149,7 +150,7 @@ fondamentaux. Le c\oe ur du sujet se trouve lui dans la partie \ref{deux}.
 Dans cette section on rappelle les définitions et démontrer certains 
 résultats liés aux corps finis. Principalement, on étudiera les extensions 
 de corps et la théorie de Galois sur les corps finis. Tous les corps seront
-considérés commutatifs. 
+considérés commutatifs. On notera $(a,b)$ le pgcd entre deux entiers $a$ et $b$.
 
 \subsection{Définitions}
 Un corps fini $K$ est un corps à $q = p^r$ éléments, où $p$ un nombre premier
@@ -1689,12 +1690,13 @@ La façon dont on va trouver $m$ est détaillé dans la section
 $m$ sans facteurs carrés tel qu'il existe $o\in\NN^*$ tel que :
 \vspace{0.3cm}
 \begin{enumerate}[(1)]
-    \item $(q, m) = 1$ et $q$ soit d'ordre $n.o$ dans $\zmodninv{m}$,
-    \item $\varphi(m)/(n.o)$ et $n.o$ soient premiers entre eux,
+    \item $(q, m) = 1$ et $q$ soit d'ordre $\ord{m}{q} :=n.o$ dans 
+    $\zmodninv{m}$,
+    \item $\varphi(m)/\ord{m}{q}$ et $\ord{m}{q}$ soient premiers entre eux,
     \item $n$ et $o$ soient premiers entre eux,
     \item $(\varphi(m), r) = 1$ pour $q = p^r$,
     \item $\zmodninv{m} = \groupgen{q^o}\times S$ pour $S$ un sous groupe
-    de $\zmodninv{m}$.
+    de $\zmodninv{m}$ d'ordre $\varphi{m}/(n.o)$.
 \end{enumerate}
 \vspace{0.3cm}
 Les conditions $(1)$, $(2)$ et $(5)$ sont là pour assurer que les racines 
@@ -1705,7 +1707,8 @@ $\GF{q}$ si besoin est. La quatrième condition permet de s'assurer que
 $\groupgen{p} = \groupgen{q}$ et donc que les résultats sur
 $\GF{p}$ soient encore valables sur $\GF{q}$. Enfin, la dernière condition est
 aussi la plus importante puisqu'elle permet d'appliquer le théorème 
-\ref{th:gausspernorm}.
+\ref{th:gausspernorm}, elle est aussi en particulier la conséquence des points
+$(1)$ et $(2)$.
 \begin{rem}
 Il se trouve que l'algorithme ne peut pas fonctionner si $q$ est une puissance 
 $r$ de $p$ non première avec $n$, le degré de l'extension. En effet, on a 
@@ -1721,8 +1724,8 @@ obligerait à réutiliser la méthode trial-and-error de Pinch.
 \end{rem}
 \vspace{0.3cm}
 Alors selon la valeur de $o$ lorsqu'on cherche $m$, \emph{i.e.} si $o = 
-ord_m(q)/n = 1$ ou $> 1$, il y aura deux façons différentes de procéder, c'est 
-ce qu'on va détailler plus bas.
+\ord{m}{q} /n = 1$ ou $> 1$, il y aura deux façons différentes de procéder, 
+c'est ce qu'on va détailler plus bas.
 \paragraph{$\bullet$ Cas rationnel $o = 1$}
 Imaginons qu'on ait trouvé un $m$ satisfaisant les conditions $(1)$ à $(5)$ avec
 $o = 1$ ou $q$ directement d'ordre $n$ . Dans ce cas, on peut travailler 
@@ -1772,8 +1775,9 @@ Galois est justifié par la proposition \ref{prop:gaussperconj}.\\
 
 \paragraph{$\bullet$ Cas général $o > 1$}
 Si jamais $q$ n'est pas d'ordre $n$ alors on doit passer par une extension de
-degré $o = ord_m(q)/n$. Pour cela on définit $h$ dans $\GF{q}[X]$, irréductible 
-de degré $o$ et on définit les extensions :
+degré $o = \ord{m}{q}/n$ premier avec $n$; si $(o,n)\neq1$ on passe au
+$m$ suivant (\emph{cf.} \ref{sec:recherchemcycl}). Pour cela on définit $h$ dans
+$\GF{q}[X]$, irréductible de degré $o$ et on définit les extensions :
 \begin{equation}
 k_1' := k_1[U]/(h) \etmath k_2' := k_2[V]/(h)
 \end{equation}
@@ -1922,7 +1926,7 @@ cardinal}
 \to k_2$. 
 \bigskip
 \STATE Chercher le plus petit entier $m$ satisfaisant $(1)$ à $(5)$
-\STATE $o \leftarrow ord_m(q)/n$
+\STATE $o \leftarrow \ord{m}{q}/n$
 \IF{$o = 1$}
     \STATE Calculer $\eta_1$ en utilisant l'algorithme \ref{alg:gausspersansext}
     \STATE Calculer $\eta_2$ en utilisant l'algorithme \ref{alg:gausspersansext}
@@ -2013,9 +2017,9 @@ agit comme une matrice diagonale :
 \end{equation}
 et pour un entier $n$, le Frobenius de $E/\GF{q^n}$ agit comme une puissance
 \nroot{n} de cette matrice sur $E[\ell]$. Ainsi, l'extension de degré
-$\textup{min}(\textup{ord}_{\ell}(\alpha),\textup{ord}_{\ell}(\beta))$ de 
+$\textup{min}(\ord{\ell}{\alpha},\ord{\ell}{\beta})$ de 
 $\GF{q}$ est la plus petite extension contenant un point d'ordre $\ell$ et 
-l'extension de degré $\textup{ord}_{\ell}(\phi_q)$ de $\GF{q}$ est la plus
+l'extension de degré $\ord{\ell}{\phi_q}$ de $\GF{q}$ est la plus
 petite extension contenant tout $E[\ell]$.
 %TODO: Préciser comment ça se fait..
 
@@ -2056,31 +2060,32 @@ $\alpha$.\\
 Dans cette partie, nous discuterons de l'implémentation des algorithmes, des
 résultats numériques obtenues et nous comparrons ces résultats avec d'autres
 méthodes déjà mises en place.\par
-Les tests seront effectués sur une machine virtuel sous arch linux (donner la
-version etc.), doté d'un processeur XEON 4 c\oe urs à $3$GHz chacuns et de
-$1.23$go de RAM. Les algorithmes ont été implémentés et exécutés sous le 
-logiciel \href{http://www.sagemath.org/}{SAGE} en version $6.2$ et
-\emph{(peut-être)} une partie du code fait usage de la bibliothèque
+Les tests sont effectués sur une machine virtuel sous le système Linux 
+3.12.9-1-ARCH, dotée d'un processeur Intel Xeon E312xx 4 c\oe urs à 
+$3092.968$MHz et de $1.23$go de RAM. Les algorithmes ont été implémentés et 
+exécutés sous le logiciel \href{http://www.sagemath.org/}{SAGE} en version 
+$6.2$ et \emph{(peut-être)} une partie du code fait usage de la bibliothèque
 \href{http://www.flintlib.org/}{FLINT}. Des limitations du logiciel SAGE nous
-empêche de traiter le cas des extensions de $\GF{q}$ avec $q = p^r$; on ne
-traitera alors que le cas $q = p$.
+empêche de traiter le cas des extensions de $\GF{q}$ avec $q = p^r$ et $r>1$; on
+n'implémentera alors que le cas $q = p$.
 
 \section{Recherche du paramètre $m$}
 %TODO: Des détails sur m et comment on le trouve (forme an + 1, premier ou
 %puissance d'un nombre premier; pour la méthode cyclotomique et elliptique
 La détermination d'une borne optimale pour $m$ nécessiterait un peu plus
-d'expérimentations que ce qui est possible à l'heure actuelle. La solution 
+d'expérimentations que ce qui a été effectué jusqu'à maintenant. La solution 
 adoptée dans le programme est de fixer une borne arbitraire et de chercher un
 nombre premier :
 \begin{equation}
 \label{eq:formedem}
 m := an + 1 
 \end{equation}
-qui satisfassent les conditions nécessaires pour le bon fonctionnement
+qui satisfasse les conditions nécessaires pour le bon fonctionnement
 des différents algorithmes. En effet, il y a de bonne chance qu'un entier de ce
 type nous convienne puisque nous avons besoin d'un élément d'ordre $n$ dans
 $\zmodninv{m}$ et que cette forme implique forcément que $\varphi(m) = 
-an$ soit divisible par $n$.\par
+an$ soit divisible par $n$. Bien entendu, le théorème de la progression
+arithmétique nous assure que tout cela est bien possible.\par
 On teste alors tous les entiers de la forme (\ref{eq:formedem}) en augmentant la
 valeur de $a$ jusqu'à tomber sur le premier bon candidat ou atteindre la borne.
 Si la borne est atteinte sans qu'un bon candidat ait été trouvé, alors 
@@ -2094,24 +2099,92 @@ pour la méthode elliptique.
 
 La recherche de $m$ dans la méthode cyclotomique est plutôt directe. On regarde
 les entiers de la forme (\ref{eq:formedem}) et on test si $m$ est effectivement
-premier, si $(\varphi(m)/n, n) = 1$ et si $ord_m(p)$ est divisible par $n$. Les 
-autres conditions ne sont plus nécessaires :
+premier, si $\ord{m}{p}$ est divisible par $n$ et si le cofacteur
+$o := \ord{m}{p}/n$ est premier avec $n$ et dans ce cas si 
+$(\varphi(m)/\ord{m}{p}, \ord{m}{p}) = 1$,. Les autres conditions ne sont plus 
+nécessaires :
 \vspace{0.3cm}
 \begin{itemize}
     \item $(\varphi(m), r) = 1$ disparait automatiquement comme on
     ne considère uniquement le cas $q = p$;
     
     \item $m$ est nécessairement sans facteur carré puisqu'on le prend premier;
+
+    \item $\zmodninv{m} = \groupgen{p^o}\times S$ est une conséquence des
+    conditions déjà énoncées.
 \end{itemize}
 \vspace{0.3cm}
 
+On sélectionne le plus petit $m$ qui vérifie ces conditions et on continue alors
+l'exécution de l'algorithme.
+
+\begin{rem}
+Sélectionner le plus petit $m$ n'est pas nécessairement la solution la plus
+judicieuse, il se pourrait que les suivants ne nécessitent pas l'utilisation
+d'extensions supplémentaires par exemple. Cependant, devoir tester tous les $m$
+possibles, ici cela peut aller jusqu'à $m = q^n - 1$, peut prendre beaucoup de
+temps et traiter avec des $m$ de cette taille implique des complexité
+exponentielle. Une solution pourrait être d'utiliser une deuxième borne plus
+restrictive, de garder en mémoire les $m$ testés et de vérifier si les $m$ entre
+l'ancienne borne et la nouvelle fonctionnent et ainsi de suite jusqu'à atteindre
+la borne de départ.
+\end{rem}
+
 \subsection{Pour la méthode elliptique}
 \label{sec:recherchermell}
+Pour la méthode elliptique, la situation est à peine plus délicate. Il y a la
+condition du nombre de trace admissible pour un $m$. Comme pour la méthode
+cyclotomique, au départ on cherche un $m$ premier de la forme $an + 1$ tel que
+$(\varphi(m)/n, n) = 1$. Le traitement est différent selon si $m$ est égal à $p$
+ou non.\par
+Dans les deux cas, il faut trouver les éléments d'ordre $n$ de $\zmodninv{m}$.
+Une fois ceux-ci obtenus, on effectue les tests suivants :
+\vspace{0.3cm}
+\begin{itemize}
+    \item Si $m = p$, alors on teste simplement si le relevé dans $\ZZ$ des
+    classes $\overline{t}$ d'ordre $n$ sont dans le bon intervalle, 
+    \emph{i.e.} si $t\in[-\sqrt{2q},\sqrt{2q}]$.\vspace{0.2cm}
+
+    \item Si $m\neq p$, alors il faut effectuer un peu plus de travail. On
+    veut que la valeur propre du Frobenius de plus petit ordre soit d'ordre $n$.
+    Comme on a vu plus haut, le polynôme se scinde comme suit 
+    \[(X -     \overline{\alpha})(X- \overline{\beta})= X -\overline{t}X + 
+    \overline{q}\bmod m.\] 
+    Il faut alors tester si pour $\overline{\alpha}\in\zmodninv{m}$ 
+    d'ordre $n$, on a $aoverline{q/\alpha}$ d'ordre plus grand que $n$ et 
+    $\vert{\alpha + q/\alpha}\vert\leq\sqrt{2q}$.
+\end{itemize}
+\vspace{0.3cm}
+Si $m$ n'admet aucun candidat pour des traces admissibles, alors on passe
+au suivant, sinon on continue l'algorithme.
+
+\begin{rem}
+Contrairement au cas précédent, l'expérience montre que prendre le premier $m$ 
+semble être la solution la plus judicieuse. En effet, tant que $m$ est plus 
+petit que $\sqrt{2q}$, le nombre de candidat semble être relativement 
+raisonnable, une fois cette borne dépassée, le nombre de candidats par valeur 
+diminue drastiquement. Pour plus de détails, on peut consulter l'article 
+\cite{CasHen} (perso j'y vois rien pour le moment...).\par
+Un autre changement possible est le nombre de trace admissibles minimal qu'on
+souhaite obtenir pour valider un candidat. Pour le moment, on ne demande d'avoir
+qu'un seul bon candidat pour la trace, on peut imaginer en demande $d>1$. L'idée
+serait que cela puisse améliorer la probabilité avec laquelle on peut
+directement tomber sur une bonne trace (pertinent ? Si la distribution est
+uniforme, je ne sais pas si ça changerait grand chose...).\par
+Comme on choisit les courbes sur le corps de base $\GF{q}$, si $q$ est petit
+alors le nombre de trace disponible est moindre, ainsi les chances de tomber sur
+une bonne courbe diminue. (Je suis plus convaincu par cette deuxième partie) 
+De plus, le degré de l'extension $n$ doit diviser
+$\varphi(m)$, alors si $n > \sqrt{2q}$ \emph{a fortiori} $m >\sqrt{2q}$ et le
+nombre de bons candidats baisse à nouveau. Il serait intéressant de pousser
+l'étude de ces critères (avec plus de temps.. ?) afin de déterminer quelle
+méthode utiliser dans un algorithme général qui regrouperait les deux méthodes.
+\end{rem}
 
 \section{Résultats numériques}
 % TODO:
 % - Temps d'exécution complet pour les deux méthodes sur différents paramètres
-% (déterminer l'élément + calcule de l'isomorphisme);
+% (déterminer le (ou les) éléments + calcule de l'isomorphisme);
 %
 % - Temps d'exécution pour la détermination des éléments uniques pour les deux
 % méthodes;
@@ -2142,13 +2215,64 @@ autres conditions ne sont plus nécessaires :
 % et appliquer l'une des deux méthodes selon la nature du m ou s'il y a besoin 
 % de calculer une extension, etc.); toute la partie sur la détermination de
 % l'isomorphisme (plus profond etc.)
+La première chose à noter est l'absence des caractéristiques $2$ et $3$. Si on
+peut appliquer théoriquement sans trop de problème les algorithmes à la
+caractéristique $3$, la caractéristique $2$ quant à elle est plus
+pathologique.\par
+Plus précisément, pour les deux algorithmes de Rains cyclotomique un des 
+critères nécessaires au fonctionnement de la méthode est $(\varphi(m)/n, n) = 1$
+ou de manière équivalente $(\varphi(m)/\ord{m}{p},\ord{m}{p}) = 1$
+lorsque $\ord{m}{p} = n$. Or, il se trouve que $2$ est un résidu
+quadratique modulo n'importe quel premier $m$ de la forme $8k + 1$, alors on
+aura toujours $(\varphi(m)/\ord{m}{2},\ord{m}{2}) > 1$ pour un tel
+$m$. Donc si $p = 2$ et $8\mid n$, il nous est impossible de trouver un $m$
+satisfaisant les conditions.\par
+Rains propose déjà deux solutions dans son article pour la méthode cyclotomique,
+il serait intéressant de pouvoir les implémenter et vérifier si elles
+fonctionnent pour la méthode elliptique ou, à défaut, d'en déterminer de
+nouvelles.
 
-\addcontentsline{toc}{part}{Références}
+\vspace{0.3cm}
+
+En ce qui concerne l'implémentation elle-même, les paramètres $m$ et $n$ ont 
+toujours été sélectionnés de telle sorte qu'ils soient premiers. Pour pouvoir 
+traiter le cas général, une solution est de factorisé $n$, de faire l'étude sur 
+chacun de ses facteurs et enfin recoller les morceaux.\par
+En particulier, pour chaque facteur on cherche alors des $m_i$ premiers de la 
+forme $ap_i^{v_{p_i}(n)} + 1$, pour $p_i$ divisant $n$, et selon si 
+l'utilisation d'une extension ou non est nécessaire, on utilise la méthode 
+elliptique ou cyclotomique; le $m$ de la méthode serait donc le produit des 
+$m_i$. L'idée serait alors de combiner le tout dans un programme linéaire.\par
+Quant au cas $q = p^r$ avec $r>1$, cela ne dépend malheureusement que du
+logiciel utilisé et de la façon dont il gère les corps finis et leurs
+extensions. Tant qu'une façon de considérer les extensions d'extensions 
+n'est pas correctement implémentée, il faudra se contenter du cas $r = 1$,
+\emph{i.e.} de partir du corps premier $\GF{p}$.
+
+\vspace{0.3cm}
+
+Enfin, un autre problème conséquent du calcul d'isomorphismes de corps fini est 
+la détermination de l'image du générateur de la base monomial. Comme on a pu le
+voir, si les algorithmes ont des performances acceptables pour déterminer deux
+éléments définissant un isomorphisme, la solution proposée pour calculer l'image
+du générateur de la base monomiale est quant à elle plutôt médiocre comparée à
+d'autres algorithmes déjà implémenté.\par
+Il se trouve que c'est un problème riche et qui mérite une attention toute
+particulière. On peut imaginer qu'en combinant un algorithme performant
+résolvant ce problème et ceux présentés dans ce mémoire, on puisse finalement
+résoudre le problème d'isomorphisme dans des temps acceptables; il restera alors
+à traiter l'évaluation de cet isomorphisme.
+
 \begin{thebibliography}{LC}
+\addcontentsline{toc}{part}{Références}
 
 \bibitem{All} \emph{Explicit Computation of Isomorphisms between Finite
-Fields}, \bsc{Bill Allombert}, Elsevier Science, \bsc{url :}
+Fields}, \bsc{Bill Allombert}, Elsevier Science, 2002, \bsc{url :}
 \url{http://www.sciencedirect.com/science/article/pii/S1071579701903442}
+
+\bibitem{CasHen} \emph{The distribution of the number of points modulo an
+integer on elliptic curves over finite fields}, \bsc{Wouter Castryck} \&
+\bsc{Hendrik Hubrechts}, 2009, \url{http://arxiv.org/abs/0902.44332} 
 
 \bibitem{Esc} \emph{Théorie de Galois}, \bsc{Jean-Pierre Escofier}, Dunod, 2nde
 éd., 2000.
@@ -2199,7 +2323,7 @@ Hermann, 1971.
 Washington}, Graduate texts in mathematics, Springer-Verlag, 1982.
 
 \bibitem{Was2} \emph{Elliptic Curves, Number Theory and Cryptography},
-\bsc{Lawrence C. Washington}
+\bsc{Lawrence C. Washington}, Chapman \& Hall/CRC, 2nd éd., 2008
 
 \end{thebibliography}
 \end{document}
