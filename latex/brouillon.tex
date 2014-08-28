@@ -2114,6 +2114,21 @@ l'action d'un certains groupes. Ici, il se trouve que l'unicité sera déduite d
 l'action du Frobenius de la courbe elliptique choisie $E/\GF{q}$ sur des points
 de torsion d'ordre $m$ de la courbe $E(\GF{q^n})$.
 %TODO: Parler des automorphismes non triviaux
+\begin{defn}
+Soit $E/\GF{q}$ une courbe elliptique avec $j_E\neq0$ et $p\neq2, 3$ et soit $m$
+une puissance d'un nombre premier de Elkies. Supposons que
+$\#\textup{Aut}_{\GF{q}}(E)$ divise $\varphi(m)$ et considérons
+$\textup{Aut}_{\GF{q}}(E)$ comme un sous-groupe de $\zmodninv{m}$. Posons
+$\alpha\in\zmodninv{m}$ une valeur propre du Frobenius modulo $m$ et supposons
+que $\zmodninv{m}/\textup{Aut}_{\GF{q}}(E) = \groupgen{\alpha}\times S$. Alors
+pour tout point $P$ d'ordre exactement $m$ dans l'espace propre engendré par
+$\alpha$, on définit la période elliptique :
+\begin{equation}
+\eta_{\alpha}(P) = \sum_{\sigma\in S}
+{\left([\sigma]P\right)_X^{\#\textup{Aut}_{\GF{q}}(E)/2}}
+\end{equation}
+où $P_X$ désigne l'abscisse du point $P$.
+\end{defn}
 \begin{prop}
 L'endomorphisme de Frobenius $\phi_q$ agit transitivement sur les périodes 
 elliptiques $\eta_{\alpha}(P)$.
