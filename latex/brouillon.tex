@@ -884,9 +884,61 @@ Frobenius de $E$. Par abus de langage, on parlera parfois de $t$ comme de la
 trace de $E$.
 
 \subsection{Courbes supersingulières}
+\label{sec:singcurve}
 %TODO: Définitions Twists quadratiques, courbes $y^2 = x^3 + x$ et 
 %$y^2 = x^3 + 1$ et leurs tordues, pour préparer le terrain pour la partie 
 %elliptique de Rains
+\begin{prop}
+\label{prop:trtwist}
+Soient $E/\GF{q}$ et $E'/\GF{q}$ deux courbes définies sur le corps à $q = p^r$
+éléments, avec $p\neq2,3$. Soit $u\in\overline{K}$ tel que l'application :
+\begin{equation}
+\overline{u} : E\longrightarrow E,\quad(x,y)\longmapsto(u^2x,u^3y)
+\end{equation}
+soit $\overline{K}$-isomorphisme de courbes elliptiques. Alors on a l'une des
+deux situations suivantes :
+\begin{enumerate}[(i)]
+    \item $u^{q-1}\notin\GF{p}$ et $E, E'$ sont supersingulières;
+    \item $u^{q-1}\in\GF{p}$ et $T_{E'} = \alpha T_E$ où, si on note $n$ l'ordre
+    de $u^{q-1}$ dans $\GF{p}$, alors $\alpha$ est le réprésentant de l'unique
+    racine de $X^n - 1 \bmod q$ de module $\vert{\alpha}\vert < q/2$ tel que
+    $\alpha = u^{q-1}\bmod p$.
+\end{enumerate}
+\end{prop}
+
+Concrètement, cela veut dire que si deux courbes sont isomorphes alors soit 
+elles sont supersingulières auquel cas leurs traces sont toutes deux égales à 
+$0$, soit leurs traces varies d'une racine de l'unité. On peut résumer la
+situation de la manière suivante :
+\vspace{0.3cm}
+\begin{itemize}
+    \item Si $j\neq0, 1728$ alors la courbe $E$ de $j$-invariant $j$ n'a qu'une 
+    tordue, la tordue quadratique $E(u)$ pour $u$ un non-résidu quadratique. 
+    Alors on a :
+    \begin{equation}
+    t_E = t_{E(u)} = 0\quad\textup{ou}\quad t_E = -t_{E(u)}
+    \end{equation}
+
+    \item Si $j = 1728$, alors la courbe $E$ de $j$-invariant $1728$ a quatre
+    tordues, ce sont les $E(u^i)$ pour $i\in\lbrace{0,\dots,3}\rbrace$ et $u$
+    non-résidu quartique. Alors on a pour tout $i\in\lbrace{0,\dots,3}\rbrace$ 
+    et pour $\zeta_4$ une racine \nroot{$4$} primitive de l'unité:
+        \begin{align}
+        t_{E(u^i)} &= t_E = 0,\quad\textup{si\;}q\neq1\bmod4,\\
+        t_{E(u^i)} &= \zeta_4^it_E\bmod q,\quad\textup{sinon.}
+        \end{align}
+
+    \item Si $j = 0$, alors la courbe $E$ de $j$-invariant $0$ a six tordues, ce
+    sont les $E(u^i)$ pour $i\in\lbrace{0,\dots,5}\rbrace$ et $u$ un non-résidu
+    sextique. Alors on a pour tout $i\in\lbrace{0,\dots,5}\rbrace$ et pour
+    $\zeta_6$ une racine \nroot{$6$} primitive de l'unité :
+        \begin{align}
+        t_{E(u^i)} &= t_E = 0,\quad\textup{si\;}q\neq1\bmod3,\\
+        t_{E(u^i)} &= \zeta_6^it_E\bmod q,\quad\textup{sinon.}
+        \end{align}
+
+\end{itemize}
+\vspace{0.3cm}
 
 \section{Complexité et notations}
 Cette courte section nous permettra de définir quelques notions de complexité
@@ -1994,7 +2046,7 @@ d'obtenir l'isomorphisme désiré.
 %comment on pick les courbes (à ce moment là on pourra aussi justifier avec le 
 %résultat sur les tordues).
 On rappelle qu'une courbe elliptique $E/\GF{q}$ est munie de l'endomorphisme de
-Frobenius $\phi_q : [X, Y, Z] \to [X^q, Y^q, Z^q]$ qui a pour polynôme
+Frobenius $\phi_q : [X, Y, Z] \mapsto [X^q, Y^q, Z^q]$ qui a pour polynôme
 minimal $X^2 -tX + q$ avec $\#E(\GF{q}) = q + 1 - t$. Le polynôme
 minimal se scinde dans une extension quadratique et devient $(X -
 \alpha)(X - \beta)$. On rappelle aussi que $\#E(\GF{q^n}) = q^n + 1 - (\alpha^n
@@ -2020,13 +2072,32 @@ et pour un entier $n$, le Frobenius de $E/\GF{q^n}$ agit comme une puissance
 $\textup{min}(\ord{\ell}{\alpha},\ord{\ell}{\beta})$ de 
 $\GF{q}$ est la plus petite extension contenant un point d'ordre $\ell$ et 
 l'extension de degré $\ord{\ell}{\phi_q}$ de $\GF{q}$ est la plus
-petite extension contenant tout $E[\ell]$.
-%TODO: Préciser comment ça se fait..
+petite extension contenant tout $E[\ell]$.\par
+Autrement dit, si $\textup{min}(\ord{m}{\alpha},\ord{m}{\beta}) = n$, on obtient
+alors des générateurs de $\GF{q^n}$. Pour cela, il faut prendre un bon $m$ et
+surtout une bonne courbe elliptique, \emph{i.e.} prendre pour $m$ un premier
+Elkies ou un puissance d'un tel nombre premier semble être la meilleure
+solution. Si on note $T_E$ la trace du Frobenius d'une courbe elliptique $E$,
+alors $m$ premier ou puissance d'un premier de Elkies entraine :
+\begin{equation}
+X - \overline{T_E}X + \overline{q} = (X - \overline{\alpha})(X -
+\overline{\beta})\bmod m
+\end{equation}
+Si $n$ divise $m$ alors il nous suffit de chercher les éléments
+$z\in\zmodninv{m}$ tels que $z^n = 1$ et de vérifier si :
+\begin{equation}
+\ord{m}{q/z} > n \etmath \vert{\overline{z + q/z}}\vert\leq\sqrt{2q}
+\end{equation}
+où dans la seconde équation, on prend le relevé de $z + q/z$ dans $\ZZ$. Les $z$
+vérifiant ses conditions seront les candidats pour les classes de traces
+admissibles. Elles serviront à déterminer quelle courbe elliptique on utilisera
+pour appliquer l'algorithme. Pour sélectionner une courbe, il suffit de calculer
+la trace de son Frobenius et la trace du Frobenius de ses tordues en accord avec
+la proposition \ref{prop:trtwist}.
 
 \subsection{Périodes elliptiques}
 \label{sec:perell}
-%TODO: Prouver et définir les périodes elliptiques (peut-être que ce serait à
-%faire directement dans la partie algorithme elliptique de Rains ?)
+%TODO: Prouver et définir les périodes elliptiques 
 La caractéristique principale de l'algorithme de Rains, comme on a pu le voir
 dans la section précédente, est l'utilisation d'éléments normaux uniques sous
 l'action d'un certains groupes. Ici, il se trouve que l'unicité sera déduite de
@@ -2034,7 +2105,8 @@ l'action du Frobenius de la courbe elliptique choisie $E/\GF{q}$ sur des points
 de torsion d'ordre $m$ de la courbe $E(\GF{q^n})$.
 \begin{prop}
 L'endomorphisme de Frobenius $\phi_q$ agit transitivement sur les périodes 
-elliptiques $\eta_{\alpha}(P)$. \end{prop}
+elliptiques $\eta_{\alpha}(P)$.
+\end{prop}
 \begin{proof}
 Comme $P$ est dans l'espace propre de la valeure propre $\alpha$, lui appliquer 
 $\phi_q$ revient à le multiplier par $\alpha$. Si on prend 
@@ -2051,6 +2123,64 @@ $\alpha$.\\
 \subsection{Algorithme et analyse de complexité}
 \label{sec:algcompell}
 %TODO: Décrire l'algorithme et donner sa complexité.
+Comme la partie détermination de l'isomorphisme est la même pour la partie
+cyclotomique que pour la partie elliptique, on ne va traiter que la recherche
+d'élément normal unique (sous l'action du Frobenius).\par
+
+\subsubsection*{Recherche d'un élément normal unique}
+On cherche donc un entier $m$ puissance d'un nombre premier de Elkies ou bien
+puissance de $p$, tel que $n\mid\varphi(m)$ et tel qu'il existe au moins un 
+$t\in\zmodninv{m}$ tel que :
+
+\vspace{0.3cm}
+\begin{enumerate}[(1)]
+    \item si $m$ est égal à $p$, alors $\ord{m}{t} = n$;
+
+    \item si $m$ est un premier de Elkies, alors
+    $\textup{min}(\ord{m}{\alpha},\ord{m}{\beta}) = n$, où $t = 
+    \overline{\alpha} + \overline{\beta}$.
+
+    \item Selon le cas, on doit aussi avoir
+    $\zmodninv{p^k}/\textup{Aut}_{\GF{q}}(E) = \groupgen{t}\times S$ ou
+    $\zmodninv{m}/\textup{Aut}_{\GF{q}}(E) = \groupgen{\alpha}\times S$ si en
+    plus $\alpha$ est la valeur propre d'ordre minimal égal à $n$.
+\end{enumerate}
+\vspace{0.3cm}
+Les trois points sont nécessaires, selon le cas dans lequel on se trouve, pour
+que les périodes elliptiques définies plus haut forment effectivement une base
+normale de $\GF{q^n}$.\par
+Il faut aussi pouvoir sélectionner la bonne courbe elliptique. La méthode qu'on
+utilise est assez simple pour être expliquée succintement. On commence par
+regarder les courbes de $j$ invariant $0$ ou $1728$ sur $\GF{q}$; selon la
+valeur de $q$ modulo $3$ pour le premier et modulo $4$ pour le second, on teste
+si les classes des différentes traces décrites dans la section
+\ref{sec:singcurve} sont parmi les bons candidats associés à l'entier $m$. Si
+aucune des dix courbes testées ne correspond, alors on teste chaque courbe de
+$j$-invariant différent de $0$ et $1728$ et leurs tordues quadratiques en
+parcourant tout $\GF{q}$ jusqu'à tomber sur une qui marche (Ça serait bien
+d'avoir une preuve que ça arrive forcément.. Peut-être \cite{CasHen} ?).\par
+Une fois la courbe et $m$ obtenus, on peut exécuté l'algorithme de Rains
+proprement dit, \emph{cf} algorithme \ref{alg:gaussell}.
+%TODO: expliquez un peu les trucs où l'algorithme
+\begin{algorithm}
+\caption{Détermination d'un élément normal unique}
+\label{alg:gaussell}
+\begin{algorithmic}[1]
+\REQUIRE $m$ un entier satisfaisant les conditions (1) et (2), $E/\GF{q^n}$ une 
+courbe elliptique avec les bonnes caractéristiques
+\ENSURE $\eta$ un élément normal unique de $\GF{q^n}$
+\bigskip
+\REPEAT
+    \STATE $P \leftarrow [\frac{\#E/\GF{q^n}}{m}]\textup{rand}(E/\GF{q^n})$
+\UNTIL{$[m]P = \EO\quad\&\quad\forall d\mid m, d\neq m, [d]P\neq\EO$}
+\STATE $\eta \leftarrow \sum_{\sigma\in
+S}{\left([\sigma]P\right)_X^{\#\textup{Aut}(E)/2}}$
+\RETURN $\eta$
+\end{algorithmic}
+\end{algorithm}
+
+
+
 
 \part{Implémentation}
 \label{trois}
@@ -2060,6 +2190,7 @@ $\alpha$.\\
 Dans cette partie, nous discuterons de l'implémentation des algorithmes, des
 résultats numériques obtenues et nous comparrons ces résultats avec d'autres
 méthodes déjà mises en place.\par
+\emph{(Les caracs ne sont plus à jour)}\,
 Les tests sont effectués sur une machine virtuel sous le système Linux 
 3.12.9-1-ARCH, dotée d'un processeur Intel Xeon E312xx 4 c\oe urs à 
 $3092.968$MHz et de $1.23$go de RAM. Les algorithmes ont été implémentés et 
@@ -2134,9 +2265,8 @@ la borne de départ.
 \label{sec:recherchermell}
 Pour la méthode elliptique, la situation est à peine plus délicate. Il y a la
 condition du nombre de trace admissible pour un $m$. Comme pour la méthode
-cyclotomique, au départ on cherche un $m$ premier de la forme $an + 1$ tel que
-$(\varphi(m)/n, n) = 1$. Le traitement est différent selon si $m$ est égal à $p$
-ou non.\par
+cyclotomique, au départ on cherche un $m$ premier de la forme $an + 1$. 
+Le traitement est différent selon si $m$ est égal à $p$ ou non.\par
 Dans les deux cas, il faut trouver les éléments d'ordre $n$ de $\zmodninv{m}$.
 Une fois ceux-ci obtenus, on effectue les tests suivants :
 \vspace{0.3cm}
@@ -2148,10 +2278,10 @@ Une fois ceux-ci obtenus, on effectue les tests suivants :
     \item Si $m\neq p$, alors il faut effectuer un peu plus de travail. On
     veut que la valeur propre du Frobenius de plus petit ordre soit d'ordre $n$.
     Comme on a vu plus haut, le polynôme se scinde comme suit 
-    \[(X -     \overline{\alpha})(X- \overline{\beta})= X -\overline{t}X + 
+    \[(X - \overline{\alpha})(X- \overline{\beta})= X -\overline{t}X + 
     \overline{q}\bmod m.\] 
     Il faut alors tester si pour $\overline{\alpha}\in\zmodninv{m}$ 
-    d'ordre $n$, on a $aoverline{q/\alpha}$ d'ordre plus grand que $n$ et 
+    d'ordre $n$, on a $\overline{q/\alpha}$ d'ordre plus grand que $n$ et 
     $\vert{\alpha + q/\alpha}\vert\leq\sqrt{2q}$.
 \end{itemize}
 \vspace{0.3cm}
@@ -2174,11 +2304,16 @@ uniforme, je ne sais pas si ça changerait grand chose...).\par
 Comme on choisit les courbes sur le corps de base $\GF{q}$, si $q$ est petit
 alors le nombre de trace disponible est moindre, ainsi les chances de tomber sur
 une bonne courbe diminue. (Je suis plus convaincu par cette deuxième partie) 
+%TODO: On pourrait faire un tableau pour tout ça ?
 De plus, le degré de l'extension $n$ doit diviser
 $\varphi(m)$, alors si $n > \sqrt{2q}$ \emph{a fortiori} $m >\sqrt{2q}$ et le
 nombre de bons candidats baisse à nouveau. Il serait intéressant de pousser
 l'étude de ces critères (avec plus de temps.. ?) afin de déterminer quelle
 méthode utiliser dans un algorithme général qui regrouperait les deux méthodes.
+%TODO: On pourrait même comparé les temps entre la méthode elliptique avec un n
+%plus grand que la borne de Hasse et la méthode cyclotomique qui aurait besoin
+%d'une extension; histoire de savoir si on garde quand même la méthode
+%elliptique avec peu de traces (de classe de trace).
 \end{rem}
 
 \section{Résultats numériques}
@@ -2263,8 +2398,8 @@ résolvant ce problème et ceux présentés dans ce mémoire, on puisse finaleme
 résoudre le problème d'isomorphisme dans des temps acceptables; il restera alors
 à traiter l'évaluation de cet isomorphisme.
 
-\begin{thebibliography}{LC}
 \addcontentsline{toc}{part}{Références}
+\begin{thebibliography}{LC}
 
 \bibitem{All} \emph{Explicit Computation of Isomorphisms between Finite
 Fields}, \bsc{Bill Allombert}, Elsevier Science, 2002, \bsc{url :}
