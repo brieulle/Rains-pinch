@@ -110,10 +110,10 @@ la même représentation\footnote{Par exemple, si on quotiente par deux polynôm
 irréductibles différents ou si on utilise des bases différentes.} pour les deux 
 branches. Une façon de procéder est de construire un isomorphisme entre le corps
 d'une branche et le sous-corps isomorphe de l'autre branche.\par
-Il est connu et prouvé que de deux corps finis de même cardinal sont reliés par
+Il est connu et prouvé que deux corps finis de même cardinal sont reliés par
 un isomorphisme. Cependant la preuve de ce résultat ne permet pas d'expliciter
 directement un tel isomorphisme, le trouver demande alors un travail 
-supplémentaire. La situation est la suivante, nous avons deux extensions de 
+supplémentaire. La situation est la suivante, on a deux extensions de 
 $\GF{q}$ de même degré et définies par deux polynômes irréductibles distincts 
 $f$ et $g$. On notera :
 \[k_1=\GF{q}[X]/(f)\etmath k_2=\GF{q}[Y]/(g)\]
@@ -121,9 +121,10 @@ le but est donc de trouver un isormophisme reliant ces deux corps.
 Une méthode simple et immédiate est d'envoyer $x = \bar{X}$ la classe de $X$
 dans $k_1$ sur une racine de $f$ dans $k_2$. Le problème est que cela revient à 
 factoriser le polynôme $f$ ce qui est beaucoup trop lent. On étudiera dans ce
-rapport deux variantes d'un algorithm dû à Rains, l'une dite cyclotomique et
-l'autre dite elliptique, lui-même tirer d'un algorithme de Pinch, pour 
-déterminer des isomorphismes entre corps finis de même cardinal.
+rapport deux variantes d'un algorithme dû à Rains\cite{Rai}, l'une dite 
+cyclotomique et l'autre elliptique, lui-même étant une amélioration d'un 
+algorithme donné par Pinch\cite{Pin}, pour déterminer des isomorphismes entre 
+corps finis de même cardinal.
 
 \newpage
 \tableofcontents
@@ -493,7 +494,7 @@ l'automorphisme de Frobenius $\phi_q$.
 On a déjà montré que $\GF{q^n}$ était le corps de décomposition de $Q = X^{q^n} 
 - X$, théorème \ref{th:isomGF}, donc que l'extension était normale, proposition 
 \ref{prop:decompnorm}. De plus, comme $Q' = -1 \neq 0$, $Q$ est séparable,
-proposition \ref{prop:sepderiv}, on a bien que $\GF{q^n}/\GF{q}$ est galoisienne
+proposition \ref{prop:sepderiv}, d'où $\GF{q^n}/\GF{q}$ est galoisienne
 et donc :
 \[|\textup{Gal}(\GF{q^n}/\GF{q})| = [\GF{q^n}:\GF{q}] = n\]
 Comme le Frobenius est un $\GF{q}$-automorphisme, c'est un morphisme et un 
@@ -648,7 +649,7 @@ appliquant le (ii), ce qui implique que $\psi$ est un isomorphisme, et en
 rappelant la définition \ref{def:gal}.\\
 \end{proof}
 
-\section{Idéaux d'anneau d'entiers d'un corps de nombre}
+\section{Décomposition d'idéaux d'anneaux d'entiers}
 %TODO: Tout ce qui concerne la preuve de Rains avec les idéaux 
 %premiers, les normes d'ideaux, la factorisation unique, Galois, les périodes de
 %Gauss, les périodes elliptiques (Mihailescu et al.) ou plus précisément ce qui 
@@ -1823,8 +1824,10 @@ $O(\E{n}n\,\textup{log\;}q)$.
 
 \begin{prop}
 \label{prop:algsansext}
-L'algorithme \ref{alg:gausspersansext} est correct et de complexité
-$O(\E{n}n\,\textup{log\,}q)$.
+L'algorithme \ref{alg:gausspersansext} est correct et de complexité :
+\begin{equation}
+O(\E{n}n\,\textup{log\,}q).
+\end{equation}
 \end{prop}
 \begin{proof}
 Les conditions (1), (2) et (5) permettent d'appliquer le théorème 
@@ -1889,8 +1892,10 @@ conditions (1) à (5), $h$ un polynôme de degré $o$ à coefficients dans $\GF{
 %TODO: Analyse de complexité
 \begin{prop} 
 \label{prop:algavecext}
-L'algorithme \ref{alg:gaussperavecext} est correct et de complexité
-$O(\E{no}(no\textup{log\,}q + m\,\textup{log\,}m/(no)))$.
+L'algorithme \ref{alg:gaussperavecext} est correct et de complexité :
+\begin{equation}
+O(\E{no}(no\textup{log\,}q + m\,\textup{log\,}m/(no))).
+\end{equation}
 \end{prop}
 \begin{proof}
 Le théorème \ref{th:gausspernorm} et la proposition \ref{prop:gaussperconj}
@@ -1953,8 +1958,10 @@ reste.
 
 \begin{prop}
 \label{prop:algconvert}
-L'algorithme \ref{alg:convert} est correct et de complexité 
-$O(n\E{n}\textup{log}\;q)$.
+L'algorithme \ref{alg:convert} est correct et de complexité :
+\begin{equation}
+O(n\E{n}\textup{log}\;q).
+\end{equation}
 \end{prop}
 \begin{proof}
 D'après le point précédent, on a :
@@ -2079,15 +2086,22 @@ agit comme une matrice diagonale :
 \end{equation}
 et pour un entier $n$, le Frobenius de $E/\GF{q^n}$ agit comme une puissance
 \nroot{n} de cette matrice sur $E[\ell]$. Ainsi, l'extension de degré
-$\textup{min}(\ord{\ell}{\alpha},\ord{\ell}{\beta})$ de 
-$\GF{q}$ est la plus petite extension contenant un point d'ordre $\ell$ et 
-l'extension de degré $\ord{\ell}{\phi_q}$ de $\GF{q}$ est la plus
-petite extension contenant tout $E[\ell]$.\par 
+$k = \textup{min}(\ord{\ell}{\alpha},\ord{\ell}{\beta})$ de 
+$\GF{q}$ est la plus petite extension contenant un point d'ordre $\ell$, si on
+prend $P\in E[m]$ dans l'espace propre de $\alpha$  et que $\ord{\ell}{\alpha} =
+k$ alors :
+\begin{equation}
+\phi_{q^k}(P) = [\alpha^k]P = [1]P = P
+\end{equation}
+ce qui est le critère d'appartenance à $E/\GF{q^k}$.
+
+Ce résultat serait généralisé au
+puissance d'un nombre premier de Elkies par relèvement $\ell$-adique.\par 
 %TODO: rajouter le cas d'une puissance d'un elkie en parlant du lift en l-adic
 Autrement dit, si $\textup{min}(\ord{m}{\alpha},\ord{m}{\beta}) = n$, on obtient
 alors des générateurs de $\GF{q^n}$. Pour cela, il faut prendre un bon $m$ et
 surtout une bonne courbe elliptique, \emph{i.e.} prendre pour $m$ un premier
-Elkies ou un puissance d'un tel nombre premier semble être la meilleure
+Elkies ou une puissance d'un tel nombre premier semble être la meilleure
 solution. Pour $m$ premier ou puissance d'un premier de Elkies, on a :
 \begin{equation}
 X - \overline{t_E}X + \overline{q} = (X - \overline{\alpha})(X -
@@ -2188,7 +2202,6 @@ sur une qui marche (Ça serait bien d'avoir une preuve que ça arrive forcément
 Peut-être \cite{CasHen} ?).\par
 Une fois la courbe et $m$ obtenus, on peut exécuter l'algorithme de Rains
 proprement dit, \emph{cf} algorithme \ref{alg:gaussell}.
-%TODO: expliquez un peu les trucs où l'algorithme
 \begin{algorithm}
 \caption{Détermination d'un élément normal unique}
 \label{alg:gaussell}
@@ -2207,8 +2220,10 @@ S}{\left([\sigma]P\right)_X^{\#\textup{Aut}(E)/2}}$
 \end{algorithm}
 
 \begin{prop}
-L'algorithme \ref{alg:gaussell} est correct et de complexité
-$O((m\,\textup{log\,}m)\I{n}/n)$.
+L'algorithme \ref{alg:gaussell} est correct et de complexité :
+\begin{equation}
+O((m\,\textup{log\,}m)\I{n}/n).
+\end{equation}
 \end{prop}
 
 
@@ -2230,7 +2245,7 @@ $6.2$ et \emph{(peut-être)} une partie du code fait usage de la bibliothèque
 empêche de traiter le cas des extensions de $\GF{q}$ avec $q = p^r$ et $r>1$; on
 n'implémentera alors que le cas $q = p$.
 
-\section{Recherche du paramètre $m$}
+\section{Recherche du paramètre \emph{m}}
 %TODO: Des détails sur m et comment on le trouve (forme an + 1, premier ou
 %puissance d'un nombre premier; pour la méthode cyclotomique et elliptique
 La détermination d'une borne optimale pour $m$ nécessiterait un peu plus
@@ -2293,10 +2308,10 @@ la borne de départ.
 
 \subsection{Pour la méthode elliptique}
 \label{sec:recherchermell}
-Pour la méthode elliptique, la situation est à peine plus délicate. Il y a la
-condition du nombre de trace admissible pour un $m$. Comme pour la méthode
-cyclotomique, au départ on cherche un $m$ premier de la forme $an + 1$. 
-Le traitement est différent selon si $m$ est égal à $p$ ou non.\par
+Pour la méthode elliptique, la situation est à peine plus délicate, il y a la
+condition du nombre de trace admissible pour un $m$ en plus. Comme pour la 
+méthode cyclotomique, au départ on cherche un $m$ premier de la forme $an + 1$. 
+Pour la suite, le traitement est différent selon si $m$ est égal à $p$ ou non.
 Dans les deux cas, il faut trouver les éléments d'ordre $n$ de $\zmodninv{m}$.
 Une fois ceux-ci obtenus, on effectue les tests suivants :
 \vspace{0.3cm}
@@ -2327,19 +2342,20 @@ diminue drastiquement. Pour plus de détails, on peut consulter l'article
 \cite{CasHen} (perso j'y vois rien pour le moment...).\par
 Un autre changement possible est le nombre de trace admissibles minimal qu'on
 souhaite obtenir pour valider un candidat. Pour le moment, on ne demande d'avoir
-qu'un seul bon candidat pour la trace, on peut imaginer en demande $d>1$. L'idée
-serait que cela puisse améliorer la probabilité avec laquelle on peut
-directement tomber sur une bonne trace (pertinent ? Si la distribution est
-uniforme, je ne sais pas si ça changerait grand chose...).\par
-Comme on choisit les courbes sur le corps de base $\GF{q}$, si $q$ est petit
+qu'un seul bon candidat, mais on peut imaginer en demander $d>1$. 
+L'idée serait que cela puisse améliorer la probabilité avec laquelle on pourrait
+directement tomber sur une bonne trace. Cela pourrait être utile dans le cas où
+le degré de l'extension devien plus grand que la borne de Hasse comme on le
+verra plus tard.\par
+Comme les courbes sont choisies sur le corps de base $\GF{q}$, si $q$ est petit
 alors le nombre de trace disponible est moindre, ainsi les chances de tomber sur
 une bonne courbe diminue. (Je suis plus convaincu par cette deuxième partie) 
 %TODO: On pourrait faire un tableau pour tout ça ?
-De plus, le degré de l'extension $n$ doit diviser
-$\varphi(m)$, alors si $n > \sqrt{2q}$ \emph{a fortiori} $m >\sqrt{2q}$ et le
-nombre de bons candidats baisse à nouveau. Il serait intéressant de pousser
-l'étude de ces critères (avec plus de temps.. ?) afin de déterminer quelle
-méthode utiliser dans un algorithme général qui regrouperait les deux méthodes.
+De plus, le degré de l'extension $n$ doit diviser $\varphi(m)$, alors si $n > 
+\sqrt{2q}$ \emph{a fortiori} $m >\sqrt{2q}$ et le nombre de bons candidats 
+baisse à nouveau. Il serait intéressant de pousser l'étude de ces critères 
+(avec plus de temps.. ?) afin de déterminer quelle méthode utiliser dans un 
+algorithme général qui regrouperait les deux méthodes.
 %TODO: On pourrait même comparé les temps entre la méthode elliptique avec un n
 %plus grand que la borne de Hasse et la méthode cyclotomique qui aurait besoin
 %d'une extension; histoire de savoir si on garde quand même la méthode
