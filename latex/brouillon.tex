@@ -1824,7 +1824,7 @@ $O(\E{n}n\,\textup{log\;}q)$.
 
 \begin{prop}
 \label{prop:algsansext}
-L'algorithme \ref{alg:gausspersansext} est correct et de complexité :
+L'algorithme \ref{alg:gausspersansext} est correct et de complexité
 \begin{equation}
 O(\E{n}n\,\textup{log\,}q).
 \end{equation}
@@ -1892,7 +1892,7 @@ conditions (1) à (5), $h$ un polynôme de degré $o$ à coefficients dans $\GF{
 %TODO: Analyse de complexité
 \begin{prop} 
 \label{prop:algavecext}
-L'algorithme \ref{alg:gaussperavecext} est correct et de complexité :
+L'algorithme \ref{alg:gaussperavecext} est correct et de complexité
 \begin{equation}
 O(\E{no}(no\textup{log\,}q + m\,\textup{log\,}m/(no))).
 \end{equation}
@@ -1958,7 +1958,7 @@ reste.
 
 \begin{prop}
 \label{prop:algconvert}
-L'algorithme \ref{alg:convert} est correct et de complexité :
+L'algorithme \ref{alg:convert} est correct et de complexité
 \begin{equation}
 O(n\E{n}\textup{log}\;q).
 \end{equation}
@@ -2087,16 +2087,15 @@ agit comme une matrice diagonale :
 et pour un entier $n$, le Frobenius de $E/\GF{q^n}$ agit comme une puissance
 \nroot{n} de cette matrice sur $E[\ell]$. Ainsi, l'extension de degré
 $k = \textup{min}(\ord{\ell}{\alpha},\ord{\ell}{\beta})$ de 
-$\GF{q}$ est la plus petite extension contenant un point d'ordre $\ell$, si on
+$\GF{q}$ est la plus petite extension contenant un point d'ordre $\ell$ : si on
 prend $P\in E[m]$ dans l'espace propre de $\alpha$  et que $\ord{\ell}{\alpha} =
 k$ alors :
 \begin{equation}
-\phi_{q^k}(P) = [\alpha^k]P = [1]P = P
+\phi_{q^k}(P) = [\alpha^k]P = [1]P = P.
 \end{equation}
-ce qui est le critère d'appartenance à $E/\GF{q^k}$.
-
-Ce résultat serait généralisé au
-puissance d'un nombre premier de Elkies par relèvement $\ell$-adique.\par 
+De la même façon, une extension d'ordre $\ord{m}{\ell}$ est contient tous les 
+points d'ordre $\ell$. Ce résultat serait généralisé au puissance d'un nombre 
+premier de Elkies par relèvement $\ell$-adique.\par 
 %TODO: rajouter le cas d'une puissance d'un elkie en parlant du lift en l-adic
 Autrement dit, si $\textup{min}(\ord{m}{\alpha},\ord{m}{\beta}) = n$, on obtient
 alors des générateurs de $\GF{q^n}$. Pour cela, il faut prendre un bon $m$ et
@@ -2220,7 +2219,7 @@ S}{\left([\sigma]P\right)_X^{\#\textup{Aut}(E)/2}}$
 \end{algorithm}
 
 \begin{prop}
-L'algorithme \ref{alg:gaussell} est correct et de complexité :
+L'algorithme \ref{alg:gaussell} est correct et de complexité 
 \begin{equation}
 O((m\,\textup{log\,}m)\I{n}/n).
 \end{equation}
