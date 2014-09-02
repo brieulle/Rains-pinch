@@ -1010,15 +1010,14 @@ polynôme en $y := \overline{Y}$ et on utilise ces deux expressions pour exprime
 $x$ en fonction de $y$ afin d'obtenir l'isomorphisme voulu.\par
 
 \subsection{Méthode cyclotomique}
-fallback
-Pour la méthode cyclotomique on utilisera $\Gamma = k_1^{\times}$ et $\gamma$ 
-sera une racine primitive \nroot{m} de l'unité.
+Pour la méthode cyclotomique on utilisera pour $\Gamma$ le groupe multiplicatif 
+de $k_1$ et $\gamma$ sera une racine primitive \nroot{m} de l'unité.
 Un corps fini contient toutes les racines \nroot{m} de l'unité si et seulement 
 si l'ordre de son groupe multiplicatif est divisible par $m$. En particulier, il
 contient alors des racines \nroot{m} primitives de l'unité. Soit $\zeta_m$ une
 racine \nroot{m} primitive de l'unité dans $k_1$, alors l'image de $\zeta_m$ par
-n'importe quel morphisme $\theta : k_1 \to k_2$ est une racine \nroot{m} primitive
-de l'unité.\par
+n'importe quel morphisme $\theta : k_1 \to k_2$ est une racine \nroot{m} 
+primitive de l'unité.\par
 On choisit $\zeta'_m$ une racine primitive \nroot{m} de l'unité dans $k_2$
 alors $\zeta_m$ s'enverra sur une puissance $\zeta'_m$ puisque le groupe 
 mulitplicatif d'un corps est cyclique. On définit pour $0 < s < m$ les
@@ -1040,16 +1039,16 @@ AC = B.
 \par
 Il faut maintenant déterminer les bases $(x_i)_{i\in I}$ et $(y_i)_{i\in I}$. 
 Par exemple, si on trouve deux racines $\nu_1$ et $\nu_2$ de $f$ et $g$ 
-respectivement, telles que $\theta(\nu_1) = \nu_2$, on pourra prendre comme bases 
-$x_i = \nu_1^i$ et $y_i = \nu_2^i$.\par
+respectivement, telles que $\theta(\nu_1) = \nu_2$, on pourra prendre comme 
+bases $x_i = \nu_1^i$ et $y_i = \nu_2^i$.\par
 Mais comme les racines $\zeta_m$ et $\zeta'_m$ sont choisies de telle sorte 
 qu'elles n'engendrent aucuns des sous-corps de $\GF{q^n}$ cela veut 
 dire, en particulier, qu'elles sont racines de $f$ et $g$. On pose donc 
-$x_i = \zeta_m^i$ et $y_i = (\zeta'_m)^{si}$ selon l'application $\theta^s$ qu'on 
-souhaite tester. On déduit l'image de $x$ de la matrice $C$, dont les 
+$x_i = \zeta_m^i$ et $y_i = (\zeta'_m)^{si}$ selon l'application $\theta^s$ 
+qu'on souhaite tester. On déduit l'image de $x$ de la matrice $C$, dont les 
 coefficients dans la base monomiale engendrée par $y$ sont sur la deuxième 
-ligne. Alors, si $\theta^s(x)$ est racine de $f$ sur $k_2$, l'application $\theta^s$
-est effectivement un isomorphisme. La méthode peut se résumer ainsi :
+ligne. Alors, si $\theta^s(x)$ est racine de $f$ sur $k_2$, l'application 
+$\theta^s$ est effectivement un isomorphisme. La méthode peut se résumer ainsi :
 \vspace{0.3cm}
 \begin{enumerate}[1.]
     \item Trouver un entier $m$ "petit" divisant $q^n - 1$ tel que 
@@ -1059,8 +1058,8 @@ est effectivement un isomorphisme. La méthode peut se résumer ainsi :
     $\zeta'_m$ dans $k_2$.
 
     \item  Déterminer pour quel $s\in \lbrace{1,\dots,m-1}\rbrace$, 
-    l'application $\theta^s$ telle que $\theta^s(\zeta_m) = (\zeta'_m)^s$, est un 
-    isomorphisme.
+    l'application $\theta^s$ telle que $\theta^s(\zeta_m) = (\zeta'_m)^s$, est 
+	un isomorphisme.
 \end{enumerate}
 \vspace{0.3cm}
 La condition $q$ premier avec $m$ est là pour assurer qu'une racine primitive
@@ -2048,9 +2047,9 @@ $E/\GF{q}$, $m$ et le nombre de points rationnels de $E$ sur $\GF{q^n}$; ce sera
 étudié plus en détail dans la section \ref{sec:choixparam}.\par
 Il faut alors calculer des points d'ordre exactement $m$ sur $E/k_1$ et $E/k_2$.
 Selon le $j$-invariant et la trace (du Frobenius) de $E$, on calcule alors  
-ce qu'on appelle les \emph{périodes elliptiques} qui consistent principalement à
-sommer les abscisses de l'orbites d'un point de $m$-torsion sous l'action d'un
-sous-groupe de $\zmodninv{m}$, ce sera détailler dans la section
+ce qu'on appelle les \emph{périodes elliptiques} qui consistent à sommer les 
+abscisses de l'orbites d'un point de $m$-torsion sous l'action d'un
+sous-groupe de $\zmodninv{m}$, ce sera détaillé dans la section
 \ref{sec:perell}. On aura alors obtenu des éléments normaux et il nous suffira 
 de procéder comme dans la méthode cyclotomique \ref{sec:algcompcycl} afin
 d'obtenir l'isomorphisme désiré.
@@ -2063,13 +2062,12 @@ d'obtenir l'isomorphisme désiré.
 %résultat sur les tordues).
 On rappelle qu'une courbe elliptique $E/\GF{q}$ est munie de l'endomorphisme de
 Frobenius $\phi_q : [X, Y, Z] \mapsto [X^q, Y^q, Z^q]$ qui a pour polynôme
-minimal $X^2 -tX + q$ avec $\#E(\GF{q}) = q + 1 - t$. Le polynôme
-minimal se scinde dans une extension quadratique et devient $(X -
-\alpha)(X - \beta)$. On rappelle aussi que $\#E(\GF{q^n}) = q^n + 1 - (\alpha^n
-+ \beta^n)$.\par
+minimal $X^2 -tX + q$ avec $\#E(\GF{q}) = q + 1 - t$. On rappelle aussi que 
+$\#E(\GF{q^n}) = q^n + 1 - (\alpha^n + \beta^n)$ (futur référence à un résultat 
+dans la première partie).\par
 Si $m$ est premier avec $p$ alors le groupe de $m$-torsion $E[m]$ est de rang
-$2$ et pour toute base fixée $\phi_q$ agit comme une matrice $2\times2$ à
-coefficients dans $\zmodn{m}$ sur $E[m]$.
+$2$ et si on fixe une base de $\zmodninv{m}\times\zmodninv{m}$, alors $\phi_q$ 
+agit comme une matrice $2\times2$ à coefficients dans $\zmodn{m}$ sur $E[m]$.
 \begin{defn}
 Soit $E/\GF{q}$ une courbe elliptique, un nombre premier $\ell$ est appelé
 nombre premier de Elkies pour $E$ si le polynôme minimal de $\phi_q$ se scinde
@@ -2083,16 +2081,16 @@ agit comme une matrice diagonale :
 0 & \beta
 \end{pmatrix}
 \end{equation}
-et pour un entier $n$, le Frobenius de $E/\GF{q^n}$ agit comme une puissance
+et pour tout entier $n$, le Frobenius de $E/\GF{q^n}$ agit comme une puissance
 \nroot{n} de cette matrice sur $E[\ell]$. Ainsi, l'extension de degré
 $k = \textup{min}(\ord{\ell}{\alpha},\ord{\ell}{\beta})$ de 
-$\GF{q}$ est la plus petite extension contenant un point d'ordre $\ell$ : si on
-prend $P\in E[m]$ dans l'espace propre de $\alpha$  et que $\ord{\ell}{\alpha} =
-k$ alors :
+$\GF{q}$ est la plus petite extension contenant un point d'ordre $\ell$. En
+effet, si on prend $P\in E[m]$ dans l'espace propre de $\alpha$  et que 
+$\ord{\ell}{\alpha} = k$, alors :
 \begin{equation}
 \phi_{q^k}(P) = [\alpha^k]P = [1]P = P.
 \end{equation}
-De la même façon, une extension d'ordre $\ord{m}{\ell}$ est contient tous les 
+De plus, une extension d'ordre $\ord{m}{\ell}$ est contient tous les 
 points d'ordre $\ell$. Ce résultat serait généralisé au puissance d'un nombre 
 premier de Elkies par relèvement $\ell$-adique.\par 
 %TODO: rajouter le cas d'une puissance d'un elkie en parlant du lift en l-adic
@@ -2111,7 +2109,7 @@ $z\in\zmodninv{m}$ tels que $z^n = 1$ et de vérifier si :
 \ord{m}{q/z} > n \etmath \vert{\widehat{z + q/z}}\vert\leq\sqrt{2q}
 \end{equation}
 où dans la seconde équation, on prend le relevé de $z + q/z$ dans $\ZZ$. Les $z$
-vérifiant ses conditions seront les candidats pour les classes de traces
+vérifiant ces conditions seront les candidats pour les classes de traces
 admissibles. Elles serviront à déterminer quelle courbe elliptique on utilisera
 pour appliquer l'algorithme. Pour sélectionner une courbe, il suffit de calculer
 la trace de son Frobenius et la trace du Frobenius de ses tordues en accord avec
@@ -2175,8 +2173,9 @@ la situation de la manière suivante :
 \label{sec:perell}
 %TODO: Prouver et définir les périodes elliptiques 
 La caractéristique principale de l'algorithme de Rains, comme on a pu le voir
-dans la section précédente, est l'utilisation d'éléments normaux uniques sous
-l'action d'un certains groupes. Ici, il se trouve que l'unicité sera déduite de
+dans la section précédente, est la détermination de deux éléments uniques reliés
+par un isomorphisme, dans le sens où ils ont la même orbite sous l'action de
+Galois. Ici, il se trouve que l'unicité sera déduite de
 l'action du Frobenius de la courbe elliptique choisie $E/\GF{q}$ sur des points
 de torsion d'ordre $m$ de la courbe $E(\GF{q^n})$.
 %TODO: Parler des automorphismes non triviaux
@@ -2184,8 +2183,8 @@ de torsion d'ordre $m$ de la courbe $E(\GF{q^n})$.
 Soit $E/\GF{q}$ une courbe elliptique avec $j_E\neq0$ et $p\neq2, 3$ et soit $m$
 une puissance d'un nombre premier de Elkies. Supposons que
 $\#\textup{Aut}_{\GF{q}}(E)$ divise $\varphi(m)$ et considérons
-$\textup{Aut}_{\GF{q}}(E)$ comme un sous-groupe de $\zmodninv{m}$. Posons
-$\alpha\in\zmodninv{m}$ une valeur propre du Frobenius modulo $m$ et supposons
+$\textup{Aut}_{\GF{q}}(E)$ comme un sous-groupe de $\zmodninv{m}$. On note alors
+$\alpha\in\zmodninv{m}$ une valeur propre du Frobenius modulo $m$ et on suppose
 que $\zmodninv{m}/\textup{Aut}_{\GF{q}}(E) = \groupgen{\alpha}\times S$. Alors
 pour tout point $P$ d'ordre exactement $m$ dans l'espace propre engendré par
 $\alpha$, on définit la période elliptique :
@@ -2290,7 +2289,7 @@ méthodes déjà mises en place.\par
 \emph{(Les caracs ne sont plus à jour)}\,
 Les tests sont effectués sur une machine virtuel sous le système Linux 
 3.12.9-1-ARCH, dotée d'un processeur Intel Xeon E312xx 4 c\oe urs à 
-$3092.968$MHz et de $1.23$go de RAM. Les algorithmes ont été implémentés et 
+$3$GHz et de $1.23$go de RAM. Les algorithmes ont été implémentés et 
 exécutés sous le logiciel \href{http://www.sagemath.org/}{SAGE} en version 
 $6.2$ et \emph{(peut-être)} une partie du code fait usage de la bibliothèque
 \href{http://www.flintlib.org/}{FLINT}. Des limitations du logiciel SAGE nous
@@ -2302,8 +2301,8 @@ n'implémentera alors que le cas $q = p$.
 %puissance d'un nombre premier; pour la méthode cyclotomique et elliptique
 La détermination d'une borne optimale pour $m$ nécessiterait un peu plus
 d'expérimentations que ce qui a été effectué jusqu'à maintenant. La solution 
-adoptée dans le programme est de fixer une borne arbitraire et de chercher un
-nombre premier :
+adoptée dans le programme est de fixer une borne arbitraire sur $a$ et de 
+chercher un nombre premier :
 \begin{equation}
 \label{eq:formedem}
 m := an + 1 
@@ -2361,7 +2360,7 @@ la borne de départ.
 \subsection{Pour la méthode elliptique}
 \label{sec:recherchermell}
 Pour la méthode elliptique, la situation est à peine plus délicate, il y a la
-condition du nombre de trace admissible pour un $m$ en plus. Comme pour la 
+condition du nombre de traces admissibles pour un $m$ en plus. Comme pour la 
 méthode cyclotomique, au départ on cherche un $m$ premier de la forme $an + 1$. 
 Pour la suite, le traitement est différent selon si $m$ est égal à $p$ ou non.
 Dans les deux cas, il faut trouver les éléments d'ordre $n$ de $\zmodninv{m}$.
@@ -2392,7 +2391,7 @@ petit que $\sqrt{2q}$, le nombre de candidat semble être relativement
 raisonnable, une fois cette borne dépassée, le nombre de candidats par valeur 
 diminue drastiquement. Pour plus de détails, on peut consulter l'article 
 \cite{CasHen} (perso j'y vois rien pour le moment...).\par
-Un autre changement possible est le nombre de trace admissibles minimal qu'on
+Un autre changement possible est le nombre de traces admissibles minimal qu'on
 souhaite obtenir pour valider un candidat. Pour le moment, on ne demande d'avoir
 qu'un seul bon candidat, mais on peut imaginer en demander $d>1$. 
 L'idée serait que cela puisse améliorer la probabilité avec laquelle on pourrait
@@ -2469,7 +2468,7 @@ nouvelles.
 
 En ce qui concerne l'implémentation elle-même, les paramètres $m$ et $n$ ont 
 toujours été sélectionnés de telle sorte qu'ils soient premiers. Pour pouvoir 
-traiter le cas général, une solution est de factorisé $n$, de faire l'étude sur 
+traiter le cas général, une solution est de factoriser $n$, de faire l'étude sur
 chacun de ses facteurs et enfin recoller les morceaux.\par
 En particulier, pour chaque facteur on cherche alors des $m_i$ premiers de la 
 forme $ap_i^{v_{p_i}(n)} + 1$, pour $p_i$ divisant $n$, et selon si 
