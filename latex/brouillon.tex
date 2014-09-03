@@ -785,7 +785,8 @@ On remarque que le point $[0,1,0]$ est toujours solution de l'équation
 $E$ uniquement par sa partie affine, autrement dit on a :
 \begin{equation}
 \label{eq:weiersimpl}
-E : {(x,y)\in\overline{K}\times\overline{K} : y^2 = x^3 + ax + b}\cup{\EO}
+E : \lbrace{(x,y)\in\overline{K}\times\overline{K} : y^2 = x^3 + ax + b}\rbrace
+\cup\lbrace{\EO}\rbrace
 \end{equation}
 \end{rem}
 
@@ -808,7 +809,7 @@ résultats suivant sont particulièrement intéressants :
 On note $E/K$ pour signifier que les coefficients $a, b$ sont dans $K$, c'est
 équivalent à dire que $E$ est définie sur $K$. On parle de points rationnels 
 d'un corps $L\subset\overline{K}$ pour les points
-$P := [x,y,1]$ dans $E$ tel que $x, y$ sont dans $L$ et on note leur ensemble
+$P := (x,y)$ dans $E$ tel que $x, y$ sont dans $L$ et on note leur ensemble
 $E(L)$.\par
 \vspace{0.3cm}
 Si on munit $E$ de la loi de composition de \emph{corde tangente}, désignée par
@@ -2410,22 +2411,27 @@ algorithme général qui regrouperait les deux méthodes.
 \section{Résultats numériques}
 % TODO:
 % - Temps d'exécution complet pour les deux méthodes sur différents paramètres
-% (déterminer le (ou les) éléments + calcule de l'isomorphisme);
+% (déterminer le (ou les) éléments + calcule de l'isomorphisme); peut-être ça à
+% foutre ailleurs ?
 %
 % - Temps d'exécution pour la détermination des éléments uniques pour les deux
-% méthodes;
+% méthodes; évolution par rapport à différent paramètre, etc.
 %
 % - Comparer éventuellement le nombre de traces trouvées et le nombre de courbes
-% testées avant de trouver une bonne courbe
+% testées avant de trouver une bonne courbe, oui ça pourrait être cool
 %
 % - Temps pour la détermination de l'isomorphisme (montrer plus tard que
 % finalement, cette méthode est pas si géniale :<);
 %
 % - Autre chose ?
+Dans cette section, on présentera différents temps de plusieurs paramètres en
+fonction de la caractéristique et du degré des extensions considérées.
 
 \section{Comparaison avec d'autres méthodes}
 %TODO: 
-% - Comparer cyclotomique vs elliptic, avec et sans extensions;
+% - Comparer cyclotomique vs elliptic, avec et sans extensions; !! Une bone idée
+% pourrait être de "voir" quelle serait la proportion de premier tel qu'il y
+% aurait besoin d'une extension, en fonction de p, en fonction n etc.
 %
 % - Comparer cyclo vs allombert
 %
