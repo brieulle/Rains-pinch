@@ -52,7 +52,7 @@ def pinch_method(p, n, m, f = None, g = None):
 
     while s <= m :	
     	for i in range(n):
-			B[i,:] = ((rootmg**s)**i).vector()
+		B[i,:] = ((rootmg**s)**i).vector()
 
 
         # This will be the isomorphism's matrix
