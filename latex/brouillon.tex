@@ -952,7 +952,7 @@ suivante.
 La méthode de Pinch consiste à choisir un groupe $\Gamma$ défini par des 
 relations algébriques sur $\GF{q}$ et un élément $\gamma\in\Gamma$ tel que:
 \vspace{0.3cm}
-\begin{enumerate}[-]
+\begin{enumerate}[1.]
 \item il soit d'ordre $m$ petit et défini sur $\GF{q^n}$,
 \item il engendre exactement $\GF{q^n}$; et non un de ses sous-corps.
 \end{enumerate}
@@ -960,20 +960,10 @@ relations algébriques sur $\GF{q}$ et un élément $\gamma\in\Gamma$ tel que:
 On exprime alors $\gamma$ en tant que polynôme en $x := \overline{X}$ et en 
 polynôme en $y := \overline{Y}$ et on utilise ces deux expressions pour exprimer
 $x$ en fonction de $y$ afin d'obtenir l'isomorphisme voulu.\par
-
-\subsection{Méthode cyclotomique}
-Pour la méthode cyclotomique on utilisera pour $\Gamma$ le groupe multiplicatif 
-de $k_1$ et $\gamma$ sera une racine primitive \nroot{m} de l'unité.
-Un corps fini contient toutes les racines \nroot{m} de l'unité si et seulement 
-si l'ordre de son groupe multiplicatif est divisible par $m$. En particulier, il
-contient alors des racines \nroot{m} primitives de l'unité. Soit $\zeta_m$ une
-racine \nroot{m} primitive de l'unité dans $k_1$, alors l'image de $\zeta_m$ par
-n'importe quel morphisme $\theta : k_1 \to k_2$ est une racine \nroot{m} 
-primitive de l'unité.\par
 \begin{defn}
     Soit $K/k$ et $L/k$ deux extensions de corps de degrés finis, on dit que 
     $\alpha\in K$ est \emph{relié} à $\beta\in L$ si et seulement s'il existe un
-    $\theta\in\textup{Hom}(K, L)$ tel que :
+    $\theta\in\textup{Hom}_k(K, L)$ tel que :
     \begin{equation}
         \theta(\alpha) = \beta.
     \end{equation}
@@ -984,11 +974,28 @@ primitive de l'unité.\par
     \end{equation}
 \end{defn}
 \begin{rem}
-La notion est très proche de la notion d'éléments conjugués, la seule différence
-est de niveau formel. Si on considère les corps $k_1$ et $k_2$ comme deux objets
-différents, alors on ne peut pas considérer un isomorphisme entre les deux comme
-un automorphisme.
+La notion est très proche de la notion d'éléments conjugués dans le sens où deux
+éléments sont reliés entre eux s'ils ont le même polynôme minimal sur $k$, la 
+seule différence est de niveau formelle.\par
+De façon abstraite, $k_1$ et $k_2$ sont une même entité, le corps à $q^n$ 
+éléments. Lorsqu'on descend d'un niveau d'abstraction et qu'on construit
+concrètement un corps à $q$ éléments, on obtient des représentations 
+différentes. Dans ce cas, $k_1$ et $k_2$ sont différents et par conséquent 
+l'isomorphisme qui les relie n'est pas exactement un automorphisme. On peut donc
+faire une différence entre être reliés et être conjugés.
+\textit{(\emph{N.B.} Ça pourrait être bien si je pouvais expliquer tout ça de
+façons plus formelle, avec le langage des catégories, par exemple.)}
 \end{rem}
+
+\subsection{Méthode cyclotomique}
+Pour la méthode cyclotomique on utilisera pour $\Gamma$ le groupe multiplicatif 
+de $k_1$ et $\gamma$ sera une racine primitive \nroot{m} de l'unité.
+Un corps fini contient toutes les racines \nroot{m} de l'unité si et seulement 
+si l'ordre de son groupe multiplicatif est divisible par $m$. En particulier, il
+contient alors des racines \nroot{m} primitives de l'unité. Soit $\zeta_m$ une
+racine \nroot{m} primitive de l'unité dans $k_1$, alors l'image de $\zeta_m$ par
+n'importe quel morphisme $\theta : k_1 \to k_2$ est une racine \nroot{m} 
+primitive de l'unité.\par
 On choisit $\zeta'_m$ une racine primitive \nroot{m} de l'unité dans $k_2$
 alors $\zeta_m$ s'enverra sur une puissance de $\zeta'_m$ puisque le groupe 
 mulitplicatif d'un corps est cyclique. On définit pour $0 < s < m$ les
@@ -996,26 +1003,23 @@ applications $\theta^s : k_1 \to k_2$ , telles que :
 \begin{equation}
 \theta^s(\zeta_m) = (\zeta'_m)^s.
 \end{equation}
-Le but est de déterminer quel $\theta^s$ définit un isomorphisme.\par
+Le but est de déterminer quel $\theta^s$ définit un isomorphisme ou autrement
+dit de trouver deux racines de l'unité reliées entre elles.\par
 Pour cela, on utilise de l'algèbre linéaire. Si on a deux bases 
-$(x_i)_{i\in I}$, $(y_i)_{i\in I}$ de $k_1$, $k_2$ respectivement, telles 
-qu'il existe un isomorphisme $\theta$ qui envoie $x_i$ sur $y_i$, alors il nous
-suffit de calculer la matrice de passage de la base $(x_i)_{i\in I}$ à
-$(y_i)_{i\in I}$ pour pouvoir déterminer ensuite $\theta(x)$. En posant $A$ la
-matrice avec pour lignes les $x_i$, $B$ la matrice avec pour ligne les $y_i$ et
-$C$ la matrice de passage, il faut alors résoudre le système 
+$(e_i)_{i\in I}$, $(f_i)_{i\in I}$ de $k_1$, $k_2$ respectivement avec $I =
+\lbrace{1,\dots,n}\rbrace$, telles qu'il existe un isomorphisme $\theta$ qui 
+envoie $e_i$ sur $f_i$, alors il nous suffit de calculer la matrice de passage 
+de la base $(e_i)_{i\in I}$ à $(f_i)_{i\in I}$ pour pouvoir déterminer ensuite 
+$\theta(x)$. En posant $A$ la matrice avec pour lignes les $e_i$, $B$ la matrice
+avec pour ligne les $f_i$ et $C$ la matrice de passage, il faut alors résoudre 
+le système 
 \begin{equation}
 AC = B.
 \end{equation}
 \par
-Il faut maintenant déterminer les bases $(x_i)_{i\in I}$ et $(y_i)_{i\in I}$. 
-Par exemple, si on trouve deux racines $\nu_1$ et $\nu_2$ de $f$ et $g$ 
-respectivement, telles que $\theta(\nu_1) = \nu_2$, on pourra prendre comme 
-bases $x_i = \nu_1^i$ et $y_i = \nu_2^i$.\par
-Mais comme les racines $\zeta_m$ et $\zeta'_m$ sont choisies de telle sorte 
-qu'elles n'engendrent aucuns des sous-corps de $\GF{q^n}$ cela veut 
-dire, en particulier, qu'elles sont racines de $f$ et $g$. On pose donc 
-$x_i = \zeta_m^i$ et $y_i = (\zeta'_m)^{si}$ selon l'application $\theta^s$ 
+Il faut maintenant déterminer les bases $(e_i)_{i\in I}$ et $(f_i)_{i\in I}$. 
+Or, les racines $m$-ièmes de l'unité engendre notre extension, on pose alors 
+$e_i = \zeta_m^i$ et $f_i = (\zeta'_m)^{si}$ selon l'application $\theta^s$ 
 qu'on souhaite tester. On déduit l'image de $x$ de la matrice $C$, dont les 
 coefficients dans la base monomiale engendrée par $y$ sont sur la deuxième 
 ligne. Alors, si $\theta^s(x)$ est racine de $f$ sur $k_2$, l'application 
@@ -1032,28 +1036,24 @@ $\theta^s$ est effectivement un isomorphisme. La méthode peut se résumer ainsi
 	un isomorphisme.
 \end{enumerate}
 \vspace{0.3cm}
-La première condition assure qu'une racine primitive
-\nroot{m} de l'unité engendre exactement $\GF{q^n}$, théorème
-\ref{th:polycycldecomp}. Pour le deuxième point, il suffit de prendre au hasard 
-un $z\in k_1^{\times}$ et de l'élever à la puissance $(q^n - 1)/m$ jusqu'à 
-tomber sur un élément d'ordre $m$, la probalité que cela arrive est de 
-$\varphi(m)/m$; il y a au plus $m$ éléments solutions de $X^m - 1$ dans 
-$\GF{q^n}$ et seulement $\varphi(m)$ éléments d'ordre exactement $m$. Si $m$ est
-premier et plus grand que $5$, ce qui sera en général le cas, alors la chance 
-de tomber sur une racine primitive de l'unité est de plus de $80\%$ et elle 
-atteint $95\%$ dès que $m \geq 23$; ce n'est donc pas ce qui demandera le plus
-de ressources. 
+La première condition assure qu'une racine primitive \nroot{m} de l'unité 
+engendre exactement $\GF{q^n}$, théorème \ref{th:polycycldecomp}. Pour le 
+deuxième point, il suffit de prendre au hasard un $z\in k_1^{\times}$ et de 
+l'élever à la puissance $(q^n - 1)/m$ jusqu'à tomber sur un élément d'ordre $m$,
+la probalité que cela arrive est de $\varphi(m)/m$; il y a au plus $m$ éléments 
+solutions de $X^m - 1$ dans $\GF{q^n}$ et seulement $\varphi(m)$ éléments 
+d'ordre exactement $m$.
 \begin{ex}
 Illustrons la méthode par un exemple directement tiré de l'article de 
-Pinch\cite{Pin}. On considère les deux polynômes irréductibles sur $\GF{11}$, 
+Pinch \cite{Pin}. On considère les deux polynômes irréductibles sur $\GF{11}$, 
 $f = X^{23} + 8X^2 + X + 9$ et $g = Y^{23} + 3Y^2 + 4Y + 9$. On pose $m = 829$, 
 on vérifiera qu'il divise bien $11^{23} - 1$ et qu'il est premier avec $11$; 
 en fait, il est lui-même premier. On définit $k_1$ et $k_2$ comme les corps de 
 rupture de $f$ et $g$ respectivement.\par
-Dans cet exemple, il se trouve que $x^{\tfrac{11^{23} - 1}{829}}$ et 
-$y^{\tfrac{11^{23} - 1}{829}}$ sont déjà des racines primitives 829-ième de 
-l'unité, voici leurs expressions dans les bases monomiales engendrées par $x$ et
-$y$ :
+Dans cet exemple, il se trouve que $\alpha(x) := x^{\tfrac{11^{23} - 1}{829}}$ 
+et $\beta(y) := y^{\tfrac{11^{23} - 1}{829}}$ sont déjà des racines primitives
+$829$-ième de l'unité, voici leurs expressions dans les bases monomiales 
+engendrées par $x$ et $y$ :
 \begin{align*}
 \alpha(x) =&\hspace{0.15cm} 7 + 8x + 4x^2 + 4x^4 + 4x^5 + 10x^6 + 4x^7 + 3x^8 + 
 5x^9\\
@@ -1083,27 +1083,24 @@ On peut alors vérifier que $f(\theta(x)) = 0$.
 \subsection{Limitations}
 Le premier problème de cette méthode est qu'il n'y a pas toujours d'élément
 d'ordre "petit" dans $\GF{q^n}^{\times}$. Par exemple, si on prend $p = 2$ et un
-premier de Mersenne égal à $2^n - 1$, on ne trouvera pas d'élement d'ordre plus
-petit que $2^n - 1$. Il y a donc un risque qu'on soit obligé de chercher des
-éléments d'ordre proche de $q^n - 1$, ce qui peut poser problème. Dans l'exemple
-ci-dessus, on avait :
-\[q^n - 1 = 11^{23} - 1 = 895430243255237372246530\]
-On obtiendrait alors une complexité exponentielle. Le scénario peut être encore 
-pire avec des valeurs de $q$ et de $n$ beaucoup plus grandes.\par
+un entier $k$ tel que $n = 2^k - 1$ soit premier, on ne trouvera pas d'élement 
+d'ordre plus petit que $2^n - 1$. Il y a donc un risque qu'on soit obligé de 
+chercher des éléments d'ordre proche de $q^n - 1$, on obtiendrait alors une 
+complexité exponentielle en $n$.\par
 Un autre problème est la recherche au hasard des racines primitives de l'unité. 
 Le côté aléatoire du choix fait qu'il n'est jamais certain de pouvoir tomber sur
 deux racines qui sont dans le même facteur irréductible du polynôme
-cyclotomique. Il peut arriver qu'on soit obligé de tester jusqu'à $m-2$ valeurs
-différentes de $s$ pour pouvoir enfin tomber sur un isomorphisme, par exemple
-si $m$ est premier.\par
-Il faudrait alors trouver un moyen de pouvoir travailler avec un $m$
-relativement petit même si le cardinal du groupe des inversibles n'a pas de
-facteur petit, et en même temps, pouvoir choisir des éléments uniques sous
-l'action du groupe de Galois afin d'être sûr qu'un isomorphisme existe alors
-entre les deux éléments. C'est ce que fait, entre autre, l'algorithme de Rains 
-cyclotomique qu'on va étudier dans la section suivante.
-
-
+cyclotomique. Il peut arriver qu'on soit obligé de tester jusqu'à $O(m)$ valeurs
+différentes de $s$ pour pouvoir enfin tomber sur un isomorphisme.\par
+Le problème vient du fait suivant. Il se trouve que dans un corps fini $\GF{q}$
+si la classe de $q$ n'engendre pas $\zmodninv{m}$ alors le polynôme cyclotomique
+$\Phi_m$ se scinde en $e := \varphi(m)/d$ facteurs irréductibles distincts de 
+degré $d$ dans $\GF{q}[X]$ où $d := \ord{m}{q}$, \emph{cf.} 
+\ref{th:polycycldecomp}. Autrement dit :
+\begin{equation}
+\Phi_m(X) = P_1(X)\dots P_e(X)\in\GF{q}[X],
+\end{equation}
+avec $\textup{deg}(P_i) = d$.
 \section{Algorithme de Rains : méthode cyclotomique}
 La méthode de Rains cyclotomique est une extension de la méthode de Pinch
 cyclotomique. Les principaux changements sont l'utilisation de petites
@@ -2274,7 +2271,9 @@ $6.2$ et \emph{(peut-être)} une partie du code fait usage de la bibliothèque
 empêche de traiter le cas des extensions de $\GF{q}$ avec $q = p^r$ et $r>1$; on
 n'implémentera alors que le cas $q = p$.
 
-\section{Recherche du paramètre \emph{m}}
+\section{Recherche des paramètres}
+
+\subsection{Recherche du paramètre \emph{m}}
 %TODO: Des détails sur m et comment on le trouve (forme an + 1, premier ou
 %puissance d'un nombre premier; pour la méthode cyclotomique et elliptique
 La détermination d'une borne optimale pour $m$ nécessiterait un peu plus
@@ -2299,7 +2298,7 @@ rappelle que les critères de sélection pour l'entier $m$ sont donnés au
 \ref{sec:algcompcycl}, pour la méthode cyclotomique, et au \ref{sec:algcompell},
 pour la méthode elliptique.
 
-\subsection{Pour la méthode cyclotomique}
+\subsubsection*{Pour la méthode cyclotomique}
 \label{sec:recherchemcycl}
 
 La recherche de $m$ dans la méthode cyclotomique est plutôt directe. On regarde
@@ -2335,7 +2334,7 @@ l'ancienne borne et la nouvelle fonctionnent et ainsi de suite jusqu'à atteindr
 la borne de départ.
 \end{rem}
 
-\subsection{Pour la méthode elliptique}
+\subsubsection*{Pour la méthode elliptique}
 \label{sec:recherchermell}
 Pour la méthode elliptique, la situation est à peine plus délicate, il y a la
 condition du nombre de traces admissibles pour un $m$ en plus. Comme pour la 
@@ -2391,11 +2390,13 @@ algorithme général qui regrouperait les deux méthodes.
 %elliptique avec peu de traces (de classe de trace).
 \end{rem}
 
+\subsection{Recherche de la courbe elliptique}
+
 \section{Résultats numériques}
 % TODO:
 % - Temps d'exécution complet pour les deux méthodes sur différents paramètres
 % (déterminer le (ou les) éléments + calcule de l'isomorphisme); peut-être ça à
-% foutre ailleurs ?
+% foutre ailleurs ? >>> Useless
 %
 % - Temps d'exécution pour la détermination des éléments uniques pour les deux
 % méthodes; évolution par rapport à différent paramètre, etc.
