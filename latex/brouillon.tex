@@ -949,6 +949,7 @@ méthode de Pinch, nous allons exposer une de ses variantes dans la section
 suivante.
 
 \section{Algorithme de Pinch}
+\label{sec:algpinch}
 La méthode de Pinch consiste à choisir un groupe $\Gamma$ défini par des 
 relations algébriques sur $\GF{q}$ et un élément $\gamma\in\Gamma$ tel que:
 \vspace{0.3cm}
@@ -962,27 +963,28 @@ polynôme en $y := \overline{Y}$ et on utilise ces deux expressions pour exprime
 $x$ en fonction de $y$ afin d'obtenir l'isomorphisme voulu.\par
 \begin{defn}
     Soit $K/k$ et $L/k$ deux extensions de corps de degrés finis, on dit que 
-    $\alpha\in K$ est \emph{relié} à $\beta\in L$ si et seulement s'il existe un
+    $\alpha\in K$ est \emph{relié à} $\beta\in L$ si et seulement s'il existe un
     $\theta\in\textup{Hom}_k(K, L)$ tel que :
     \begin{equation}
         \theta(\alpha) = \beta.
     \end{equation}
-    On dit que deux éléments $\alpha\in K$ et $\beta\in L$ sont \emph{reliés 
-    entre eux} si $\theta$ est un isomorphisme :
+    On dit que deux éléments $\alpha\in K$ et $\beta\in L$ sont \emph{reliés}
+    si $\theta$ est un isomorphisme :
     \begin{equation}
         \theta : k(\alpha)\to k(\beta).
     \end{equation}
 \end{defn}
 \begin{rem}
 La notion est très proche de la notion d'éléments conjugués dans le sens où deux
-éléments sont reliés entre eux s'ils ont le même polynôme minimal sur $k$, la 
+éléments sont reliés s'ils ont le même polynôme minimal sur $k$, la 
 seule différence est de niveau formelle.\par
-De façon abstraite, $k_1$ et $k_2$ sont une même entité, le corps à $q^n$ 
+En toute généralité, $k_1$ et $k_2$ sont une même entité, le corps à $q^n$ 
 éléments. Lorsqu'on descend d'un niveau d'abstraction et qu'on construit
-concrètement un corps à $q$ éléments, on obtient des représentations 
-différentes. Dans ce cas, $k_1$ et $k_2$ sont différents et par conséquent 
-l'isomorphisme qui les relie n'est pas exactement un automorphisme. On peut donc
-faire une différence entre être reliés et être conjugés.
+concrètement un corps finis, on obtient des représentations différentes. Dans
+ce cas, $k_1$ et $k_2$ sont deux objets distincts et par conséquent 
+l'isomorphisme qui les relie n'est pas un automorphisme. On peut donc
+faire une différence entre être reliés et être conjugés, bien qu'en pratique les
+deux notions sont équivalentes.
 \textit{(\emph{N.B.} Ça pourrait être bien si je pouvais expliquer tout ça de
 façons plus formelle, avec le langage des catégories, par exemple.)}
 \end{rem}
@@ -1100,13 +1102,19 @@ degré $d$ dans $\GF{q}[X]$ où $d := \ord{m}{q}$, \emph{cf.}
 \begin{equation}
 \Phi_m(X) = P_1(X)\dots P_e(X)\in\GF{q}[X],
 \end{equation}
-avec $\textup{deg}(P_i) = d$.
+avec $\textup{deg}(P_i) = d$. Lorsqu'on choisit deux racines de l'unité au
+hasard, il est donc possible qu'elles ne soient pas racines du même facteur
+irréductible. C'est pour cela qu'il faut \og{parcourir}\fg{} les racines de
+l'unité afin d'espérer tomber sur deux racines ayant le même polynôme minimal
+dans $\GF{q}[X]$.\par
+Ces deux problèmes sont résolus par l'algorithme de Rains traité dans la section
+suivant.
 \section{Algorithme de Rains : méthode cyclotomique}
 La méthode de Rains cyclotomique est une extension de la méthode de Pinch
 cyclotomique. Les principaux changements sont l'utilisation de petites
 extensions des corps considérés afin de pouvoir trouver un $m$ plus petit et
-l'usage des périodes de Gauss afin de déterminer des éléments étant dans la même
-orbites sous l'action du groupe de Galois de l'extension.
+l'usage des \emph{périodes de Gauss} afin de déterminer des éléments étant dans 
+la même orbites sous l'action du groupe de Galois de l'extension.
 
 \subsection{Principe}
 
@@ -1115,15 +1123,13 @@ satisfait certaines conditions permettant de trouver des racines $m$-ièmes
 primitives de l'unité qui engendrent les corps qui nous intéressent.\par
 Si on ne trouve pas de $m$ assez petit, il se peut qu'on ait besoin de
 travailler dans de petites extensions de $k_1$ et $k_2$, voir
-\ref{sec:extension}. Il faut alors construire des élements uniques 
-reliés par un isomorphisme entre $k_1$ et $k_2$ ou leurs extensions, ce qui est
-effectué \textit{via} les \emph{périodes de Gauss} dans la section 
-\ref{sec:gaussper}.\par
+\ref{sec:extension}. Il faut alors construire des élements reliés de $k_1$ et 
+$k_2$ ou de leurs extensions, ce qui est effectué \textit{via} les 
+\emph{périodes de Gauss} dans la section \ref{sec:gaussper}.\par
 Si l'utilisation d'une extension a été nécessaire, alors on calcule la trace des
 deux éléments obtenus afin d'avoir des générateurs de l'extension qui nous
 intéresse. Une fois ceux-ci obtenus, il ne reste plus qu'à déterminer
-l'isomorphisme. Ici le choix fait fera usage d'éléments dit normaux, ce qui est
-traité à la section \ref{sec:elemnorm}.
+l'isomorphisme, ce qui est traité dans la section \ref{sec:elemnorm}.
 
 \subsection{Utilisation d'une extension}
 \label{sec:extension}
@@ -1133,18 +1139,19 @@ extension de $\GF{q^n}$ afin de trouver un $m$ plus petit. En effet, imaginons
 qu'on ait deux extensions de petit degré $k'_1$ et $k'_2$ de $k_1$ et $k_2$ 
 respectivement. Si on applique la méthode de Pinch à $k'_1$ et $k'_2$ et 
 qu'on trouve un isomorphisme, il suffira alors de le restreindre à $k_1$.\par
-L'idée est la suivante, on a les corps $k'_1$ et $k'_2$, extensions de degré $o$
-petit de $k_1$ et $k_2$ respectivement, tels que $m$ petit tel que
-$\#\groupgen{q} = n.o$. On peut alors trouver deux racines primitives
-$m$-ième de l'unité $\zeta_{m}$ et $\zeta'_m$ qui engendrent $k'_1$ et $k'_2$
-respectivement et tels que $\theta(\zeta_m) = \zeta'_m$. Alors on a : 
+L'idée est la suivante, soient $o$ et $m$ deux entiers tels que $q$ soit d'ordre
+$n.o$ dans $\zmodninv{m}$. Soient maintenant $k_1'/k_1$ et $k_2'/k_2$ deux
+extensions de degré $o$, d'après la section précédente, on peut trouver deux
+racines de l'unité $\zeta_m\in k_1'$ et $\zeta'_m\in k_2'$ reliées qui 
+engendrent $k_1'$ et $k_2'$ en tant qu'extensions de $\GF{q}$. Si on note
+$\theta$ l'isomorphisme qui relie $\zeta_m$ à $\zeta'_m$ alors on a : 
 \begin{equation}
 \theta(\textup{Tr\;}_{k'_1/k_1}(\zeta_{m})) =
 \textup{Tr\;}_{k'_2/k_2}(\zeta'_{m}).
 \end{equation}
-La surjectivité de la trace permet d'assurer en particulier que ces
-éléments engendrent toujours $k_1$ et $k_2$. On résume la situation par le 
-schéma suivant :
+La surjectivité de la trace, \cite[Chap. VI, th. 2.5]{Lan1}, permet d'assurer en
+particulier que ces éléments engendrent toujours $k_1$ et $k_2$. On résume la 
+situation par le schéma suivant :
 
 \begin{equation}
 \begin{tikzpicture}
@@ -1153,18 +1160,13 @@ row sep=0.5em, column sep=1.5em,
 text height=2ex, text depth=1ex]
 {\GF{q}[\zeta_m]& & \\
 &\GF{q}[\Tr{\zeta_m}]&\\
-& & \GF{p}[\Tr{\zeta_m}]\\
 \GF{q^o}& & \\
-&\GF{q}& \\
-& & \GF{p}\\};
+&\GF{q}& \\};
 \path[-,font=\scriptsize,>=angle 90]
 (m-1-1) edge node[below] {$o$} (m-2-2)
-(m-4-1) edge node[below] {$o$} (m-5-2)
-(m-2-2) edge node[below] {$r$} (m-3-3)
-(m-5-2) edge node[below] {$r$} (m-6-3)
-(m-1-1) edge node[left] {$n$} (m-4-1)
-(m-2-2) edge node[left] {$n$} (m-5-2)
-(m-3-3) edge node[left] {$n$} (m-6-3);
+(m-3-1) edge node[below] {$o$} (m-4-2)
+(m-1-1) edge node[left] {$n$} (m-3-1)
+(m-2-2) edge node[left] {$n$} (m-4-2);
 \end{tikzpicture}
 \end{equation}
 
@@ -1175,38 +1177,38 @@ on utilise alors les périodes de Gauss introduites à la section
 
 \subsection{Éléments normaux}
 \label{sec:elemnorm}
-Il se trouve qu'on peut améliorer le temps nécessaire pour déterminer
-l'isomorthetasme en exigant que les générateurs satisfassent une condition plus 
-forte qu'être unique; cette condition est que les générateurs soient des 
-éléments normaux. Imaginons qu'on ait calculé deux éléments normaux $v\in k_1$ 
-et $w\in k_2$ tels que $\theta(v) = w$. Pour finir de résoudre le problème, il 
-faut déterminer les images $\theta(x^i)$ pour $0\leq i < n$. Or comme 
-$\theta(x^i) = \theta(x)^i$, il suffit même de déterminer uniquement l'image de 
-$\theta(x)$.\par
-Pour cela, il faut pouvoir être capable à partir d'un élément normal $v$ et d'un
-autre élément $z$, trouver les coefficients de $z$ dans la base de $v$. Puisque,
-si on peut exprimer $x$ sous la forme :
+Imaginons qu'on ait calculé deux éléments normaux $v\in k_1$ 
+et $w\in k_2$ reliés, c-à-d. tels que $\theta(v) = w$. Pour finir de résoudre le
+problème, il faut déterminer les images $\theta(x^i)$ pour $0\leq i < n$. Or, 
+comme $\theta(x^i) = \theta(x)^i$, il suffit de déterminer uniquement la valeur 
+de $\theta(x)$.\par
+Pour cela, il faut pouvoir être capable de déterminer les coefficients de $x$
+dans la base engendré par un élément normal $v$ :
 \[x = \sum_{i\in I}{c_iv^{q^i}}\]
 alors on aura :
 \begin{align*}
 \theta(x) &= \sum_{i\in I}{c_i\theta(v)^{q^i}}\\
 &= \sum_{i\in I}{c_iw^{q^i}}
 \end{align*}
-puisque $\theta$ est un morthetasme. Devoir passer de la base normale à la base 
-monomial en $x$ peut se faire, non pas en inversant une matrice, mais en 
-inversant l'élément d'un anneau quotient. C'est ce qui va être exposé dans cette
-sous-section. Dans le cas des corps finis, on a montré que le Frobenius engendre
-le groupe de Galois de $\GF{p^n}$, donc pour un $x\in\GF{p^n}$ ses conjugués 
-sont $x^p, x^{p^2},\dots,x^{p^{n-1}}$. 
+puisque $\theta$ est un morphisme. Devoir passer de la base normale à la base 
+monomiale en $x$ peut se faire, non pas en inversant une matrice, comme cela a
+été fait en \ref{sec:algpinch} mais en inversant l'élément d'un anneau quotient.
+C'est ce qui va être exposé dans cette sous-section. 
+Dans le cas des corps finis, on a montré que le Frobenius engendre le groupe de 
+Galois de $\GF{p^n}$, donc pour un $x\in\GF{p^n}$ ses conjugués sont 
+$x^p, x^{p^2},\dots,x^{p^{n-1}}$. 
+Le corollaire déduit théorème suivant permet d'utiliser des éléments normaux 
+dans le cadre de l'utilisation d'une extension comme cela a été expliquer à la
+sous-section précédente.
 \begin{thm}
 \label{th:nbelemnorm}
 Le nombre d'élements normaux dans $\GF{p^n}$ est égal au nombre d'unités de
-l'anneau $\GF{p}[X]/(X^n - 1)$.
+l'anneau $\GF{p}[X]/(X^n - 1)$.\par
 \end{thm}
 \begin{proof}
 Voir \cite[th. 3.73]{LiNi2}.
 \end{proof}
-\begin{cor}[\cite{Rai}]
+\begin{cor}[Rains, \cite{Rai}]
 \label{cor:tracenorm}
 Soit $L/K$ une extension de corps finis de caractéristique $p$, premier. Si
 $x\in L$ est un élément normal de $L$ sur $K$, alors $\textup{Tr}_{L/K}(x)$ est 
@@ -1214,7 +1216,7 @@ un élément normal de $K$ sur $\GF{p}$. Si de plus$[L:K]$ est une puissance de
 $p$ alors la réciproque est aussi vraie.
 \end{cor}
 \begin{proof}
-Puisque la trace est surjective sur les corps finis,alors pour tout $y\in K$ il 
+Puisque la trace est surjective sur les corps finis, alors pour tout $y\in K$ il
 existe un $y'\in L$ tel que $y = \textup{Tr}_{L/K}(y')$. Il suffit alors 
 de prendre l'expression de $y'$ dans la base normale engendrée par $x$ et d'y 
 appliquer la trace; le fait qu'elle soit linéaire montre que 
@@ -1237,17 +1239,14 @@ $p^k$ fois élément normaux que $L$. La borne est atteinte dans notre cas, ce q
 conclut la démonstration.
 \end{proof}
 
-On développe maintenant plus en détail la partie évaluation de
-l'isomorphisme. Notamment en illustrant l'isomorphisme entre les matrices
-circulantes de taille $n$ sur $\GF{q}$ et l'anneau $\GF{q}[\omega]/(\omega^n -
-1)$.\par
 Le contexte est le suivant, imaginons qu'on soit parvenu à déterminer deux
-éléments normaux $v$ et $w$ tels qu'ils soient reliés par un isomorphisme $\phi
-: k_1\to k_2$. Notre but est de calculer cet isomorphisme, c'est-à-dire de
-déterminer l'image de $x$ par celui-ci. Comme dit plus haut, on veut trouver les
-coefficients de $x$ dans la base normale engendrée par $v$, en déduire son
-image dans la base normale engendrée par $w$ et pour finir son image dans la 
-base monomial engendrée par $y$. La situation se résume de la façon suivante :
+éléments normaux $v$ et $w$  reliés par un isomorphisme $\theta : k_1\to k_2$. 
+Notre but est de calculer cet isomorphisme, c'est-à-dire de déterminer l'image 
+de $x$ par celui-ci. Comme dit plus haut, on veut trouver les coefficients de 
+$x$ dans la base normale engendrée par $v$, en déduire son image dans la base 
+normale engendrée par $w$ et pour finir son image dans la base monomial 
+engendrée par $y$. Si on pose $I := \lbrace{1,\dots,n}\rbrace$, la situation se 
+résume de la façon suivante :
 \begin{equation}
 \begin{tikzpicture}
 \matrix(m)[matrix of math nodes,
@@ -1266,17 +1265,17 @@ I}{\GF{q}\cdot w^{p^i}}\\};
 \end{equation}
 
 L'application $\GF{q}$-linéaire $\pi^{\prime}$ est donnée par l'expression de 
-$w$ en fonction des $y^i$ ce qui prend $O(...)$ opérations, mais en général les 
-éléments sont déjà exprimés en fonction de la base monomiale. La seule flêche 
-qui pose un problème est celle correspondant à $\pi$ qui permet d'exprimer $x$ 
-en fonction des $v^{p^i}$. C'est pour cette application qu'on va devoir 
-effectuer tout le travail. Soit $z\in\GF{q^n}$ alorsil existe des $c_i\in\GF{q}$
-tels que :
+$w$ en fonction des $y^i$ ce qui prend $O(...)$ opérations. Cependant, en
+pratique les éléments sont déjà exprimés en fonction de la base monomiale. 
+La seule flêche qui pose un problème est celle correspondant à $\pi$ qui permet 
+d'exprimer $x$ en fonction des $v^{p^i}$. C'est pour cette application qu'on va 
+devoir effectuer tout le travail. Soit $z\in\GF{q^n}$ alors il existe des 
+$c_i\in\GF{q}$ tels que :
 \begin{equation}
 z = \sum_{0 \leq i < n}{c_iv^{q^i}}.
 \end{equation}
 En appliquant $\phi_{q^{n-j}}$ puis une forme $\GF{q}$-linéaire $\lambda
-: \GF{q^n} \to \GF{q}$, on obtient :
+: \GF{q^n} \to \GF{q}$ dont on précisera la nature plus loin, on obtient :
 \begin{equation}
 \lambda\left(z^{q^{n-j}}\right) = \sum_{0\leq i < n}
 {c_i\lambda\left(v^{q^{i+n-j}}\right)}.
@@ -1292,7 +1291,7 @@ coefficients de $B^{-1}$, on a bien :
 c_i = \sum_{0\leq j < n}{d_{ij}\lambda\left(z^{q^{n-j}}\right)},
 \end{equation}
 pour $0\leq i < n$. Reste à savoir si la matrice $B$ sera effectivement 
-inversible.
+inversible.\par
 D'après un résultat classique d'algèbre linéaire, toute forme linéaire peut
 s'exprimer sous la forme :
 \begin{equation}
@@ -1327,12 +1326,8 @@ Or la trace est surjective, donc si $\beta$ est normal cela implique que
 $\alpha^{\prime} = 0$ mais alors $\alpha$ n'est pas un élément normal; ce qui 
 démontre le lemme.
 \end{proof}
-Reste maintenant à expliquer d'où vient l'anneau 
-$\mathbb{F}_q[\omega]/(\omega^n - 1)$. Il se trouve que la matrice $B$ a une 
-propriété particulière, elle est ce qu'on appelle une matrice \emph{circulante},
-c-à-d. pour obtenir la ligne suivante, il suffit de décaler tous les 
-éléments vers la droite en faisant passer le dernier coefficient en première 
-position. Ou plus formellement, si :
+Il se trouve que la matrice $B$ a une propriété particulière, 
+elle est ce qu'on appelle une matrice \emph{circulante}, c-à-d. si :
 \[i_1 - j_1 \equiv i_2 - j_2 \bmod n\]
 alors on a 
 \[b_{i_1j_1} = b_{i_2j_2}\]
@@ -1382,19 +1377,12 @@ où les $u_i$ sont les coefficients $u$; on aura alors $\psi(A) = u$.
 
 \subsection{Périodes de Gauss}
 \label{sec:gaussper}
-On connaît désormais le type d'éléments qui nous intéresse, il faut maintenant 
-trouver un moyen d'en trouver qui soient uniques. Cela revient à trouver des 
-éléments qui ont la même orbite sous l'action du groupe de Galois de
-l'extension, ou encore, à regrouper les différentes orbites du polynôme
-cyclotomique (puisqu'il se décompose dans $\GF{q^n}$). Une bonne façon de faire
-est d'utiliser les périodes de Gauss qui en plus d'être uniques sous l'action du
-groupe de Galois, fournissent aussi des éléments normaux.\par
+On souhaite alors obtenir deux éléments reliés afin de pouvoir en déduire
+l'image de $x$ \emph{via} diverses techniques.\par
 Soit $K$ un corps de nombres et $\EO_K$ son anneau des entiers. Posons 
 $\mathfrak{p}$ l'idéal de $\EO_K$ au-dessus de $p$ tel que $\EO_K/\mathfrak{p} =
-\GF{q}$, pour $q = p^r$. D'après le théorème \ref{th:entiercycl}, si $m$ et $p$
-sont premiers entre eux, alors $p$ est non ramifié dans $R_m$ ou par abus de 
-langage dans $K[\mu_m]/K := K[X]/\Phi(X)$ où $\mu_m := \mu_{m,\overline{\CC}}$. 
-Alors on a le schéma suivant :
+\GF{q}$, pour $q = p^r$. Si on pose $K[\mu_m]/K := K[X]/\Phi(X)$ où $\mu_m := 
+\mu_{m,\overline{\CC}}$ alors on a le schéma suivant :
 \begin{equation}
 \label{schema:gaussnorm}
 \begin{tikzpicture}
@@ -1440,7 +1428,8 @@ on a en particulier l'inclusion $\groupgen{q}\subset G
 \begin{defn}
 Supposons qu'il existe un sous-groupe $S\subset\zmodninv{m}$ tel que
 $\zmodninv{m} = \groupgen{q}\times S$. Pour toute racine \nroot{m} de
-l'unité $\zeta_m$, on définit la \emph{période de Gauss} comme suit :
+l'unité $\zeta_m$, on définit la \emph{période de Gauss} $\eta(\zeta_m)$
+comme suit :
 \begin{equation}
 \eta(\zeta_m) = \sum_{\sigma\in S}{\zeta_m^{\sigma}}.
 \end{equation}
@@ -1461,7 +1450,7 @@ $\tau\in\groupgen{q}$ on a $\zeta_m^{\tau} = \zeta_m'$ un autre générateur
 de $\mu_m$ ou encore $\eta(\zeta_m)^{\tau} = \eta(\zeta'_m)$, d'où
 $\groupgen{q}$ agit transitivement sur les $\eta(\zeta_m)$.
 \end{proof}
-Le but de la section va être de démontrer le théorème suivant :
+Le but de la section est de démontrer le théorème suivant :
 
 \begin{thm}
 \label{th:gausspernorm}
@@ -1469,7 +1458,8 @@ Soit $\GF{q^n}/\GF{q}$ une extension de degré $n$ et soit un entier $m$ premier
 avec $q$, tel que :
 \vspace{0.3cm}
 \begin{enumerate}[(i)]
-    \item $\zmodninv{m} = \groupgen{q}\times S$ pour $S$ un sous-groupe,
+    \item $\zmodninv{m} = \groupgen{q}\times S$ pour $S$ un sous-groupe de
+        $\zmodninv{m}$,
     \item $(\varphi(m), r) = 1$,
     \item $m$ est sans facteur carré.
 \end{enumerate}
@@ -1495,14 +1485,10 @@ où $\EO_m$ est l'anneau des entiers de $\QQ[X]/\Phi_m(X)$ d'après le théorèm
 \ref{th:entiercycl} et $\mathfrak{p} = p\EO_m$ est l'idéal de $\EO_m$ au-dessus 
 de $p$. Comme $\QQ[X]/\Phi_m(X)$ est galoisienne, proposition 
 \ref{prop:cyclgal}, de groupe de Galois $\zmodninv{m}$ agit sur $\EO_m$ et donc 
-sur $\EO_{m,p}$. On notera :
-\begin{equation}
-\sigma_k(x) = x^k
-\end{equation}
-l'action du groupe de Galois. Soit maintenant $S$ un sous-groupe de 
-$\zmodninv{m}$, on va étudier la forme de l'invariant $\EO_{m,p}^S$  de 
-$\EO_{m,p}$ sous l'action de $S$, réduction modulo $\mathfrak{p}$ de $\EO_m^S$ 
-l'invariant de $\EO_m$ sous l'action de $S$.\par
+sur $\EO_{m,p}$.\par
+Soit maintenant $S$ un sous-groupe de $\zmodninv{m}$, on va étudier la forme de 
+l'invariant $\EO_{m,p}^S$  de $\EO_{m,p}$ sous l'action de $S$, réduction modulo
+$\mathfrak{p}$ de $\EO_m^S$ l'invariant de $\EO_m$ sous l'action de $S$.\par
 On a $\mathfrak{p} = \prod_{i=0}^g{\mathfrak{P}_i}$, où $g$ est le nombre
 d'idéaux de $\EO_m$ au-dessus de $p$ et les $\mathfrak{P}_i$ sont des premiers
 de $\EO_m$. En effet, l'extension est galoisienne et $p$ est non ramifié dans 
@@ -1513,20 +1499,20 @@ $\EO_m$ puisque $m$ et $p$ sont premiers entre eux, théorème
 \end{equation}
 D'après le théorème des restes chinois généralisé, on obtient finalement :
 \begin{equation}
-\EO_{m,p} = \bigoplus_{i=0}^g{\EO_m/\mathfrak{P}_i}
+\EO_{m,p} = \prod_{i=0}^g{\EO_m/\mathfrak{P}_i}
 \end{equation}
 Or, les $\EO_m/\mathfrak{P}_i$ sont des extensions de corps de $\ZZ/p\ZZ\simeq
 \GF{p}$ de même degré, le degré résiduel $f = [\EO_m/\mathfrak{P}_i:\GF{p}]$. 
 Dans ce cas, on a :
 \begin{equation}
 \label{eq:structinvSmodp}
-\EO_{m,p}^S = \bigoplus_{i=0}^{g'}{\GF{p^{f'}}}.
+\EO_{m,p}^S = \prod_{i=0}^{g'}{\GF{p^{f'}}}.
 \end{equation}
 où $g'$ est le nombre d'idéaux $\mathfrak{P}'_i$ de $\EO_m^S$ tels que $p\EO_m^S
 = \prod_{i = 0}^{g'}{\mathfrak{P}'_i}$ et $f' = 
 [\EO_m^S/\mathfrak{P}'_i:\GF{p}]$.
 
-\begin{lem}
+\begin{lem}[Rains \cite{Rai}]
 \label{lem:nbprimeabove}
 Soit $p$ un nombre premier tel que $(m, p) = 1$ et soit $S$ un sous-groupe de
 $\zmodninv{m}$. Alors le nombre d'idéaux premiers de $\EO_m^S$ au-dessus de $p$ 
@@ -1543,41 +1529,6 @@ $\zmodninv{m}$ ce qui donne le résultat pour $S = \groupgen{1}$ car dans ce cas
 \begin{equation}
 g = \varphi(m)/f = [\zmodninv{m}:\groupgen{p}].
 \end{equation}
-
-Considérons maintenant le cas d'un sous-groupe $S$ quelconque. Pour n'importe 
-quel $\mathfrak{p}$ de $\EO_m$, l'idéal premier en-dessous de celui-ci dans 
-$\EO_m^S$ est l'idéal :
-\begin{equation}
-\prod_{i\in\left(S_{\mathfrak{p}}S\right)/S_{\mathfrak{p}}}
-{\sigma_i(\mathfrak{p})\cap\EO_m^S},
-\end{equation}
-où $S_{\mathfrak{p}}$ est le stabilisateur de $\mathfrak{p}$ sous l'action de
-$S$. Le groupe quotient $(S_{\mathfrak{p}}S)$ permet de trouver les conjugués de
-$\mathfrak{p}$ multipliés par une puissance de celui-ci. En quotientant par
-$S_{\mathfrak{p}}$, on obtient une puissance de $\mathfrak{p}$ égale à $1$ et en
-intersectant avec $\EO_m^S$, on obtient alors la décomposition de $p\EO_m^S$.
-Réciproquement, si $i\notin S_{\mathfrak{p}}S$ alors $\sigma_i(\mathfrak{p})$ 
-n'est pas un conjugué de $\mathfrak{p}$ et donc n'est pas au-dessus de $p$.\par
-Le cardinal de $(S_{\mathfrak{p}}S)/S_{\mathfrak{p}}$ est le même pour tous les
-$\mathfrak{p}$ au-dessus de $p$ puisqu'ils sont conjugués. Alors le nombre de
-premiers de $\EO_m^S$ au-dessus de $p$ est égal à :
-%TODO: Transition un poil trop rapide...
-\begin{equation}
-\dfrac{[\zmodninv{m}:\groupgen{p}]}{[\groupgen{p}S:\groupgen{p}]} =
-[\zmodninv{m}:\groupgen{p}S],
-\end{equation}
-d'après le troisième théorème d'isomorphisme. Ce qu'on peut encore écrire
-:
-\begin{equation}
-[\zmodninv{m}/S:\groupgen{p}].
-\end{equation}
-% Je comprends pas tout le bordel que Rains fait pour obtenir le nombre d'idéaux
-% au-dessus de p. Comme L^S/Q est aussi de Galois, il suffirait d'utiliser les
-% résultats sur le cardinal du groupe de décomposition ? Il y aurait juste une
-% petite discussion par rapport au fait qu'on considère un sous-groupe de G =
-% Gal(L/Q).
-\vspace{0.3cm}
-\emph{Démonstration alternative du cas général}\par
 Considérons mainenant le cas d'un sous-groupe $S$ quelconque, comme 
 $\QQ[\mu_m]/\QQ$ est commutative alors $\QQ[\mu_m]^S/\QQ$ est aussi galoisienne 
 de groupe de Galois $\zmodninv{m}/S$. Alors on peut reporter l'étude à 
@@ -1591,7 +1542,7 @@ g' = \frac{\#\zmodninv{m}/S}{\#\groupgen{p}} =
 \end{equation}
 \end{proof}
 
-\begin{cor}
+\begin{cor}[Rains \cite{Rai}]
 L'anneau $\EO_{m,p}^S$ se factorise en une somme directe de
 $[\zmodninv{m}/S:\groupgen{p}]$ corps tous isomorphes à $\GF{p^n}$, où $n$ est 
 l'ordre de $p$ dans $\zmodninv{m}/S$.
@@ -1607,7 +1558,7 @@ En particulier si $[\zmodninv{m}/S:\groupgen{p}] = 1$ alors $\EO_{m,p}^S$ est
 un corps; c'est en fait exactement $\GF{p^n}$, avec $\#\groupgen{p} = n$. Il 
 reste alors à montrer que les périodes de Gauss engendrent effectivement 
 $\EO_{m,p}^S$.
-\begin{lem}
+\begin{lem}[Rains \cite{Rai}]
 Soit $m$ un entier sans facteur carré, alors les périodes $\eta(\zeta_m^k)$
 engendrent $\EO_{m,p}^S$, où $k\in\zmodninv{m}/S$.
 \end{lem}
@@ -1617,7 +1568,7 @@ Commençons par considérer le cas $S = \langle1\rangle$ et $m$ premier. Alors o
 a $\eta(\zeta_m^k) = \zeta_m^k$ et, par définition, les $\zeta_m^k$ engendrent 
 $\EO_{m,p}$ pour $0 \leq k\leq m$. Il suffit alors de montrer que $1$ peut 
 s'exprimer en fonction des $\zeta_m^k$ pour $k > 0$, puisque $k = 0$ n'est pas 
-dans $\zmodninv{m}$. Mais $m$ est premier, alors le polynôme $\phi_m$ 
+dans $\zmodninv{m}$. Mais $m$ est premier, alors le polynôme $\Phi_m$ 
 donne exactement :
 \begin{equation}
 \textup{Tr}(\zeta_m) = \sum_{0 < k < m}{\zeta_m^k} = 1.
@@ -1694,7 +1645,7 @@ théorème \ref{th:gausspernorm}.
 \subsection{Algorithme et analyse de complexité}
 \label{sec:algcompcycl}
 Maintenant qu'on a tous les résultats théoriques qu'il nous faut, on va pouvoir
-énoncer et justifier les aglorithmes pour déterminer l'isomorphisme. 
+énoncer et justifier les algorithmes pour déterminer l'isomorphisme. 
 On rappelle brièvement la situation, on a $f$ et $g$ deux polynômes 
 irréductibles de degré $n$ distincts sur $\GF{q}$, on note :
 \[k_1 := \GF{q}[X]/(f)\etmath k_2 := \GF{q}[Y]/(g)\]
@@ -1703,7 +1654,7 @@ impair. Il nous faut alors déterminer deux éléments normaux uniques sous
 l'action du groupe de Galois de $\GF{q^n}/\GF{q}$ et en déduire l'image de $x :=
 \overline{X}$ pour déterminer complètement l'isomorphisme. 
 
-\subsubsection*{Recherche d'un élément normal unique}
+\subsubsection*{Calcul d'un générateur relié}
 Comme cela a été exposé au point \ref{sec:extension}, si on ne trouve pas de $m$
 assez petit alors il faut passer par une extension de petit degré $o$ de
 $\GF{q^n}$ afin de pouvoir appliquer les résultats à l'extension $\GF{q^{n.o}}$
@@ -2010,18 +1961,16 @@ groupe de Galois en jeu.
 %TODO: Choix d'un point d'ordre m sur une bonne courbe elliptique engendre 
 %l'extension, utilisation des périodes elliptiques afin d'avoir un élément 
 %stable par l'action du groupe de Galois (Énoncer les lemmes etc.)
-On commence par chercher un entier $m$ et une courbe $E/\GF{q}$ satisfaisant
-plusieurs conditions, notamment des conditions reliant la trace du Frobenius de
-$E/\GF{q}$, $m$ et le nombre de points rationnels de $E$ sur $\GF{q^n}$; ce sera
+On commence par chercher un entier $m$ et une courbe $E/\GF{q}$ tels que
+l'abscisse des points de $m$-torsions engendrent $\GF{q^n}$; ce sera
 étudié plus en détail dans la section \ref{sec:choixparam}.\par
 Il faut alors calculer des points d'ordre exactement $m$ sur $E/k_1$ et $E/k_2$.
-Selon le $j$-invariant et la trace (du Frobenius) de $E$, on calcule alors  
-ce qu'on appelle les \emph{périodes elliptiques} qui consistent à sommer les 
-abscisses de l'orbites d'un point de $m$-torsion sous l'action d'un
-sous-groupe de $\zmodninv{m}$, ce sera détaillé dans la section
-\ref{sec:perell}. On aura alors obtenu des éléments normaux et il nous suffira 
-de procéder comme dans la méthode cyclotomique \ref{sec:algcompcycl} afin
-d'obtenir l'isomorphisme désiré.
+Comme pour la méthode cyclotomique, on calcule alorsce qu'on appelle les 
+\emph{périodes elliptiques} qui consistent à sommer les abscisses de l'orbites 
+d'un point de $m$-torsion sous l'action du groupe de Galois, ce sera détaillé 
+dans la section \ref{sec:perell}. On aura alors obtenu deux éléments reliés et
+accessoirement normal, il suffira alors de procéder comme dans la méthode 
+cyclotomique \ref{sec:algcompcycl} afin d'obtenir l'isomorphisme désiré.
 
 \subsection{Choix des paramètres}
 \label{sec:choixparam}
@@ -2530,7 +2479,7 @@ in Mathematics, 2nd ed., Springer, 2000.
 Pinch}, Cryptography and coding II, p. 193-197, Oxford University Press, 1992.
 
 \bibitem{Rai} \emph{Efficient Computation of Isomorphism Between Finite Fields},
-\bsc{Eric M. Rains}, 1996.
+\bsc{Eric M. Rains}, 1996, communication personnelle.
 
 \bibitem{Sam} \emph{Théorie algébrique des nombres}, \bsc{Pierre Samuel}, 
 Hermann, 1971.
