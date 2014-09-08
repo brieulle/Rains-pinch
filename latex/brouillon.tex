@@ -17,6 +17,7 @@
 \usepackage{rotating}
 \usetikzlibrary{matrix,arrows,decorations.pathmorphing}
 \usepackage{array}
+\usepackage{caption}
 
 % Numérotation des sections, sous-sections, équations, etc.
 \numberwithin{section}{part}
@@ -28,8 +29,6 @@
 \newcommand\zmodninv[1]{(\mathbb{Z}/#1\mathbb{Z})^{\times}}
 \newcommand\GF[1]{\mathbb{F}_{#1}}
 \newcommand\Irr[2]{\textup{Irr}_{#1}(#2)}
-\renewcommand{\algorithmicrequire}{\textbf{Input:}}
-\renewcommand{\algorithmicensure}{\textbf{Ouput:}}
 \newcommand\Tr[1]{\textup{Tr}\left(#1\right)}
 \newcommand\QQ{\mathbb{Q}}
 \newcommand\ZZ{\mathbb{Z}}
@@ -46,6 +45,28 @@
 \newcommand\groupgen[1]{\langle{#1}\rangle}
 \newcommand\ord[2]{\textup{ord}_{#1}(#2)}
 
+% Algorithmic en français
+\floatname{algorithm}{Algorithme}
+\renewcommand{\algorithmicrequire}{\textbf{Entrée :}}
+\renewcommand{\algorithmicensure}{\textbf{Sortie :}}
+\renewcommand{\algorithmiccomment}[1]{\{#1\}}
+\renewcommand{\algorithmicend}{\textbf{fin}}
+\renewcommand{\algorithmicif}{\textbf{si}}
+\renewcommand{\algorithmicthen}{\textbf{alors}}
+\renewcommand{\algorithmicelse}{\textbf{sinon}}
+\renewcommand{\algorithmicelsif}{\algorithmicelse\ \algorithmicif}
+\renewcommand{\algorithmicendif}{\algorithmicend\ \algorithmicif}
+\renewcommand{\algorithmicfor}{\textbf{pour}}
+\renewcommand{\algorithmicforall}{\textbf{pour tout}}
+\renewcommand{\algorithmicdo}{\textbf{faire}}
+\renewcommand{\algorithmicendfor}{\algorithmicend\ \algorithmicfor}
+\renewcommand{\algorithmicwhile}{\textbf{tant que}}
+\renewcommand{\algorithmicrepeat}{\textbf{répéter}}
+\renewcommand{\algorithmicuntil}{\textbf{jusqu'à}}
+\renewcommand{\algorithmicreturn}{\textbf{renvoyer}}
+\renewcommand{\algorithmicto}{\textbf{à}}
+
+
 % Éviter l'overlap dans la table des matières pour les sections, sous-sections
 % etc.
 \setlength{\cftsecnumwidth}{3em}    
@@ -60,6 +81,7 @@
 \newtheorem{lem}[thm]{Lemme}
 \newtheorem{cor}[thm]{Corollaire}
 \newtheorem{prop}[thm]{Proposition}
+\newtheorem{conj}[thm]{Conjecture}
 \theoremstyle{definition}
 \newtheorem{defn}[thm]{Définition}
 \newtheorem{defnp}[thm]{Définition et proposition}
@@ -357,9 +379,7 @@ une base de $L$ en tant que $K$-espace vectoriel. On appelera cette base la
 \end{defn}
 
 \begin{thm}
-Soit $L/K$ une extension galoisienne, alors il existe un $x\in L$ dont l'orbite
-par l'action du groupe de Galois forme une base de $L$ en tant que $K$-espace
-vectoriel.
+Soit $L/K$ une extension galoisienne, alors il existe une base normale.
 \end{thm}
 \begin{proof}
 Voir \cite[th. 3.72]{LiNi1}.
@@ -766,15 +786,15 @@ E[m] = \lbrace{P\in E(\overline{K}) : [m]P = \EO}\rbrace.
 On a les résultats suivants :
 \vspace{0.3cm}
 \begin{itemize}
-\item Si $\textup{car}(K) = 0$ ou $\textup{car}(K) = p > 0$ et $p\not|\,m$ 
+\item Si $\textup{car}(K) = 0$ ou $\textup{car}(K) = p > 0$ et $p\nmid\,m$ 
 alors :
 \begin{equation}
 E[m] = \zmodn{m}\times\zmodn{m}
 \end{equation}
 \item Si $\textup{car}(K) = p > 0$ alors on a l'une des deux situations :
     \begin{align} 
-    E[p^e] &= \lbrace{\EO}\rbrace, \quad \forall e\in\NN^{*}\\
-    E[p^e] &= \zmodn{p^e}\quad \forall e\in\NN^{*}
+    E[p^e] &= \lbrace{\EO}\rbrace, \quad \forall e\in\NN\setminus{0}\\
+    E[p^e] &= \zmodn{p^e}\quad \forall e\in\NN\setminus\lbrace{0}\rbrace
     \end{align}
 \end{itemize}
 \vspace{0.3cm}
@@ -882,7 +902,8 @@ On a $f\in O(g)$ si et seulement s'il existe une constante $M>0$ telle que :
 \begin{equation}
     \vert{f(x)}\vert \leq M\vert{g(x)}\vert,\quad x\to\infty.
 \end{equation}
-On a aussi $f\in o(g)$ si et seulement si pour tout $\epsilon>0$ il existe une constante $N$ telle que :
+On a aussi $f\in o(g)$ si et seulement si pour tout $\epsilon>0$ il existe une 
+constante $N$ telle que :
 \begin{equation}
     \vert{f(n)}\vert\leq\epsilon\vert{g(n)}\vert,\quad\forall n\geq N.
 \end{equation}
@@ -900,8 +921,8 @@ de degré au plus $n$ sur $\GF{q}$. On suppose qu'elle a les propriétés suivan
 \label{eq:M1}
 \M{n}/n\geq\M{m}/m\textup{ si }n\geq m,\quad \M{mn} \leq m^2\M{n},
 \end{equation}
-pour tout $n, m\in\NN$. En particulier, elle est \emph{superlinéaire}, \emph{cf.}
-\cite{GaGe} :
+pour tout $n, m\in\NN$. En particulier, elle est \emph{superlinéaire}, 
+\emph{cf.} \cite{GaGe} :
 \begin{equation}
 \M{mn}\geq m.\M{n},\quad \M{n + m}\geq\M{n} + \M{m}, \quad \M{n}\geq n.
 \end{equation}
@@ -913,11 +934,30 @@ on note $\I{n}$ le nombre d'opérations pour inverser un élément dans $\GF{q^n
 on suppose que cela prend $O(\M{n}\,\textup{log\,}n)$ opérations sur $\GF{q}$,
 voir \cite{GaGe}.
 On utilisera aussi la notation $\tO$, avec $f(n)\in\tO{g(n)}$
-équivalent à $f(n)\in O(g(n)\,\textup{log}^k\,g(n)$.
+équivalent à $f(n)\in O(g(n)\,\textup{log}^k\,g(n))$.
 \begin{defn}
 On désignera par $\textup{rand}(F)$, la fonction retournant un élément choisi
 uniformément au hasard dans un ensemble fini $F$.
 \end{defn}
+Le tableau suivant regroupe les différentes complexités d'opérations courantes 
+sur les corps finis et leurs extensions; elles sont toutes prouvées dans 
+\cite{GaGe} :
+\begin{center}
+\begin{tabular}{|p{7cm}|c|}
+    \hline
+    Opération & Complexité\\
+    \hline\hline
+    Multiplication de deux éléments d'un anneau résiduel de degré $n$. & 
+    $\E{n}$\\
+    \hline
+    Inversion d'un élément d'un anneau résiduel de degré $n$. &
+    $O(\E{n}\,\textup{log }n)$\\
+    \hline
+    Exponentiation à la puissance $m$ d'un élément d'un anneau résiduel de degré
+    $n$. & $O(\E{n}\,\textup{log }m)$\\
+    \hline
+\end{tabular}
+\end{center}
 \newpage
 \part{Isomorphisme de corps finis}
 \label{deux}
@@ -969,7 +1009,7 @@ $x$ en fonction de $y$ afin d'obtenir l'isomorphisme voulu.\par
         \theta(\alpha) = \beta.
     \end{equation}
     On dit que deux éléments $\alpha\in K$ et $\beta\in L$ sont \emph{reliés}
-    si $\theta$ est un isomorphisme :
+    ou \emph{reliés entre eux} si $\theta$ est un isomorphisme :
     \begin{equation}
         \theta : k(\alpha)\to k(\beta).
     \end{equation}
@@ -1184,12 +1224,15 @@ comme $\theta(x^i) = \theta(x)^i$, il suffit de déterminer uniquement la valeur
 de $\theta(x)$.\par
 Pour cela, il faut pouvoir être capable de déterminer les coefficients de $x$
 dans la base engendré par un élément normal $v$ :
-\[x = \sum_{i\in I}{c_iv^{q^i}}\]
+\begin{equation}
+\label{eq:elemnorm1}
+x = \sum_{i\in I}{c_iv^{q^i}}
+\end{equation}
 alors on aura :
-\begin{align*}
-\theta(x) &= \sum_{i\in I}{c_i\theta(v)^{q^i}}\\
-&= \sum_{i\in I}{c_iw^{q^i}}
-\end{align*}
+\begin{align}
+\theta(x) &= \sum_{i\in I}{c_i\theta(v)^{q^i}}\label{eq:elemnorm2}\\
+&= \sum_{i\in I}{c_iw^{q^i}}\label{eq:elemnorm3}
+\end{align}
 puisque $\theta$ est un morphisme. Devoir passer de la base normale à la base 
 monomiale en $x$ peut se faire, non pas en inversant une matrice, comme cela a
 été fait en \ref{sec:algpinch} mais en inversant l'élément d'un anneau quotient.
@@ -1265,9 +1308,10 @@ I}{\GF{q}\cdot w^{p^i}}\\};
 \end{equation}
 
 L'application $\GF{q}$-linéaire $\pi^{\prime}$ est donnée par l'expression de 
-$w$ en fonction des $y^i$ ce qui prend $O(...)$ opérations. Cependant, en
-pratique les éléments sont déjà exprimés en fonction de la base monomiale. 
-La seule flêche qui pose un problème est celle correspondant à $\pi$ qui permet 
+$w$ en fonction des $y^i$ ceci équivaut à l'évaluation d'un polynôme en une
+variable et prend $O(n^2)$ opérations, voir \cite[th. 5.1]{GaGe}. Cependant, en 
+pratique les éléments sont déjà exprimés en fonction de la base monomiale. La 
+seule flêche qui pose un problème est celle correspondant à $\pi$ qui permet 
 d'exprimer $x$ en fonction des $v^{p^i}$. C'est pour cette application qu'on va 
 devoir effectuer tout le travail. Soit $z\in\GF{q^n}$ alors il existe des 
 $c_i\in\GF{q}$ tels que :
@@ -1374,6 +1418,16 @@ d'un élément quelconque $u$ de $\GF{q}[\omega]/(\omega^n - 1)$ et de définir 
 matrice $A$ de coefficients $a_{ij} = u_{(i-j \bmod n)}$ pour $i,j\in\zmodn{n}$,
 où les $u_i$ sont les coefficients $u$; on aura alors $\psi(A) = u$.
 \end{proof}
+En résumé, si on pose $z = x$, on a :
+\[\textup{Tr}\left(x^{p^{n-j}}\right) = \sum_{0\leq i < n}{c_i\textup{Tr}
+\left(v^{p^{i+n-j}}\right)}\]
+et la matrice $B$ est définie par :
+\[b_{ij} = \Tr{\alpha v^{p^{i+n-j}}} = \Tr{\alpha^{p^j}v^{p^i}}\]
+On sait qu'elle est inversible grâce au lemme \ref{lem:mattrinv}, donc si on
+note $d_{ij}$ les coefficients de la matrice $B^{-1}$, on a bien :
+\[c_i = \sum_{0\leq j < n}{d_{ij}\textup{Tr}\left(x^{p^{n-j}}\right)}\]
+Le théorème \ref{th:matcirciso} et les formules (\ref{eq:elemnorm1}),
+(\ref{eq:elemnorm2}) et (\ref{eq:elemnorm3}) permettent de conclure.
 
 \subsection{Périodes de Gauss}
 \label{sec:gaussper}
@@ -1450,6 +1504,11 @@ $\tau\in\groupgen{q}$ on a $\zeta_m^{\tau} = \zeta_m'$ un autre générateur
 de $\mu_m$ ou encore $\eta(\zeta_m)^{\tau} = \eta(\zeta'_m)$, d'où
 $\groupgen{q}$ agit transitivement sur les $\eta(\zeta_m)$.
 \end{proof}
+\begin{rem}
+En particulier, en tant qu'éléments de $\GF{q^n}$ les $\eta(\zeta_m)$ sont
+conjugués. Ainsi, quand on les considère sur deux représentations différentes,
+elles sont reliées entre elles.
+\end{rem}
 Le but de la section est de démontrer le théorème suivant :
 
 \begin{thm}
@@ -1529,8 +1588,9 @@ $\zmodninv{m}$ ce qui donne le résultat pour $S = \groupgen{1}$ car dans ce cas
 \begin{equation}
 g = \varphi(m)/f = [\zmodninv{m}:\groupgen{p}].
 \end{equation}
+
 Considérons mainenant le cas d'un sous-groupe $S$ quelconque, comme 
-$\QQ[\mu_m]/\QQ$ est commutative alors $\QQ[\mu_m]^S/\QQ$ est aussi galoisienne 
+$\QQ[\mu_m]/\QQ$ est abélienne alors $\QQ[\mu_m]^S/\QQ$ est aussi galoisienne 
 de groupe de Galois $\zmodninv{m}/S$. Alors on peut reporter l'étude à 
 l'extension $\QQ[\mu_m]^S/\QQ$, on regarde l'action de $\zmodninv{m}/S$ sur les
 $\mathfrak{P}'_i$ tels que $p\EO_m^S = \prod_{i=0}^{g'}{\mathfrak{P}'_i}$. Comme
@@ -1649,10 +1709,11 @@ Maintenant qu'on a tous les résultats théoriques qu'il nous faut, on va pouvoi
 On rappelle brièvement la situation, on a $f$ et $g$ deux polynômes 
 irréductibles de degré $n$ distincts sur $\GF{q}$, on note :
 \[k_1 := \GF{q}[X]/(f)\etmath k_2 := \GF{q}[Y]/(g)\]
-avec $q = p^r$ pour $r$ un entier naturel non nul et $p$ un nombre premier
-impair. Il nous faut alors déterminer deux éléments normaux uniques sous
-l'action du groupe de Galois de $\GF{q^n}/\GF{q}$ et en déduire l'image de $x :=
-\overline{X}$ pour déterminer complètement l'isomorphisme. 
+avec $q = p^r$ pour $r$ un entier naturel non nul, $p$ un nombre premier
+impair et $r$ premier avec $n$. Il nous faut alors déterminer deux éléments 
+normaux uniques sous l'action du groupe de Galois de $\GF{q^n}/\GF{q}$ et en 
+déduire l'image de $x := \overline{X}$ pour déterminer complètement 
+l'isomorphisme. 
 
 \subsubsection*{Calcul d'un générateur relié}
 Comme cela a été exposé au point \ref{sec:extension}, si on ne trouve pas de $m$
@@ -1661,7 +1722,8 @@ $\GF{q^n}$ afin de pouvoir appliquer les résultats à l'extension $\GF{q^{n.o}}
 et redescendre sur $\GF{q^n}$.\par
 La façon dont on va trouver $m$ est détaillée dans la section
 \ref{sec:recherchemcycl}. En résumé, on cherche le plus petit entier
-$m$ sans facteurs carrés tel qu'il existe $o\in\NN^*$ satisfaisant :
+$m$ sans facteurs carrés tel qu'il existe $o\in\NN\setminus\lbrace{0}\rbrace$ 
+satisfaisant :
 \vspace{0.3cm}
 \begin{enumerate}[(1)]
     \item $(q, m) = 1$ et $q$ est d'ordre $\ord{m}{q} :=n.o$ dans 
@@ -1669,51 +1731,52 @@ $m$ sans facteurs carrés tel qu'il existe $o\in\NN^*$ satisfaisant :
     \item $\varphi(m)/\ord{m}{q}$ et $\ord{m}{q}$ sont premiers entre eux,
     \item $n$ et $o$ sont premiers entre eux,
     \item $(\varphi(m), r) = 1$ pour $q = p^r$,
-    \item $\zmodninv{m} = \groupgen{q^o}\times S$ pour $S$ un sous groupe
-    de $\zmodninv{m}$ d'ordre $\varphi(m)/(n.o)$.
+    %\item $\zmodninv{m} = \groupgen{q^o}\times S$ pour $S$ un sous groupe
+    %de $\zmodninv{m}$ d'ordre $\varphi(m)/(n.o)$.
 \end{enumerate}
 \vspace{0.3cm}
-Les conditions $(1)$, $(2)$ et $(5)$ assurent que les racines 
-\nroot{m} primitives engendrent exactement $\GF{q^{n.o}}$ (\emph{cf.} 
-\ref{schema:gaussnorm}). La condition $(3)$ est d'ordre pratique et permet de
-construire des extensions à partir de polynôme à coefficients directement dans 
-$\GF{q}$ si besoin est. La quatrième condition permet de s'assurer que
-$\groupgen{p} = \groupgen{q}$ et donc que les résultats sur
-$\GF{p}$ soient encore valables sur $\GF{q}$. Enfin, la dernière condition est
-aussi la plus importante puisqu'elle permet d'appliquer le théorème 
-\ref{th:gausspernorm}, elle est aussi en particulier la conséquence des points
-$(1)$ et $(2)$.
+Les conditions $(1)$ et $(2)$ assurenet que les racines $m$-ièmes de l'unité
+engendrent exactement $\GF{q^{n.o}}$ (\emph{cf.} 
+\ref{schema:gaussnorm}); elles impliquent aussi que $\zmodninv{m} =
+\groupgen{q^o}\times S$ pour $S$ un sous-groupe d'ordre $\varphi(m)/(n.o)$, ce
+qui permet d'appliquer le théorème \ref{th:gausspernorm}. La condition $(3)$ est
+d'ordre pratique et permet de construire des extensions à partir de polynôme à 
+coefficients directement dans $\GF{q}$ si besoin est. La condition permet $(4)$ 
+d'assurer que $\groupgen{p} = \groupgen{q}$ et donc que les résultats sur
+$\GF{p}$ soient encore valables sur $\GF{q}$.
 \begin{rem}
-Il se trouve que l'algorithme ne peut pas fonctionner si $q$ est une puissance 
-$r$ de $p$ non première avec $n$, le degré de l'extension. En effet, on a 
-$\groupgen{q}\times S = \zmodninv{m}$, donc par définition $p = sq^a\bmod 
-m$ pour un $s\in S$ et $0 \leq a < n$, alors $q=s^rq^{ar} \bmod m$. 
-Or, $q$ ne peut être écrit que d'une seule façon comme produit d'un élément de 
-$S$ et d'une puissance de $q$, d'où $s^r = 1$ et $q^{ar - 1} = 1 \bmod m$. 
-Ce qui implique que $n$ divise $ar - 1$ et donc que $(n, r) = 1$.\par
+La condition $(4)$ implique que $(r,n) = 1$ et cette condition ne peut pas être
+affaiblie à $(r,n)\neq1$. En effet, on a $\groupgen{q}\times S = \zmodninv{m}$, 
+donc par définition $p = sq^a\bmod m$ pour un $s\in S$ et $0 \leq a < n$, alors 
+$q=s^rq^{ar} \bmod m$. Or, $q$ ne peut être écrit que d'une seule façon comme 
+produit d'un élément de $S$ et d'une puissance de $q$, d'où $s^r = 1$ et $q^{ar 
+- 1} = 1 \bmod m$. Ce qui implique que $n$ divise $ar - 1$ et donc que $(n, r) =
+1$.\par
 Une solution possible serait de calculer un générateur $\alpha$ de 
 $k/\GF{p^{d/c}}$, son polynôme minimal serait alors uniquement défini sur 
 $\GF{p^{d/c}}$ mais se scinderait en $c$ facteurs sur $\GF{q}$, ce qui nous 
-obligerait à réutiliser la méthode trial-and-error de Pinch.
+obligerait à réutiliser la méthode trial-and-error de Pinch. Une autre solution
+serait d'utiliser la méthode elliptique qu'on décrire à la section
+\ref{sec:algell}.
 \end{rem}
 \vspace{0.3cm}
-Alors selon la valeur de $o$ lorsqu'on cherche $m$, c-à-d. si $o = 
-\ord{m}{q} /n = 1$ ou $> 1$, il y aura deux façons différentes de procéder, 
-c'est ce qu'on va détailler plus bas.
+Ainsi selon la valeur de $o$ lorsqu'on cherche $m$, c-à-d. si $o = 
+\ord{m}{q} /n = 1$ ou $> 1$, il y aura deux façons de procéder, c'est ce qu'on 
+va détailler plus bas.
 \paragraph{$\bullet$ Cas rationnel $o = 1$}
-Imaginons qu'on ait trouvé un $m$ satisfaisant les conditions $(1)$ à $(5)$ avec
-$o = 1$ ou $q$ directement d'ordre $n$ . Dans ce cas, on peut travailler 
-directement dans les corps $k_1$ et $k_2$ pour trouver calculer les périodes de
-Gauss. Le tout est résumé dans l'algorithme \ref{alg:gausspersansext}.
+Imaginons qu'on ait trouvé un $m$ satisfaisant les conditions $(1)$ à $(4)$ avec
+$o = 1$. Dans ce cas, on peut travailler directement dans les corps $k_1$ et 
+$k_2$ pour calculer les périodes de Gauss. Le tout est résumé dans l'algorithme 
+\ref{alg:gausspersansext}.
 
 \begin{algorithm}
-\caption{Détermination d'un élément normal unique dans un corps fini}
+\caption{Calcul d'une période de Gauss}
 \label{alg:gausspersansext}
 \begin{algorithmic}[1]
 \REQUIRE $k$ une extension de degré $n$; $m$ un entier divisible par $n$
 satisfaisant les conditions (1) à (5); $\mathcal{M}$ ensemble des diviseurs
 stricts de $m$.
-\ENSURE $\eta$ un élément normal unique de $k$ sous l'action de Galois.
+\ENSURE $\eta$ un élément normal de $k$ reliés aux autres périodes de Gauss.
 \bigskip
 \REPEAT
     \STATE $\zeta_m \leftarrow \textup{rand}(k)^{(q^n - 1)/m}$
@@ -1728,16 +1791,23 @@ On veut déterminer sa complexité, pour trouver une racine primitive
 à la puissance $(q^n - 1)/m$ et on teste si le résultat élevé à la puissance 
 $m/\ell$ vaut $1$ ou non pour $\ell$ un diviseur premier strict de $m$. On 
 s'attend à ce que cela réussisse après $O(1)$ essaies; chaque essaie prenant 
-$O(\E{n}n\,\textup{log\;}q)$ opérations.\par
+\begin{equation}
+O(\E{n}n\,\textup{log\;}q)
+\end{equation}
+opérations.\par
 On doit ensuite calculer la période de Gauss $\eta := \eta(\zeta_m)$,
 d'après ce qui précéde cela revient à faire $\varphi(m)/n$ exponentiation dans
-$\GF{q^n}$ d'exposant au plus $m$, cela se fait $O((m\textup{log\;}m)\E{n}/n)$
+$\GF{q^n}$ d'exposant au plus $m$, cela se fait en 
+\begin{equation}
+O((m\textup{log\;}m)\E{n}/n) 
+\end{equation}
 opérations.\par
-Ainsi, le coût total de l'algorithme est de $O(\E{n}(n\,\textup{log\;}q +
-m\,\textup{log\;}m/n))$ opérations dans $\GF{q}$. Tant que $m\in o(n^2)$, on 
-peut négliger les termes en $m$ et se contenter d'une complexite en 
-$O(\E{n}n\,\textup{log\;}q)$.
-
+Ainsi, le coût total de l'algorithme est de 
+\begin{equation}
+O(\E{n}(n\,\textup{log\;}q + m\,\textup{log\;}m/n))
+\end{equation}
+opérations dans $\GF{q}$. Tant que $m\in o(n^2)$, on 
+peut négliger les termes en $m$ et on obtient la proposition suivante :
 \begin{prop}
 \label{prop:algsansext}
 L'algorithme \ref{alg:gausspersansext} est correct et de complexité
@@ -1745,12 +1815,6 @@ L'algorithme \ref{alg:gausspersansext} est correct et de complexité
 O(\E{n}n\,\textup{log\,}q).
 \end{equation}
 \end{prop}
-\begin{proof}
-Les conditions (1), (2) et (5) permettent d'appliquer le théorème 
-\ref{th:gausspernorm} qui assure que $\eta$ est un élément normal de 
-$\GF{q^n}$ sur $\GF{q}$. Le fait qu'il soit dans la même orbite de l'action du
-groupe de Galois est justifié par la proposition \ref{prop:gaussperconj}.
-\end{proof}
 
 \paragraph{$\bullet$ Cas général $o > 1$}
 Si jamais $q$ n'est pas d'ordre $n$ alors on doit passer par une extension de
@@ -1771,21 +1835,15 @@ text height=1.5ex, text depth=0.25ex]
 {\GF{q}[\eta_1] & \GF{q}[\eta_2]\\
 \GF{q}[\Tr{\eta_1}] & \GF{q}[\Tr{\eta_2}]\\};
 \path[->,font=\scriptsize,>=angle 90]
-(m-1-1) edge node[auto] {$\phi$} (m-1-2)
-(m-2-1) edge node[auto] {$\phi$} (m-2-2);
+(m-1-1) edge node[auto] {} (m-1-2)
+(m-2-1) edge node[auto] {$\theta$} (m-2-2);
 \path[-,font=\scriptsize,>=angle 90]
 (m-1-1) edge node[left] {$o$} (m-2-1)
 (m-1-2) edge node[right] {$o$} (m-2-2);
 \end{tikzpicture}
 \end{equation}
 
-\begin{rem}
-Si on rajoute en plus la condition $(n,r) = 1$, on peut alors directement 
-prendre des polynômes à coefficients dans $\GF{p}$, cela est aussi valable pour 
-l'algorithme \ref{alg:gausspersansext}.
-\end{rem}
 \vspace{0.3cm}
-
 \begin{algorithm}
 \caption{Détermination d'un élément normal unique dans un corps finis
 \textit{via} une extension}
@@ -1807,29 +1865,60 @@ $m$.
 \RETURN $\eta$
 \end{algorithmic}
 \end{algorithm}
-%TODO: Analyse de complexité
+La procédure est décrite de l'algorithme \ref{alg:gaussperavecext}. Le calcul de
+sa complexité est assez proche de celle de l'algorithme 
+\ref{alg:gausspersansext}. La grosse différence se situe au niveau de la 
+construction de l'extension de degré $no$ et dans le calcul de la trace de 
+$\eta$. On suppose avoir déjà une table de polynôme irréductible de degré $o$ 
+sur $\GF{p}$ de sorte que le calcul de $h$ soit gratuit. [...] On suppose alors 
+que la construction d'une extension de $\GF{q}$ est en $O((no)^2)$ opérations 
+sur $\GF{q}$. Le nombre d'opérations nécessaire à la recherche d'une racine 
+primitive \nroot{m} de l'unité est, de façon analogue au cas précédent, en :
+\begin{equation}
+O(\E{no}\,no\,\textup{log }q)
+\end{equation}
+opérations sur $\GF{q}$. De même, la complexité du calcul d'une période de Gauss
+sur $\GF{q^n}$ est en 
+\begin{equation}
+O((m\,\textup{log }m)\,\E{no}/(no)).
+\end{equation}
+Le calcul de la trace quant à lui peut être effectué en $O((no)^2)$ ou est en
+$O(\E{no})$ opérations, dans les deux cas, il est négligeable face au reste.\par
+La remarque sur la taille de $m$ est encore valable dans le cas présent. Si
+$m\in O((no)^2)$, alors le pire cas possible est $no = \varphi(m)$. On en déduit
+le résultat suivant.
 \begin{prop} 
 \label{prop:algavecext}
-L'algorithme \ref{alg:gaussperavecext} est correct et de complexité
+L'algorithme \ref{alg:gaussperavecext} calcule correctement un élément normal
+$\eta$ relié aux autres périodes de Gauss en 
 \begin{equation}
-O(\E{no}(no\textup{log\,}q + m\,\textup{log\,}m/(no))).
+O(\E{m}m\,\textup{log }q).
 \end{equation}
+opérations sur $\GF{q}$.
 \end{prop}
 \begin{proof}
 Le théorème \ref{th:gausspernorm} et la proposition \ref{prop:gaussperconj}
-assure que $\alpha$ est un élément normal unique de $\GF{q^{n.o}}$. Il suffit 
+assurent que $\alpha$ est un élément normal unique de $\GF{q^{n.o}}$. Il suffit 
 alors d'appliquer le corollaire \ref{cor:tracenorm} pour assurer que $\eta :=
-\Tr{\alpha}$ soit un élément normal unique de $\GF{q^n}$.
+\Tr{\alpha}$ soit un élément normal de $\GF{q^n}$.
 \end{proof}
+\begin{rem}
+L'algorithme ci-dessus est au mieux quadratique en $m$. De même, la première
+partie de l'algorithme est au mieux quadratique en $p$; les expériences ont
+confirmé cette tendance et ont montré que la construction d'extension devient
+très vite prohibitive en même temps que $o$ augmente.
+\end{rem}
 
 \subsubsection*{Détermination de l'isomorphisme}
 Il reste alors à déterminer exactement l'isomorphisme, c'est-à-dire calculer son
-image en $x$. Comme on l'a expliqué au début de la sous-section, il suffit juste
-d'exprimer les coefficients de $x$ par rapport à la base normale engendrée par
-$\eta(\zeta_m)$; alors il suffit de reporter les coefficients 
-trouvés dans la base normale engendrée par $\eta(\zeta'_m)$. On rappelle
-l'existence de l'isomorphisme reliant les matrices circulantes de tailles $n$ 
-sur $\GF{q}$ et l'anneau $\GF{q}[\omega]/(\omega^n - 1)$.
+image en $x$. Comme on l'a expliqué au début de la sous-section
+\ref{sec:elemnorm}, si on a deux bases normales, il suffit d'exprimer les 
+coefficients de $x$ par rapport à la base normale engendrée par $\eta(\zeta_m)$;
+alors il suffit de reporter les coefficients trouvés dans la base normale 
+engendrée par $\eta(\zeta'_m)$. On rappelle l'existence de l'isomorphisme 
+reliant les matrices circulantes de tailles $n$ sur $\GF{q}$ et l'anneau 
+$\GF{q}[\omega]/(\omega^n - 1)$ vu en section \ref{sec:elemnorm}. La procédure
+décrit dans cette section est résumée dans l'algorithme \ref{alg:convert}.
 
 \begin{algorithm}
 \caption{Conversion de la base monomiale vers la base normale}
@@ -1854,44 +1943,43 @@ normale engendrée par $v$.
 
 \end{algorithmic}
 \end{algorithm}
-On commence par élever à la puissance $q$ plusieurs polynômes sur $\GF{q}$, 
-on les multiplie par un autre polynôme et enfin on calcule la trace de chacun 
-de ces produits; on effectue alors $n$ fois cette opération. Donc 
-$O(n\E{n}\textup{log}\;q + n\E{n}) + n\textup{T}(n) = O(n\E{n}\textup{log}\;q + 
-n\E{n})$ opérations, 
-où $\textup{T}(n)$ est la complexité du calcul de la trace d'un élément
-de $\GF{q^n}$ et $\textup{T}(n) \in O(\E{n})$.
-Par la suite, il s'agit dans un premier temps de la muliplication par un 
+Calculons sa complexité. De la ligne $1$ à $3$, la complexité est dominé par 
+l'élévation de $v$ à la puissance $q^n$, le calcul de sa trace et la somme du 
+résultat $n$ fois. Cela revient à élever à la puissance $q^n$ des polynômes à 
+coeffcient dans $\GF{q}$ et à la somme d'éléments de $\GF{q}$. D'où 
+\begin{equation}
+O(n\E{n}\,\textup{log}\;q) + n\textup{T}(n) = O(n\E{n}\,\textup{log}\;q) 
+\end{equation}
+opérations sur $\GF{q}$, où $\textup{T}(n)$ est la complexité du calcul de la 
+trace d'un élément de $\GF{q^n}$ et $\textup{T}(n) \in O(\E{n})$ puisque c'est
+une somme de polynômes élevés à la puissance $q^n$ et on conlut grâce à
+\cite{GaoGaPaSho}.\par
+À la ligne $4$, il s'agit dans un premier temps de la muliplication par un 
 scalaire d'éléments de $\mathbb{F}_p[\omega]/(\omega^n - 1)$ puis de $n$ sommes 
 de polynômes. Ensuite, on inverse le polynôme et on prend la trace de l'élément 
-qu'il représente; ce qui nous donne $O(n + \E{n}.\textup{log }n)$.\par
+qu'il représente; ce qui nous donne 
+\begin{equation}
+O(\E{n}\,\textup{log }n)
+\end{equation}
+opérations sur $\GF{q}$.\par
 Des lignes $5$ à $7$, il s'agit de la même opération que des lignes 1 à 3, d'où 
-encore une complexité de $O(n\E{n}\textup{log}\;q + n\E{n})$.
-Les lignes 8 à 10 consistent en $n$ sommes de $n$ multiplications dans le corps 
-de base $\GF{q}$, c-à-d. $O(n)$ opérations.
-Au final, la complexité de l'algorithme est égale à:
-\[O(n\E{n} + n\E{n}\textup{log }q +  \E{n}\textup{log }n + n\textup{T}(n) + n)\]
-ou de manière plus simple, elle est en $O(n\E{n}\textup{log}\;q)$ qui domine le 
-reste.
+encore une complexité de 
+\begin{equation}
+O(n\E{n}\,\textup{log}\;q).
+\end{equation}
 
+Les lignes 8 à 10 consistent en $n$ sommes de $n$ multiplications dans le corps 
+de base $\GF{q}$, c-à-d. $O(n)$ opérations.\par
+Au final, on a la proposition suivante :
 \begin{prop}
 \label{prop:algconvert}
-L'algorithme \ref{alg:convert} est correct et de complexité
+L'algorithme \ref{alg:convert} calcule correctement l'image de $x$ à partir de
+deux éléments normaux $v$ et $w$ reliés entre eux en 
 \begin{equation}
-O(n\E{n}\textup{log}\;q).
+O(n\E{n}\,\textup{log}\;q)
 \end{equation}
+opérations sur $\GF{q}$.
 \end{prop}
-\begin{proof}
-D'après le point précédent, on a :
-\[\textup{Tr}\left(z^{p^{n-j}}\right) = \sum_{0\leq i < n}{c_i\textup{Tr}
-\left(v^{p^{i+n-j}}\right)}\]
-et la matrice $B$ est définie par :
-\[b_{ij} = \Tr{\alpha v^{p^{i+n-j}}} = \Tr{\alpha^{p^j}v^{p^i}}\]
-On sait qu'elle est inversible grâce au lemme \ref{lem:mattrinv}, donc si on
-note $d_{ij}$ les coefficients de la matrice $B^{-1}$, on a bien :
-\[c_i = \sum_{0\leq j < n}{d_{ij}\textup{Tr}\left(z^{p^{n-j}}\right)}\]
-Le théorème \ref{th:matcirciso} permet de conclure.
-\end{proof}
 
 \subsubsection*{Algorithme principal}
 
@@ -1901,7 +1989,8 @@ $(1)$ à $(5)$, on calcule alors les périodes de Gauss dans $k_1$ et $k_2$ ou
 dans leurs extensions et on finit par calculer les coefficients de $x$ dans la
 base normale engendrée par $\eta_2$; en réécrivant $\eta_2$ en fonction de $y$,
 on retrouve alors l'image de $x$ dans la base monomiale engendrée par $y$ et on
-peut calculer l'image de n'importe quel élément de $k_1$.
+peut calculer l'image de n'importe quel élément de $k_1$. Le tout est résumé
+dans l'algorithme \ref{alg:rainscycl}.
 
 \begin{algorithm}
 \caption{Détermination d'un isomorphisme entre deux corps finis de même
@@ -1934,16 +2023,8 @@ cardinal}
 \end{algorithmic}
 \end{algorithm}
 
-\begin{prop}
-L'algorithme \ref{alg:rainscycl} est correct.
-\end{prop}
-\begin{proof}
-Il suffit d'appliquer successivement les propositions $\ref{prop:algsansext}$ et
-$\ref{prop:algconvert}$ ou $\ref{prop:algavecext}$ et $\ref{prop:algconvert}$,
-selon la valeur de $o$.
-\end{proof}
-
 \section{Algorithme de Rains : méthode elliptique}
+\label{sec:algell}
 %TODO: Résumer/Détailler le papier de Luca, rajouter les résultats sur
 %les twists, les périodes, détaillés l'algorithme et sa complexité, le prouver 
 %(probablement fait avec le papier de Luca et Mihailescu pour les périodes ?)
@@ -1965,9 +2046,9 @@ On commence par chercher un entier $m$ et une courbe $E/\GF{q}$ tels que
 l'abscisse des points de $m$-torsions engendrent $\GF{q^n}$; ce sera
 étudié plus en détail dans la section \ref{sec:choixparam}.\par
 Il faut alors calculer des points d'ordre exactement $m$ sur $E/k_1$ et $E/k_2$.
-Comme pour la méthode cyclotomique, on calcule alorsce qu'on appelle les 
+Comme pour la méthode cyclotomique, on calcule alors ce qu'on appelle les 
 \emph{périodes elliptiques} qui consistent à sommer les abscisses de l'orbites 
-d'un point de $m$-torsion sous l'action du groupe de Galois, ce sera détaillé 
+d'un point d'ordre $m$ sous l'action du groupe de Galois, ce sera détaillé 
 dans la section \ref{sec:perell}. On aura alors obtenu deux éléments reliés et
 accessoirement normal, il suffira alors de procéder comme dans la méthode 
 cyclotomique \ref{sec:algcompcycl} afin d'obtenir l'isomorphisme désiré.
@@ -1984,19 +2065,20 @@ minimal $X^2 -tX + q$ avec $\#E(\GF{q}) = q + 1 - t$. On rappelle aussi que
 $\#E(\GF{q^n}) = q^n + 1 - (\alpha^n + \beta^n)$, voir par exemple 
 \cite[th. 2.3.1, chap V]{Sil}.\par
 Si $m$ est premier avec $p$ alors le groupe de $m$-torsion $E[m]$ est de rang
-$2$ et si on fixe une base de $\zmodninv{m}\times\zmodninv{m}$, alors $\phi_q$ 
+$2$ et si on fixe une base de $\zmodn{m}\times\zmodn{m}$, alors $\phi_q$ 
 agit comme une matrice $2\times2$ à coefficients dans $\zmodn{m}$ sur $E[m]$.
 \begin{defn}
-Soit $E/\GF{q}$ une courbe elliptique, un nombre premier $\ell$ est appelé
+Soit $E/\GF{q}$ une courbe elliptique, un nombre premier $m$ est appelé
 nombre \emph{premier d'Elkies} pour $E$ si le polynôme minimal de $\phi_q$ se 
-scinde en deux facteurs distincts dans $\zmodn{\ell}$.
+scinde en deux facteurs distincts dans $\zmodn{m}$.
 \end{defn}
 \begin{rem}
-Les premiers $\ell$ tels que le polynôme minimal de $\phi_q$ ne se scinde pas
-dans $\zmodninv{\ell}$ sont appelés des nombre premier de Atkin.
-
+Les premiers $m$ tels que le polynôme minimal de $\phi_q$ ne se scinde pas
+dans $\zmodninv{m}$ sont appelés des nombre premier de Atkin. Il se trouve que
+la proportion de nombre premier de Elkies pour une courbe elliptique donnée est
+de $1/2$, pour plus de précisions consulter \cite{Scho}.
 \end{rem}
-Si $\ell$ est un premier de Elkies, alors il existe une base de $E[\ell]$ sur 
+Si $m$ est un premier de Elkies, alors il existe une base de $E[m]$ sur 
 laquelle $\phi_q$ agit comme une matrice diagonale :
 \begin{equation}
 \begin{pmatrix}
@@ -2004,118 +2086,69 @@ laquelle $\phi_q$ agit comme une matrice diagonale :
 0 & \beta
 \end{pmatrix}
 \end{equation}
-et pour tout entier $n$, le Frobenius de $E/\GF{q^n}$ agit comme une puissance
-\nroot{n} de cette matrice sur $E[\ell]$. Ainsi, l'extension de degré
-$k = \textup{min}(\ord{\ell}{\alpha},\ord{\ell}{\beta})$ de 
-$\GF{q}$ est la plus petite extension contenant un point d'ordre $\ell$. En
+et pour tout entier $n$, le Frobenius de $E/\GF{q^n}$ agit comme la puissance
+\nroot{n} de cette matrice sur $E[m]$. Ainsi, l'extension de degré
+$k = \textup{min}(\ord{m}{\alpha},\ord{m}{\beta})$ de 
+$\GF{q}$ est la plus petite extension contenant un point d'ordre $m$. En
 effet, si on prend $P\in E[m]$ dans l'espace propre de $\alpha$  et que 
-$\ord{\ell}{\alpha} = k$, alors :
+$\ord{m}{\alpha} = k$, alors :
 \begin{equation}
 \phi_{q^k}(P) = [\alpha^k]P = [1]P = P.
 \end{equation}
-De plus, une extension d'ordre $\ord{m}{\ell}$ est contient tous les 
-points d'ordre $\ell$. Ce résultat serait généralisé au puissance d'un nombre 
-premier de Elkies par relèvement $\ell$-adique.\par 
-%TODO: rajouter le cas d'une puissance d'un elkie en parlant du lift en l-adic
-Autrement dit, si $\textup{min}(\ord{m}{\alpha},\ord{m}{\beta}) = n$, on obtient
-alors des générateurs de $\GF{q^n}$. Pour cela, il faut prendre un bon $m$ et
-surtout une bonne courbe elliptique, c-à-d. prendre pour $m$ un premier
-Elkies ou une puissance d'un tel nombre premier semble être la meilleure
-solution. Pour $m$ premier ou puissance d'un premier de Elkies, on a :
-\begin{equation}
-X - \overline{t}_EX + \overline{q} = (X - \overline{\alpha})(X -
-\overline{\beta})\bmod m
-\end{equation}
-Si $n$ divise $m$ alors il nous suffit de chercher les éléments
-$z\in\zmodninv{m}$ tels que $z^n = 1$ et de vérifier si :
-\begin{equation}
-\ord{m}{q/z} > n \etmath \vert{\widehat{z + q/z}}\vert\leq\sqrt{2q}
-\end{equation}
-où dans la seconde équation, on prend le relevé de $z + q/z$ dans $\ZZ$. Les $z$
-vérifiant ces conditions seront les candidats pour les classes de traces
-admissibles. Elles serviront à déterminer quelle courbe elliptique on utilisera
-pour appliquer l'algorithme. Pour sélectionner une courbe, il suffit de calculer
-la trace de son Frobenius et la trace du Frobenius de ses tordues en accord avec
-la proposition suivante.
-\begin{prop}
-\label{prop:trtwist}
-Soient $E/\GF{q}$ et $E'/\GF{q}$ deux courbes définies sur le corps à $q = p^r$
-éléments, avec $p\neq2,3$. Soit $u\in\overline{\mathbb{F}}_q$ tel que 
-l'application :
-\begin{equation}
-\overline{u} : E\longrightarrow E,\quad(x,y)\longmapsto(u^2x,u^3y)
-\end{equation}
-soit un $\overline{\mathbb{F}}_q$-isomorphisme de courbes elliptiques. Alors on 
-a l'une des deux situations suivantes :
-\begin{enumerate}[(i)]
-    \item $u^{q-1}\notin\GF{p}$ et $E, E'$ sont supersingulières;
-    \item $u^{q-1}\in\GF{p}$ et $t_{E'} = \alpha t_E$ où, si on note $n$ l'ordre
-    de $u^{q-1}$ dans $\GF{p}$, alors $\alpha$ est le réprésentant de l'unique
-    racine de $X^n - 1 \bmod q$ de module $\vert{\alpha}\vert < q/2$ tel que
-    $\alpha = u^{q-1}\bmod p$.
-\end{enumerate}
-\end{prop}
-\begin{proof}
-(i) On commence par remarquer que si $u\in\GF{q}$ alors $u^{q-1} = 1\in\GF{p}$
-\end{proof}
+Autrement dit, si $\textup{min}(\ord{m}{\alpha},\ord{m}{\beta}) = n$ et
+$\ord{m}{\beta}$ ne divise pas $n$, l'abscisses d'un point $P$ dans l'espace
+propre de $\alpha$ sont des générateurs de $\GF{q^n}$, la situation est résumé
+dans le schéma \ref{}. Elles jouent donc un rôle
+analogue aux racines primitives $m$-ièmes de l'unité pour la méthode
+cyclotomique.
 
-Concrètement, cela veut dire que si deux courbes sont tordues l'une de l'autre 
-alors soit elles sont supersingulières auquel cas leurs traces sont toutes deux 
-égales à $0$, soit leurs traces varies d'une racine de l'unité. On peut résumer 
-la situation de la manière suivante :
-\vspace{0.3cm}
-\begin{itemize}
-    \item Si $j\neq0, 1728$ alors la courbe $E$ de $j$-invariant $j$ n'a qu'une 
-    tordue, la tordue quadratique $E(u)$ pour $u$ un non-résidu quadratique. 
-    Alors on a :
-    \begin{equation}
-    t_E = t_{E(u)} = 0\quad\textup{ou}\quad t_E = -t_{E(u)}.
-    \end{equation}
-
-    \item Si $j = 1728$, alors la courbe $E$ de $j$-invariant $1728$ a quatre
-    tordues, ce sont les $E(u^i)$ pour $i\in\lbrace{0,\dots,3}\rbrace$ et $u$
-    non-résidu quartique. Alors on a pour tout $i\in\lbrace{0,\dots,3}\rbrace$ 
-    et pour $\zeta_4$ une racine \nroot{$4$} primitive de l'unité:
-        \begin{align}
-        t_{E(u^i)} &= t_E = 0,\quad\textup{si\;}q\neq1\bmod4,\\
-        t_{E(u^i)} &= \zeta_4^it_E\bmod q,\quad\textup{sinon.}
-        \end{align}
-
-    \item Si $j = 0$, alors la courbe $E$ de $j$-invariant $0$ a six tordues, ce
-    sont les $E(u^i)$ pour $i\in\lbrace{0,\dots,5}\rbrace$ et $u$ un non-résidu
-    sextique. Alors on a pour tout $i\in\lbrace{0,\dots,5}\rbrace$ et pour
-    $\zeta_6$ une racine \nroot{$6$} primitive de l'unité :
-        \begin{align}
-        t_{E(u^i)} &= t_E = 0,\quad\textup{si\;}q\neq1\bmod3,\\
-        t_{E(u^i)} &= \zeta_6^it_E\bmod q,\quad\textup{sinon.}
-        \end{align}
-
-\end{itemize}
 
 \subsection{Périodes elliptiques}
 \label{sec:perell}
 %TODO: Prouver et définir les périodes elliptiques 
 La caractéristique principale de l'algorithme de Rains, comme on a pu le voir
-dans la section précédente, est la détermination de deux éléments uniques reliés
-par un isomorphisme, dans le sens où ils ont la même orbite sous l'action de
-Galois. Ici, il se trouve que l'unicité sera déduite de
+dans la section précédente, est la détermination de deux éléments reliés
+par un isomorphisme. Ici, il se trouve que l'unicité sera déduite de
 l'action du Frobenius de la courbe elliptique choisie $E/\GF{q}$ sur des points
-de torsion d'ordre $m$ de la courbe $E(\GF{q^n})$.
-%TODO: Parler des automorphismes non triviaux
+de torsion d'ordre $m$ de la courbe $E(\GF{q^n})$.\par
+Si on essaie de définir les périodes elliptiques comme dans le cas des périodes
+de Gauss, on rencontre un phénomène qui n'était pas présent dans le cas
+précédent. Les courbes elliptiques possèdent des automorphismes non-triviaux qui
+ne peuvent pas être laissés de côté (pourquoi ?). 
+On rappelle le résultat suivant :
+\begin{prop}
+Soit $E/\GF{q}$ une courbe elliptique et soit $j$ son $j$-invariant. Le groupe
+des $\GF{q}$-automorphismes de $E$ est d'ordre :
+\begin{enumerate}[(a)]
+    \item $24$ si $j = 0$ et $q = 4\bmod{6}$,
+    \item $12$ si $j = 0$ et $q = 9\bmod{12}$,
+    \item $6$ si $j = 0$ et $q = 1\bmod{6}$,
+    \item $4$ si $j = 1728$ et $q = 1, 5\bmod{12}$,
+    \item $2$ dans tous les autres cas.
+\end{enumerate}
+\end{prop}
 \begin{defn}
-Soit $E/\GF{q}$ une courbe elliptique avec $j_E\neq0$ et $p\neq2, 3$ et soit $m$
-une puissance d'un nombre premier de Elkies. Supposons que
-$\#\textup{Aut}_{\GF{q}}(E)$ divise $\varphi(m)$ et considérons
-$\textup{Aut}_{\GF{q}}(E)$ comme un sous-groupe de $\zmodninv{m}$. On note alors
-$\alpha\in\zmodninv{m}$ une valeur propre du Frobenius modulo $m$ et on suppose
-que $\zmodninv{m}/\textup{Aut}_{\GF{q}}(E) = \groupgen{\alpha}\times S$. Alors
-pour tout point $P$ d'ordre exactement $m$ dans l'espace propre engendré par
-$\alpha$, on définit la période elliptique :
+Soit $E/\GF{q}$ une courbe elliptique avec $p\neq2, 3$ et soit $m$
+un nombre premier de Elkies. Si $j(E)\notin\lbrace{0, 1728}\rbrace$, alors
+$\#\textup{Aut}_{\GF{q}}(E) = 2$ divise $\varphi(m)$ et on identifie
+$\textup{Aut}_{\GF{q}}(E)$ à un sous-groupe de $\zmodninv{m}$. Soit maintenant
+$\alpha\in\zmodninv{m}$ une valeur propre de $\phi_q\bmod{m}$ et supposons que
+$\zmodninv{m}/\textup{Aut}_{\GF{q}} = \groupgen{\alpha}\times S$ pour $S$ un 
+sous-groupe de $\zmodninv{m}$. Alors pour tout point $P$ de $m$-torsion dans 
+l'espace propre de $\alpha$, on définit la période elliptique :
+\begin{equation}
+\eta_{\alpha}(P) = \sum_{\sigma\in S}{([\alpha]P)_X}
+\end{equation}
+où $P_X$ désigne l'abscisse du point $P$.\par
+Pour $j = 0$ ou $1728$, on suppose que $\#\textup{Aut}_{\GF{q}}$ divise
+$\varphi(m)$, alors comme dans le cas générique, on identifie
+$\textup{Aut}_{\GF{q}}(E)$ à un sous-groupe de $\zmodninv{m}$. On suppose à
+nouveau que $\zmodninv{m}/\textup{Aut}_{\GF{q}} = \groupgen{q}\times S$ et on 
+peut définir les périodes elliptiques suivantes dans ces deux cas particuliers :
 \begin{equation}
 \eta_{\alpha}(P) = \sum_{\sigma\in S}
 {\left([\sigma]P\right)_X^{\#\textup{Aut}_{\GF{q}}(E)/2}}
 \end{equation}
-où $P_X$ désigne l'abscisse du point $P$.
 \end{defn}
 \begin{prop}
 L'endomorphisme de Frobenius $\phi_q$ agit transitivement sur les périodes 
@@ -2134,6 +2167,24 @@ Or, on a $\zmodninv{m}/\textup{Aut}(E) = \groupgen{\alpha} \times S$ donc
 $[\tau]P$ est encore un point primitif d'ordre $m$ dans l'espace propre de 
 $\alpha$.
 \end{proof}
+On peut alors énoncer la conjecture principale :
+\begin{conj}
+Soient $m$ et $t$ deux entiers tels que :
+\vspace{0.3cm}
+\begin{enumerate}[1.]
+    \item $|t| < \sqrt{2q}$,
+    \item $X^2 - tX + q = (X - \alpha)(X - \beta)\bmod{m}$,
+    \item $\zmodninv{m}/\textup{Aut}_{\GF{q}} = \groupgen{\alpha\times S}$ pour
+    $S$ un sous-groupe de $\zmodninv{m}$,
+    \item $\ord{m}{\alpha} = n$ et $\ord{m}{\beta}\nmid n$.
+\end{enumerate}
+\vspace{0.3cm}
+Soit $E/\GF{q}$ une courbe elliptique de trace $t$ et soit $k$ la plus petite
+extension de $\GF{q}$ contenant un point d'ordre $m$. Alors pour tout $P$
+d'ordre $m$, les périodes elliptiques $\eta_{\alpha}(P)$ forment une base normal
+de $k$ sur $\GF{q}$.
+\end{conj}
+
 \subsection{Algorithme et analyse de complexité}
 \label{sec:algcompell}
 %TODO: Décrire l'algorithme et donner sa complexité.
@@ -2141,7 +2192,7 @@ Comme la partie détermination de l'isomorphisme est la même pour la partie
 cyclotomique que pour la partie elliptique, on ne va traiter que la recherche
 d'élément normal unique (sous l'action du Frobenius).\par
 
-\subsubsection*{Recherche d'un élément normal unique}
+\subsubsection*{Calcul d'une période elliptique}
 On cherche donc un entier $m$ puissance d'un nombre premier de Elkies ou bien
 puissance de $p$, tel que $n\mid\varphi(m)$ et tel qu'il existe au moins un 
 $t\in\zmodninv{m}$ tel que :
@@ -2177,12 +2228,13 @@ Peut-être \cite{CasHen} ?).\par
 Une fois la courbe et $m$ obtenus, on peut exécuter l'algorithme de Rains
 proprement dit, \emph{cf} algorithme \ref{alg:gaussell}.
 \begin{algorithm}
-\caption{Détermination d'un élément normal unique}
+\caption{Calcule d'une période elliptique}
 \label{alg:gaussell}
 \begin{algorithmic}[1]
 \REQUIRE $m$ un entier satisfaisant les conditions (1) et (2), $E/\GF{q^n}$ une 
 courbe elliptique avec les bonnes caractéristiques
-\ENSURE $\eta$ un élément normal unique de $\GF{q^n}$
+\ENSURE $\eta$ un élément normal de $\GF{q^n}$ relié aux autres périodes
+elliptiques.
 \bigskip
 \REPEAT
     \STATE $P \leftarrow [\frac{\#E/\GF{q^n}}{m}]\textup{rand}(E/\GF{q^n})$
@@ -2316,7 +2368,7 @@ semble être la solution la plus judicieuse. En effet, tant que $m$ est plus
 petit que $\sqrt{2q}$, le nombre de candidat semble être relativement 
 raisonnable, une fois cette borne dépassée, le nombre de candidats par valeur 
 diminue drastiquement. Pour plus de détails, on peut consulter l'article 
-\cite{CasHen} (perso j'y vois rien pour le moment...).\par
+\cite{CasHen}.\par
 Un autre changement possible est le nombre de traces admissibles minimal qu'on
 souhaite obtenir pour valider un candidat. Pour le moment, on ne demande d'avoir
 qu'un seul bon candidat, mais on peut imaginer en demander $d>1$. 
@@ -2340,6 +2392,76 @@ algorithme général qui regrouperait les deux méthodes.
 \end{rem}
 
 \subsection{Recherche de la courbe elliptique}
+Pour $m$ un premier de Elkies, on a :
+\begin{equation}
+X - \overline{t}_EX + \overline{q} = (X - \overline{\alpha})(X -
+\overline{\beta})\bmod m
+\end{equation}
+Si $n$ divise $m$ alors il nous suffit de chercher les éléments
+$z\in\zmodninv{m}$ tels que $z^n = 1$ et de vérifier si :
+\begin{equation}
+\ord{m}{q/z} > n \etmath \vert{\widehat{z + q/z}}\vert\leq\sqrt{2q}
+\end{equation}
+où dans la seconde équation, on prend le relevé centré de $z + q/z$ dans $\ZZ$. 
+Les $z$ vérifiant ces conditions seront les candidats pour les classes de traces
+admissibles. Elles servent à déterminer quelle courbe elliptique on utilisera
+pour appliquer l'algorithme. Pour sélectionner une courbe, il suffit de calculer
+la trace de son Frobenius et la trace du Frobenius de ses tordues en accord avec
+la proposition suivante.
+\begin{prop}
+\label{prop:trtwist}
+Soient $E/\GF{q}$ et $E'/\GF{q}$ deux courbes définies sur le corps à $q = p^r$
+éléments, avec $p\neq2,3$. Soit $u\in\overline{\mathbb{F}}_q$ tel que 
+l'application :
+\begin{equation}
+\overline{u} : E\longrightarrow E,\quad(x,y)\longmapsto(u^2x,u^3y)
+\end{equation}
+soit un $\overline{\mathbb{F}}_q$-isomorphisme de courbes elliptiques. Alors on 
+a l'une des deux situations suivantes :
+\begin{enumerate}[(i)]
+    \item $u^{q-1}\notin\GF{p}$ et $E, E'$ sont supersingulières;
+    \item $u^{q-1}\in\GF{p}$ et $t_{E'} = \alpha t_E$ où, si on note $n$ l'ordre
+    de $u^{q-1}$ dans $\GF{p}$, alors $\alpha$ est le réprésentant de l'unique
+    racine de $X^n - 1 \bmod q$ de module $\vert{\alpha}\vert < q/2$ tel que
+    $\alpha = u^{q-1}\bmod p$.
+\end{enumerate}
+\end{prop}
+\begin{proof}
+(i) On commence par remarquer que si $u\in\GF{q}$ alors $u^{q-1} = 1\in\GF{p}$
+\end{proof}
+
+Concrètement, cela veut dire que si deux courbes sont tordues l'une de l'autre 
+alors soit elles sont supersingulières auquel cas leurs traces sont toutes deux 
+égales à $0$, soit leurs traces varies d'une racine de l'unité. On peut résumer 
+la situation de la manière suivante :
+\vspace{0.3cm}
+\begin{itemize}
+    \item Si $j\neq0, 1728$ alors la courbe $E$ de $j$-invariant $j$ n'a qu'une 
+    tordue, la tordue quadratique $E(u)$ pour $u$ un non-résidu quadratique. 
+    Alors on a :
+    \begin{equation}
+    t_E = t_{E(u)} = 0\quad\textup{ou}\quad t_E = -t_{E(u)}.
+    \end{equation}
+
+    \item Si $j = 1728$, alors la courbe $E$ de $j$-invariant $1728$ a quatre
+    tordues, ce sont les $E(u^i)$ pour $i\in\lbrace{0,\dots,3}\rbrace$ et $u$
+    non-résidu quartique. Alors on a pour tout $i\in\lbrace{0,\dots,3}\rbrace$ 
+    et pour $\zeta_4$ une racine \nroot{$4$} primitive de l'unité:
+        \begin{align}
+        t_{E(u^i)} &= t_E = 0,\quad\textup{si\;}q\neq1\bmod4,\\
+        t_{E(u^i)} &= \zeta_4^it_E\bmod q,\quad\textup{sinon.}
+        \end{align}
+
+    \item Si $j = 0$, alors la courbe $E$ de $j$-invariant $0$ a six tordues, ce
+    sont les $E(u^i)$ pour $i\in\lbrace{0,\dots,5}\rbrace$ et $u$ un non-résidu
+    sextique. Alors on a pour tout $i\in\lbrace{0,\dots,5}\rbrace$ et pour
+    $\zeta_6$ une racine \nroot{$6$} primitive de l'unité :
+        \begin{align}
+        t_{E(u^i)} &= t_E = 0,\quad\textup{si\;}q\neq1\bmod3,\\
+        t_{E(u^i)} &= \zeta_6^it_E\bmod q,\quad\textup{sinon.}
+        \end{align}
+
+\end{itemize}
 
 \section{Résultats numériques}
 % TODO:
@@ -2447,6 +2569,10 @@ integer on elliptic curves over finite fields}, \bsc{Wouter Castryck} \&
 \bsc{Sandra Feisel}, \bsc{Joachim von zur Gathen} \& \bsc{M. Amin Shokrollahi}, 
 Mathematics of computation, Volume 68, Number 225, January 1999, p. 271-290.
 
+\bibitem{GaoGaPaSho} \emph{Algorithms for exponentiation in finite fields},
+\bsc{Shuhong Gao}, \bsc{Joachim Von Zur Gathen}, \bsc{Daniel Panario} \& 
+\bsc{Victor Shoup}, Journal of Symbolic Computation 29:879-889, 2000.
+
 \bibitem{GaGe} \emph{Modern Computer Algebra}, \bsc{Joachim von zur Gathen} \&
 \bsc{Jürgen Gerhard}, 3rd edition, Cambridge, 2013.
 
@@ -2464,9 +2590,9 @@ in Mathematics, 2nd ed., Springer, 2000.
 \bsc{Rudolf Lidl} \& \bsc{Harald Niederreiter}, Cambridge University Press,
 1986.
 
-%\bibitem{MuPa} \emph{Handbook of Finite Fields}, \bsc{Gary L. Mullen} \& 
-%\bsc{Daniel Panario}, Discrete mathematics and its applications, Series Editor 
-%Kenneth H. Rosen, CRC Press.
+\bibitem{MuPa} \emph{Handbook of Finite Fields}, \bsc{Gary L. Mullen} \& 
+\bsc{Daniel Panario}, Discrete mathematics and its applications, Series Editor 
+Kenneth H. Rosen, CRC Press.
 
 %\bibitem{MiMoScho} \emph{Computing the Eigenvalue in the Schoof-Elkies-Atkin
 %Algorithm using Abelian Lifts}, \bsc{P. Mih\u{a}ilescu}, \bsc{F. Morain} \&
@@ -2483,6 +2609,10 @@ Pinch}, Cryptography and coding II, p. 193-197, Oxford University Press, 1992.
 
 \bibitem{Sam} \emph{Théorie algébrique des nombres}, \bsc{Pierre Samuel}, 
 Hermann, 1971.
+
+\bibitem{Scho} \emph{Couting poins on elliptic curves over finite fields},
+\bsc{René Schoof}, Journal de théorie des nombres de Bordeaux 7, pp. 219-254,
+1995.
 
 \bibitem{Sil} \emph{The Arithmetic of Elliptic Curves}, 
 \bsc{Joseph H. Silverman}, Graduate texts in mathematics, Springer, 2nd ed. 
