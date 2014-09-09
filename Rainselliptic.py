@@ -421,11 +421,8 @@ def find_trace(n,m,k):
         for i in range(len(log_a)):
             diff = log_q - log_a[i]
             b = g**diff
-            ord_b = diff.order()
 
-            if ord_b <= n:
-                continue
-            elif abs((a[i] + b).centerlift()) > sq:
+            if abs((a[i] + b).centerlift()) > sq:
                 continue
             else:
                 sol.append(a[i] + b)
