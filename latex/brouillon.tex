@@ -834,7 +834,8 @@ détaille sa structure.
 Soit $E/K$ une courbe elliptique, alors $\textup{Aut}(E)$ est un groupe fini
 d'ordre divisant $24$. Plus précisément, on a le tableau suivant :
 
-\begin{equation}
+\begin{table}[H]
+\centering
 \begin{tabular}{|c|c|c|}
     \hline
     \#Aut$(E)$ & $j(E)$ & car$(K)$\\
@@ -850,7 +851,9 @@ d'ordre divisant $24$. Plus précisément, on a le tableau suivant :
     $24$ & $j(E) = 0 = 1728$ & car$(K) = 2$\\
     \hline
 \end{tabular}
-\end{equation}
+\caption{Automorphisme de $E$ sur $\overline{K}$}
+\label{tab:autoclotell}
+\end{table}
 \end{thm}
 Les automorphismes pour les courbes elliptiques de la forme
 (\ref{eq:weiersimpl}) sont tous définis par : 
@@ -858,7 +861,102 @@ Les automorphismes pour les courbes elliptiques de la forme
 x = u^2x'\etmath y = u^3y',
 \end{equation}
 pour $u\in\overline{K}^{\times}$; ce sont les seuls changements de variables qui
-conservent cette forme.
+conservent cette forme.\par
+Prenons $j\neq0, 1728$, si on considère $E$ sur un corps $K$ non algébriquement
+clos, on prends $c\in K\setminus K^2$ et $c\neq0$ et on pose $u = \sqrt{c}$ 
+et on définit la courbe $E^u$ telle que si $E : y^2 = x^3 + ax + b$ alors :
+\begin{equation}
+E^u : y^2 = x^3 + u^4ax + u^6b.
+\end{equation}
+On appelle $E^u$ la \emph{tordue quadratique} de $E$. En particulier, elles ont 
+le même $j$-invariant puisqu'elles sont isomorphes sur $\overline{K}$, elles le
+sont même sur une extension quadratique de $K$. Mais elles ne le sont pas sur 
+$K$ directement, ce sont donc bien deux courbes différentes sur $K$.\par
+Dans les cas $j = 0$ et $j = 1728$, il y a respectivement $6$ et $4$
+automorphismes sur $\overline{K}$, on peut donc s'attendre à ce qu'il y ait $6$
+et $4$ tordues différentes d'une courbe $E/K$.\par
+Considérons alors $j = 1728$, alors la courbe de $j$-invariant correspondante 
+est :
+\begin{equation}
+E : y^2 = x^3 + x.
+\end{equation}
+On prend $c$ un non-résidu quartique dans $K$ et on pose $u = \sqrt[4]{c}$,
+alors on définit une \emph{tordue quartique} $E^u$ :
+\begin{equation}
+E : y^2 = x^3 + u^4x.
+\end{equation}
+On l'appelle quartique puisque pour que $E$ soit à coefficient dans $K$, il
+suffit que $u$ soit une racine quatrième de l'unité, comme nous sommes un corps,
+il y a donc quatres $u$ possibles pour définir chaque tordues.\par
+Pour le cas $j = 0$, la courbe associée est :
+\begin{equation} 
+E : y^2 = x^3 + 1.
+\end{equation}
+Si on prend cette fois-ci $c$ un non-résidu sextique et qu'on pose $u =
+\sqrt[6]{c}$, on obtient alors une \emph{tordue sextique} $E^u$ :
+\begin{equation}
+E^u : y^2 = x^3 + u^6
+\end{equation}
+qui pour les mêmes raisons évoques ci-dessus va de pair avec six autres tordues
+de $E$, ce qui justifie à nouveau l'appelation.
+
+\subsection{Courbes elliptiques sur les corps finis}
+%TODO: Nombres de points, théorème de Hasse, Frobenius, trace, points de 
+%torsions
+On considère les courbes elliptiques sur les corps finis. Dans ce cas, une 
+courbe elliptique $E/\GF{q}$ n'a qu'un nombre fini de point. Plus
+précisément, on a le théorème suivant :
+\begin{thm}[Hasse]
+\label{th:hasse}
+Soit $E/\GF{q}$ une courbe elliptique défini sur $\GF{q}$ alors on a l'inégalité
+suivante :
+\begin{equation}
+\vert{q + 1 - \#E(\GF{q})}\vert\leq 2\sqrt{q}.
+\end{equation}
+\end{thm}
+\begin{proof}
+\cite[Chap. V, th. 1.1]{Sil}
+\end{proof}
+Le morphisme de Frobenius $\phi_q$ agit sur les coordonnées des points de
+$E(\overline{\mathbb{F}}_q)$ :
+\begin{equation}
+\phi_q(x,y) = (x^q, y^q)\etmath \phi_q(\EO) = (\EO),
+\end{equation}
+il s'agit d'un endomorphisme de $E$ et on le notera $\phi_{q,E}$. 
+En particulier, on a complètement caractérisé les points rationnels d'une courbe
+sur les corps finis :
+\begin{equation}
+P\in E(\GF{q}) \Leftrightarrow \phi_{q,E}(P) = P.
+\end{equation}
+\begin{prop}
+Soit $E/\GF{q}$ une courbe elliptique, si on pose $t = q + 1 - \#E(\GF{q})$
+alors on a :
+\begin{equation}
+\label{eq:frpolmin}
+\phi_{q,E}^2 - t\phi_{q,E} + q = 0,
+\end{equation}
+en tant qu'endomorphisme de $E$ et $t$ est l'unique entier tel que l'égalité
+soit vérifiée. De plus, pour $m$ premier avec $q$, $t$ est aussi l'unique entier
+tel que :
+\begin{equation}
+t \equiv \Tr{\phi_{q,E}} \bmod m.
+\end{equation}
+\end{prop}
+où $\Tr{\phi_{q,E}}$ est la trace de du Frobenius $\phi_{q,E}$. En particulier, 
+le polynôme (\ref{eq:frpolmin}) est le polynôme minimal du
+Frobenius de $E$. Par abus de langage, on parlera parfois de $t$ comme de la 
+trace de $E$.\par
+
+\subsection{Courbes supersingulières}
+\label{sec:singcurve}
+%TODO: Définitions Twists quadratiques, courbes $y^2 = x^3 + x$ et 
+%$y^2 = x^3 + 1$ et leurs tordues, pour préparer le terrain pour la partie 
+%elliptique de Rains
+\vspace{0.3cm}
+On a vu dans la sous-section \ref{sec:elldef} que chaque courbe a une tordue
+quadratique si $j\neq0,1728$ et des tordues quartiques ou sextiques selon si $j$
+est égal à $1728$ ou $0$ respectivement. Dans le cas des corps finis, on peut
+même relié la trace du Frobenius de ces tordues.
 \begin{prop}
 \label{prop:trtwist}
 Soient $E/\GF{q}$ et $E'/\GF{q}$ deux courbes définies sur le corps à $q = p^r$
@@ -908,60 +1006,6 @@ la situation de la manière suivante :
         t_{E(u^i)} &= \zeta_6^it_E\bmod q,\quad\textup{sinon.}
         \end{align}
 \end{itemize}
-
-\subsection{Courbes elliptiques sur les corps finis}
-%TODO: Nombres de points, théorème de Hasse, Frobenius, trace, points de 
-%torsions
-On considère les courbes elliptiques sur les corps finis. Dans ce cas, une 
-courbe elliptique $E/\GF{q}$ n'a qu'un nombre fini de point. Plus
-précisément, on a le théorème suivant :
-\begin{thm}[Hasse]
-\label{th:hasse}
-Soit $E/\GF{q}$ une courbe elliptique défini sur $\GF{q}$ alors on a l'inégalité
-suivante :
-\begin{equation}
-\vert{q + 1 - \#E(\GF{q})}\vert\leq 2\sqrt{q}.
-\end{equation}
-\end{thm}
-\begin{proof}
-\cite[Chap. V, th. 1.1]{Sil}
-\end{proof}
-Le morphisme de Frobenius $\phi_q$ agit sur les coordonnées des points de
-$E(\overline{\mathbb{F}}_q)$ :
-\begin{equation}
-\phi_q(x,y) = (x^q, y^q)\etmath \phi_q(\EO) = (\EO),
-\end{equation}
-il s'agit d'un endomorphisme de $E$ et on le notera $\phi_{q,E}$. 
-En particulier, on a complètement caractérisé les points rationnels d'une courbe
-sur les corps finis :
-\begin{equation}
-P\in E(\GF{q}) \Leftrightarrow \phi_{q,E}(P) = P.
-\end{equation}
-\begin{prop}
-Soit $E/\GF{q}$ une courbe elliptique, si on pose $t = q + 1 - \#E(\GF{q})$
-alors on a :
-\begin{equation}
-\label{eq:frpolmin}
-\phi_{q,E}^2 - t\phi_{q,E} + q = 0,
-\end{equation}
-en tant qu'endomorphisme de $E$ et $t$ est l'unique entier tel que l'égalité
-soit vérifiée. De plus, pour $m$ premier avec $q$, $t$ est aussi l'unique entier
-tel que :
-\begin{equation}
-t \equiv \Tr{\phi_{q,E}} \bmod m.
-\end{equation}
-\end{prop}
-où $\Tr{\phi_{q,E}}$ est la trace de du Frobenius $\phi_{q,E}$. En particulier, 
-le polynôme (\ref{eq:frpolmin}) est le polynôme minimal du
-Frobenius de $E$. Par abus de langage, on parlera parfois de $t$ comme de la 
-trace de $E$.
-
-\subsection{Courbes supersingulières}
-\label{sec:singcurve}
-%TODO: Définitions Twists quadratiques, courbes $y^2 = x^3 + x$ et 
-%$y^2 = x^3 + 1$ et leurs tordues, pour préparer le terrain pour la partie 
-%elliptique de Rains
-\vspace{0.3cm}
 
 \section{Complexité et notations}
 Cette courte section nous permettra de définir quelques notions de complexité
@@ -1013,7 +1057,8 @@ uniformément au hasard dans un ensemble fini $F$.
 Le tableau suivant regroupe les différentes complexités d'opérations courantes 
 sur les corps finis et leurs extensions; elles sont toutes prouvées dans 
 \cite{GaGe} :
-\begin{center}
+\begin{table}[H]
+\centering
 \begin{tabular}{|p{7cm}|c|}
     \hline
     Opération & Complexité\\
@@ -1028,7 +1073,9 @@ sur les corps finis et leurs extensions; elles sont toutes prouvées dans
     $n$. & $O(\E{n}\,\textup{log }m)$\\
     \hline
 \end{tabular}
-\end{center}
+\caption{Complexités usuelles dans $\GF{q^n}$}
+\label{tab:compl}
+\end{table}
 \newpage
 \part{Isomorphisme de corps finis}
 \label{deux}
@@ -2187,9 +2234,9 @@ $\ord{m}{\alpha} = k$, alors :
 Autrement dit, si $\textup{min}(\ord{m}{\alpha},\ord{m}{\beta}) = n$ et
 $\ord{m}{\beta}$ ne divise pas $n$, l'abscisses d'un point $P$ dans l'espace
 propre de $\alpha$ sont des générateurs de $\GF{q^n}$, la situation est résumé
-dans le schéma \ref{}. Elles jouent donc un rôle
-analogue aux racines primitives $m$-ièmes de l'unité pour la méthode
-cyclotomique.\par
+dans le schéma \ref{} dû à Luca De Feo (communication personnelle). Elles jouent
+donc un rôle analogue aux racines primitives $m$-ièmes de l'unité pour la 
+méthode cyclotomique.\par
 À l'instar des racines de l'unité qui ne sont pas nécessairement racines du même
 polynôme minimal, deux points d'ordre $m$ d'une courbe elliptique ne sont pas
 nécessairement dans le même espace propre. Il faut donc trouver un moyen de
@@ -2352,42 +2399,60 @@ $\alpha$ et $\beta$, alors ceci est exactement la réduction modulo $m$ du nombr
 de points de $E(\GF{q^n})$, d'où le résultat. On rappelle que $m$ est un nombre
 premier.
 \end{rem}
-Pour la méthode, on a besoin de choisir un points au hasard, mais cela revient à
-calculer une racine carré dans $\GF{q^n}$ ce qui est en $O(...)$ opérations sur
-$\GF{q}$. Il est plus judicieux de prenre un $x$ au hasard dans $\GF{q^n}$ et
-tester s'il est l'abscisse d'un point de $E/\GF{q^n}$; cela revient juste à
-tester si $x$ est un carré, ce qui se fait en 
-\begin{equation}
-O(n\,\E{n}\,\textup{log }q)
-\end{equation}
-opérations.
+La méthode se fait en trois étapes résumé dans l'algorithme \ref{alg:gaussell}, 
+on suppose qu'on a déjà la courbe elliptique $E/\GF{q}$ dont on a besoin.\par
 
-
-\ref{alg:gaussell}.
 \begin{algorithm}
 \caption{Calcule d'une période elliptique}
 \label{alg:gaussell}
 \begin{algorithmic}[1]
 \REQUIRE $m$ un entier satisfaisant les conditions (1) à (3), $E/\GF{q^n}$ une 
-courbe elliptique avec les bonnes caractéristiques
+courbe elliptique avec les bonnes caractéristiques, $\mathcal{M}$ les diviseurs
+strictes de $m$
 \ENSURE $\eta$ un élément normal de $\GF{q^n}$ relié aux autres périodes
 elliptiques.
 \bigskip
 \REPEAT
     \STATE $P \leftarrow [\frac{\#E/\GF{q^n}}{m}]\textup{rand}(E/\GF{q^n})$
-\UNTIL{$[m]P = \EO\quad\&\quad\forall d\mid m, d\neq m, [d]P\neq\EO$}
+\UNTIL{$[m]P = \EO\quad\& [d]P\neq\EO\quad\forall d\in\mathcal{M}$}
 \STATE $\eta \leftarrow \sum_{\sigma\in
 S}{\left([\sigma]P\right)_X^{\#\textup{Aut}(E)/2}}$
 \RETURN $\eta$
 \end{algorithmic}
 \end{algorithm}
 
-\newpage
-\begin{prop}
-L'algorithme \ref{alg:gaussell} calcule normal $\eta$ relié aux autres périodes
-elliptiques en
+Des lignes $1$ à $3$, on a besoin de choisir un points au hasard, mais cela 
+revient à calculer une racine carré dans $\GF{q^n}$ ce qui est en $O(...)$ 
+opérations sur $\GF{q}$. Il est plus judicieux de prenre un $x$ au hasard dans 
+$\GF{q^n}$ et tester s'il est l'abscisse d'un point de $E/\GF{q^n}$; cela 
+revient juste à tester si $x$ est un carré, ce qui se fait en 
 \begin{equation}
-O((m\,\textup{log\,}m)\I{n}/n).
+O(n\,\E{n}\,\textup{log }q)
+\end{equation}
+opérations d'après \ref{}. Par la suite, il faut alors faire une multiplication
+du point trouvé par un scalaire. Avec les formules de Montgomery, on obtient
+alors une complexité en 
+\begin{equation}
+O(n\,\I{n}\,\textup{log }q)
+\end{equation}
+opérations sur $\GF{q}$. On s'attend à trouver un point de $m$-torsion en $O(1)$
+essaies.\par
+Finalement, à la ligne $4$ on calcule directement la période elliptique $\eta$,
+cela comprend $\varphi(m)/(2n)$ multiplications par des scalaires plus petits
+que $m/2$, d'où une complexité en 
+\begin{equation}
+O((m\,\textup{log }m)\,I(n)/n)
+\end{equation}
+opérations sur $\GF{q}$.\par
+Comme pour le cas cyclotomique, on suppose que $m\in o(n^2)$ ce qui entraine la
+proposition suivante :
+
+
+\begin{prop}
+L'algorithme \ref{alg:gaussell} calcule correctement un élément normal $\eta$ 
+relié aux autres périodes elliptiques en
+\begin{equation}
+O(n\,\I{n}\,\textup{log }q).
 \end{equation}
 opérations sur $\GF{q}$.
 \end{prop}
@@ -2543,7 +2608,7 @@ Les $z$ vérifiant ces conditions seront les candidats pour les classes de trace
 admissibles. Elles servent à déterminer quelle courbe elliptique on utilisera
 pour appliquer l'algorithme. Pour sélectionner une courbe, il suffit de calculer
 la trace de son Frobenius et la trace du Frobenius de ses tordues en accord avec
-la proposition \ref{}.\par
+la proposition \ref{prop:trtwist}.\par
 On commence par regarder les courbes de $j$ invariant $0$ ou $1728$ sur 
 $\GF{q}$; selon la valeur de $q$ modulo $3$ pour le premier et modulo $4$ pour 
 le second, on teste si les classes des différentes traces décrites dans la 
@@ -2585,7 +2650,7 @@ d'exécution. Les tests sont tous effectués pour une caractéristique fixée $p
 
 \subsection{Méthode cyclotomique}
 Les résultats de la méthode cyclotomique avec les paramètres énoncés ci-dessus
- sont exposés dans la figure ci-dessous :
+sont exposés dans la figure ci-dessous :
 \begin{figure}[H]
 \begin{center}
 \includegraphics[scale=0.7]{data_test15_testcycl1}
@@ -2597,9 +2662,11 @@ du degré}
 
 On remarque très clairement que le temps d'exécution est extrêmement variable.
 Pour voir à quel moment le programme demande énormément de temps. Dans le
-tableau suivant se trouve une partie des valeurs numériques de l'exécution dont
-le temps d'exécution était le plus élevé :
-\begin{center}
+tableau \ref{tab:resnumcyclavecext} se trouve une partie des valeurs numériques 
+de l'exécution dont le temps d'exécution était le plus élevé.
+
+\begin{table}[H]
+\centering
 \begin{tabular}{|c|c|c|}
 	\hline
 	$n$ & temps (sec) & $o$\\
@@ -2614,10 +2681,19 @@ le temps d'exécution était le plus élevé :
 	151 & 35.593329 & 6\\
 	\hline
 \end{tabular}
-\end{center}
+\caption{Temps d'exécution de la méthode cyclotomique lorsque $o > 1$}
+\label{tab:resnumcyclavecext}
+\end{table}
+
 Les valeurs de $p$ sont relativement peu élevées, mais si on compare au temps
-lorsque $o = 1$ :
-\begin{center}
+lorsque $o = 1$ dans le tableau \ref{tab:resnumcyclsansext}, le résultat est 
+sans appel. Le problème est donc clairement la construction de l'extension
+supplémentaire qui prend énormément de temps. Quant à choisir entre chercher un 
+$m$ plus grand ou utiliser une méthode alternative, il faudrait pouvoir pousser 
+encore plus les expériences.
+
+\begin{table}[H]
+\centering
 \begin{tabular}{|c|c|c|}
 	\hline
 	$n$ & temps (sec) & $o$\\
@@ -2634,11 +2710,9 @@ lorsque $o = 1$ :
 	157 & 0.096667 & 1\\
 	\hline
 \end{tabular}
-\end{center}
-Le résultat est sans appel. Le problème est donc clairement la construction de
-l'extension supplémentaire qui prend énormément de temps. Quant à choisir entre
-chercher un $m$ plus grand ou utiliser une méthode alternative, il faudrait
-pouvoir pousser encore plus les expériences.
+\caption{Temps d'exécution de la méthode cyclotomique lorsque que $o = 1$}
+\label{tab:resnumcyclsansext}
+\end{table}
 
 \subsection{Méthode elliptique}
 
