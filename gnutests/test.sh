@@ -259,7 +259,7 @@ elif [[ "$1" == 14 ]];then
     set xlabel \"degré n\"
     set ylabel \"temps(sec)\"
     plot \"${NAMEFILE}.txt\" using 1:2 title 'T_ell_flint' with linespoints,\
-     \"${NAMEFILE}.txt\" using 1:3 title 'T_all' with linespoints\"| $GNUPLOT
+     \"${NAMEFILE}.txt\" using 1:3 title 'T_all' with linespoints"| $GNUPLOT
 elif [[ "$1" == 15 ]];then
     while [ -f "data_test15_testcycl${N}.txt" ]
     do
