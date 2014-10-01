@@ -948,7 +948,7 @@ E[m] = \zmodn{m}\times\zmodn{m}
 \item Si $\textup{car}(K) = p > 0$ alors on a l'une des deux situations :
     \begin{align} 
     E[p^e] &= \lbrace{\EO}\rbrace, \quad \forall
-e\in\NN\setminus{0}\label{eq:supersingcurv}\\
+e\in\NN\setminus\lbrace{0}\rbrace\label{eq:supersingcurv}\\
     E[p^e] &= \zmodn{p^e}\quad \forall e\in\NN\setminus\lbrace{0}\rbrace
     \end{align}
 \end{enumerate}
@@ -1075,7 +1075,7 @@ des $\GF{q}$-automorphismes de $E$ est d'ordre :
 On a vu dans la sous-section \ref{sec:elldef} que chaque courbe a une tordue
 quadratique si $j\neq0,1728$ et des tordues quartiques ou sextiques selon si $j$
 est égal à $1728$ ou $0$ respectivement. Dans le cas des corps finis, on peut
-même relié la trace du Frobenius de ces tordues. Les deux derniers points sont
+même relier la trace du Frobenius de ces tordues. Les deux derniers points sont
 issus d'une communication personnelle avec Luca De Feo.
 \begin{prop}
 \label{prop:trtwist}
@@ -2162,7 +2162,7 @@ normale engendrée par $v$.
 
 \end{algorithmic}
 \end{algorithm}
-Calculons sa complexité. De la ligne $1$ à $3$, la complexité est dominé par 
+Calculons sa complexité. De la ligne $1$ à $3$, la complexité est dominée par 
 l'élévation de $v$ à la puissance $q^n$, le calcul de sa trace et la somme du 
 résultat $n$ fois. Cela revient à élever à la puissance $q^n$ des polynômes à 
 coeffcient dans $\GF{q}$ et à la somme d'éléments de $\GF{q}$. D'où 
@@ -2362,7 +2362,7 @@ tout point $P$ de $m$-torsion dans l'espace propre de $\alpha$, on définit la
 période elliptique $\eta_{\alpha}(P)$ de la façon suivante :
 \begin{equation}
 \label{eq:ellperpar}
-\eta_{\alpha}(P) = \sum_{\sigma\in S}{([\alpha]P)_X}
+\eta_{\alpha}(P) = \sum_{\sigma\in S}{([\sigma]P)_X}
 \end{equation}
 où $P_X$ désigne l'abscisse du point $P$.\par
 Pour $j = 0$ ou $1728$, on suppose que $\#\textup{Aut}_{\GF{q}}(E)$ divise
@@ -2483,7 +2483,7 @@ moins un $t\in\zmodninv{m}$ satifaisant :
 	\end{equation}
 	avec $\ord{m}{\alpha} = n$, $\ord{m}{\beta}\nmid n$ et :
 	\begin{equation}
-    \zmodninv{m}/\textup{Aut}_{\GF{q}}(E) = \groupgen{\alpha}\times
+    \zmodninv{m}/\textup{Aut}_{\GF{q}}(E) = \groupgen{\alpha}\times S
 	\end{equation}
 	\item le relevé centré $\hat{t}$ de $t$ dans $\QQ$ doit être de valeur
 absolue plus petite que la borne de Hasse :
@@ -2514,12 +2514,12 @@ on suppose qu'on a déjà obtenu la courbe elliptique $E/\GF{q}$ dont on a besoi
 comme expliquer ci-dessus.\par
 
 \begin{algorithm}
-\caption{Calcule d'une période elliptique}
+\caption{Calcul d'une période elliptique}
 \label{alg:gaussell}
 \begin{algorithmic}[1]
 \REQUIRE $m$ un entier satisfaisant les conditions (1) à (3), $E/\GF{q^n}$ une 
 courbe elliptique avec les bonnes caractéristiques, $\mathcal{M}$ les diviseurs
-strictes de $m$
+stricts de $m$
 \ENSURE $\eta$ un élément normal de $\GF{q^n}$ relié aux autres périodes
 elliptiques.
 \bigskip
@@ -2576,7 +2576,7 @@ opérations sur $\GF{q}$.
 %(retrouver une simple racine). Détailler les limitations dû à SAGE, peut-être
 %prendre une partie de la conclusion en expliquant ce qui pourrait être changer.
 Dans cette partie, nous discuterons de l'implémentation des algorithmes, des
-résultats numériques obtenues et nous comparrons ces résultats avec d'autres
+résultats numériques obtenues et nous comparerons ces résultats avec d'autres
 méthodes déjà mises en place.\par
 Les tests sont effectués sur une machine virtuelle sous le système Linux 
 3.15.5-1-ARCH, dotée d'un processeur Intel(R) Xeon(R) CPU E3-1220 V2 @ 3.10GHz 
