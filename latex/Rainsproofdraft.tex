@@ -1,0 +1,292 @@
+\documentclass[a4paper]{article} % papier A4
+\usepackage[utf8]{inputenc}      % accents dans le source
+\usepackage[T1]{fontenc}         % accents dans le pdf
+\usepackage{textcomp}            % symboles complémentaires (euro)
+\usepackage[frenchb]{babel}      % titres en français
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage[colorlinks=false]{hyperref} %Apparemment ça sert à rien...
+\usepackage{enumerate}
+\usepackage{tocloft}             % Pour la table des matières
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{pgf}
+\usepackage{tikz}
+\usepackage{tikz-cd}
+\usepackage{rotating}
+\usetikzlibrary{matrix,arrows,decorations.pathmorphing}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{graphicx}
+
+% Numérotation des sections, sous-sections, équations, etc.
+%\numberwithin{section}{part}
+%\numberwithin{equation}{section}
+
+% Maccros pour les commandes de math
+\newcommand\nroot[1]{\textit{#1}-ième}
+\newcommand\zmodn[1]{\mathbb{Z}/#1\mathbb{Z}}
+\newcommand\zmodninv[1]{(\mathbb{Z}/#1\mathbb{Z})^{\times}}
+\newcommand\GF[1]{\mathbb{F}_{#1}}
+\newcommand\Irr[2]{\textup{min}_{#1}(#2)}
+\newcommand\Tr[1]{\textup{Tr}\left(#1\right)}
+\newcommand\QQ{\mathbb{Q}}
+\newcommand\ZZ{\mathbb{Z}}
+\newcommand\NN{\mathbb{N}}
+\newcommand\CC{\mathbb{C}}
+\newcommand\RR{\mathbb{R}}
+\newcommand\EO{\mathcal{O}}
+\newcommand\PP[1]{\mathbb{P}^{#1}}
+\newcommand\KK{\mathbb{K}}
+\newcommand\etmath{\textup{\quad et \quad}}
+\newcommand\M[1]{\textup{M}(#1)}
+\newcommand\E[1]{\textup{E}(#1)}
+\newcommand\I[1]{\textup{I}(#1)}
+\newcommand\tO[1]{\widetilde{O}(#1)}
+\newcommand\groupgen[1]{\langle{#1}\rangle}
+\newcommand\ord[2]{\textup{ord}_{#1}(#2)}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+
+% Algorithmic en français
+\floatname{algorithm}{Algorithme}
+\renewcommand{\algorithmicrequire}{\textbf{Entrée :}}
+\renewcommand{\algorithmicensure}{\textbf{Sortie :}}
+\renewcommand{\algorithmiccomment}[1]{\{#1\}}
+\renewcommand{\algorithmicend}{\textbf{fin}}
+\renewcommand{\algorithmicif}{\textbf{si}}
+\renewcommand{\algorithmicthen}{\textbf{alors}}
+\renewcommand{\algorithmicelse}{\textbf{sinon}}
+\renewcommand{\algorithmicelsif}{\algorithmicelse\ \algorithmicif}
+\renewcommand{\algorithmicendif}{\algorithmicend\ \algorithmicif}
+\renewcommand{\algorithmicfor}{\textbf{pour}}
+\renewcommand{\algorithmicforall}{\textbf{pour tout}}
+\renewcommand{\algorithmicdo}{\textbf{faire}}
+\renewcommand{\algorithmicendfor}{\algorithmicend\ \algorithmicfor}
+\renewcommand{\algorithmicwhile}{\textbf{tant que}}
+\renewcommand{\algorithmicrepeat}{\textbf{répéter}}
+\renewcommand{\algorithmicuntil}{\textbf{jusqu'à}}
+\renewcommand{\algorithmicreturn}{\textbf{renvoyer}}
+\renewcommand{\algorithmicto}{\textbf{à}}
+
+\renewcommand{\listalgorithmname}{Liste des algorithmes}
+\renewcommand{\listfigurename}{Liste des figures}
+
+
+
+% Éviter l'overlap dans la table des matières pour les sections, sous-sections
+% etc.
+\setlength{\cftsecnumwidth}{3em}    
+\setlength{\cftsubsecnumwidth}{3em} 
+
+
+\begin{document}
+\newtheorem{thm}{Théorème}[section]
+\newtheorem{lem}[thm]{Lemme}
+\newtheorem{fac}[thm]{Fait}
+\newtheorem{cor}[thm]{Corollaire}
+\newtheorem{prop}[thm]{Proposition}
+\newtheorem{conj}[thm]{Conjecture}
+\newtheorem*{thmn}{Théorème}
+\theoremstyle{definition}
+\newtheorem{defn}[thm]{Définition}
+\newtheorem{defnp}[thm]{Définition et proposition}
+\newtheorem*{ex}{Exemple}
+\theoremstyle{remark}
+\newtheorem*{rem}{Remarque}
+\section{Introduction}
+Soit $p$ un nombre premier différent de $2$ et $3$ et soit $\GF{p}$ le corps
+fini à $p$ élément. On souhaite démontrer le théorème suivant :
+
+\begin{thmn}
+\label{conj:gaussellnorm}
+Soient $m$ un nombre premier différent de $p$ et $t$ un entier tels que :
+\begin{enumerate}[1.]
+    \item $|t| < \sqrt{2p}$,
+    \item $X^2 - tX + q = (X - \alpha)(X - \beta)\bmod{m}$,
+    \item $\zmodninv{m}/\lbrace{\pm1}\rbrace = \groupgen{\alpha}\times S$ pour
+    $S$ un sous-groupe de $\zmodninv{m}$,
+    \item $\ord{m}{\alpha} = n$ et $\ord{m}{\beta}\nmid n$.
+\end{enumerate}
+Soit $E/\GF{p}$ une courbe elliptique ordinaire de trace $t$. Dans ce cas, 
+$\GF{p^n}$ est la plus petite extension contenant des points d'ordre $m$ et 
+pour tout $P$ d'ordre $m$ dans l'espace propre de $\alpha$, les périodes 
+elliptiques $\eta_{\alpha}(P)$ forment une base normale de $\GF{q^n}$ sur 
+$\GF{q}$.\par
+\end{thmn}
+
+Plus précisément, on souhaite démontrer la partie énonçant que les périodes
+elliptiques engendrent le corps $\GF{p^n}$. La preuve est un résultat secondaire
+de l'article de Mihailescu et al. \cite{MiMoSch}, le but est d'extraire et
+détailler ce résultat.
+
+\section{Caractéristique 0}
+
+Soient $E$ une courbe elliptique et $m$ un nombre premier. On rappelle que si 
+$m$ est un nombre de Elkies pour $E$ alors le polynôme caractéristique du 
+Frobenius $\pi : (X,Y) \to (X^p, Y^p)$ se factorise en deux facteurs linéaires
+modulo $m$. La restriction de $\pi$ à $E[m]$ a donc deux espaces propres, l'un
+d'eux est caractérisé par le polynôme $f_{m,\alpha}(X)$ de degré $(m-1)/2$
+divisant $f_m(X)$ le $m$-ième polynôme de division.\par
+\subsection{Mise en place}
+\label{sec:mep}
+On utilisera les notations de l'article de Mihailesku \emph{et al.}
+\cite{MiMoSch}. On note $K$ le corps de définition du relèvement de Deuring.
+On notera avec un chapeau les éléments qui admettent un relêvement de Deuring.
+Soit :
+\[
+\widehat{E} : Y^2 = X^3 + \widehat{A}X + \widehat{B}
+\]
+le relêvement de $E$. On introduit aussi les extensions suivantes : 
+\begin{align*}
+K_m &= K[X]/(\widehat{f}_m(X))\\
+L_m &= K_m[Y]/(Y^2 - (X^3 + \widehat{A}X + \widehat{B}))
+\end{align*}
+La première extension est de degré $m(m-1)/2$ et la deuxième de degré $2$. On
+pose $\Theta\in K_m$ la classe de $X$ modulo $\widehat{f}_m(X)$ et $\Gamma\in L_m$
+la classe de $Y$ dans $L_m$.\par
+Considérons alors le point générique $P = (\Theta, \Gamma)$ de $\widehat{E}(L_m)$.
+Pour $a\in \zmodninv{m}$ l'action :
+\[
+\rho_a : \Theta \to ([a]\widehat{P})_X
+\]
+définie un automorphisme de $K_m/K$ et 
+\[
+G = \lbrace{\rho_a : 1 \leq a \leq \dfrac{m-1}{2}}\rbrace
+\]
+est un sous-groupe cyclique du groupe de Galois $\textup{Gal}(K_m/K)$. On
+pose alors $K_0 = K_m^{G}$, ce qui implique l'extension $K_m/K_0$ est
+cyclique de degré $(m-1)/2$.\par
+Le polynôme $f_{m,\lambda}(X)$ se factorise comme suit dans $K_0[T]$:
+\[
+\widehat{f}_{m,\lambda}(T) = \prod_{a=1}^{\tfrac{m-1}{2}}{(T - \rho_a(\Theta))}
+\]
+Par conséquent, on a $K_m = K_0[X]/(\widehat{f}_{m,\lambda}(X))$. Pour
+$a\in\zmodninv{m}$ on définit l'unique polynôme $\widehat{g}_a\in K_0[X]$ tel
+que $\textup{deg}(\widehat{g}_a) < (l-1)/2$ et $\widehat{g}_a(\Theta) =
+\rho_a(\Theta)$.
+
+\subsection{Elliptic gaussian period}
+
+Soit $c\in\zmodninv{m}$ un générateur. Soient $n$ un diviseur impair de
+$(m-1)/2$ et $n' = (m-1)/(2q)$ son cofacteur tels que $(n, n') =
+1$\footnote{Cette propriété n'est pas vraiment précisée dans les notes
+originales de l'article, à moins que je ne l'ai pas vue, mais elle me semble
+assez indispensable pour que les ordres fonctionnent bien.}. On pose 
+$h = c^n$ et $k = c^{n'}$, $H = \groupgen{h}$ et $K = \groupgen{k}$; alors :
+\[
+\zmodninv{m}/\lbrace{\pm1}\rbrace = H \times K
+\]
+Pour $0 \leq i < n$, on définit :
+\[
+\widehat{\eta}_i = \sum_{a\in H}{\left([k^ia]\widehat{P}\right)_X} = \sum_{a\in
+H}{\rho_a(\rho_{k^i}(\Theta))}
+\]
+On remarque que $\widehat{\eta}_i = \rho_k^{(i)}(\widehat{\eta}_0$ pour tout
+$i$. On a alors l'action cyclique suivante :
+\[\widehat{\eta}_0 \buildrel\rho_k\over\longrightarrow
+\widehat{\eta}_1 \buildrel\rho_k\over\longrightarrow \dots 
+\buildrel\rho_k\over\longrightarrow \widehat{\eta}_{n-1}
+\buildrel\rho_k\over\longrightarrow \widehat{\eta}_0\]
+On en déduit :
+\begin{lem}
+Le polynôme 
+\[
+\widehat{M}(T) = \prod_{i = 0}^{n - 1}{(T - \widehat{\eta}_i)}
+\]
+est irréductible à coefficients dans $\EO(K_0)$; il s'agit du polynôme minimal de
+$\widehat{\eta}_0$ sur $K_0$.
+\end{lem}
+\begin{proof}
+\end{proof}
+
+\section{Caractéristique \emph{p}}
+
+Par cohérence avec les notations de \cite{MiMoSch}, on pose :
+\[
+\mathcal{A}_0 = \GF{p}[X]/(f_{m,\lambda}(X))
+\]
+et
+\[
+\mathcal{A} = \GF{p}[X]/(Y^2 - (X^3 + AX + B), f_{m,\lambda}(X)).
+\]
+On pose aussi $\theta$ et $\gamma$ les classes résiduelles de $X$ et $Y$ dans
+$A$ et $P = (\theta, \gamma)$ le point "générique". De façon analogue à la
+section \ref{sec:mep}, pour $a\zmodninv{m}$ on définit l'unique polynôme $g_a$ de degré
+strictement inférieur à $(m-1)/2$ tel que $g_a(\theta) = ([a]P)_X \in
+\mathcal{A}$. En particulier, on a la propriété suivante :
+\[
+\theta^p = g_{\lambda}(\theta)
+\]
+\begin{fac}
+Comme $m$ est un premier de Elkies, il existe un premier $\mathfrak{p} \subset
+p\EO(K_0)$ tel que $f_{m,\lambda}(X) = \widehat{f}_{m,\lambda}(X) \bmod
+\mathfrak{p}$, \emph{i.e.} $\widehat{f}_{m,\lambda}$ est un relevé cyclique de
+$f_{m,\lambda}$.\par
+De même, pour tout $a\in\zmodninv{m}$, $\widehat{g}_a(X)$ est un relevé de
+$g_a(X)$.
+\end{fac}
+\begin{proof}
+\end{proof}
+Alors d'après la définition des $g_a$, on a :
+\[
+f_{m,\lambda}(Z) = \prod_{a=1}^{\tfrac{l-1}{2}}{(Z - g_a(\theta))}
+\]
+Pour $0 \leq i < q$, on définit : 
+\[
+\eta_i = \sum_{a\in H}{g_a(g_{k^i}(\theta))}
+\]
+en particulier, on a $\eta_i = \widehat{\eta}_i \bmod \mathfrak{p}$. On rappelle
+que pour $m\geq3$, le discriminant de $f_m(X)$ satisfait la relation :
+\[
+\textup{Disc}(f_m) = (-1)^{(m-1)/2}m^{(m^2 - 3)/2}(-\Delta)^{(m^2 - 1)(m^2 -
+3)/24}
+\]
+où $\Delta = \Delta(E)$ le discriminant de la courbe $E$; alors $f_m(X)$, donc
+$f_{m,\lambda}(X)$ aussi, est séparable. Ceci implique que pour $i\neq j$,
+$\eta_i\neq\eta_j$, puisqu'une telle égalité impliquerait l'existence d'une
+relation linéaire entre les racines de $f_{m,\lambda}$ (ça mérite peut-être un
+poil plus de détails). Par conséquent, le polynôme minimal $\widehat{M}(X)$ de
+$\widehat{\eta}_0$ est séparable.\par
+Dans ce cas, si on note $M(X)\in\GF{p}[X]$ le polynôme minimal de
+$\eta_0\in\mathcal{A}_0$ et si on remarque que $M(X) = \widehat{M}(X)\bmod
+\mathfrak{p}$, alors on en déduit que $M(X)$ est de degré $n$.
+
+\section{Résultat}
+
+Il suffit alors de prendre les paramètres qui nous intéressent et on pourra
+démontrer le théorème. Soit une courbe elliptique sur un corps fini $\GF{p}$ de
+caractéristique différente de $2$ ou $3$ et soit $m$ un nombre de Elkies pour
+$E$. On note $\alpha$ et $\beta$ les deux valeurs propres du Frobenius et $n$ le
+degré de l'extension considérée.\par
+On rappelle les conditions. La valeur propre $\alpha$ doit être d'ordre $n$
+modulo $m$ alors que $\beta$ doit être d'ordre ne divisant pas $n$. L'entier $n$
+doit donc diviser $\varphi(m) = m-1$, être impair et être premier avec $(m-1)/n$. 
+On remarque qu'il est alors aussi premier avec $(m-1)/2n$.\par
+Prenons alors un point $P$ dans l'espace propre de $\alpha$. On choisit
+$c\in\zmodninv{m}$ un générateur tel que $\alpha = c^{n'}$ où $n' = (m-1)/2n$,
+on se retrouve alors dans le cas où :
+\[
+\zmodninv{m}/\lbrace{\pm1\rbrace} = \groupgen{\alpha}\times H
+\]
+où $H = \groupgen{h}$ avec $h = c^n$. Alors d'après les points précédents, le
+polynôme minimal de 
+\[
+\eta_{\alpha}(P) := \eta_0 = \sum_{a\in H}{g_a(\theta)} = \sum_{a\in
+H}{([a]P)_X}
+\]
+est $M(T)$ qui est de degré $n$; ceci vaut pour n'importe quel point $P$ dans
+l'espace propre de $\alpha$, ce qui achève la démonstration.
+
+
+\begin{thebibliography}{LC}
+
+\bibitem{MiMoSch} \emph{Computing the Eigenvalue in the Schoof-Elkies-Atkin
+Algorithm using Abelian Lifts}, \bsc{P. Mih\u{a}ilescu}, \bsc{F. Morain} \&
+\bsc{É. Schost}, 2007, \bsc{url :}
+\url{http://hal.inria.fr/LIX/inria-00130142/en/}
+
+\end{thebibliography}
+
+
+\end{document}
