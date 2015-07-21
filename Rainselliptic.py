@@ -187,27 +187,53 @@ def find_unique_orbit_elliptic(E, m, case = 0):
     # Loking for a point of order exactly m.
     P = XZ.find_ordm(E, m)
 
-    if case == 0:
+    if n%2 == 1:
+        if case == 0:
         # Looking for a generator of order exactly phi(m)/n in 
         # (Z/m)*/something.
-        gen_G = Integers(m).unit_gens()[0]**n
-        order = euler_phi(m)//(2*n)
-
-        return sum((XZ.ladder(P, ZZ(gen_G**i), E.a4(), E.a6())[0]) for i in 
+            gen_G = Integers(m).unit_gens()[0]**n
+            order = euler_phi(m)//(2*n)
+    
+            return sum((XZ.ladder(P, ZZ(gen_G**i), E.a4(), E.a6())[0]) for i in 
                 range(order))
-    elif case == 1:
-        gen_G = Integers(m).unit_gens()[0]**n
-        order = euler_phi(m)/(4*n)
+        elif case == 1:
+            gen_G = Integers(m).unit_gens()[0]**n
+            order = euler_phi(m)/(4*n)
         
-        return sum((XZ.ladder(P, ZZ(gen_G**i), E.a4(), E.a6())[0])**2 for i in 
+            return sum((XZ.ladder(P, ZZ(gen_G**i), E.a4(), E.a6())[0])**2 for i in 
                 range(order))
 
-    elif case == 2:
-        gen_G = Integers(m).unit_gens()[0]**n
-        order = euler_phi(m)/(6*n)
+        elif case == 2:
+            gen_G = Integers(m).unit_gens()[0]**n
+            order = euler_phi(m)/(6*n)
 
-        return sum((XZ.ladder(P, ZZ(gen_G**i), E.a4(), E.a6())[0])**3 for i in
+            return sum((XZ.ladder(P, ZZ(gen_G**i), E.a4(), E.a6())[0])**3 for i in
             range(order))
+    else:
+        P = ZZ(E.cardinality()/m)*E.random_point()
+        if case == 0:
+        # Looking for a generator of order exactly phi(m)/n in 
+        # (Z/m)*/something.
+            gen_G = Integers(m).unit_gens()[0]**n
+            order = euler_phi(m)//(n)
+            per = sum((ZZ(gen_G**i)*P)[1] for i in range(order)) 
+            return per**2
+            
+        else:
+            raise NotImplementedError
+#        elif case == 1:
+#            gen_G = Integers(m).unit_gens()[0]**n
+#            order = euler_phi(m)/(4*n)
+#        
+#            return sum((XZ.ladder(P, ZZ(gen_G**i), E.a4(), E.a6())[0]) for i in 
+#                range(order))
+#
+#        elif case == 2:
+#            gen_G = Integers(m).unit_gens()[0]**n
+#           order = euler_phi(m)/(6*n)
+#
+#           return sum((XZ.ladder(P, ZZ(gen_G**i), E.a4(), E.a6())[0]) for i in
+#           range(order))
 
 def find_elliptic_curve(k, K, m_t):
     '''
@@ -424,6 +450,8 @@ def find_trace(n,m,k):
 
             if abs((a[i] + b).centerlift()) > sq:
                 continue
+            elif n%diff == 0:
+                continue
             else:
                 sol.append(a[i] + b)
 
@@ -484,7 +512,7 @@ def find_m(n, k, bound = None):
         # m composite not implemented yet
         if not m.is_prime_power():
             continue 
-        elif (euler_phi(m)/n).gcd(n) != 1:
+        elif (euler_phi(m)/(n)).gcd(n) != 1:
             continue
         else:
             S_t = find_trace(n, m, k)
