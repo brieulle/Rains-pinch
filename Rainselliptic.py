@@ -76,16 +76,22 @@ def isom_elliptic(k1, k2, k = None, bound = None):
     p = k.characteristic()
     n = k1.degree()  
     q = k.cardinality()
+    b = 1
     
     # We compute a list of candidates for m (i.e. such that n divides phi(m) 
     # and (phi(m)/n,n) = 1. It lacks the conditions on the trace.
     m_t = find_m(n, k, bound)
+    while m_t is None:
+        m_t = find_m(n, k, bound, b)
+        b += 1
+
     
     if m_t is None:
         raise RuntimeError, 'No suitable m found, increase your bound.'
 
     # Finding the elliptic curve on which we can work. 
-    E, case = find_elliptic_curve(k, k1, m_t) 
+    E, case = find_elliptic_curve(k, k1, m_t)
+    print case
 
     if E is None:
         raise RuntimeError, 'No suitable elliptic curve found, check your \
@@ -95,11 +101,11 @@ def isom_elliptic(k1, k2, k = None, bound = None):
     Ek2 = E.change_ring(k2)
 
     a, b = (find_unique_orbit_elliptic(Ek1, m_t[0], 
-        case), find_unique_orbit_elliptic(Ek2, m_t[0], case))
+        case, m_t[2]), find_unique_orbit_elliptic(Ek2, m_t[0], case, m_t[2]))
 
     return a, b
 
-def find_unique_orbit_elliptic(E, m, case = 0):
+def find_unique_orbit_elliptic(E, m, case = 0, one_element = 0):
     '''
     INPUT : 
     
@@ -183,44 +189,61 @@ def find_unique_orbit_elliptic(E, m, case = 0):
         - u = sum_{i \in S} (([i]P)[0])^6, for j = 0.
     '''
     n = E.base_ring().degree()
+    p = E.base_ring().characteristic()
 
-    # Loking for a point of order exactly m.
-    P = XZ.find_ordm(E, m)
+    # Tbe case p = 2 or 3 can't use the XZ algorithm
+    if p == 2 or p == 3:
+        O = E([0,1,0])
+        P = O
+        cofactor = E.cardinality()/m
+        while any(i*P == O for i in range(1,m)):
+            P = ZZ(cofactor)*E.random_point()
 
-    if n%2 == 1:
-        if case == 0:
-        # Looking for a generator of order exactly phi(m)/n in 
-        # (Z/m)*/something.
-            gen_G = Integers(m).unit_gens()[0]**n
-            order = euler_phi(m)//(2*n)
-    
-            return sum((XZ.ladder(P, ZZ(gen_G**i), E.a4(), E.a6())[0]) for i in 
-                range(order))
-        elif case == 1:
-            gen_G = Integers(m).unit_gens()[0]**n
-            order = euler_phi(m)/(4*n)
-        
-            return sum((XZ.ladder(P, ZZ(gen_G**i), E.a4(), E.a6())[0])**2 for i in 
-                range(order))
+        gen_G = Integers(m).unit_gens()[0]**n
+        order = euler_phi(m)/(2*n)
 
-        elif case == 2:
-            gen_G = Integers(m).unit_gens()[0]**n
-            order = euler_phi(m)/(6*n)
-
-            return sum((XZ.ladder(P, ZZ(gen_G**i), E.a4(), E.a6())[0])**3 for i in
-            range(order))
+        return sum( (ZZ(gen_G**i)*P)[0] for i in range(order))
     else:
-        P = ZZ(E.cardinality()/m)*E.random_point()
-        if case == 0:
+        P = XZ.find_ordm(E, m)
+
+        if n%2 == 1:
+            if case == 0:
         # Looking for a generator of order exactly phi(m)/n in 
         # (Z/m)*/something.
-            gen_G = Integers(m).unit_gens()[0]**n
-            order = euler_phi(m)//(n)
-            per = sum((ZZ(gen_G**i)*P)[1] for i in range(order)) 
-            return per**2
-            
+                gen_G = Integers(m).unit_gens()[0]**n
+                order = euler_phi(m)/(2*n)
+    
+                return sum((XZ.ladder(P, ZZ(gen_G**i), E.a4(), E.a6())[0]) for i in 
+                range(order))
+            elif case == 1:
+                gen_G = Integers(m).unit_gens()[0]**n
+                order = euler_phi(m)/(2*n)
+        
+                return sum((XZ.ladder(P, ZZ(gen_G**i), E.a4(), E.a6())[0]) for i in 
+                    range(order))
+
+            elif case == 2:
+                gen_G = Integers(m).unit_gens()[0]**n
+                order = euler_phi(m)/(2*n)
+
+                return sum((XZ.ladder(P, ZZ(gen_G**i), E.a4(), E.a6())[0]) for i in
+                range(order))
         else:
-            raise NotImplementedError
+
+
+            if one_element == 1:
+                return P 
+
+            elif case == 0:
+        # Looking for a generator of order exactly phi(m)/n in 
+        # (Z/m)*/something.
+                gen_G = Integers(m).unit_gens()[0]**n
+                order = euler_phi(m)//(n)
+                per = sum((ZZ(gen_G**i)*P)[1] for i in range(order)) 
+                return per**2
+            
+            else:
+                raise NotImplementedError
 #        elif case == 1:
 #            gen_G = Integers(m).unit_gens()[0]**n
 #            order = euler_phi(m)/(4*n)
@@ -407,16 +430,13 @@ def find_trace(n,m,k):
     q = k.cardinality()
     sq = sqrt(float(2*q))
     q_m = Zm(q)
+    alpha = (m-1)//n
 
-    # This test may be obsolete if the function is used inside 'isom_elliptic'.
-    if not m.is_prime_power():
-        raise NotImplementedError
-    # If m is a power of p, then we just need the trace to be of order 
-    # exactly n in (Z/m)*
-    elif m%p == 0:
+
+    if q_m**n == 1:
+        return []
+    elif m == p:
         sol = []
-        phi_m = euler_phi(m)
-        alpha = phi_m/n
         g = Zm.unit_gens()[0]
 
         log_t = [i*alpha for i in n.coprime_integers(n)]
@@ -429,15 +449,10 @@ def find_trace(n,m,k):
 
         return set(sol)
     # We don't want q to be of order n or dividing n, then q/a would be of order
-    # n; which is unacceptable.
-    elif q_m**n == 1:
-        return []
+    # n; which is unacceptable => b order n, but why b order n is bad ?
     else:
         sol = []
-        phi_m = euler_phi(m)
-        alpha = phi_m/phi_m.gcd(n)
         g = Zm.unit_gens()[0]
-        Zphi_m = Integers(phi_m)
         
         # Computing the logarithm of element of order n.
         log_a = [i*alpha for i in n.coprime_integers(n)]
@@ -448,16 +463,21 @@ def find_trace(n,m,k):
             diff = log_q - log_a[i]
             b = g**diff
 
+            if p == 2:
+                if abs((a[i] + b).centerlift()) > 1:
+                    continue
+                else:
+                    sol.append((a[i] + b))
             if abs((a[i] + b).centerlift()) > sq:
                 continue
-            elif n%diff == 0:
+            elif diff%n == 0:
                 continue
             else:
                 sol.append(a[i] + b)
 
         return set(sol)
 
-def find_m(n, k, bound = None):
+def find_m(n, k, bound = None, b = 1):
     '''
     INPUT :
 
@@ -508,11 +528,21 @@ def find_m(n, k, bound = None):
         bound_a = (bound - 1) / n 
 
     for a in range(bound_a):
-        m = a*n + 1
+        m = a*n + b
+        try:
+            euphin = ZZ(euler_phi(m)/n)
+        except TypeError:
+            continue
         # m composite not implemented yet
         if not m.is_prime_power():
             continue 
-        elif (euler_phi(m)/(n)).gcd(n) != 1:
+        #elif euphin == 1:
+        #    temp = find_m(n, k, b = b+1)
+        #    if temp  == None:
+        #        continue
+        #    else:
+        #       return temp
+        elif euphin.gcd(n) != 1:
             continue
         else:
             S_t = find_trace(n, m, k)
@@ -521,4 +551,4 @@ def find_m(n, k, bound = None):
             if len(S_t) < 1:   
                 continue       
             else:
-                return m, S_t 
+                return m, S_t, 0
