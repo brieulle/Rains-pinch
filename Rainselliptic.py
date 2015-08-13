@@ -217,16 +217,16 @@ def find_unique_orbit_elliptic(E, m, case = 0, one_element = 0):
                 range(order))
             elif case == 1:
                 gen_G = Integers(m).unit_gens()[0]**n
-                order = euler_phi(m)/(2*n)
+                order = euler_phi(m)/(4*n)
         
-                return sum((XZ.ladder(P, ZZ(gen_G**i), E.a4(), E.a6())[0]) for i in 
+                return sum((XZ.ladder(P, ZZ(gen_G**i), E.a4(), E.a6())[0])**2 for i in 
                     range(order))
 
             elif case == 2:
                 gen_G = Integers(m).unit_gens()[0]**n
-                order = euler_phi(m)/(2*n)
+                order = euler_phi(m)/(6*n)
 
-                return sum((XZ.ladder(P, ZZ(gen_G**i), E.a4(), E.a6())[0]) for i in
+                return sum((XZ.ladder(P, ZZ(gen_G**i), E.a4(), E.a6())[0])**3 for i in
                 range(order))
         else:
 
@@ -534,7 +534,7 @@ def find_m(n, k, bound = None, b = 1):
         except TypeError:
             continue
         # m composite not implemented yet
-        if not m.is_prime_power():
+        if not m.is_prime():
             continue 
         #elif euphin == 1:
         #    temp = find_m(n, k, b = b+1)
